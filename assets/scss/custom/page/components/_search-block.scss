@@ -1,0 +1,12 @@
+.search-block {
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 250px auto;
+  position: relative;
+  & > div {
+    height: 100%;
+  }
+  svg {
+    position: absolute;
+  }
+}

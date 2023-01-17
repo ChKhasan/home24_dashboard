@@ -1,0 +1,24 @@
+.add-btn {
+  border-radius: $toolbar-setting-btn-b-radius;
+  @include fontPoppins(14.3px, 500);
+  line-height: 1.5;
+  svg {
+    margin-right: 0.5rem;
+  }
+}
+.add-btn-padding {
+  padding: $add-btn-padding;
+}
+.btn-light-primary {
+  color: $add-btn-bg-color;
+  border-color: #f1faff;
+  background-color: #f1faff;
+  @include fontPoppins(14.3px, 500);
+}
+.btn-primary-hover {
+  &:hover {
+    background-color: $add-btn-bg-color !important;
+    color: #f1faff !important;
+    background-color: #f1faff;
+  }
+}

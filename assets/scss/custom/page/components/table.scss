@@ -1,0 +1,66 @@
+.product_table {
+  background: #fff;
+  padding: 0 2.25rem;
+  .el-table__row {
+    &:hover {
+      background-color: #fff !important;
+    }
+  }
+  .el-table__cell {
+    border-bottom: $table-td-border-bottom !important;
+    .cell {
+      padding-left: 0 !important;
+    }
+  }
+}
+.el-checkbox__input {
+  .el-checkbox__inner {
+    background-color: $table-checkbox-bg-color;
+    border-radius: $table-checkbox-b-radius;
+    height: $table-checkbox-height;
+    width: $table-checkbox-width;
+    display: flex;
+    justify-content: center;
+    &:focus-visible {
+      outline: none;
+      border: none;
+    }
+    &:hover {
+      border: none;
+    }
+    &::after {
+      left: $table-checkbox-after-left;
+      top: $table-checkbox-after-top;
+    }
+  }
+  .is-checked {
+    background-color: $table-checkbox-checked-bg-color;
+  }
+}
+
+.has-gutter {
+  tr {
+    th {
+      .cell {
+        color: #b5b5c3 !important;
+        @include fontPoppins(12px, 600);
+      }
+    }
+  }
+}
+
+.table-action-btn {
+  color: #7e8299 !important;
+  border-color: #f5f8fa !important;
+  background-color: #f5f8fa !important;
+  padding: calc(0.55 * 13px + 1px) calc(1.25 * 13px + 1px) !important;
+  border-radius: 0.325 * 13px !important;
+  .el-dropdown-link {
+    font-size: 0.925 * 13px !important;
+    color: #7e8299 !important;
+  }
+}
+.el-dropdown-menu__item {
+  margin: 0 0.75 * 13px !important;
+  border-radius: $toolbar-setting-btn-b-radius;
+}

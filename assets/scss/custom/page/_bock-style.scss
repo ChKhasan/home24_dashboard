@@ -1,0 +1,30 @@
+.card_block {
+  border: 0;
+  box-shadow: 0 0 20px 0 rgb(76 87 125 / 2%);
+  padding-top: 0 !important;
+  padding-bottom: 1.25rem !important;
+  border-radius: 0.625rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+}
+.card_block_padd {
+    padding-left: 2.25 * 13px;
+    padding-right: 2.25 * 13px;
+}
+.card_header {
+  padding: 0 2.25rem;
+  margin: 0.5rem 0;
+  padding-top: 1.25rem !important;
+  padding-bottom: 1.25rem !important;
+}
+.card_header_bottom {
+  border-bottom: 1px solid #eff2f5;
+}
+.card_block-title {
+  @include fontPoppins(1.5 * 13px, 600);
+}

@@ -1,0 +1,42 @@
+.form-control-solid {
+  background-color: $search-input-bg-color;
+  border-color: $search-input-border-color;
+  color: $search-input-color;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  @include fontPoppins(14.3px, 500);
+  &::placeholder {
+    color: rgba(94, 98, 120, 0.5);
+  }
+}
+.form-control-solid:focus {
+  background-color: $search-input-focus-bg-color;
+  border-color: $search-input-focus-border-color;
+  color: $search-input-color;
+  outline: 0 !important;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.form-control:focus {
+  color: $search-input-color;
+  border-color: none;
+  outline: 0;
+  box-shadow: none;
+}
+.form-control {
+  padding: 0 13px;
+  height: 100%;
+}
+
+// search input
+
+.search-input {
+  display: flex;
+  position: relative;
+  align-items: center;
+  span {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    margin-left: 13px;
+    color: #a1a5b7;
+  }
+}
