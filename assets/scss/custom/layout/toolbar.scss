@@ -5,11 +5,32 @@
   width: calc(100% - $toolbar-body-ml);
   background-color: #fff;
   color: #333;
-  line-height: 60px;
+  line-height: 70px;
   z-index: 100;
   box-shadow: none !important;
+  display: flex;
+  align-items: center;
+  padding: 0 30px !important;
+  height: 60px !important;
 }
+.header-btn {
+  cursor: pointer;
+  color: #5e6278 !important;
 
+  display: flex;
+  align-items: center;
+  line-height: initial !important;
+  padding: 0.65rem 1rem;
+  transition: none;
+  outline: 0 !important;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  border-radius: 0.475rem;
+  @include fontPoppins(1rem, 500);
+  &:hover {
+    color: #009ef7 !important;
+    background-color: rgba(245, 248, 250, 0.8);
+  }
+}
 .el-aside {
   margin-top: 20px;
 }
