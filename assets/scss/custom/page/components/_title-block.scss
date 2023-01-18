@@ -1,0 +1,46 @@
+.title-block {
+  height: 55px;
+  padding: 0 30px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  h1 {
+    @include fontPoppins(1.35rem, 600);
+  }
+  ul {
+    li {
+      color: #a1a5b7 !important;
+      @include fontPoppins(0.95rem, 500);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      .list-bullet-box {
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.5rem;
+      }
+      .list-bullet {
+        display: inline-block;
+        background-color: #b5b5c3;
+        border-radius: 6px;
+        height: 2px !important;
+        width: 5px !important;
+      }
+    }
+    .last-link {
+      color: #181c32 !important;
+    }
+  }
+}
+.page-title {
+  .vertical_hr {
+    margin-right: 1rem !important;
+    margin-left: 1rem !important;
+    border-color: #e4e6ef !important;
+    height: 20px !important;
+    border-left: 1px solid #eff2f5 !important;
+  }
+}

@@ -7,10 +7,13 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column label="PRODUCT" show-overflow-tooltip>
-        <template slot-scope="scope">{{ scope.row.date }}</template>
+      <el-table-column property="img" label="PRODUCT" width="70">
+        <template slot-scope="scope"
+          ><img class="table-image" src="../../assets/images/image.png" alt="" />
+        </template>
       </el-table-column>
-      <el-table-column property="name"  width="100">
+      <el-table-column  show-overflow-tooltip>
+        <template slot-scope="scope">{{ scope.row.date }}</template>
       </el-table-column>
       <el-table-column property="name" label="SKU" width="100">
       </el-table-column>
@@ -42,7 +45,7 @@
           >
         </template>
       </el-table-column>
-      <el-table-column label="ACTIONS" width="110" >
+      <el-table-column label="ACTIONS" width="110">
         <template slot-scope="scope">
           <el-button type="text" size="small" class="table-action-btn">
             <el-dropdown trigger="click">
@@ -76,6 +79,7 @@ export default {
         {
           date: "2016-05-03",
           name: "Tom",
+          img: "../../assets/images/image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -84,6 +88,7 @@ export default {
         {
           date: "2016-05-02",
           name: "Tom",
+          img: "../../assets/images/image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -92,6 +97,7 @@ export default {
         {
           date: "2016-05-04",
           name: "Tom",
+          img: ".image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -100,6 +106,7 @@ export default {
         {
           date: "2016-05-01",
           name: "Tom",
+          img: "../image.png",
           price: 100,
           tag: "Office",
           actions: "actions",
@@ -108,6 +115,7 @@ export default {
         {
           date: "2016-05-08",
           name: "Tom",
+          img: "./image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -116,6 +124,7 @@ export default {
         {
           date: "2016-05-06",
           name: "Tom",
+          img: "../../image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -124,6 +133,7 @@ export default {
         {
           date: "2016-05-07",
           name: "Tom",
+          img: "../../images/image.png",
           price: 100,
           tag: "Office",
           actions: "actions",
@@ -132,6 +142,7 @@ export default {
         {
           date: "2016-05-03",
           name: "Tom",
+          img: "../images/image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -140,6 +151,7 @@ export default {
         {
           date: "2016-05-02",
           name: "Tom",
+          img: "./images/image.png",
           price: 100,
           tag: "Office",
           actions: "actions",
@@ -148,6 +160,7 @@ export default {
         {
           date: "2016-05-04",
           name: "Tom",
+          img: "./../assets/images/image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -156,6 +169,7 @@ export default {
         {
           date: "2016-05-01",
           name: "Tom",
+          img: "../images/image.png",
           price: 100,
           tag: "Office",
           actions: "actions",
@@ -164,6 +178,7 @@ export default {
         {
           date: "2016-05-08",
           name: "Tom",
+          img: "./images/image.png",
           price: 100,
           tag: "Home",
           actions: "actions",
@@ -172,6 +187,7 @@ export default {
         {
           date: "2016-05-06",
           name: "Tom",
+          img: "../assets/images/image.png",
           price: 100,
           tag: "Office",
           actions: "actions",
@@ -180,6 +196,7 @@ export default {
         {
           date: "2016-05-07",
           name: "Tom",
+          img: "./assets/images/image.png",
           price: 100,
           tag: "Office",
           actions: "actions",

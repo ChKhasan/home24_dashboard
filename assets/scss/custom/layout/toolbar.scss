@@ -7,7 +7,7 @@
   color: #333;
   line-height: 60px;
   z-index: 100;
-  box-shadow: $toolbar-header-shadow;
+  box-shadow: none !important;
 }
 
 .el-aside {
@@ -53,6 +53,9 @@
         .menu-icon {
           color: #009ef7;
         }
+        .bullet-dot {
+          background: #009ef7;
+        }
         i {
           color: $toolbar-clr-text-hover !important;
         }
@@ -84,12 +87,16 @@
   line-height: 1.5 !important;
   border-radius: 0.475rem;
   padding: $toolbar-menu-item-padding !important;
+  display: flex;
   &:focus {
     background-color: transparent !important;
   }
   &:hover {
     background-color: transparent !important;
     color: $toolbar-clr-text-hover !important;
+    .bullet-dot {
+      background: #009ef7;
+    }
   }
 }
 .el-menu-item-group {
@@ -109,7 +116,7 @@
 // toolbar inner
 
 .toolbar-inner {
-  margin-top: 60px + 55px;
+  margin-top: 60px;
 }
 
 // toolbar logo box
@@ -166,5 +173,22 @@
 .toolbar-menu-products {
   .el-menu-item-group__title {
     display: none;
+  }
+}
+.menu-bullet {
+  display: flex;
+  align-items: center;
+  width: 1.25rem;
+  margin-right: 0.5rem;
+  .bullet-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 100% !important;
+    background-color: #9899ac;
+  }
+}
+.el-submenu__title {
+  & > div {
+    display: flex;
   }
 }

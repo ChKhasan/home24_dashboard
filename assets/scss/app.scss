@@ -2,6 +2,9 @@
 @import "../fonts/fonts.scss";
 @import "./config/create/margin";
 @import "./custom/page/mixins/fonts.scss";
+@import "./custom/page/components/title-block";
+@import "./custom/page/components/tabs";
+@import "./custom/page/components/quill-editor";
 @import "./custom//layout/toolbar.scss";
 @import "./custom/page/containers";
 @import "./custom/page/app-styles";

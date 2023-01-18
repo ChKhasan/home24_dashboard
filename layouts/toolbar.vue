@@ -61,15 +61,28 @@
                 <div slot="title">Group 1</div>
               </el-menu-item-group> -->
               <el-submenu index="1-1">
-                <div slot="title">Products</div>
+                <div slot="title">
+                  <span class="menu-bullet"
+                    ><span class="bullet-dot"></span
+                  ></span>
+                  Products
+                </div>
                 <el-menu-item-group class="toolbar-menu-products">
-                  <el-menu-item index="1-1-1" @click="$router.push('/products/products')"
-                    >Products</el-menu-item
+                  <el-menu-item
+                    index="1-1-1"
+                    @click="$router.push('/products/products')"
+                    > <span class="menu-bullet"
+                    ><span class="bullet-dot"></span
+                  ></span>Products</el-menu-item
                   >
                 </el-menu-item-group>
                 <el-menu-item-group class="toolbar-menu-products">
-                  <el-menu-item index="1-1-2" @click="$router.push('/products/add_products')"
-                    >Add Product</el-menu-item
+                  <el-menu-item
+                    index="1-1-2"
+                    @click="$router.push('/products/add_products')"
+                    > <span class="menu-bullet"
+                    ><span class="bullet-dot"></span
+                  ></span>Add Product</el-menu-item
                   >
                 </el-menu-item-group>
               </el-submenu>
@@ -78,7 +91,9 @@
               </el-menu-item-group> -->
               <el-submenu index="1-4">
                 <div slot="title">Categories</div>
-                <el-menu-item index="1-4-1" @click="$router.push('/products/products')"
+                <el-menu-item
+                  index="1-4-1"
+                  @click="$router.push('/products/products')"
                   >Categories</el-menu-item
                 >
               </el-submenu>

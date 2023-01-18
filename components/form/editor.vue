@@ -115,7 +115,6 @@ export default {
   components: { quillEditor },
 };
 </script>
-
 <template>
   <div>
     <quill-editor style="min-height: 250px;" :options="editorOption" />

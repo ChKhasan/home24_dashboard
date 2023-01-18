@@ -1,0 +1,18 @@
+// --- quill editor ---
+
+.quill-editor {
+  border-radius: $toolbar-setting-btn-b-radius;
+}
+.ql-toolbar.ql-snow {
+  border: 1px solid #eff2f5;
+  border-radius: $toolbar-setting-btn-b-radius;
+}
+.ql-container.ql-snow {
+  border: 1px solid #eff2f5;
+  border-radius: $toolbar-setting-btn-b-radius;
+}
+.ql-container {
+  height: 214px !important;
+}
+.ql-snow {
+}

@@ -15,15 +15,15 @@
   outline: 0 !important;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
-.form-control:focus {
+.form-control:focus,.el-input__inner {
   color: $search-input-color;
   border-color: none;
   outline: 0;
   box-shadow: none;
 }
-.form-control {
-  padding: 0 13px;
-  height: 100%;
+.form-control,.el-input__inner {
+  padding: 0 13px ;
+  height: 100% !important;
 }
 
 // search input

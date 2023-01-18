@@ -64,3 +64,14 @@
   margin: 0 0.75 * 13px !important;
   border-radius: $toolbar-setting-btn-b-radius;
 }
+.table-image {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+
+  background-color: #f5f8fa;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 0.475rem;
+}
