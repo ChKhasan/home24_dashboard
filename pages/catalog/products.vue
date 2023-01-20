@@ -52,7 +52,6 @@
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
 import FilterBtn from "../../components/form/Filter-btn.vue";
-import Table from "../../components/products/table.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import SearchBlock from "../../components/form/Search-block.vue";
 import TitleBlock from "../../components/Title-block.vue";
@@ -83,7 +82,6 @@ export default {
     };
   },
   components: {
-    Table,
     AddBtn,
     FilterBtn,
     SearchInput,

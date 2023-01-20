@@ -65,7 +65,7 @@
               <!-- <el-menu-item-group>
                 <div slot="title">Group 1</div>
               </el-menu-item-group> -->
-              <el-submenu index="1-1" class="sub_menu" >
+              <el-submenu index="1-1" class="sub_menu">
                 <div slot="title">
                   <span class="menu-bullet"
                     ><span class="bullet-dot"></span
@@ -160,7 +160,7 @@
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div class="block d-flex align-items-center" :key="size">
+            <div class="block d-flex align-items-center">
               <el-avatar
                 shape="square"
                 size="medium"
@@ -188,10 +188,25 @@ export default {
       tableData: Array(20).fill(item),
       sidebarToggle: true,
       collapsed: false,
-      defaultOpens: ['1','1-1'],
+      defaultOpens: ["1", "1-1"],
       squareUrl:
         "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
     };
+  },
+  computed: {
+    routerName() {
+      return this.$route.name;
+    },
+  },
+  mounted() {
+    switch (this.$route.name) {
+      case "catalog-products":
+        this.defaultOpens = ["1", "1-1", "1-1-1"];
+        break;
+      case "catalog-categories":
+        this.defaultOpens = ["1", "1-1"];
+        break;
+    }
   },
   methods: {
     takeChange(e) {
@@ -199,10 +214,25 @@ export default {
     },
     collapsedToggle() {
       this.collapsed = !this.collapsed;
-      if(this.collapsed) {
-        this.defaultOpens = []
+      if (this.collapsed) {
+        this.defaultOpens = [];
+        console.log("router", this.$route);
       }
-      console.log(this.collapsed);
+    },
+  },
+  watch: {
+    routerName(oldVal, newVal) {
+      if (oldVal !== newVal) {
+        console.log(oldVal);
+        switch (oldVal) {
+          case "catalog-products":
+            this.defaultOpens = ["1", "1-1", "1-1-1"];
+            break;
+          case "catalog-categories":
+            this.defaultOpens = ["1", "1-1"];
+            break;
+        }
+      }
     },
   },
 };

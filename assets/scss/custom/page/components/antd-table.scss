@@ -97,3 +97,23 @@ td.column-price {
   color: #181c32 !important;
   @include fontPoppins(1.15rem, 600);
 }
+.ant-table-pagination {
+  display: none;
+}
+.table_pagination {
+  .el-pager {
+    .number {
+      font-size: 1.075rem;
+      @include fontPoppins(1.075rem, 500);
+    }
+    .active {
+      border-radius: 0.475rem;
+      height: 2.5rem;
+      min-width: 2.5rem;
+      color: #fff;
+      font-weight: 500;
+      font-size: 1.075rem;
+      background-color: #009ef7 !important;
+    }
+  }
+}

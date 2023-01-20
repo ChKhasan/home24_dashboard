@@ -3,12 +3,12 @@
     <a-table
       :columns="columns"
       :data-source="data"
+      :pagination="false"
       :row-selection="{
         selectedRowKeys: selectedRowKeys,
         onChange: onSelectChange,
         columnWidth: '45px',
       }"
-      @change="handleTableChange"
     >
       <a slot="img" slot-scope="text"
         ><img class="table-image" src="../../assets/images/image.png" alt=""
@@ -32,11 +32,11 @@
       </span>
       <span slot="action" slot-scope="text, record">
         <el-button type="text" size="small" class="table-action-btn">
-          <el-dropdown trigger="click">
+          <el-dropdown trigger="click" class="table-dropdown">
             <span class="el-dropdown-link">
               Actions<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu slot="dropdown" class="table-dropdown-body">
               <el-dropdown-item>Edit</el-dropdown-item>
               <el-dropdown-item>Delete</el-dropdown-item>
             </el-dropdown-menu>
@@ -44,6 +44,33 @@
         </el-button>
       </span>
     </a-table>
+    <div class="d-flex justify-content-between py-3">
+      <el-button type="text" size="small" class="table-action-btn">
+        <el-dropdown
+          trigger="click"
+          class="table-dropdown"
+          @command="handleCommand"
+        >
+          <span class="el-dropdown-link">
+            {{ pageSize }}<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown" class="table-dropdown-body">
+            <el-dropdown-item :command="10">10</el-dropdown-item>
+            <el-dropdown-item :command="25">25</el-dropdown-item>
+            <el-dropdown-item :command="50">50</el-dropdown-item>
+            <el-dropdown-item :command="100">100</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-button>
+      <el-pagination
+        class="table_pagination"
+        :page-size="pageSize"
+        :pager-count="11"
+        layout="prev, pager, next"
+        :total="40"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 <script>
@@ -62,6 +89,7 @@ const columns = [
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "name" },
     className: "column-name",
+    width: "20%",
   },
   {
     title: "SKU",
@@ -97,7 +125,6 @@ const columns = [
     onFilter: (value, record) => record.tags.indexOf(value) === 0,
     sorter: (a, b) => a.tags.length - b.tags.length,
     sortDirections: ["descend"],
-    width: "30% !important",
   },
   {
     title: "RATING",
@@ -117,6 +144,7 @@ const columns = [
 export default {
   data() {
     return {
+      pageSize: 10,
       data: [
         {
           key: "1",
@@ -174,6 +202,15 @@ export default {
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
+    },
+    handleSizeChange(val) {
+      console.log(`${val} items per page`);
+    },
+    handleCurrentChange(val) {
+      console.log(`current page: ${val}`);
+    },
+    handleCommand(command) {
+      this.pageSize = command;
     },
   },
 };

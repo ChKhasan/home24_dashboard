@@ -116,6 +116,7 @@
   line-height: 1.5 !important;
   border-radius: 0.475rem;
   display: flex;
+
   &:focus {
     background-color: transparent !important;
   }
@@ -211,7 +212,7 @@
 
 .toolbar-menu-products {
   .el-menu-item-group__title {
-    // display: none;
+    padding: 0 0 0 20px
   }
 }
 .menu-bullet {
@@ -235,7 +236,8 @@
   background: #1a1a27 !important;
 
   color: $toolbar-clr-text-hover !important;
-  & > div > .menu-icon,svg {
+  & > div > .menu-icon,
+  svg {
     color: $toolbar-blue-color;
   }
   .bullet-dot {
@@ -256,6 +258,8 @@
 .toolbar-menu-products .el-menu-item {
   padding: 0.65rem 25px !important;
   padding-left: calc(1.5rem + 25px) !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
 }
 
 .collapsedСontrol {
