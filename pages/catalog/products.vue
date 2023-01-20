@@ -40,7 +40,10 @@
                 </el-option>
               </el-select>
             </div>
-            <AddBtn name="Add Product" action="/catalog/add_products" />
+            <AddBtn
+              name="Add Product"
+              :action="'/catalog/add_products'"
+            />
           </div>
         </div>
         <AntdTable />

@@ -22,6 +22,7 @@ export default {
     { src: "~plugins/vue-js-modal.js", ssr: false },
     { src: "~plugins/quill-editor.js", ssr: false },
     { src: "~plugins/antd-ui.js", ssr: false },
+    { src: "~plugins/vue-toast-notification.js", ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

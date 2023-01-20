@@ -9,5 +9,16 @@
 <script>
 export default {
   props: ["name", "action"],
+  methods: {
+    // toast() {
+    //   this.$toast.open({
+    //     message: "add-btn btn btn-primary add-btn-padding",
+    //     type: "success",
+    //     duration: 2000,
+    //     dismissible: true,
+    //     position: "top-right",
+    //   });
+    // },
+  },
 };
 </script>
