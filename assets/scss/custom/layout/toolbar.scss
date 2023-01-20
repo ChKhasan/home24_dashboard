@@ -16,7 +16,6 @@
 .header-btn {
   cursor: pointer;
   color: #5e6278 !important;
-
   display: flex;
   align-items: center;
   line-height: initial !important;
@@ -27,7 +26,7 @@
   border-radius: 0.475rem;
   @include fontPoppins(1rem, 500);
   &:hover {
-    color: #009ef7 !important;
+    color: $toolbar-blue-color !important;
     background-color: rgba(245, 248, 250, 0.8);
   }
 }
@@ -47,7 +46,7 @@
   background: $toolbar-bg;
   z-index: 1000;
   display: grid;
-  grid-template-rows: 70px auto 70px;
+  grid-template-rows: 65px auto 70px;
   .menu-icon {
     margin-right: 10px;
   }
@@ -56,15 +55,15 @@
   width: 100% !important;
   overflow-y: scroll;
   background: transparent !important;
+
   .el-menu {
     background: transparent !important;
     border-right: none !important;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+
     .el-submenu__title {
-      color: $toolbar-clr-text !important;
+      color: $toolbar-clr-text;
       line-height: 1.5;
-      padding: $toolbar-menu-item-padding !important;
+
       height: initial !important;
       @include fontPoppins(13px, 500);
 
@@ -72,10 +71,10 @@
         background-color: transparent !important;
         color: $toolbar-clr-text-hover !important;
         .menu-icon {
-          color: #009ef7;
+          color: $toolbar-blue-color;
         }
         .bullet-dot {
-          background: #009ef7;
+          background: $toolbar-blue-color;
         }
         i {
           color: $toolbar-clr-text-hover !important;
@@ -107,7 +106,6 @@
   height: initial !important;
   line-height: 1.5 !important;
   border-radius: 0.475rem;
-  padding: $toolbar-menu-item-padding !important;
   display: flex;
   &:focus {
     background-color: transparent !important;
@@ -116,15 +114,23 @@
     background-color: transparent !important;
     color: $toolbar-clr-text-hover !important;
     .bullet-dot {
-      background: #009ef7;
+      background: $toolbar-blue-color;
     }
   }
 }
 .el-menu-item-group {
   .is-active {
     color: $toolbar-clr-text-hover !important;
-    background-color: #2a2a3c !important;
-    margin-right: 1rem;
+    background: #1a1a27 !important;
+    & > div > .menu-icon {
+      color: $toolbar-blue-color;
+    }
+    .bullet-dot {
+      background: $toolbar-blue-color;
+    }
+    & > i {
+      color: $toolbar-clr-text-hover !important;
+    }
   }
 }
 
@@ -145,9 +151,11 @@
 .toolbar-logo {
   display: flex;
   align-items: center;
-  border-bottom: $toolbar-logo-box-border-bottom;
-  padding-left: 1.5rem;
+  justify-content: space-between;
+  padding: 0 25px;
   position: relative;
+  transition: all 5s !important;
+  background: #1a1a27;
   img {
     height: $toolbar-logo-height;
   }
@@ -171,11 +179,8 @@
 //sidebar toggle
 
 .sidebar_toggle {
-  position: absolute;
-  box-shadow: 0px 0px 10px rgba(113, 121, 136, 0.1);
   width: 30px;
   height: 30px;
-  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,7 +192,7 @@
   cursor: pointer;
   color: #a1a5b7;
   &:hover {
-    color: #009ef7;
+    color: $toolbar-blue-color;
   }
 }
 
@@ -212,4 +217,31 @@
   & > div {
     display: flex;
   }
+}
+.is-opened > .el-submenu__title {
+  background: #1a1a27 !important;
+
+  color: $toolbar-clr-text-hover !important;
+  & > div > .menu-icon {
+    color: $toolbar-blue-color;
+  }
+  .bullet-dot {
+    background: $toolbar-blue-color;
+  }
+  & > i {
+    color: $toolbar-clr-text-hover !important;
+  }
+}
+.home_menu > .el-submenu__title {
+  padding: 0.65rem 25px !important;
+}
+
+.sub_menu .el-submenu__title {
+  padding: 0.65rem 25px;
+  padding-left: calc(0.75rem + 25px) !important;
+}
+.toolbar-menu-products .el-menu-item {
+  padding: 0.65rem 25px !important;
+  padding-left: calc(1.5rem + 25px) !important;
+  
 }

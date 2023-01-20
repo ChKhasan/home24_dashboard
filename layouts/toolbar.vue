@@ -26,7 +26,7 @@
         </div>
         <el-aside width="200px" style="background-color: rgb(238, 241, 246);">
           <el-menu @onchange="takeChange">
-            <el-submenu index="1">
+            <el-submenu index="1" class="home_menu">
               <div slot="title">
                 <svg
                   class="menu-icon"
@@ -60,17 +60,17 @@
               <!-- <el-menu-item-group>
                 <div slot="title">Group 1</div>
               </el-menu-item-group> -->
-              <el-submenu index="1-1">
+              <el-submenu index="1-1" class="sub_menu">
                 <div slot="title">
                   <span class="menu-bullet"
                     ><span class="bullet-dot"></span
                   ></span>
-                  Products
+                  Catalog
                 </div>
                 <el-menu-item-group class="toolbar-menu-products">
                   <el-menu-item
                     index="1-1-1"
-                    @click="$router.push('/products/products')"
+                    @click="$router.push('/catalog/products')"
                   >
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span></span
@@ -79,6 +79,16 @@
                 </el-menu-item-group>
                 <el-menu-item-group class="toolbar-menu-products">
                   <el-menu-item
+                    index="1-2-1"
+                    @click="$router.push('/catalog/categories')"
+                  >
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span></span
+                    >Categories</el-menu-item
+                  >
+                </el-menu-item-group>
+                <!-- <el-menu-item-group class="toolbar-menu-products">
+                  <el-menu-item
                     index="1-1-2"
                     @click="$router.push('/products/add_products')"
                   >
@@ -86,50 +96,35 @@
                       ><span class="bullet-dot"></span></span
                     >Add Product</el-menu-item
                   >
-                </el-menu-item-group>
+                </el-menu-item-group> -->
               </el-submenu>
               <!-- <el-menu-item-group title="Group 2">
                 <el-menu-item index="1-3">Option 3</el-menu-item>
               </el-menu-item-group> -->
-              <el-submenu index="1-4">
-                <div slot="title">Categories</div>
+              <!-- <el-submenu index="1-4"  class="sub_menu">
+                <div slot="title"> <span class="menu-bullet"
+                    ><span class="bullet-dot"></span
+                  ></span>Categories</div>
                 <el-menu-item
                   index="1-4-1"
                   @click="$router.push('/products/products')"
                   >Categories</el-menu-item
                 >
-              </el-submenu>
+              </el-submenu> -->
             </el-submenu>
-            <el-submenu index="2">
+            <el-submenu index="2" class="home_menu">
               <div slot="title"><i class="el-icon-menu"></i>Navigator Two</div>
-              <el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
                 <div slot="title">Group 1</div>
                 <el-menu-item index="2-1">Option 1</el-menu-item>
                 <el-menu-item index="2-2">Option 2</el-menu-item>
               </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
+              <el-menu-item-group title="Group 2" class="toolbar-menu-products">
                 <el-menu-item index="2-3">Option 3</el-menu-item>
               </el-menu-item-group>
-              <el-submenu index="2-4">
+              <el-submenu index="2-4" class="home_menu">
                 <div slot="title">Option 4</div>
                 <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
-              </el-submenu>
-            </el-submenu>
-            <el-submenu index="3">
-              <div slot="title">
-                <i class="el-icon-setting"></i>Navigator Three
-              </div>
-              <el-menu-item-group>
-                <div slot="title">Group 1</div>
-                <el-menu-item index="3-1">Option 1</el-menu-item>
-                <el-menu-item index="3-2">Option 2</el-menu-item>
-              </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
-                <el-menu-item index="3-3">Option 3</el-menu-item>
-              </el-menu-item-group>
-              <el-submenu index="3-4">
-                <div slot="title">Option 4</div>
-                <el-menu-item index="3-4-1">Option 4-1</el-menu-item>
               </el-submenu>
             </el-submenu>
           </el-menu>
@@ -146,7 +141,7 @@
           class="d-flex justify-content-between"
         >
           <div><div class="header-btn">Products</div></div>
-          <div>
+          <div class="d-flex align-items-center">
             <el-dropdown>
               <i class="el-icon-setting" style="margin-right: 15px;"></i>
               <el-dropdown-menu slot="dropdown">
@@ -155,7 +150,13 @@
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <span>Tom</span>
+            <div class="block d-flex align-items-center" :key="size">
+              <el-avatar
+                shape="square"
+                size="medium"
+                :src="squareUrl"
+              ></el-avatar>
+            </div>
           </div>
         </el-header>
         <div class="toolbar-inner">
@@ -176,6 +177,8 @@ export default {
     return {
       tableData: Array(20).fill(item),
       sidebarToggle: true,
+      squareUrl:
+        "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
     };
   },
   methods: {

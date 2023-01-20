@@ -109,3 +109,55 @@
   color: #3f4254 !important;
   @include fontPoppins(1.25rem, 500);
 }
+
+// select input
+
+.select_input {
+  input {
+    background-color: #eef3f7;
+    border-color: #eef3f7 !important;
+    @include fontPoppins(1.1rem, 500);
+    line-height: 1.5;
+    color: #a1a5b7 !important;
+    &::placeholder {
+      color: #a1a5b7 !important;
+    }
+    &:focus {
+      border-color: #eef3f7 !important;
+    }
+  }
+}
+.el-select-dropdown__list {
+  padding: 1rem 0 !important;
+}
+.el-select-dropdown__item {
+  color: #5e6278;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  padding: 0.75rem 1.25rem;
+  margin: 0 0;
+  height: 39px !important;
+  line-height: 39px !important;
+  @include fontPoppins(13px, 400);
+  &:hover {
+    background-color: #f1faff !important;
+    color: #009ef7 !important;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+  .selected {
+    background-size: 0.8rem;
+    background-position: center right 1.25rem;
+    background-color: #009ef7 !important;
+    color: #fff;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+}
+.el-select-dropdown__item.selected {
+  background-size: 0.8rem;
+  background-position: center right 1.25rem;
+  background-color: #009ef7 !important;
+  color: #fff !important;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  &:hover {
+    color: #fff !important;
+  }
+}

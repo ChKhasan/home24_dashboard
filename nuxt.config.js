@@ -19,7 +19,9 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: "~plugins/element-ui.js", ssr: false },
+    { src: "~plugins/vue-js-modal.js", ssr: false },
     { src: "~plugins/quill-editor.js", ssr: false },
+    { src: "~plugins/antd-ui.js", ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

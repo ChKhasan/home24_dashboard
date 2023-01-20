@@ -174,7 +174,9 @@
               ></FilterBtn>
             </div>
             <div class="input-block mb-10">
-              <label for="" class="form-label">Brand</label>
+              <label for="" class="form-label" @click="show('example')"
+                >Brand</label
+              >
               <!-- <input type="text" class="form-control form-input mb-2" /> -->
               <el-select v-model="value" class="mb-2" placeholder="Select">
                 <el-option
@@ -222,6 +224,69 @@
           </div>
         </div>
       </div>
+
+      <modal name="example">This is an example</modal>
+    </div>
+    <div class="container_xl app-container mt-5">
+      <div class="">
+        <div class="card_block py-5">
+          <div class="card_header">
+            <h2 class="card_block-title">Вариация 1</h2>
+          </div>
+          <div class="card_block_padd">
+            <!-- input blocks -->
+            <div class="variant_form_grid">
+              <div class="input-block">
+                <label for="" class="form-label required">Product Name</label>
+                <input type="text" class="form-control form-input mb-2" />
+              </div>
+              <div class="input-block">
+                <label for="" class="form-label required">Model</label>
+                <input type="text" class="form-control form-input mb-2" />
+              </div>
+              <div class="input-block">
+                <label for="" class="form-label required">Product Name</label>
+                <input type="text" class="form-control form-input mb-2" />
+              </div>
+              <div class="input-block">
+                <label for="" class="form-label required">Model</label>
+                <input type="text" class="form-control form-input mb-2" />
+              </div>
+            </div>
+            <!-- input blocks -->
+          </div>
+          <div class="card_header">
+            <h2 class="card_block-title">Изображение товара</h2>
+          </div>
+          <div class="card_block_padd">
+            <!-- input blocks -->
+            <div class="clearfix">
+              <a-upload
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                list-type="picture-card"
+                :file-list="fileList"
+                @preview="handlePreview"
+                @change="handleChange"
+              >
+                <div v-if="fileList.length < 6">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">
+                    Upload
+                  </div>
+                </div>
+              </a-upload>
+              <a-modal
+                :visible="previewVisible"
+                :footer="null"
+                @cancel="handleCancel"
+              >
+                <img alt="example" style="width: 100%;" :src="previewImage" />
+              </a-modal>
+            </div>
+            <!-- input blocks -->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -229,7 +294,14 @@
 import Editor from "../../components/form/editor.vue";
 import FilterBtn from "../../components/form/Filter-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
-
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
 const columns = [
   {
     title: "Name",
@@ -339,11 +411,67 @@ export default {
         },
       ],
       value: "------------",
+      previewVisible: false,
+      previewImage: "",
+      fileList: [
+        {
+          uid: "-1",
+          name: "image.png",
+          status: "done",
+          url:
+            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        },
+        {
+          uid: "-2",
+          name: "image.png",
+          status: "done",
+          url:
+            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        },
+        {
+          uid: "-3",
+          name: "image.png",
+          status: "done",
+          url:
+            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        },
+        {
+          uid: "-4",
+          name: "image.png",
+          status: "done",
+          url:
+            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        },
+        {
+          uid: "-5",
+          name: "image.png",
+          status: "error",
+        },
+      ],
     };
   },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
+    },
+    show(name) {
+      this.$modal.show(name);
+    },
+    hide(name) {
+      this.$modal.hide(name);
+    },
+    handleCancel() {
+      this.previewVisible = false;
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    handleChange({ fileList }) {
+      this.fileList = fileList;
     },
   },
   components: { Editor, FilterBtn, TitleBlock },
@@ -359,5 +487,19 @@ export default {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 4rem;
+}
+.variant_form_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
 }
 </style>

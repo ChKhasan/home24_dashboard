@@ -1,0 +1,99 @@
+.ant-checkbox-inner {
+  background-color: $table-checkbox-bg-color !important;
+  border-radius: $table-checkbox-b-radius !important;
+  height: $table-checkbox-height !important;
+  width: $table-checkbox-width !important;
+  display: flex;
+  justify-content: center;
+  &:focus-visible {
+    outline: none;
+    border: none;
+  }
+  &:hover {
+    border: none;
+  }
+  &::after {
+    left: $table-checkbox-after-left;
+    top: $table-checkbox-after-top;
+  }
+}
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #1890ff !important;
+  border-color: #1890ff !important;
+}
+
+.ant-checkbox-checked {
+  &::after {
+    border: none !important;
+  }
+}
+.ant-table-thead > tr > th {
+  background: #fff !important;
+  border-bottom: $table-td-border-bottom !important;
+}
+.ant-table-column-title {
+  color: #b5b5c3 !important;
+  @include fontPoppins(0.95rem, 600);
+}
+.ant-table-tbody {
+  .ant-table-selection-column {
+    display: table-cell !important;
+    // width: 40px !important;
+    line-height: 50px;
+    padding-right: 0 !important;
+    // float: left;
+  }
+}
+.ant-table-thead {
+  .ant-table-selection-column {
+    display: table-cell !important;
+
+    // width: 40px !important;
+    line-height: 34px;
+    // float: left;
+  }
+}
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  padding: 1.25rem 0 !important;
+  overflow-wrap: break-word;
+  // width: 30px !important;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: $table-td-border-bottom !important;
+}
+.ant-checkbox-inner {
+  border: none !important;
+}
+.ant-checkbox {
+  &:hover {
+    border-color: none !important;
+  }
+}
+.ant-table-header-column,
+.ant-checkbox-wrapper {
+  float: left;
+}
+.ant-table-selection-column {
+  padding-right: 0 !important;
+  span {
+    float: left;
+  }
+}
+th.column-name,
+td.column-name {
+  a {
+    color: #3f4254 !important;
+    @include fontPoppins(1.15rem, 600);
+  }
+}
+th.column-sky,
+td.column-sky {
+  color: #7e8299 !important;
+  @include fontPoppins(1.15rem, 600);
+}
+th.column-price,
+td.column-price {
+  color: #181c32 !important;
+  @include fontPoppins(1.15rem, 600);
+}
