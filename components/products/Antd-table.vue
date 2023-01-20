@@ -37,8 +37,8 @@
               Actions<i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item icon="el-icon-edit">Edit</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-delete">Delete</el-dropdown-item>
+              <el-dropdown-item>Edit</el-dropdown-item>
+              <el-dropdown-item>Delete</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </el-button>
@@ -97,7 +97,7 @@ const columns = [
     onFilter: (value, record) => record.tags.indexOf(value) === 0,
     sorter: (a, b) => a.tags.length - b.tags.length,
     sortDirections: ["descend"],
-    width: '30% !important',
+    width: "30% !important",
   },
   {
     title: "RATING",

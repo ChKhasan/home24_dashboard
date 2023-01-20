@@ -133,11 +133,13 @@
 .el-select-dropdown__item {
   color: #5e6278;
   transition: color 0.2s ease, background-color 0.2s ease;
-  padding: 0.75rem 1.25rem;
-  margin: 0 0;
+  flex: 0 0 100%;
+  padding: 0.65rem 1rem !important;
+  margin: 0 1rem !important;
+  width: 105.5px !important;
   height: 39px !important;
   line-height: 39px !important;
-  @include fontPoppins(13px, 400);
+  @include fontPoppins(13px, 500);
   &:hover {
     background-color: #f1faff !important;
     color: #009ef7 !important;
@@ -150,6 +152,10 @@
     color: #fff;
     transition: color 0.2s ease, background-color 0.2s ease;
   }
+}
+.el-dropdown-menu {
+  padding: 1rem 0 !important;
+  border: none !important;
 }
 .el-select-dropdown__item.selected {
   background-size: 0.8rem;
