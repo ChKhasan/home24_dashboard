@@ -1,5 +1,13 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  router: {
+    extendRoutes(routes) {
+      routes.push({
+        path: "/admin/login",
+        component: "~/pages/admin/login.vue",
+      });
+    },
+  },
   head: {
     title: "admin-panel",
     htmlAttrs: {
@@ -24,7 +32,13 @@ export default {
     { src: "~plugins/antd-ui.js", ssr: false },
     { src: "~plugins/vue-toast-notification.js", ssr: false },
   ],
-
+  axios: {
+    credentials: true,
+    init(axios) {
+      axios.defaults.withCredentials = true;
+    },
+    baseURL: "https://bombadmin.pythonanywhere.com/api",
+  },
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -35,6 +49,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     "bootstrap-vue/nuxt",
+    "@nuxtjs/axios",
   ],
   mode: "spa",
   // Build Configuration: https://go.nuxtjs.dev/config-build

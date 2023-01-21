@@ -17,16 +17,20 @@
           <input type="password" class="input form-control" />
         </div>
       </div>
-      <div
-        class="login_btn d-flex justify-content-center"
-        @click="$router.push('/catalog/products')"
-      >
+      <div class="login_btn d-flex justify-content-center" @click="login">
         Continue
       </div>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    login() {
+      localStorage.setItem("Auth", "token");
+      this.$router.push("/catalog/products");
+    },
+  },
+};
 </script>
 <style lang="scss"></style>

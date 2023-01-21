@@ -101,7 +101,6 @@ const columns = [
     title: "QTY",
     dataIndex: "address",
     className: "column-sky",
-
     key: "address",
   },
   {
@@ -114,7 +113,7 @@ const columns = [
     scopedSlots: { customRender: "price" },
   },
   {
-    title: "TAGS",
+    title: "STATUS",
     key: "tags",
     dataIndex: "tags",
     scopedSlots: { customRender: "tags" },

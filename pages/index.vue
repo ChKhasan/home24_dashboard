@@ -4,8 +4,8 @@
 
 <script>
 export default {
-  asyncData({ redirect }) {
-    redirect("/admin/login");
-  },
+  mounted() {
+    this.$router.push('/admin/login')
+  }
 };
 </script>

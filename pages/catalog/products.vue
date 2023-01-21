@@ -40,10 +40,7 @@
                 </el-option>
               </el-select>
             </div>
-            <AddBtn
-              name="Add Product"
-              :action="'/catalog/add_products'"
-            />
+            <AddBtn name="Add Product" :callback="toAddProduct" />
           </div>
         </div>
         <AntdTable />
@@ -61,6 +58,7 @@ import TitleBlock from "../../components/Title-block.vue";
 import AntdTable from "../../components/products/Antd-table.vue";
 
 export default {
+  middleware: "auth",
   data() {
     return {
       options: [
@@ -83,6 +81,12 @@ export default {
       ],
       value: "",
     };
+  },
+  methods: {
+    toAddProduct() {
+      this.$router.push("/catalog/add_products");
+      console.log("errors");
+    },
   },
   components: {
     AddBtn,

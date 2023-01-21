@@ -28,7 +28,7 @@
           </div>
         </div>
         <el-aside width="200px" style="background-color: rgb(238, 241, 246);">
-          <el-menu @onchange="takeChange" :default-openeds="defaultOpens">
+          <el-menu :default-openeds="defaultOpens">
             <el-submenu index="1" class="home_menu">
               <div slot="title">
                 <span>
@@ -67,15 +67,16 @@
               </el-menu-item-group> -->
               <el-submenu index="1-1" class="sub_menu">
                 <div slot="title">
-                  <span class="menu-bullet"
+                 
+                  <p class="d-flex"> <span class="menu-bullet"
                     ><span class="bullet-dot"></span
-                  ></span>
-                  <p>Catalog</p>
+                  ></span>Catalog</p>
                 </div>
                 <el-menu-item-group class="toolbar-menu-products">
                   <el-menu-item
                     index="1-1-1"
                     @click="$router.push('/catalog/products')"
+                    :class="{ 'is-active': $route.name == 'catalog-products' }"
                   >
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
@@ -85,8 +86,11 @@
                 </el-menu-item-group>
                 <el-menu-item-group class="toolbar-menu-products">
                   <el-menu-item
-                    index="1-2-1"
+                    index="1-1-2"
                     @click="$router.push('/catalog/categories')"
+                    :class="{
+                      'is-active': $route.name == 'catalog-categories',
+                    }"
                   >
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
@@ -152,17 +156,17 @@
         >
           <div><div class="header-btn">Products</div></div>
           <div class="d-flex align-items-center">
-            <el-dropdown>
+            <!-- <el-dropdown>
               <i class="el-icon-setting" style="margin-right: 15px;"></i>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>View</el-dropdown-item>
                 <el-dropdown-item>Add</el-dropdown-item>
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
-            <div class="block d-flex align-items-center">
+            </el-dropdown> -->
+            <div class="block d-flex align-items-center" @click="logout">
               <el-avatar
-                shape="square"
+                shape="circle"
                 size="medium"
                 :src="squareUrl"
               ></el-avatar>
@@ -188,7 +192,7 @@ export default {
       tableData: Array(20).fill(item),
       sidebarToggle: true,
       collapsed: false,
-      defaultOpens: ["1", "1-1"],
+      defaultOpens: ["1", "1-1", "1-1-1"],
       squareUrl:
         "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
     };
@@ -199,14 +203,7 @@ export default {
     },
   },
   mounted() {
-    switch (this.$route.name) {
-      case "catalog-products":
-        this.defaultOpens = ["1", "1-1", "1-1-1"];
-        break;
-      case "catalog-categories":
-        this.defaultOpens = ["1", "1-1"];
-        break;
-    }
+    // this.checkToolbar();
   },
   methods: {
     takeChange(e) {
@@ -214,10 +211,20 @@ export default {
     },
     collapsedToggle() {
       this.collapsed = !this.collapsed;
-      if (this.collapsed) {
-        this.defaultOpens = [];
-        console.log("router", this.$route);
+    },
+    checkToolbar() {
+      switch (this.$route.name) {
+        case "catalog-products":
+          this.defaultOpens = ["1", "1-1"];
+          break;
+        case "catalog-categories":
+          this.defaultOpens = ["1", "1-1"];
+          break;
       }
+    },
+    logout() {
+      localStorage.removeItem("Auth");
+      this.$router.push("/");
     },
   },
   watch: {

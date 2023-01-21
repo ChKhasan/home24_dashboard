@@ -8,11 +8,6 @@ import { quillEditor } from "vue-quill-editor";
  * Form Quill Editor component
  */
 export default {
-  head() {
-    return {
-      title: `${this.title} | Minton - Nuxtjs Responsive Admin Dashboard Template`,
-    };
-  },
   data() {
     return {
       title: "Quill Editor",
