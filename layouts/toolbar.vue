@@ -67,22 +67,26 @@
               </el-menu-item-group> -->
               <el-submenu index="1-1" class="sub_menu">
                 <div slot="title">
-                 
-                  <p class="d-flex"> <span class="menu-bullet"
-                    ><span class="bullet-dot"></span
-                  ></span>Catalog</p>
+                  <p class="d-flex">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span></span
+                    >Catalog
+                  </p>
                 </div>
                 <el-menu-item-group class="toolbar-menu-products">
-                  <el-menu-item
-                    index="1-1-1"
-                    @click="$router.push('/catalog/products')"
-                    :class="{ 'is-active': $route.name == 'catalog-products' }"
-                  >
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Products</p></el-menu-item
-                  >
+                  <nuxt-link to="/catalog/products">
+                    <el-menu-item
+                      index="1-1-1"
+                      :class="{
+                        'is-active': $route.name == 'catalog-products',
+                      }"
+                    >
+                      <span class="menu-bullet"
+                        ><span class="bullet-dot"></span
+                      ></span>
+                      <p>Products</p></el-menu-item
+                    >
+                  </nuxt-link>
                 </el-menu-item-group>
                 <el-menu-item-group class="toolbar-menu-products">
                   <el-menu-item
@@ -203,7 +207,7 @@ export default {
     },
   },
   mounted() {
-    // this.checkToolbar();
+    this.checkToolbar();
   },
   methods: {
     takeChange(e) {

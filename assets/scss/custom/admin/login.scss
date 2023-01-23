@@ -65,3 +65,58 @@
   cursor: pointer;
   margin-bottom: 1.25rem !important;
 }
+
+// sign in
+
+.signin-container {
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  .signin-bg {
+    background-image: url(~/assets/images/auth-bg.png);
+    background-size: 100%;
+  }
+  .form-block {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+  }
+  .form-title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 2.5rem !important;
+    h1 {
+      @include fontPoppins(1.75rem, 700);
+      margin-bottom: 0.75rem !important;
+      color: #181c32;
+      text-align: center;
+    }
+  }
+  .form-card {
+    width: 500px;
+    padding: 2.5rem;
+    input {
+      color: #5e6278;
+      border: 1px solid #e1e3ea;
+      width: 100%;
+      padding: 0.775rem 1rem;
+      margin-bottom: 2rem;
+      background-color: #fff !important;
+    }
+    .form-btn {
+      width: 100%;
+      padding: calc(0.775rem + 1px) calc(1.5rem + 1px);
+      background-color: #009ef7;
+      border-radius: 0.475rem;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      cursor: pointer;
+      @include fontPoppins(1.1rem, 500);
+    }
+  }
+}
