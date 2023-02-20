@@ -13,7 +13,7 @@
     scroll-padding: 2px;
   }
   &::-webkit-scrollbar-thumb {
-    background: $toolbar-clr-scroll;
+    background: #646477;
     opacity: 0;
     border-radius: 5px;
     border: 3px solid rgba(0, 0, 0, 0);
@@ -68,7 +68,7 @@
       scroll-padding: 2px;
     }
     &::-webkit-scrollbar-thumb {
-      background: $toolbar-clr-scroll;
+      background: #646477;
       opacity: 0;
       border-radius: 5px;
       border: 3px solid rgba(0, 0, 0, 0);

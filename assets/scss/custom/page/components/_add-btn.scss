@@ -1,27 +1,94 @@
 .add-btn {
-  border-radius: $toolbar-setting-btn-b-radius;
-  @include fontPoppins(14.3px, 500);
+  border: 1px solid #3699ff;
+  border-radius: 8px;
+  @include fontTTinterface(18px, 600);
   line-height: 1.5;
+  display: flex;
+  align-items: center;
+  transition: 0.3s;
+  cursor: pointer;
   svg {
-    margin-right: 0.5rem;
+    margin-right: 8px;
+    transition: 3s;
   }
 }
 .add-btn-padding {
-  padding: $add-btn-padding;
+  padding: 14.5px 26px;
+}
+.add-btn-padding-icon {
+  padding: 16px 56px;
 }
 .btn-light-primary {
-  color: $add-btn-bg-color;
+  color: #009ef7;
   border-color: #f1faff;
   background-color: #f1faff;
   @include fontPoppins(14.3px, 500);
 }
+.btn-outline-primary {
+  color: #3699ff;
+  background-color: transparent;
+  border: 1px solid #3699ff;
+  @include fontTTinterface(18px, 600);
+  transition: 0.3s;
+  line-height: 24px;
+  &:hover {
+    color: #fff;
+    background-color: #3699ff;
+    border: 1px solid #3699ff;
+    svg {
+      path {
+        fill: #fff;
+      }
+    }
+  }
+}
 .btn-primary-hover {
   &:hover {
-    background-color: $add-btn-bg-color !important;
+    background-color: #009ef7 !important;
     color: #f1faff !important;
     background-color: #f1faff;
   }
 }
 .btn {
   border: none;
+}
+
+//
+.outline-light-btn {
+  background: #e1f0ff;
+  border-radius: 8px;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #5899ff;
+  @include fontTTinterface(18px, 600);
+}
+
+// from bts
+
+.form-btn {
+  padding: 18px 40px;
+  border-radius: 8px;
+  @include fontTTinterface(18px, 600);
+  line-height: 24px;
+  display: inline-flex;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.form-btn-primary {
+  background: #3699ff;
+  color: #ffffff;
+  &:hover {
+    background: lighten(#3699ff, 10%);
+  }
+}
+.form-outline-transparent {
+  background: transparent;
+  border: 1px solid #e4e6ef;
+  color: #a1a5bf;
+  &:hover {
+    background: lighten(grey, 40%);
+  }
 }

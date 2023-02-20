@@ -7,7 +7,7 @@
         collapsible
         width="265"
       >
-        <div class="toolbar-logo" :class="{collapsedLogo: collapsed}">
+        <div class="toolbar-logo" :class="{ collapsedLogo: collapsed }">
           <img src="../assets/svg/custom/toolbar/default-dark.svg" alt="" />
           <div
             class="sidebar_toggle trigger"
@@ -63,8 +63,9 @@
                   <path
                     d="M19.041 20.041H5.04096C4.74096 20.041 4.34095 19.841 4.14095 19.541C3.94095 19.241 3.94095 18.841 4.14095 18.541L6.04096 14.841L4.14095 4.64095L2.54096 3.84096C2.04096 3.64096 1.84095 3.04097 2.14095 2.54097C2.34095 2.04097 2.94096 1.84095 3.44096 2.14095L5.44096 3.14095C5.74096 3.24095 5.94096 3.54096 5.94096 3.84096L7.94096 14.841C7.94096 15.041 7.94095 15.241 7.84095 15.441L6.54096 18.041H19.041C19.641 18.041 20.041 18.441 20.041 19.041C20.041 19.641 19.641 20.041 19.041 20.041Z"
                     fill="currentColor"
-                  ></path></svg
-                ><p>eCommerce</p>
+                  ></path>
+                </svg>
+                <p>eCommerce</p>
               </div>
               <!-- <el-menu-item-group>
                 <div slot="title">Group 1</div>
@@ -124,7 +125,10 @@
               </el-submenu> -->
             </el-submenu>
             <el-submenu index="2" class="home_menu">
-              <div slot="title"><i class="el-icon-menu"></i><p>Navigator Two</p></div>
+              <div slot="title">
+                <i class="el-icon-menu"></i>
+                <p>Navigator Two</p>
+              </div>
               <el-menu-item-group class="toolbar-menu-products">
                 <div slot="title">Group 1</div>
                 <el-menu-item index="2-1">Option 1</el-menu-item>

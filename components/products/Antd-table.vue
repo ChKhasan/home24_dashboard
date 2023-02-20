@@ -1,76 +1,50 @@
 <template lang="">
   <div class="antd_table product_table">
+    <!-- :row-selection="{
+        selectedRowKeys: selectedRowKeys,
+        onChange: onSelectChange,
+        columnWidth: '45px',
+      }" -->
     <a-table
       :columns="columns"
       :data-source="data"
       :pagination="false"
-      :row-selection="{
-        selectedRowKeys: selectedRowKeys,
-        onChange: onSelectChange,
-        columnWidth: '45px',
-      }"
+      align="center"
     >
       <a slot="img" slot-scope="text"
         ><img class="table-image" src="../../assets/images/image.png" alt=""
       /></a>
-      <a slot="name" slot-scope="text">{{ text }}</a>
+      <a slot="name" slot-scope="text" align="center" class="table_product_row">
+        <h6>{{ text.name }}</h6>
+        <span>{{ text.subtitle }}</span>
+      </a>
+      <h4 slot="code" slot-scope="text">${{ text }}</h4>
       <a slot="price" slot-scope="text">${{ text }}</a>
       <span slot="customTitle"></span>
 
-      <span slot="tags" slot-scope="tags">
-        <a-tag
-          :color="
-            tags === 'loser'
-              ? 'volcano'
-              : tags.length > 5
-              ? 'geekblue'
-              : 'green'
-          "
-        >
-          {{ tags }}
-        </a-tag>
+      <span
+        slot="tags"
+        slot-scope="tags"
+        class="tags-style"
+        :class="{
+          tag_success: tags == 'Success',
+          tag_inProgress: tags == 'in progress',
+          tag_approved: tags == 'Approved',
+          tag_rejected: tags == 'rejected',
+        }"
+      >
+        {{ tags }}
       </span>
-      <span slot="action" slot-scope="text, record">
-        <el-button type="text" size="small" class="table-action-btn">
-          <el-dropdown trigger="click" class="table-dropdown">
-            <span class="el-dropdown-link">
-              Actions<i class="el-icon-arrow-down el-icon--right"></i>
-            </span>
-            <el-dropdown-menu slot="dropdown" class="table-dropdown-body">
-              <el-dropdown-item>Edit</el-dropdown-item>
-              <el-dropdown-item>Delete</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </el-button>
+      <span slot="btns" slot-scope="text">
+        <span class="action-btn" @click="tableActions(text)">
+          <img :src="editIcon" alt="" />
+        </span>
+        <span class="action-btn" @click="tableActions(text)">
+          <img :src="deleteIcon" alt="" />
+        </span>
       </span>
     </a-table>
-    <div class="d-flex justify-content-between py-3">
-      <el-button type="text" size="small" class="table-action-btn">
-        <el-dropdown
-          trigger="click"
-          class="table-dropdown"
-          @command="handleCommand"
-        >
-          <span class="el-dropdown-link">
-            {{ pageSize }}<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown" class="table-dropdown-body">
-            <el-dropdown-item :command="10">10</el-dropdown-item>
-            <el-dropdown-item :command="25">25</el-dropdown-item>
-            <el-dropdown-item :command="50">50</el-dropdown-item>
-            <el-dropdown-item :command="100">100</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-      </el-button>
-      <el-pagination
-        class="table_pagination"
-        :page-size="pageSize"
-        :pager-count="11"
-        layout="prev, pager, next"
-        :total="40"
-      >
-      </el-pagination>
-    </div>
+
   </div>
 </template>
 <script>
@@ -81,7 +55,8 @@ const columns = [
     key: "img",
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "img" },
-    width: 90,
+    width: "8%",
+    align: "right",
   },
   {
     dataIndex: "name",
@@ -89,19 +64,23 @@ const columns = [
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "name" },
     className: "column-name",
-    width: "20%",
+    width: "30%",
   },
   {
-    title: "SKU",
-    dataIndex: "age",
-    className: "column-sky",
-    key: "age",
+    title: "Code",
+    dataIndex: "code",
+    scopedSlots: { customRender: "code" },
+    className: "column-code",
+    key: "code",
+    width: "10%",
   },
   {
     title: "QTY",
-    dataIndex: "address",
-    className: "column-sky",
-    key: "address",
+    dataIndex: "qty",
+    className: "column-qty",
+    key: "qty",
+    align: "center",
+    width: "10%",
   },
   {
     title: "PRICE",
@@ -111,32 +90,23 @@ const columns = [
     key: "price",
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "price" },
+    width: "16%",
   },
   {
     title: "STATUS",
     key: "tags",
     dataIndex: "tags",
     scopedSlots: { customRender: "tags" },
-    filters: [
-      { text: "Published", value: "Published" },
-      { text: "loser", value: "loser" },
-    ],
-    onFilter: (value, record) => record.tags.indexOf(value) === 0,
-    sorter: (a, b) => a.tags.length - b.tags.length,
-    sortDirections: ["descend"],
-  },
-  {
-    title: "RATING",
-    key: "rating",
-    className: "column-rating",
-    dataIndex: "address",
+    className: "column-tags",
+    width: "16%",
   },
   {
     title: "ACTIONS",
-    key: "action",
-    className: "column-action",
-    scopedSlots: { customRender: "action" },
-    width: "120",
+    key: "btns",
+    dataIndex: "btns",
+    scopedSlots: { customRender: "btns" },
+    className: "column-btns",
+    width: "10%",
   },
 ];
 
@@ -144,39 +114,68 @@ export default {
   data() {
     return {
       pageSize: 10,
+      editIcon: require("../../assets/svg/components/edit-icon.svg"),
+      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       data: [
         {
           key: "1",
-          name: "Product 1",
-          age: "02887003",
-          address: "25",
-          price: 1000,
-          rating: "dadsa",
-
-          tags: "Published",
+          name: {
+            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
+            subtitle: "Техника / Техника / Техника / Техника",
+          },
+          subtitle: "subtitle",
+          code: "02887003",
+          qty: "25",
+          price: "6 700 000 sum",
+          tags: "in progress",
           img: "Published",
+
+          btns: "id",
         },
         {
           key: "2",
-          name: "Product 10",
-          age: "02887003",
-          address: "23",
-          price: 1000,
-          rating: "dadsa",
+          name: {
+            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
+            subtitle: "Техника / Техника / Техника / Техника",
+          },
+          code: "02887003",
+          qty: "23",
+          price: "6 700 000 sum",
 
           img: "Published",
-          tags: "loser",
+          tags: "Success",
+
+          btns: "id",
         },
         {
           key: "3",
-          name: "Product 1",
-          age: "02887003",
-          address: "45",
-          price: 1000,
-          rating: "dadsa",
+          name: {
+            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
+            subtitle: "Техника / Техника / Техника / Техника",
+          },
+          code: "02887003",
+          qty: "45",
+          price: "6 700 000 sum",
 
           img: "Published",
-          tags: "loser",
+          tags: "rejected",
+
+          btns: "id",
+        },
+        {
+          key: "4",
+          name: {
+            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
+            subtitle: "Техника / Техника / Техника / Техника",
+          },
+          code: "02887003",
+          qty: "45",
+          price: "6 700 000 sum",
+
+          img: "Published",
+          tags: "Approved",
+
+          btns: "id",
         },
       ],
       columns,
@@ -188,6 +187,12 @@ export default {
     hasSelected() {
       return this.selectedRowKeys.length > 0;
     },
+    classObject(tag) {
+      return {
+        tag_success: tag == "Success",
+        tag_inProgress: tag == "in progress",
+      };
+    },
   },
   methods: {
     start() {
@@ -197,6 +202,9 @@ export default {
         this.loading = false;
         this.selectedRowKeys = [];
       }, 1000);
+    },
+    tableActions(id) {
+      console.log(id);
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);

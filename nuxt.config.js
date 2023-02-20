@@ -22,7 +22,7 @@ export default {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["~/assets/scss/app.scss"],
+  css: ["~/assets/scss/app.scss", "~/assets/fonts/stylesheet.css"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -37,7 +37,7 @@ export default {
     init(axios) {
       axios.defaults.withCredentials = true;
     },
-    baseURL: "https://bombadmin.pythonanywhere.com/api",
+    baseURL: "https://bombadmin.pythonanywhere.com",
   },
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -50,8 +50,41 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     "bootstrap-vue/nuxt",
     "@nuxtjs/axios",
+    "@nuxtjs/auth",
   ],
   mode: "spa",
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  auth: {
+    strategies: {
+      local: {
+        scheme: "refresh",
+        token: {
+          property: "access",
+          maxAge: 60 * 60 * 2,
+          global: true,
+        },
+
+        endpoints: {
+          login: {
+            url: "/api/account/login",
+            method: "post",
+            propertyName: "access",
+          },
+          logout: { url: "/api/auth/logout", method: "post" },
+          user: false,
+        },
+        tokenRequired: false,
+        tokenType: false,
+      },
+    },
+    redirect: {
+      login: "/admin/login",
+      logout: "/admin/login",
+      callback: "/admin/login",
+      home: "/catalog/add_products",
+    },
+    watchLoggedIn: true,
+  },
 };

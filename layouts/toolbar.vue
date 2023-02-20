@@ -98,6 +98,36 @@
                     <p>Categories</p></el-menu-item
                   >
                 </el-menu-item-group>
+                <el-menu-item-group class="toolbar-menu-products">
+                  <nuxt-link to="/catalog/atributs">
+                    <el-menu-item
+                      index="1-1-3"
+                      :class="{
+                        'is-active': $route.name == 'catalog-atributs',
+                      }"
+                    >
+                      <span class="menu-bullet"
+                        ><span class="bullet-dot"></span
+                      ></span>
+                      <p>Atributs</p></el-menu-item
+                    >
+                  </nuxt-link>
+                </el-menu-item-group>
+                <el-menu-item-group class="toolbar-menu-products">
+                  <nuxt-link to="/catalog/characteristic">
+                    <el-menu-item
+                      index="1-1-4"
+                      :class="{
+                        'is-active': $route.name == 'catalog-characteristic',
+                      }"
+                    >
+                      <span class="menu-bullet"
+                        ><span class="bullet-dot"></span
+                      ></span>
+                      <p>Characteristic</p></el-menu-item
+                    >
+                  </nuxt-link>
+                </el-menu-item-group>
                 <!-- <el-menu-item-group class="toolbar-menu-products">
                   <el-menu-item
                     index="1-1-2"

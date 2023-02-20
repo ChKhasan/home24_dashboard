@@ -10,7 +10,7 @@
         <div class="error-img">
           <img src="../assets/images/404-error.png" alt="" />
         </div>
-        <div class="to-home btn btn-primary" @click="$router.push('/')">
+        <div class="to-home btn btn-primary" @click="$auth.logout('local')">
           Return Home
         </div>
       </div>

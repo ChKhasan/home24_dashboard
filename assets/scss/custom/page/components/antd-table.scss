@@ -1,8 +1,8 @@
 .ant-checkbox-inner {
-  background-color: $table-checkbox-bg-color !important;
-  border-radius: $table-checkbox-b-radius !important;
-  height: $table-checkbox-height !important;
-  width: $table-checkbox-width !important;
+  background-color: #eff2f5 !important;
+  border-radius: 0.45rem !important;
+  height: 1.5rem !important;
+  width: 1.5rem !important;
   display: flex;
   justify-content: center;
   &:focus-visible {
@@ -13,107 +13,331 @@
     border: none;
   }
   &::after {
-    left: $table-checkbox-after-left;
-    top: $table-checkbox-after-top;
+    left: 40%;
+    top: 3.5px;
   }
 }
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: #1890ff !important;
   border-color: #1890ff !important;
 }
-
+.ant-table-selection-column {
+  span {
+    width: 100%;
+    display: flex !important;
+    justify-content: flex-end;
+  }
+}
 .ant-checkbox-checked {
   &::after {
     border: none !important;
   }
 }
 .ant-table-thead > tr > th {
-  background: #fff !important;
-  border-bottom: $table-td-border-bottom !important;
+  background: #fafbfc !important;
+  border-bottom: 1px solid #d6dee9;
 }
-.ant-table-column-title {
-  color: #b5b5c3 !important;
-  @include fontPoppins(0.95rem, 600);
-}
-.ant-table-tbody {
-  .ant-table-selection-column {
-    display: table-cell !important;
-    // width: 40px !important;
-    line-height: 50px;
-    padding-right: 0 !important;
-    // float: left;
-  }
-}
-.ant-table-thead {
-  .ant-table-selection-column {
-    display: table-cell !important;
 
-    // width: 40px !important;
-    line-height: 34px;
-    // float: left;
-  }
-}
 .ant-table-thead > tr > th,
 .ant-table-tbody > tr > td {
-  padding: 1.25rem 0 !important;
-  overflow-wrap: break-word;
-  // width: 30px !important;
+  padding: 24px 16px 24px 0 !important;
 }
-.ant-table-tbody > tr > td {
-  border-bottom: $table-td-border-bottom !important;
-}
-.ant-checkbox-inner {
-  border: none !important;
-}
-.ant-checkbox {
-  &:hover {
-    border-color: none !important;
+.product_table {
+  .ant-table-tbody > tr > td {
+    border-bottom: 1px solid #d6dee9 !important;
   }
 }
-.ant-table-header-column,
-.ant-checkbox-wrapper {
-  float: left;
+.ant-table-column-title {
+  @include fontTTinterface(14px, 600);
+  line-height: 18px !important;
+  text-transform: uppercase;
+  color: #6c7b9a;
 }
-.ant-table-selection-column {
-  padding-right: 0 !important;
+.table_product_row {
+  display: flex;
+  flex-direction: column;
+  h6 {
+    text-align: start;
+    line-height: 24px;
+    color: #181c32;
+    font-family: "TT Interfaces";
+    font-size: 18px;
+    font-weight: bold;
+    font-style: normal;
+    margin-bottom: 8px !important;
+    overflow: hidden;
+    width: 90%;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+  }
   span {
-    float: left;
+    @include fontTTinterface(14px, 400);
+    line-height: 18px;
+    color: #a1a5bf;
+    text-align: start;
   }
 }
-th.column-name,
-td.column-name {
-  a {
-    color: #3f4254 !important;
-    @include fontPoppins(1.15rem, 600);
+.column-code {
+  h4 {
+    @include fontTTinterface(16px, 500);
+    line-height: 20px;
+    color: #a1a5bf;
   }
 }
-th.column-sky,
-td.column-sky {
-  color: #7e8299 !important;
-  @include fontPoppins(1.15rem, 600);
+.column-qty {
+  @include fontTTinterface(18px, 500);
+  line-height: 24px;
+  color: #181c32;
 }
-th.column-price,
-td.column-price {
-  color: #181c32 !important;
-  @include fontPoppins(1.15rem, 600);
+.column-price {
+  @include fontTTinterface(18px, 500);
+  line-height: 24px;
+  color: #181c32;
 }
-.ant-table-pagination {
-  display: none;
+
+.tag_success {
+  background: #c9f7f5;
+  color: #18b3bd;
 }
-.table_pagination {
-  .el-pager {
-    .number {
-      font-size: 1.075rem;
-      @include fontPoppins(1.075rem, 500);
+.tag_inProgress {
+  background: #fff4de;
+  color: #ffa909;
+}
+.tag_rejected {
+  background: #ffe2e5;
+  color: #f65160;
+}
+.tag_approved {
+  color: #3699ff;
+  background: #e1f0ff;
+}
+.column-tags {
+  .tags-style {
+    line-height: 17px;
+    text-transform: uppercase;
+    border-radius: 8px;
+    @include fontTTinterface(14px, 500);
+    padding: 8px 24px;
+  }
+}
+.column-btns {
+  span {
+    .action-btn {
+      background: #f3f6f9;
+      border-radius: 8px;
+      padding: 8px;
+      display: inline-flex;
+      cursor: pointer;
     }
-    .active {
-      border-radius: 0.475rem;
-      height: 2.5rem;
-      min-width: 2.5rem;
-      color: #fff;
-      font-weight: 500;
-      font-size: 1.075rem;
-      background-color: #009ef7 !important;
+  }
+}
+.column-options {
+  .option-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .option-items {
+    padding: 8px 16px;
+    background: #eff2f5;
+    border-radius: 8px;
+    @include fontTTinterface(14px, 500);
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    color: #6c7b9a;
+    white-space: nowrap;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    &:last-child {
+      margin-right: 0;
     }
+  }
+}
+
+//child table
+
+.child-table {
+  thead {
+    display: none;
+  }
+}
+.ant-table-row-cell-break-word {
+  position: relative;
+  .ant-table-row-collapsed,
+  .ant-table-row-expanded {
+    position: absolute;
+    width: 45px;
+    height: 100%;
+    left: 40px;
+    top: 0;
+    opacity: 0;
+  }
+}
+.ant-table-row-level-0 {
+  background: #fff;
+  .column-name {
+    position: relative;
+    .ant-table-row-collapsed,
+    .ant-table-row-expanded {
+      position: absolute;
+      width: 45px;
+      height: 100%;
+      left: 40px;
+      top: 0;
+      opacity: 0;
+    }
+  }
+}
+.ant-table-row-level-1 {
+  background: #f5f5f7;
+  .column-name {
+    padding-left: 72px !important;
+    position: relative;
+    border: none !important;
+    .ant-table-row-collapsed,
+    .ant-table-row-expanded {
+      position: absolute;
+      width: 45px;
+      height: 100%;
+      left: 112px;
+      top: 0;
+      opacity: 0;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      border-left: 1px solid #eeeeee;
+      top: 0;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      border-bottom: 1px solid #eeeeee;
+      bottom: 0;
+    }
+  }
+  .indent-level-1 {
+    display: flex;
+  }
+  td {
+    border-bottom: 1px solid #eeeeee !important;
+  }
+}
+.ant-table-row-level-2 {
+  background: #fafbfc;
+  .indent-level-2 {
+    display: flex;
+    position: absolute;
+    top: 0;
+    padding: 0 !important;
+    left: 72px;
+    height: 100%;
+    border-left: 1px solid #eeeeee !important;
+  }
+  .column-name {
+    padding-left: 160px !important;
+    border: none !important;
+    .ant-table-row-collapsed,
+    .ant-table-row-expanded {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      border-left: 1px solid #eeeeee;
+      top: 0;
+    }
+    &::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      border-bottom: 1px solid #eeeeee;
+      bottom: 0;
+    }
+  }
+  position: relative;
+}
+.column-child {
+  display: flex;
+  justify-content: flex-end;
+}
+.ant-table-row-spaced {
+  position: absolute;
+}
+.select-table-child {
+  padding-left: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.select-img {
+  margin-right: 16px;
+}
+.select-table {
+  border-radius: 15px;
+  overflow: hidden;
+  .ant-table-thead {
+    .column-name {
+      padding-left: 40px !important;
+    }
+  }
+}
+
+@media (max-width: 1440px) {
+  .table_product_row {
+    h6 {
+      line-height: 21px;
+      font-size: 16px;
+      margin-bottom: 6px !important;
+    }
+    span {
+      @include fontTTinterface(12px, 400);
+      line-height: 16px;
+    }
+  }
+  .column-code {
+    h4 {
+      @include fontTTinterface(14px, 500);
+      line-height: 18px;
+    }
+  }
+  .column-price {
+    @include fontTTinterface(16px, 500);
+    line-height: 18px;
+    color: #181c32;
+  }
+  .column-qty {
+    @include fontTTinterface(16px, 500);
+    line-height: 24px;
+    color: #181c32;
+  }
+  .column-tags {
+    .tags-style {
+      line-height: 16px;
+      @include fontTTinterface(12px, 500);
+      padding: 6px 18px;
+      border-radius: 6px;
+    }
+  }
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    padding: 16px 16px 16px 0 !important;
+  }
+  .ant-table-column-title {
+    @include fontTTinterface(12px, 600);
+    line-height: 18px !important;
+    text-transform: uppercase;
+    color: #6c7b9a;
   }
 }

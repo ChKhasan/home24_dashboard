@@ -2,11 +2,11 @@
   <div class="login_container">
     <div class="login_block">
       <div class="login_header mb-10">
-        <h1 class="mb-3">Sign In to Home24 Admin</h1>
+        <h1 class="mb-3" v-if="$auth.loggedIn">Sign In to Home24 Admin</h1>
       </div>
       <div class="login_form">
         <div class="login_input mb-10">
-          <label for="">Number</label>
+          <label for="" >{{$auth.loggedIn}}</label>
           <input type="text" class="input form-control" />
         </div>
         <div class="login_input mb-10">
@@ -25,10 +25,18 @@
 </template>
 <script>
 export default {
+  middleware: "auth",
   methods: {
-    login() {
-      localStorage.setItem("Auth", "token");
-      this.$router.push("/catalog/products");
+    async login() {
+     this.$auth.loginWith("local", {
+        data: {
+          nbm: "+998910028174",
+          password: "mypass1234",
+        },
+      });
+
+      // localStorage.setItem("Auth", "token");
+      // this.$router.push("/catalog/products");
     },
   },
 };

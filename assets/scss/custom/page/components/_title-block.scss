@@ -46,3 +46,22 @@
     border-left: 1px solid #eff2f5 !important;
   }
 }
+
+// title comp
+.title-comp {
+  h1 {
+    @include fontTTinterface(24px, 600);
+    line-height: 32px;
+    color: #50658f;
+  }
+}
+
+// form title
+.form-title {
+  h1 {
+    @include fontTTinterface(24px, 600);
+    line-height: 32px;
+    color: #181c32;
+  }
+  margin-bottom: 22px;
+}

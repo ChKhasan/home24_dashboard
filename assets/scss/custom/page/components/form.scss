@@ -1,178 +1,118 @@
-.input-block {
+.form-block {
   display: flex;
   flex-direction: column;
-}
-.form-label {
-  margin-bottom: 0.5rem;
-  @include fontPoppins(1.05 * 13px, 500);
-  color: #3f4254;
-}
-.required:after {
-  content: "*";
-  position: relative;
-  font-size: inherit;
-  color: #f1416c;
-  padding-left: 0.25rem;
-  font-weight: 700;
-}
-.form-input,
-.el-input__inner {
-  padding: 0.75 * 13px 1 * 13px !important;
-  @include fontPoppins(1.1rem, 500);
-  &:focus {
-    border-color: #ced4da !important;
+  margin-bottom: 40px;
+  .el-form-item {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .el-input {
+    .el-input__inner {
+      background: #ffffff;
+      padding: 14px 16px !important;
+      border: 1px solid #e4e6ef;
+      border-radius: 8px;
+
+      @include fontTTinterface(16px, 400);
+      line-height: 24px !important;
+      color: #a1a5bf;
+      height: initial !important;
+    }
+  }
+  label {
+    display: inline-flex;
+    @include fontTTinterface(18px, 600);
+    line-height: 24px;
+    margin-bottom: 11px;
+    color: #181c32;
+    position: relative;
   }
 }
-.text-muted {
-  color: #a1a5b7 !important;
-}
-
-// --- checkbox ---
-
-.btn-outline-dashed {
-  border-width: 1px;
-  border-style: dashed;
-  border-color: #009ef7;
-  border-radius: $toolbar-setting-btn-b-radius;
-}
-.checkbox-container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  border-radius: 0.45em;
-  line-height: 0% !important;
-}
-
-/* Hide the browser's default checkbox */
-.checkbox-container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-/* Create a custom checkbox */
-.checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 1.5rem;
-  width: 1.5rem;
-  background-color: #eee;
-  border-radius: 6px;
-}
-
-/* On mouse-over, add a grey background color */
-.checkbox-container:hover input ~ .checkmark {
-  background-color: #ccc;
-}
-
-/* When the checkbox is checked, add a blue background */
-.checkbox-container input:checked ~ .checkmark {
-  background-color: #2196f3;
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
-}
-
-/* Show the checkmark when checked */
-.checkbox-container input:checked ~ .checkmark:after {
-  display: block;
-}
-
-/* Style the checkmark/indicator */
-.checkbox-container .checkmark:after {
-  left: 7px;
-  top: 5px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-
-.checkbox-label {
-  color: #3f4254 !important;
-  @include fontPoppins(1.25rem, 500);
-}
-
-// select input
-
-.select_input {
-  input {
-    background-color: #eef3f7;
-    border-color: #eef3f7 !important;
-    @include fontPoppins(1.1rem, 500);
-    line-height: 1.5;
-    color: #a1a5b7 !important;
-    &::placeholder {
-      color: #a1a5b7 !important;
-    }
-    &:focus {
-      border-color: #eef3f7 !important;
+.required {
+  label {
+    &::after {
+      content: "*";
+      position: absolute;
+      top: 0;
+      right: -12px;
+      color: #3699ff;
     }
   }
 }
-.el-select-dropdown__list {
-  padding: 1rem 0 !important;
-}
-.el-select-dropdown__item {
-  color: #5e6278;
-  transition: color 0.2s ease, background-color 0.2s ease;
-  padding: 0.75rem 1.25rem;
-  margin: 0 0;
-  height: 39px !important;
-  line-height: 39px !important;
-  @include fontPoppins(13px, 400);
-  &:hover {
-    background-color: #f1faff !important;
-    color: #009ef7 !important;
-    transition: color 0.2s ease, background-color 0.2s ease;
+.el-select {
+  .el-tag--small {
+    height: initial !important;
+    line-height: initial !important;
+    padding: 8px 16px;
+    border: none !important;
+    margin-left: 8px !important;
+    &:first-child {
+      margin-left: 12px !important;
+    }
   }
-  .selected {
-    background-size: 0.8rem;
-    background-position: center right 1.25rem;
-    background-color: #009ef7 !important;
-    color: #fff;
-    transition: color 0.2s ease, background-color 0.2s ease;
+  .el-select__tags-text {
+    @include fontTTinterface(14px, 500);
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    color: #6c7b9a;
+  }
+  .el-tag {
+    .el-icon-close {
+      font-size: 16px;
+      width: initial;
+      height: initial;
+      padding: 1px !important;
+    }
   }
 }
 
-.el-select-dropdown__item.selected {
-  background-size: 0.8rem;
-  background-position: center right 1.25rem;
-  background-color: #009ef7 !important;
-  color: #fff !important;
-  transition: color 0.2s ease, background-color 0.2s ease;
-  &:hover {
-    color: #fff !important;
+// from grids
+
+.atribut-input-grid {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  grid-gap: 23px;
+}
+.group-grid {
+  display: grid;
+  grid-template-columns: auto 54px;
+  grid-gap: 24px;
+}
+
+.category-from-grid {
+  display: grid;
+  grid-template-columns: 5fr 2fr;
+  grid-gap: 24px;
+}
+.category-input-grid {
+  display: grid;
+  grid-template-columns: 4fr 5fr;
+  grid-gap: 24px;
+}
+.category-img-grid {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 24px;
+  .form-block {
+    margin-bottom: 0;
   }
 }
-.table-dropdown-body {
-  padding: 1rem 0 !important;
-  .el-dropdown-menu__item {
-    padding: 0.65rem 0.75rem;
-    line-height: initial;
-    color: #7e8299 !important;
-    @include fontPoppins(0.95rem, 500);
-    transition: color 0.2s ease, background-color 0.2s ease;
-    width: 86px;
-    &:hover {
-      color: #009ef7 !important;
-    }
+.category-select-grid {
+  display: grid;
+  grid-gap: 24px;
+}
+
+// switch
+
+.switch-text {
+  display: flex;
+  align-items: center;
+  span {
+    @include fontTTinterface(18px, 500);
+    margin-right: 8px;
+    line-height: 24px;
+    color: #a1a5bf;
   }
 }
