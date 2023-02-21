@@ -1,0 +1,29 @@
+.category-from-grid {
+  display: grid;
+  grid-template-columns: 5fr 2fr;
+  grid-gap: 24px;
+}
+.category-input-grid {
+  display: grid;
+  grid-template-columns: 4fr 5fr;
+  grid-gap: 24px;
+}
+.category-img-grid {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 24px;
+  .form-block {
+    margin-bottom: 0;
+  }
+}
+.category-select-grid {
+  display: grid;
+  grid-gap: 24px;
+}
+@media (max-width: 1440px) {
+  .category-from-grid {
+    grid-gap: 13px;
+    grid-template-columns: 3fr 1fr;
+  }
+}

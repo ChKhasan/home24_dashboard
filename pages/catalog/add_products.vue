@@ -1,281 +1,361 @@
 <template lang="html">
-  <div>
-    <form action="">
-      <TitleBlock
-        title="Product Form"
-        :breadbrumb="['Home', 'Products']"
-        lastLink="Product Form"
-      />
-      <div class="container_xl app-container">
-        <div class="add-product">
-          <div class="card_block py-5">
-            <div class="card_header">
-              <h2 class="card_block-title">General</h2>
+  <div class="container_xl">
+    <div class="card_block py-5">
+      <div
+        class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
+      >
+        <Title title="Product edit" />
+        <AddBtn name="Save" :icon="false" :callback="toAddProduct" />
+      </div>
+      <div class="products-from-grid">
+        <div class="products-select-grid">
+          <el-tabs
+            class="form_tabs"
+            v-model="activeName"
+            @tab-click="handleClick"
+          >
+            <el-tab-pane
+              v-for="item in lang"
+              :label="item.key"
+              :name="item.key"
+            >
+              <div class="form-container form-container-ltr">
+                <div class="d-flex justify-content-start">
+                  <FormTitle title="Product edit" />
+                </div>
+                <el-form
+                  label-position="top"
+                  :model="ruleForm"
+                  :rules="rules"
+                  ref="ruleForm"
+                  label-width="120px"
+                  class="demo-ruleForm"
+                  action=""
+                >
+                  <div class="form-block">
+                    <div><label for="">Name</label></div>
+                    <el-form-item prop="nbm">
+                      <el-input
+                        v-model="ruleForm.nbm"
+                        placeholder="Product model"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                  <div class="products-input-grid-3">
+                    <div class="form-block">
+                      <div><label for="">Model</label></div>
+                      <el-form-item prop="nbm">
+                        <el-input
+                          v-model="ruleForm.nbm"
+                          placeholder="Product model"
+                        ></el-input>
+                      </el-form-item>
+                    </div>
+                    <div class="form-block">
+                      <div><label for="">Name</label></div>
+                      <el-form-item prop="nbm">
+                        <el-input
+                          v-model="ruleForm.nbm"
+                          placeholder="Product model"
+                        ></el-input>
+                      </el-form-item>
+                    </div>
+                    <div class="form-block">
+                      <div><label for="">Code</label></div>
+                      <el-form-item prop="nbm">
+                        <el-input
+                          disabled
+                          placeholder="162 111 415 515 118"
+                        ></el-input>
+                      </el-form-item>
+                    </div>
+                  </div>
+                </el-form>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
+          <div class="form-container">
+            <div class="d-flex justify-content-start">
+              <FormTitle title="Product details" />
             </div>
-            <div class="card_block_padd">
-              <!-- input blocks -->
-              <div class="input-block mb-10">
-                <label for="" class="form-label required">Product Name</label>
-                <input
-                  type="text"
-                  class="form-control form-input mb-2"
-                  required
-                />
-                <div class="text-muted fs-7">
-                  A product name is required and recommended to be unique.
-                </div>
-              </div>
-              <div class="input-block mb-10">
-                <label for="" class="form-label required">Model</label>
-                <input
-                  type="text"
-                  class="form-control form-input mb-2"
-                  required
-                />
-              </div>
-              <!-- input blocks -->
-              <!-- checkbox group -->
-              <div class="checkbox-grid">
-                <div class="">
-                  <label
-                    class="btn btn-outline btn-outline-dashed pr-15r pl-15r pb-15r pt-15r d-flex text-start p-6 active"
+            <div class="d-flex align-items-end">
+              <div class="products-input-grid-3 w-100">
+                <div class="form-block mb-0">
+                  <div><label>Category</label></div>
+                  <el-select
+                    v-model="value"
+                    allow-create
+                    default-first-option
+                    placeholder="Select category"
                   >
-                    <label class="checkbox-container">
-                      <input type="checkbox" />
-                      <span class="checkmark"></span>
-                    </label>
-
-                    <span class="checkbox-label">Popular</span>
-                  </label>
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                  <span class="bottom_text">Add product to a category</span>
                 </div>
-                <div class="">
-                  <label
-                    class="btn btn-outline btn-outline-dashed pr-15r pl-15r pb-15r pt-15r d-flex text-start p-6 active"
+                <div class="form-block mb-0">
+                  <div><label>Post category</label></div>
+                  <el-select
+                    v-model="value"
+                    allow-create
+                    default-first-option
+                    placeholder="Select post category"
                   >
-                    <label class="checkbox-container">
-                      <input type="checkbox" />
-                      <span class="checkmark"></span>
-                    </label>
-
-                    <span class="checkbox-label">Popular</span>
-                  </label>
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                  <span class="bottom_text">Add product to a category</span>
+                </div>
+                <div class="form-block mb-0">
+                  <div><label>Last category</label></div>
+                  <el-select
+                    v-model="value"
+                    allow-create
+                    default-first-option
+                    placeholder="Select last category"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                  <span class="bottom_text">Add product to a category</span>
                 </div>
               </div>
-              <!-- checkbox group -->
-              <!-- Tab -->
-              <el-tabs
-                class="mt-5"
-                v-model="activeName"
-                @tab-click="handleClick"
-              >
-                <el-tab-pane label="Description" name="first">
-                  <Editor
-                /></el-tab-pane>
-                <el-tab-pane label="Information" name="second">
-                  <Editor />
-                </el-tab-pane>
-              </el-tabs>
-              <!-- Tab -->
-            </div>
-          </div>
-          <div class="card_block py-5">
-            <div class="card_header">
-              <h2 class="card_block-title">Status</h2>
-            </div>
-            <div class="card_block_padd">
-              <div class="input-block mb-10">
-                <!-- <input type="text" class="form-control form-input mb-2" /> -->
-                <el-select v-model="value" class="mb-2" placeholder="Select">
-                  <el-option
-                    class="form-select-input"
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-                <div class="text-muted fs-7">
-                  Set the product status.
-                </div>
-              </div>
-            </div>
-            <div class="card_header">
-              <h2 class="card_block-title">Product Details</h2>
-            </div>
-            <div class="card_block_padd">
-              <div class="input-block mb-10">
-                <label for="" class="form-label">Category</label>
-                <!-- <input type="text" class="form-control form-input mb-2" /> -->
-                <el-select v-model="value" class="mb-2" placeholder="Select">
-                  <el-option
-                    class="form-select-input"
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-                <div class="text-muted fs-7">
-                  Add product to a category.
-                </div>
-              </div>
-              <div class="input-block mb-10">
-                <label for="" class="form-label">Post Category</label>
-                <!-- <input type="text" class="form-control form-input mb-2" /> -->
-                <el-select v-model="value" class="mb-2" placeholder="Select">
-                  <el-option
-                    class="form-select-input"
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-                <div class="text-muted fs-7">
-                  Add product to a category.
-                </div>
-              </div>
-              <div class="input-block mb-10">
-                <label for="" class="form-label">Last Category</label>
-                <!-- <input type="text" class="form-control form-input mb-2" /> -->
-                <el-select v-model="value" class="mb-2" placeholder="Select">
-                  <el-option
-                    class="form-select-input"
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-                <div class="text-muted fs-7">
-                  Add product to a category.
-                </div>
-              </div>
-              <div class="mb-10">
-                <FilterBtn
-                  name="Create new category
-							"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
+              <div class="prducts-details-btns">
+                <div
+                  class="outline-btn outline-light-gray-btn"
+                  @click="searchBlock = true"
+                >
+                  <svg
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
                     fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <rect
-                      opacity="0.5"
-                      x="11"
-                      y="18"
-                      width="12"
-                      height="2"
-                      rx="1"
-                      transform="rotate(-90 11 18)"
-                      fill="currentColor"
-                    ></rect>
-                    <rect
-                      x="6"
-                      y="11"
-                      width="12"
-                      height="2"
-                      rx="1"
-                      fill="currentColor"
-                    ></rect></svg
-                ></FilterBtn>
-              </div>
-              <div class="input-block mb-10">
-                <label for="" class="form-label">Brand</label>
-                <!-- <input type="text" class="form-control form-input mb-2" /> -->
-                <el-select v-model="value" class="mb-2" placeholder="Select">
-                  <el-option
-                    class="form-select-input"
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    <path
+                      d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
+                      stroke="#181C32"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div class="outline-btn outline-light-gray-btn">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                  </el-option>
-                </el-select>
-                <div class="text-muted fs-7">
-                  Add product to a category.
+                    <path
+                      d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
+                      stroke="#181C32"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div class="outline-btn outline-blue-btn">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 6V18M18 12L6 12"
+                      stroke="#5899FF"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </div>
               </div>
-              <FilterBtn
-                name="Create new category
-							"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <rect
-                    opacity="0.5"
-                    x="11"
-                    y="18"
-                    width="12"
-                    height="2"
-                    rx="1"
-                    transform="rotate(-90 11 18)"
-                    fill="currentColor"
-                  ></rect>
-                  <rect
-                    x="6"
-                    y="11"
-                    width="12"
-                    height="2"
-                    rx="1"
-                    fill="currentColor"
-                  ></rect></svg
-              ></FilterBtn>
+            </div>
+            <div class="d-flex" v-if="searchBlock">
+              <div class="search-container">
+                <div class="search-input-block">
+                  <div class="form-block w-100 mb-0">
+                    <div class="position-relative search-input-icon">
+                      <el-input
+                        class="w-100"
+                        v-model="ruleForm.nbm"
+                        placeholder="Product model"
+                      ></el-input>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
+                          stroke="#A1A5BF"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div class="search-resoults">
+                      <div class="search-clear">
+                        <p>Вы недавно искали</p>
+                        <span>Очистить</span>
+                      </div>
+                      <div class="search-resoult-items">
+                        <p>Строймате</p>
+                      </div>
+                      <div class="search-resoult-items">
+                        <p>Строймате</p>
+                      </div>
+                      <div class="search-resoult-items">
+                        <p>Строймате</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      class="outline-btn outline-white-btn"
+                      @click="searchBlock = false"
+                    >
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                          stroke="#28303F"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex search-container-btns">
+                <div class="outline-btn outline-light-gray-btn mx-3">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
+                      stroke="#181C32"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div class="outline-btn outline-blue-btn">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M12 6V18M18 12L6 12"
+                      stroke="#5899FF"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <modal name="example">This is an example</modal>
-      </div>
-      <div class="container_xl app-container mt-5">
-        <div class="">
-          <div class="card_block py-5">
-            <div class="card_header">
-              <h2 class="card_block-title">Вариация 1</h2>
-            </div>
-            <div class="card_block_padd">
-              <!-- input blocks -->
-              <div class="variant_form_grid">
-                <div class="input-block">
-                  <label for="" class="form-label required">Product Name</label>
-                  <input type="text" class="form-control form-input mb-2" />
+          <el-tabs
+            class="form_tabs"
+            v-model="activeName"
+            @tab-click="handleClick"
+          >
+            <el-tab-pane
+              v-for="item in lang"
+              :label="item.key"
+              :name="item.key"
+            >
+              <div class="form-container form-container-ltr">
+                <div class="d-flex justify-content-start">
+                  <FormTitle title="Product info" />
                 </div>
-                <div class="input-block">
-                  <label for="" class="form-label required">Model</label>
-                  <input type="text" class="form-control form-input mb-2" />
-                </div>
-                <div class="input-block">
-                  <label for="" class="form-label required">Product Name</label>
-                  <input type="text" class="form-control form-input mb-2" />
-                </div>
-                <div class="input-block">
-                  <label for="" class="form-label required">Model</label>
-                  <input type="text" class="form-control form-input mb-2" />
-                </div>
+                <el-tabs
+                  class="desc_tab"
+                  v-model="activeDesc"
+                  @tab-click="handleClick"
+                >
+                  <el-tab-pane label="Description" name="Description">
+                    <Editor editorClass="product-editor mt-1"
+                  /></el-tab-pane>
+                  <el-tab-pane label="Character" name="Character">
+                    <ProductCharacterList />
+                  </el-tab-pane>
+                </el-tabs>
               </div>
-              <!-- input blocks -->
+            </el-tab-pane>
+          </el-tabs>
+          <div class="form-container" v-for="element in productVariant">
+            <div class="d-flex justify-content-between title_border_bottom">
+              <FormTitle :title="`Вариация №${element.id}`" />
+              <div
+                class="variant-btn variant-btn-delete"
+                @click="deleteVariant(element.id)"
+              >
+                <svg
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                    stroke="#F65160"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
             </div>
-            <div class="card_header">
-              <h2 class="card_block-title">Изображение товара</h2>
-            </div>
-            <div class="card_block_padd">
-              <!-- input blocks -->
-              <div class="clearfix">
+            <div class="variant-img-container">
+              <h5 class="variant-img-title">Изображение товара</h5>
+
+              <div class="variant-img">
                 <a-upload
                   list-type="picture-card"
                   :file-list="fileList"
-                  :multiple="true"
                   @preview="handlePreview"
                   @change="handleChange"
                 >
@@ -286,151 +366,367 @@
                     </div>
                   </div>
                 </a-upload>
-                <a-modal
-                  :visible="previewVisible"
-                  :footer="null"
-                  @cancel="handleCancel"
-                >
-                  <img alt="example" style="width: 100%;" :src="previewImage" />
-                </a-modal>
               </div>
-              <!-- input blocks -->
+              <p class="variant-img-text">
+                Изображение товар
+                <span>Первое изображение товара является главной.</span>
+              </p>
+            </div>
+            <div>
+              <div
+                class="product-variant"
+                v-for="item in element.innerVariants"
+              >
+                <div class="d-flex w-100 align-items-end">
+                  <div class="variant-grid-4 w-100">
+                    <div class="form-variant-block">
+                      <div><label>Цвета</label></div>
+                      <el-select
+                        v-model="value"
+                        allow-create
+                        class="w-100"
+                        default-first-option
+                        placeholder="265 gb"
+                      >
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="form-variant-block">
+                      <div><label>Цвета</label></div>
+                      <el-select
+                        v-model="value"
+                        allow-create
+                        class="w-100"
+                        default-first-option
+                        placeholder="265 gb"
+                      >
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="form-variant-block">
+                      <div><label>Цвета</label></div>
+                      <el-select
+                        v-model="value"
+                        allow-create
+                        class="w-100"
+                        default-first-option
+                        placeholder="265 gb"
+                      >
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                    <div class="form-variant-block">
+                      <div><label>Цвета</label></div>
+                      <el-select
+                        v-model="value"
+                        allow-create
+                        class="w-100"
+                        default-first-option
+                        placeholder="265 gb"
+                      >
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <div
+                      class="variant-btn variant-btn-delete mx-2"
+                      @click="deleteInnerVariant(element.id, item.id)"
+                    >
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                          stroke="#F65160"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="variant-btn variant-btn-check"
+                      @click="onChangeVariants(item.id)"
+                    >
+                      <a-radio
+                        :checked="atributVariants.includes(item.id)"
+                      ></a-radio>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="create-inner-variant"
+              @click="addInnerVariant(element.id)"
+            >
+              <svg
+                width="17"
+                height="16"
+                viewBox="0 0 17 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M3 8H14"
+                  stroke="#3699FF"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M8.5 2.5V13.5"
+                  stroke="#3699FF"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              Добавит внутренний варизаци
+            </div>
+          </div>
+          <div
+            class="add-variant create-inner-variant mt-0"
+            @click="addVariant"
+          >
+            <svg
+              width="17"
+              height="16"
+              viewBox="0 0 17 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 8H14"
+                stroke="#3699FF"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8.5 2.5V13.5"
+                stroke="#3699FF"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Добавит варизаци
+          </div>
+        </div>
+        <div class="products-img-grid">
+          <div class="form-container">
+            <el-form
+              label-position="top"
+              :model="ruleForm"
+              :rules="rules"
+              ref="ruleForm"
+              label-width="120px"
+              class="demo-ruleForm"
+              action=""
+            >
+              <div class="form-block status-style">
+                <div><label for="status">Status</label></div>
+                <el-form-item>
+                  <el-select
+                    id="status"
+                    class="w-100"
+                    v-model="value"
+                    allow-create
+                    default-first-option
+                    placeholder="Product name"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    >
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <span class="bottom_text">Set the product status</span>
+              </div>
+              <div class="form-block mb-0">
+                <div><label for="">Brand</label></div>
+                <div class="product-plus-btn">
+                  <el-form-item prop="nbm">
+                    <el-input
+                      v-model="ruleForm.nbm"
+                      placeholder="Product model"
+                    ></el-input>
+                  </el-form-item>
+                  <div class="outline-btn outline-light-blue-btn">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 6V18M18 12L6 12"
+                        stroke="#5899FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="bottom_text">Set the product status</div>
+              </div>
+            </el-form>
+          </div>
+          <div class="form-container">
+            <ProductsStatistic />
+          </div>
+          <div class="form-container">
+            <div class="form-block mb-0">
+              <label for="">Comment</label>
+            </div>
+            <CommentCard />
+            <CommentCard />
+            <CommentCard />
+            <CommentCard />
+            <div class="show-mode">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
+                  stroke="#3699FF"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+
+              Показать ещё
             </div>
           </div>
         </div>
-        <button type="submit">save</button>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 <script>
+import AddBtn from "../../components/form/Add-btn.vue";
 import Editor from "../../components/form/editor.vue";
 import FilterBtn from "../../components/form/Filter-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
+import Title from "../../components/Title.vue";
+import ProductsStatistic from "../../components/products/Products-statistic.vue";
+import ProductCharacterList from "../../components/products/Product-character-list.vue";
+import CommentCard from "../../components/products/CommentCard.vue";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = () => {
-      resolve(reader.result);
-      console.log(reader.result);
-    };
-    reader.onerror = (error) => {
-      reject(error);
-      console.log(error);
-    };
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
   });
 }
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    scopedSlots: { customRender: "name" },
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-    width: 80,
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address 1",
-    ellipsis: true,
-  },
-  {
-    title: "Long Column Long Column Long Column",
-    dataIndex: "address",
-    key: "address 2",
-    ellipsis: true,
-  },
-  {
-    title: "Long Column Long Column",
-    dataIndex: "address",
-    key: "address 3",
-    ellipsis: true,
-  },
-  {
-    title: "Long Column",
-    dataIndex: "address",
-    key: "address 4",
-    ellipsis: true,
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park, New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 2 Lake Park, London No. 2 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park, Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
 export default {
   layout: "toolbar",
   middleware: "auth",
   data() {
     return {
-      data,
-      columns,
-      activeName: "first",
-      option: {
-        theme: "bubble",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "link"],
-            [
-              {
-                header: 1,
-              },
-              {
-                header: 2,
-              },
-              "blockquote",
-            ],
-          ],
-        },
-      },
-      options: [
+      activeName: "Русский",
+      activeDesc: "Description",
+      searchBlock: false,
+      lang: [
         {
-          value: "Option1",
-          label: "Option1",
+          key: "Русский",
         },
         {
-          value: "Option2",
-          label: "Option2",
+          key: "Uzbek",
         },
         {
-          value: "Option3",
-          label: "Option3",
-        },
-        {
-          value: "Option4",
-          label: "Option4",
-        },
-        {
-          value: "Option5",
-          label: "Option5",
+          key: "English",
         },
       ],
-      value: "------------",
+      options: [
+        {
+          value: "HTML",
+          label: "HTML",
+        },
+        {
+          value: "CSS",
+          label: "CSS",
+        },
+        {
+          value: "JavaScript",
+          label: "JavaScript",
+        },
+      ],
+      value: [],
+      rules: {
+        nbm: [
+          {
+            required: true,
+            message: "incorrect email",
+            trigger: "change",
+          },
+          {
+            min: 10,
+            max: 10,
+            message: "Length should be 10",
+            trigger: "change",
+          },
+        ],
+      },
+      ruleForm: {
+        nbm: "",
+      },
+
+      productVariant: [
+        {
+          id: 1,
+          innerVariants: [
+            {
+              id: 1,
+            },
+            {
+              id: 2,
+            },
+          ],
+        },
+      ],
+      atributVariants: [],
       previewVisible: false,
       previewImage: "",
       fileList: [
@@ -441,45 +737,23 @@ export default {
           url:
             "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
         },
-        {
-          uid: "-2",
-          name: "image.png",
-          status: "done",
-          url:
-            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-        {
-          uid: "-3",
-          name: "image.png",
-          status: "done",
-          url:
-            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-        {
-          uid: "-4",
-          name: "image.png",
-          status: "done",
-          url:
-            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-        {
-          uid: "-5",
-          name: "image.png",
-          status: "error",
-        },
       ],
-     
     };
   },
+  mounted() {
+    // const imgText = document.querySelector(".ant-upload-text");
+    // imgText.innerHTML = "Добавить изображение";
+    this.$store.dispatch("fetchCharacters/getCharacters");
+  },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
-    show(name) {
-      this.$modal.show(name);
-    },
-    hide(name) {
-      this.$modal.hide(name);
+    submitForm(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
+        if (valid) {
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     handleCancel() {
       this.previewVisible = false;
@@ -490,15 +764,68 @@ export default {
       }
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
-
-      console.log(file);
     },
     handleChange({ fileList }) {
       this.fileList = fileList;
-      console.log(fileList);
+    },
+    handleClick(tab, event) {
+      console.log("handlchange", tab, event);
+      this.formVal = "";
+    },
+    onChangeVariants(checked) {
+      this.atributVariants.includes(checked)
+        ? (this.atributVariants = this.atributVariants.filter(
+            (item) => item != checked
+          ))
+        : this.atributVariants.push(checked);
+    },
+    addInnerVariant(variantId) {
+      const addVar = this.findVarintWithId(variantId);
+      addVar.innerVariants.push({ id: addVar.innerVariants.at(-1).id + 1 });
+    },
+    deleteVariant(variantId) {
+      if (this.productVariant.length > 1) {
+        this.productVariant = this.productVariant.filter(
+          (item) => item.id != variantId
+        );
+      }
+    },
+    deleteInnerVariant(variantId, innerVarId) {
+      const addVar = this.findVarintWithId(variantId);
+      if (addVar.innerVariants.length > 1) {
+        addVar.innerVariants = addVar.innerVariants.filter(
+          (item) => item.id != innerVarId
+        );
+      }
+    },
+    findVarintWithId(variantId) {
+      return this.productVariant.find((element) => element.id == variantId);
+    },
+    addVariant() {
+      const newInnerVar = [
+        {
+          id: 1,
+        },
+      ];
+      this.productVariant.push({
+        id: this.productVariant.at(-1).id + 1,
+        innerVariants: newInnerVar,
+      });
+    },
+    toAddProduct() {
+      this.$router.push("/catalog/add_products");
     },
   },
-  components: { Editor, FilterBtn, TitleBlock },
+  components: {
+    Editor,
+    FilterBtn,
+    TitleBlock,
+    Title,
+    AddBtn,
+    ProductsStatistic,
+    ProductCharacterList,
+    CommentCard,
+  },
 };
 </script>
 <style lang="scss">

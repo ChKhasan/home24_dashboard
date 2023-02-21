@@ -54,18 +54,40 @@
 }
 
 //
-.outline-light-btn {
-  background: #e1f0ff;
+.outline-btn {
   border-radius: 8px;
   width: 54px;
   height: 54px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #5899ff;
+  cursor: pointer;
   @include fontTTinterface(18px, 600);
 }
-
+.outline-blue-btn {
+  background: #3699ff;
+  color: #fff;
+  svg {
+    width: 30px;
+    height: 30px;
+    path {
+      stroke: #fff;
+      fill: #fff;
+    }
+  }
+}
+.outline-light-blue-btn {
+  background: #e1f0ff;
+  color: #5899ff;
+}
+.outline-light-gray-btn {
+  background: #fbfafc;
+  color: #000;
+}
+.outline-white-btn {
+  background: #fff;
+  color: #000;
+}
 // from bts
 
 .form-btn {
@@ -90,5 +112,29 @@
   color: #a1a5bf;
   &:hover {
     background: lighten(grey, 40%);
+  }
+}
+@media (max-width: 1440px) {
+  .add-btn-padding {
+    padding: 8.45px 13px;
+  }
+  .btn-outline-primary {
+    @include fontTTinterface(13px, 600);
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  .outline-btn {
+    border-radius: 5.46px;
+    height: 44px;
+    width: 44px;
+    @include fontTTinterface(18px, 600);
+  }
+  .form-btn {
+    padding: 9px 13px;
+    border-radius: 5.46px;
+    @include fontTTinterface(13px, 600);
+    line-height: 18px;
   }
 }

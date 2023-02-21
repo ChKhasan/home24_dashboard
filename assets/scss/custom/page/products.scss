@@ -1,0 +1,336 @@
+.products-from-grid {
+  display: grid;
+  grid-template-columns: 5fr 2fr;
+  grid-gap: 24px;
+}
+.products-input-grid {
+  display: grid;
+  grid-template-columns: 4fr 5fr;
+  grid-gap: 24px;
+}
+.products-img-grid {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  grid-gap: 24px;
+  .form-block {
+    margin-bottom: 24px;
+  }
+}
+.products-select-grid {
+  display: grid;
+  grid-gap: 24px;
+}
+.product-plus-btn {
+  display: grid;
+  grid-template-columns: auto 54px;
+  grid-gap: 8px;
+}
+.products-input-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px;
+}
+.products-input-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  grid-gap: 24px;
+}
+.prducts-details-btns {
+  display: flex;
+  margin-bottom: 26px;
+  div {
+    margin-left: 8px;
+    &:first-child {
+      margin-left: 13px;
+    }
+  }
+}
+.product-statistic_item {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  border-bottom: 1px solid #e4e6ef;
+  padding-bottom: 14px;
+  margin-top: 24px;
+  &:nth-child(2) {
+    span {
+      color: #3699ff;
+    }
+  }
+  &:nth-child(3) {
+    span {
+      color: #781ecd;
+    }
+  }
+  &:last-child {
+    span {
+      color: #009a10;
+    }
+    border-bottom: none;
+  }
+  p {
+    @include fontTTinterface(18px, 500);
+    line-height: 24px;
+    color: #181c32;
+  }
+  span {
+    @include fontTTinterface(18px, 600);
+    line-height: 24px;
+  }
+}
+.variant-btn {
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.variant-btn-delete {
+  background: #ffe2e5;
+}
+.variant-btn-check {
+  background: #e2edff;
+  .ant-radio-wrapper {
+    margin-right: 0;
+  }
+}
+.variant-img-container {
+  padding-top: 24px;
+  margin-bottom: 16px;
+  .variant-img-title {
+    @include fontTTinterface(16px, 500);
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    color: #494949;
+  }
+}
+.variant-img {
+  padding-top: 16px;
+  .ant-upload-list-picture-card .ant-upload-list-item {
+    width: 119px;
+    height: 119px;
+  }
+  .ant-upload-list-picture-card-container {
+    margin-right: 25px;
+  }
+  .ant-upload.ant-upload-select-picture-card {
+    width: 119px;
+    height: 119px;
+  }
+}
+.variant-img-text {
+  @include fontTTinterface(12px, 400);
+  line-height: 15px;
+  display: flex;
+  align-items: center;
+  color: #a1a5bf;
+  span {
+    @include fontTTinterface(12px, 500);
+    line-height: 15px;
+    display: flex;
+    align-items: center;
+    color: #181c32;
+    margin-left: 4px;
+  }
+}
+.variant-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 12px;
+  margin-right: 4px;
+  margin-top: 16px;
+}
+.create-inner-variant {
+  border: 1px dashed #3699ff;
+  border-radius: 8px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include fontTTinterface(14px, 500);
+  line-height: 18px;
+  color: #3699ff;
+  cursor: pointer;
+  margin-top: 30px;
+  svg {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+  }
+}
+.add-variant {
+  padding-top: 18px;
+  padding-bottom: 18px;
+  @include fontTTinterface(16px, 600);
+  line-height: 20px;
+  margin-top: 0;
+  background: #e1f0ff;
+}
+.search-container {
+  background: #f3f6f9;
+  border: 1px solid #e4e6ef;
+  border-radius: 8px;
+  padding: 33px 24px;
+  width: 100%;
+  margin-top: 24px;
+  .search-input-block {
+    display: flex;
+    width: 100%;
+    .outline-btn {
+      margin-left: 16px;
+    }
+  }
+}
+.search-container-btns {
+  margin-top: 24px;
+  padding-top: 33px;
+}
+.search-resoults {
+  background: linear-gradient(0deg, #ffffff, #ffffff), #fafbfc;
+  border: 1px solid #e4e6ef;
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 8px;
+  .search-clear {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e4e6ef;
+    p {
+      @include fontTTinterface(16px, 400);
+      line-height: 24px;
+      color: #181c32;
+      margin-bottom: 0;
+    }
+    span {
+      @include fontTTinterface(14px, 400);
+      line-height: 18px;
+      color: #f65160;
+      cursor: pointer;
+    }
+  }
+  .search-resoult-items {
+    p {
+      @include fontTTinterface(16px, 500);
+      line-height: 18px;
+      color: #181c32;
+    }
+    padding: 21px 0;
+    border-bottom: 1px solid #e4e6ef;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+.search-input-icon {
+  display: flex;
+  align-items: center;
+  svg {
+    position: absolute;
+    right: 16px;
+  }
+}
+.show-mode {
+  border: 1px solid #3699ff;
+  border-radius: 8px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  svg {
+    margin-right: 10px;
+  }
+  @include fontTTinterface(14px, 500);
+  line-height: 18px;
+  color: #3699ff;
+}
+@media (max-width: 1440px) {
+  .products-from-grid {
+    grid-gap: 13px;
+  }
+  .products-input-grid-3 {
+    grid-gap: 8px;
+  }
+  .products-select-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+  .product-plus-btn {
+    grid-template-columns: auto 44px;
+  }
+  .show-mode {
+    border-radius: 5.46px;
+    height: 44px;
+
+    svg {
+      margin-right: 10px;
+      width: 20px;
+      height: 20px;
+    }
+    @include fontTTinterface(14px, 500);
+    line-height: 18px;
+    color: #3699ff;
+  }
+  .create-inner-variant {
+    border-radius: 5.46px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+    @include fontTTinterface(14px, 500);
+    line-height: 18px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-right: 6px;
+    }
+  }
+  .product-statistic_item {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid #e4e6ef;
+    padding-bottom: 8px;
+    margin-top: 16px;
+    &:nth-child(2) {
+      span {
+        color: #3699ff;
+      }
+    }
+    &:nth-child(3) {
+      span {
+        color: #781ecd;
+      }
+    }
+    &:last-child {
+      span {
+        color: #009a10;
+      }
+      border-bottom: none;
+    }
+    p {
+      @include fontTTinterface(14px, 500);
+      line-height: 24px;
+      color: #181c32;
+    }
+    span {
+      @include fontTTinterface(14px, 600);
+      line-height: 24px;
+    }
+  }
+  .variant-grid-4 {
+    grid-gap: 8px;
+  }
+  .add-variant {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+}

@@ -63,20 +63,24 @@ export default {
         token: {
           property: "access",
           maxAge: 60 * 60 * 2,
-          global: true,
         },
-
+        refreshToken: {
+          property: "refresh",
+          data: "refresh",
+          maxAge: 60 * 60 * 24,
+        },
+        user: {
+          property: false,
+        },
         endpoints: {
           login: {
             url: "/api/account/login",
             method: "post",
             propertyName: "access",
           },
-          logout: { url: "/api/auth/logout", method: "post" },
+          logout: { url: "/api/account/logout", method: "post" },
           user: false,
         },
-        tokenRequired: false,
-        tokenType: false,
       },
     },
     redirect: {

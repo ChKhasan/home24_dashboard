@@ -30,3 +30,16 @@
     padding-right: 16px;
   }
 }
+@media (max-width: 1440px) {
+  .search-block {
+    input {
+      padding: 8.45px 13px;
+    }
+    .search-btn {
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}

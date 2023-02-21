@@ -4,8 +4,9 @@
 
 <script>
 export default {
-  mounted() {
-    this.$router.push('/admin/signin')
-  }
+  middleware: "auth",
+  // mounted() {
+  //   this.$router.push('/admin/signin')
+  // }
 };
 </script>

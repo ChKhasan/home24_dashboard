@@ -65,3 +65,17 @@
   }
   margin-bottom: 22px;
 }
+
+// border
+
+.title_border_bottom {
+  border-bottom: 1px solid #f2f1f4;
+}
+@media (max-width: 1440px) {
+  .form-title {
+    h1 {
+      @include fontTTinterface(17.55px, 600);
+      line-height: 24px;
+    }
+  }
+}

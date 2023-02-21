@@ -19,6 +19,9 @@
   padding-top: 54px;
   padding-bottom: 50px;
 }
+.card_tabs_padding {
+  padding-bottom: 18px !important;
+}
 .card_header_bottom {
   border-bottom: 1px solid #eff2f5;
 }
@@ -32,11 +35,15 @@
   padding: 24px;
 }
 .form-container-ltr {
-  border-top-left-radius: 0;
+  border-top-left-radius: 0 !important;
 }
 @media (max-width: 1440px) {
   .card_header {
     padding-top: 32px;
     padding-bottom: 32px;
+  }
+  .form-container {
+    background: #ffffff;
+    border-radius: 8.125px;
   }
 }

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 40px;
+
   .el-form-item {
     width: 100%;
     margin-bottom: 0;
@@ -24,6 +25,51 @@
     @include fontTTinterface(18px, 600);
     line-height: 24px;
     margin-bottom: 11px;
+    color: #181c32;
+    position: relative;
+  }
+  .bottom_text {
+    @include fontTTinterface(14px, 400);
+    line-height: 18px;
+    color: #a1a5bf;
+    margin-top: 8px;
+  }
+}
+.status-style {
+  label {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: yellow;
+      border-radius: 50%;
+      right: -19px;
+    }
+  }
+}
+.form-variant-block {
+  .el-input {
+    .el-input__inner {
+      background: #ffffff;
+      border: 1px solid #e4e6ef;
+      padding: 10px !important;
+      border-radius: 5px;
+      @include fontTTinterface(14px, 400);
+      line-height: 18px !important;
+    }
+  }
+  .el-select__input {
+    height: initial;
+  }
+  label {
+    display: inline-flex;
+    @include fontTTinterface(14px, 500);
+    line-height: 18px;
+    margin-bottom: 8px;
     color: #181c32;
     position: relative;
   }
@@ -80,30 +126,6 @@
   grid-gap: 24px;
 }
 
-.category-from-grid {
-  display: grid;
-  grid-template-columns: 5fr 2fr;
-  grid-gap: 24px;
-}
-.category-input-grid {
-  display: grid;
-  grid-template-columns: 4fr 5fr;
-  grid-gap: 24px;
-}
-.category-img-grid {
-  margin-top: 50px;
-  display: flex;
-  flex-direction: column;
-  grid-gap: 24px;
-  .form-block {
-    margin-bottom: 0;
-  }
-}
-.category-select-grid {
-  display: grid;
-  grid-gap: 24px;
-}
-
 // switch
 
 .switch-text {
@@ -114,5 +136,48 @@
     margin-right: 8px;
     line-height: 24px;
     color: #a1a5bf;
+  }
+}
+@media (max-width: 1440px) {
+  .form-block {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+
+    .el-form-item {
+      width: 100%;
+      margin-bottom: 0;
+    }
+    .el-input {
+      .el-input__inner {
+        background: #ffffff;
+        padding: 10.725px 16px !important;
+        border: 1px solid #e4e6ef;
+        border-radius: 5.46px;
+
+        @include fontTTinterface(14.04px, 400);
+        line-height: 19.5px !important;
+        color: #a1a5bf;
+        height: initial !important;
+      }
+    }
+    label {
+      display: inline-flex;
+      @include fontTTinterface(14px, 600);
+      line-height: 18px;
+      margin-bottom: 11px;
+      color: #181c32;
+      position: relative;
+    }
+    .bottom_text {
+      @include fontTTinterface(12px, 400);
+      line-height: 18px;
+      color: #a1a5bf;
+      margin-top: 8px;
+    }
+  }
+  .group-grid {
+    grid-template-columns: auto 44px;
+    grid-gap: 16px;
   }
 }

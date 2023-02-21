@@ -17,6 +17,7 @@
     top: 3.5px;
   }
 }
+
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: #1890ff !important;
   border-color: #1890ff !important;
@@ -31,6 +32,12 @@
 .ant-checkbox-checked {
   &::after {
     border: none !important;
+  }
+}
+.ant-table-thead {
+  .ant-table-selection {
+    display: flex;
+    align-items: center;
   }
 }
 .ant-table-thead > tr > th {
@@ -127,8 +134,11 @@
     .action-btn {
       background: #f3f6f9;
       border-radius: 8px;
-      padding: 8px;
+      width: 40px;
+      height: 40px;
       display: inline-flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
     }
   }
@@ -298,7 +308,7 @@
   .table_product_row {
     h6 {
       line-height: 21px;
-      font-size: 16px;
+      font-size: 14.04px;
       margin-bottom: 6px !important;
     }
     span {
@@ -313,31 +323,64 @@
     }
   }
   .column-price {
-    @include fontTTinterface(16px, 500);
+    @include fontTTinterface(14.04px, 500);
     line-height: 18px;
     color: #181c32;
   }
   .column-qty {
-    @include fontTTinterface(16px, 500);
+    @include fontTTinterface(14.04px, 500);
     line-height: 24px;
     color: #181c32;
   }
   .column-tags {
     .tags-style {
       line-height: 16px;
-      @include fontTTinterface(12px, 500);
-      padding: 6px 18px;
-      border-radius: 6px;
+      @include fontTTinterface(11.7px, 500);
+      padding: 4px 9.75px;
+      border-radius: 5.46px;
+      height: 24px;
     }
   }
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
-    padding: 16px 16px 16px 0 !important;
+    padding: 9.7px 9.7px 9.7px 0 !important;
   }
   .ant-table-column-title {
-    @include fontTTinterface(12px, 600);
+    @include fontTTinterface(11.7px, 600);
     line-height: 18px !important;
     text-transform: uppercase;
     color: #6c7b9a;
+  }
+  .column-btns {
+    span {
+      .action-btn {
+        background: #f3f6f9;
+        border-radius: 5.46px;
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        img {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+  .column-options {
+    .option-items {
+      padding: 4px 9.75px;
+      background: #eff2f5;
+      border-radius: 5.75px;
+      @include fontTTinterface(11.7px, 500);
+      margin-right: 5px;
+      margin-bottom: 5px;
+      height: 24px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
   }
 }

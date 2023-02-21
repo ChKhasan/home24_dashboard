@@ -2,14 +2,14 @@
   <div class="container_xl">
     <div class="card_block py-5">
       <div
-        class="d-flex justify-content-between align-items-center card_header"
+        class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
       >
         <Title title="Characteristic" />
         <AddBtn name="Add Atributs" :icon="true" :callback="toAddProduct" />
       </div>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs  class="form_tabs" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane v-for="item in lang" :label="item.key" :name="item.key">
-          <div class="form-container">
+          <div class="form-container form-container-ltr">
             <FormTitle title="Characteristic" />
             <el-form
               label-position="top"
@@ -29,7 +29,7 @@
                       placeholder="Product model"
                     ></el-input>
                   </el-form-item>
-                  <div class="outline-light-btn">
+                  <div class="outline-btn outline-light-blue-btn">
                     <svg
                       width="24"
                       height="24"
@@ -57,6 +57,10 @@
                       placeholder="Product model"
                     ></el-input>
                   </el-form-item>
+                  <span class="bottom_text"
+                    >A atribut name is required and recommended to be
+                    unique.</span
+                  >
                 </div>
                 <div class="form-block required">
                   <div><label>Options name</label></div>
@@ -76,6 +80,11 @@
                     >
                     </el-option>
                   </el-select>
+                  <span class="bottom_text"
+                    >Set a list of keywords that the category is related to.
+                    Separate the keywords by adding a comma between each
+                    keyword.</span
+                  >
                 </div>
               </div>
               <div class="d-flex justify-content-end">

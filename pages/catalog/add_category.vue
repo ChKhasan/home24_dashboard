@@ -2,14 +2,18 @@
   <div class="container_xl">
     <div class="card_block py-5">
       <div
-        class="d-flex justify-content-between align-items-center card_header"
+        class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
       >
         <Title title="Category edit" />
         <AddBtn name="Save" :icon="false" :callback="toAddProduct" />
       </div>
       <div class="category-from-grid">
         <div class="category-select-grid">
-          <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tabs
+            class="form_tabs"
+            v-model="activeName"
+            @tab-click="handleClick"
+          >
             <el-tab-pane
               v-for="item in lang"
               :label="item.key"
@@ -284,25 +288,32 @@ export default {
 </script>
 <style lang="scss">
 /* you can make up upload button and sample style by using stylesheets */
-.ant-upload-select-picture-card i {
-  font-size: 32px;
-  color: #999;
-}
+.category-img-grid {
+  .ant-upload-select-picture-card i {
+    font-size: 32px;
+    color: #999;
+  }
 
-.ant-upload-select-picture-card .ant-upload-text {
-  margin-top: 8px;
-  color: #666;
-}
-.ant-upload-list-picture-card .ant-upload-list-item {
-  width: 100% !important;
-  height: 100%;
-}
-.ant-upload-list-picture-card-container {
-  width: 100% !important;
-  height: 218px;
-}
-.ant-upload.ant-upload-select-picture-card {
-  width: 100% !important;
-  height: 218px;
+  .ant-upload-select-picture-card .ant-upload-text {
+    margin-top: 8px;
+    color: #666;
+  }
+  .ant-upload-list-picture-card .ant-upload-list-item {
+    width: 100% !important;
+    height: 100%;
+  }
+  .ant-upload-list-picture-card-container {
+    width: 100% !important;
+    height: 218px;
+  }
+  .ant-upload.ant-upload-select-picture-card {
+    width: 100% !important;
+    height: 218px;
+  }
+  @media (max-width: 1440px) {
+    .ant-upload.ant-upload-select-picture-card {
+      height: 160px;
+    }
+  }
 }
 </style>

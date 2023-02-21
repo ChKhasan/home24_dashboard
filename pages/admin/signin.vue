@@ -23,6 +23,7 @@
 </template>
 <script>
 export default {
+  middleware: "auth",
   methods: {
     login() {
       localStorage.setItem("Auth", "token");

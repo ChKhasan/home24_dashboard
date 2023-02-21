@@ -25,3 +25,18 @@
 }
 .ql-picker-label {
 }
+.product-editor {
+  .ql-container {
+    height: 173px !important;
+  }
+}
+@media (max-width: 1440px) {
+  .ql-container {
+    height: 200px !important;
+  }
+  .product-editor {
+    .ql-container {
+      height: 173px !important;
+    }
+  }
+}

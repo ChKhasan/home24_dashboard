@@ -217,7 +217,7 @@
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown> -->
-            <div class="block d-flex align-items-center" @click="logout">
+            <div class="block d-flex align-items-center" @click="$auth.logout('local')">
               <el-avatar
                 shape="circle"
                 size="medium"

@@ -64,10 +64,11 @@ export default {
   },
   middleware: "router-auth",
   components: { quillEditor },
+  props: ['editorClass']
 };
 </script>
 <template>
-  <div>
+  <div :class="editorClass">
     <quill-editor style="min-height: 250px;" :options="editorOption" />
   </div>
 </template>
