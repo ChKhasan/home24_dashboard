@@ -42,7 +42,7 @@
         {{ tags }}
       </span>
       <span slot="btns" slot-scope="text">
-        <el-dropdown trigger="click">
+        <!-- <el-dropdown trigger="click">
           <span class="el-dropdown-link">
             Actions<svg
               width="24"
@@ -61,13 +61,13 @@
             <el-dropdown-item>Edit</el-dropdown-item>
             <el-dropdown-item>Delete</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
-        <!-- <span class="action-btn" @click="tableActions(text)">
+        </el-dropdown> -->
+        <span class="action-btn" @click="tableActions(text)">
           <img :src="editIcon" alt="" />
         </span>
         <span class="action-btn" @click="tableActions(text)">
           <img :src="deleteIcon" alt="" />
-        </span> -->
+        </span>
       </span>
     </a-table>
   </div>
@@ -75,7 +75,7 @@
 <script>
 const columns = [
   {
-    title: "PRODUCT",
+    title: "ПРОДУКТ",
     dataIndex: "img",
     key: "img",
     slots: { title: "customTitle" },
@@ -95,7 +95,7 @@ const columns = [
     colSpan: 0,
   },
   {
-    title: "Code",
+    title: "Код",
     dataIndex: "code",
     scopedSlots: { customRender: "code" },
     className: "column-code",
@@ -103,7 +103,7 @@ const columns = [
     width: "10%",
   },
   {
-    title: "QTY",
+    title: "КОЛ-ВО",
     dataIndex: "qty",
     className: "column-qty",
     key: "qty",
@@ -113,7 +113,7 @@ const columns = [
 
   },
   {
-    title: "PRICE",
+    title: "ЦЕНА",
     dataIndex: "price",
     className: "column-price",
 
@@ -123,7 +123,7 @@ const columns = [
     width: "16%",
   },
   {
-    title: "STATUS",
+    title: "Статус",
     key: "tags",
     dataIndex: "tags",
     scopedSlots: { customRender: "tags" },
@@ -138,7 +138,7 @@ const columns = [
     width: "16%",
   },
   {
-    title: "ACTIONS",
+    title: "действия",
     key: "btns",
     dataIndex: "btns",
     scopedSlots: { customRender: "btns" },

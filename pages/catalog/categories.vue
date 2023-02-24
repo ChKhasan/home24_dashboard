@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Categories"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Categories"
+      title="Категории"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Категории"
     >
       <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
         <span class="svg-icon"
@@ -30,7 +30,7 @@
             </g></svg
           ><!--end::Svg Icon--></span
         >
-        Add Categories
+        Добавить категорию
       </div>
     </TitleBlock>
     <div class="container_xl app-container">
@@ -41,9 +41,9 @@
           <!-- <Title title="Categories panel" /> -->
           <div class="d-flex align-items-between justify-content-between w-100">
             <!-- <SearchBlock /> -->
-            <SearchInput />
+            <SearchInput placeholder="Категория поиска"/>
             <div class="d-flex align-items-center">
-              <AddBtn name="Addition" :icon="true" :callback="toAddProduct" />
+              <AddBtn name="Добавить категорию" :icon="true" :callback="toAddProduct" />
             </div>
           </div>
         </div>

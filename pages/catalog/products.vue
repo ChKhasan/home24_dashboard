@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Products"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Products"
+      title="Продукты"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Продукты"
     >
       <div class="d-flex">
         <!-- <div
@@ -36,7 +36,7 @@
               </g></svg
             ><!--end::Svg Icon--></span
           >
-          Add Product
+          Добавить продукт
         </div>
       </div>
     </TitleBlock>
@@ -47,9 +47,9 @@
         >
           <!-- <Title title="Products panel" /> -->
           <div class="d-flex justify-content-between w-100">
-            <SearchInput />
+            <SearchInput placeholder="Поиск продукта"/>
             <div class="d-flex align-items-center">
-              <AddBtn name="Addition" :callback="toAddProduct" />
+              <AddBtn name="Добавить продукт" :callback="toAddProduct" />
             </div>
           </div>
         </div>

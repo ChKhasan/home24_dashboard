@@ -33,7 +33,7 @@
         {{ tags }}
       </span>
       <span slot="btns" slot-scope="text">
-        <el-dropdown trigger="click">
+        <!-- <el-dropdown trigger="click">
           <span class="el-dropdown-link">
             Actions<svg
               width="24"
@@ -52,13 +52,13 @@
             <el-dropdown-item>Edit</el-dropdown-item>
             <el-dropdown-item>Delete</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
-        <!-- <span class="action-btn" @click="tableActions(text)">
+        </el-dropdown> -->
+        <span class="action-btn" @click="tableActions(text)">
           <img :src="editIcon" alt="" />
         </span>
         <span class="action-btn" @click="tableActions(text)">
           <img :src="deleteIcon" alt="" />
-        </span> -->
+        </span>
       </span>
       <span slot="popular" slot-scope="text">
         <a-checkbox
@@ -72,7 +72,7 @@
 <script>
 const columns = [
   {
-    title: "Category",
+    title: "Категория",
     dataIndex: "category",
     key: "category",
     className: "column-name",
@@ -81,13 +81,13 @@ const columns = [
     align: "left",
   },
   {
-    title: "ICON",
+    title: "Икона",
     dataIndex: "icon",
     key: "icon",
     width: "12%",
   },
   {
-    title: "POPULAR",
+    title: "ПОПУЛЯРНЫЙ",
     dataIndex: "popular",
     key: "popular",
     align: "center",
@@ -95,7 +95,7 @@ const columns = [
     width: "30%",
   },
   {
-    title: "STATUS",
+    title: "Статус",
     key: "tags",
     dataIndex: "tags",
     scopedSlots: { customRender: "tags" },
@@ -103,7 +103,7 @@ const columns = [
     width: "16%",
   },
   {
-    title: "ACTIONS",
+    title: "действия",
     key: "btns",
     dataIndex: "btns",
     scopedSlots: { customRender: "btns" },

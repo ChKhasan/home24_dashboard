@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Products"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Products"
+      title="Категории"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Категории"
     >
       <div class="d-flex">
         <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
@@ -30,7 +30,7 @@
                 ></path>
               </g></svg
           ></span>
-          Add Category
+          Добавить категорию
         </div>
       </div>
     </TitleBlock>
@@ -65,15 +65,12 @@
                 >
                   <div class="form-container form-container-ltr">
                     <div class="d-flex justify-content-between">
-                      <FormTitle title="Category edit" />
-                      <div class="switch-text">
-                        <span>Popluar</span> <a-switch @change="onChange" />
-                      </div>
+                      <FormTitle title="Добавить категорию" />
                     </div>
 
                     <div class="category-input-grid">
                       <div class="form-block required">
-                        <div><label for="">Category name</label></div>
+                        <div><label for="">Название категории</label></div>
                         <el-form-item prop="category_name">
                           <el-input
                             v-model="ruleForm.category_name"
@@ -82,7 +79,7 @@
                         </el-form-item>
                       </div>
                       <div class="form-block required">
-                        <div><label for="">Choose category</label></div>
+                        <div><label for="">Выберите категорию</label></div>
                         <el-form-item prop="choose_category">
                           <el-input
                             v-model="ruleForm.choose_category"
@@ -92,7 +89,7 @@
                       </div>
                     </div>
                     <div class="form-block">
-                      <div><label for="">Product info</label></div>
+                      <div><label for="">Информация о категории</label></div>
                       <Editor />
                     </div>
                   </div>
@@ -100,7 +97,7 @@
               </el-tabs>
               <div class="form-container">
                 <div class="form-block required">
-                  <div><label>Group atributs</label></div>
+                  <div><label>Атрибуты группы</label></div>
                   <el-form-item prop="group_atribut">
                     <el-select
                       v-model="ruleForm.group_atribut"
@@ -122,7 +119,7 @@
                   </el-form-item>
                 </div>
                 <div class="form-block required">
-                  <div><label>Group Characteristic</label></div>
+                  <div><label>Групповая характеристика</label></div>
                   <el-form-item prop="group_characters">
                     <el-select
                       v-model="ruleForm.group_characters"
@@ -160,8 +157,39 @@
           </el-form>
           <div class="category-img-grid">
             <div class="form-container">
+              <FormTitle title="Параметры" />
+              <div class="form-block status-style">
+                <div><label>Статус</label></div>
+                <el-select
+                  class="w-100"
+                  placeholder="Status"
+                  default-first-option
+                  v-model="ruleForm.status"
+                >
+                  <el-option
+                    v-for="item in status"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </div>
               <div class="form-block">
-                <div><label for="">Add product pictures </label></div>
+                <div><label>Порядок</label></div>
+                <el-input
+                  v-model="ruleForm.order"
+                  placeholder="Order"
+                ></el-input>
+              </div>
+              <div
+                class="switch-text form-block d-flex flex-row align-items-center"
+              >
+                <a-switch @change="onChange" />
+                <label class="mx-3 mb-0">Популярный</label>
+              </div>
+              <div class="form-block">
+                <div><label for="">Добавить изображения категории</label></div>
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
@@ -211,10 +239,12 @@
                   </a-modal>
                 </div>
               </div>
-            </div>
-            <div class="form-container">
               <div class="form-block">
-                <div><label for="">Add product icon</label></div>
+                <div><label>Svg</label></div>
+                <el-input v-model="ruleForm.order" placeholder="Svg"></el-input>
+              </div>
+              <div class="form-block">
+                <div><label for="">Добавить значок продукта</label></div>
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
@@ -315,6 +345,16 @@ export default {
           label: "JavaScript",
         },
       ],
+      status: [
+        {
+          value: "active",
+          label: "Active",
+        },
+        {
+          value: "disactive",
+          label: "Disactive",
+        },
+      ],
       value: [],
       rules: {
         category_name: [
@@ -350,6 +390,7 @@ export default {
       ruleForm: {
         category_name: "",
         choose_category: "",
+        status: "active",
       },
       previewVisible: false,
       previewImage: "",
@@ -408,6 +449,17 @@ export default {
 <style lang="scss">
 /* you can make up upload button and sample style by using stylesheets */
 .category-img-grid {
+  .ant-upload.ant-upload-select-picture-card {
+    background: #f3f6f9;
+  }
+  .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-eye-o,
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-download,
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-delete {
+    color: #000;
+  }
   .ant-upload-select-picture-card i {
     font-size: 32px;
     color: #999;

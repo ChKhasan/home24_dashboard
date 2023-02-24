@@ -27,7 +27,7 @@
       <span slot="customTitle"></span>
 
       <span slot="btns" slot-scope="text">
-        <el-dropdown trigger="click">
+        <!-- <el-dropdown trigger="click">
           <span class="el-dropdown-link">
             Actions<svg
               width="24"
@@ -46,56 +46,25 @@
             <el-dropdown-item>Edit</el-dropdown-item>
             <el-dropdown-item>Delete</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
-        <!-- <span class="action-btn" @click="tableActions(text)">
+        </el-dropdown> -->
+        <span class="action-btn" @click="tableActions(text)">
           <img :src="editIcon" alt="" />
         </span>
         <span class="action-btn" @click="tableActions(text)">
           <img :src="deleteIcon" alt="" />
-        </span> -->
+        </span>
       </span>
     </a-table>
   </div>
 </template>
 <script>
-const columns = [
-  {
-    title: "ATRIBUTS",
-    dataIndex: "name",
-    key: "name",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "name" },
-    className: "column-name",
-    width: "30%",
-  },
-  {
-    title: "OPTIONS",
-    dataIndex: "options",
-    scopedSlots: { customRender: "options" },
-    className: "column-options",
-    key: "options",
-  },
-
-  {
-    title: "ACTIONS",
-    key: "btns",
-    dataIndex: "btns",
-    scopedSlots: { customRender: "btns" },
-    className: "column-btns",
-    width: "100px",
-    align: "right",
-  },
-];
-
 export default {
-  props: ["data"],
+  props: ["data", "columns"],
   data() {
     return {
       pageSize: 10,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-
-      columns,
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
     };

@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Atributs"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Atributs"
+      title="Атрибуты"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Атрибуты"
     >
       <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
         <span class="svg-icon"
@@ -30,7 +30,7 @@
             </g></svg
           ><!--end::Svg Icon--></span
         >
-        Add Product
+        Добавить атрибуты
       </div>
     </TitleBlock>
     <div class="container_xl app-container">
@@ -46,18 +46,18 @@
           >
             <div>
               <!-- <SearchBlock /> -->
-              <SearchInput />
+              <SearchInput placeholder="Атрибуты поиска" />
             </div>
             <div class="d-flex align-items-center">
               <AddBtn
-                name="Add Atributs"
+                name="Добавить атрибуты"
                 :icon="true"
                 :callback="toAddProduct"
               />
             </div>
           </div>
         </div>
-        <SelectAntTable :data="data" />
+        <SelectAntTable :data="data" :columns="columns" />
       </div>
     </div>
   </div>
@@ -70,11 +70,38 @@ import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
 import SearchBlock from "../../components/form/Search-block.vue";
 import SearchInput from "../../components/form/Search-input.vue";
-
 export default {
   layout: "toolbar",
   data() {
     return {
+      columns: [
+        {
+          title: "АТРИБУТЫ",
+          dataIndex: "name",
+          key: "name",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "name" },
+          className: "column-name",
+          width: "30%",
+        },
+        {
+          title: "ПАРАМЕТРЫ",
+          dataIndex: "options",
+          scopedSlots: { customRender: "options" },
+          className: "column-options",
+          key: "options",
+        },
+
+        {
+          title: "ДЕЙСТВИЯ",
+          key: "btns",
+          dataIndex: "btns",
+          scopedSlots: { customRender: "btns" },
+          className: "column-btns",
+          width: "100px",
+          align: "right",
+        },
+      ],
       data: [
         {
           key: "1",

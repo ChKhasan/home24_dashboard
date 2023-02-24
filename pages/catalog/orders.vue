@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="orders">
     <TitleBlock
-      title="Orders"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Orders"
+      title="Заказы"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Заказы"
     >
       <!-- <div class="add-btn add-btn-padding btn-light-primary">
         Cancel
@@ -17,13 +17,13 @@
           <!-- <Title title="Orders" /> -->
           <div class="d-flex align-items-between justify-content-between w-100">
             <!-- <SearchBlock /> -->
-            <SearchInput />
+            <SearchInput placeholder="Заказ" />
             <div class="d-flex align-items-center">
               <!-- <AddBtn name="Addition" :icon="true" :callback="toAddProduct" /> -->
             </div>
           </div>
         </div>
-        <SelectAntTable :data="data" />
+        <SelectAntTable :data="data" :columns="columns" />
       </div>
     </div>
   </div>
@@ -134,6 +134,34 @@ export default {
           btns: "id",
         },
       ],
+      columns: [
+        {
+          title: "Характеристика",
+          dataIndex: "name",
+          key: "name",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "name" },
+          className: "column-name",
+          width: "30%",
+        },
+        {
+          title: "ПАРАМЕТРЫ",
+          dataIndex: "options",
+          scopedSlots: { customRender: "options" },
+          className: "column-options",
+          key: "options",
+        },
+
+        {
+          title: "ДЕЙСТВИЯ",
+          key: "btns",
+          dataIndex: "btns",
+          scopedSlots: { customRender: "btns" },
+          className: "column-btns",
+          width: "100px",
+          align: "right",
+        },
+      ],
     };
   },
   methods: {
@@ -142,7 +170,14 @@ export default {
       console.log("errors");
     },
   },
-  components: { AntdTable, AddBtn, Title, SelectAntTable, TitleBlock, SearchInput },
+  components: {
+    AntdTable,
+    AddBtn,
+    Title,
+    SelectAntTable,
+    TitleBlock,
+    SearchInput,
+  },
 };
 </script>
 <style lang=""></style>

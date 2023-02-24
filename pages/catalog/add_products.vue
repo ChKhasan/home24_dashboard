@@ -62,7 +62,7 @@
               >
                 <div class="form-container form-container-ltr">
                   <div class="d-flex justify-content-start">
-                    <FormTitle title="Product edit" />
+                    <FormTitle title="Добавить продукт" />
                   </div>
                   <el-form
                     label-position="top"
@@ -74,7 +74,7 @@
                     action=""
                   >
                     <div class="form-block required">
-                      <div><label for="">Name</label></div>
+                      <div><label for="">Имя</label></div>
                       <el-form-item prop="nbm">
                         <el-input
                           v-model="ruleForm.nbm"
@@ -84,7 +84,7 @@
                     </div>
                     <div class="products-input-grid-3">
                       <div class="form-block">
-                        <div><label for="">Model</label></div>
+                        <div><label for="">Модель</label></div>
                         <el-form-item prop="nbm">
                           <el-input
                             v-model="ruleForm.nbm"
@@ -93,7 +93,7 @@
                         </el-form-item>
                       </div>
                       <div class="form-block">
-                        <div><label for="">Name</label></div>
+                        <div><label for="">Имя</label></div>
                         <el-form-item prop="nbm">
                           <el-input
                             v-model="ruleForm.nbm"
@@ -102,7 +102,7 @@
                         </el-form-item>
                       </div>
                       <div class="form-block">
-                        <div><label for="">Code</label></div>
+                        <div><label for="">Код</label></div>
                         <el-form-item prop="nbm">
                           <el-input
                             disabled
@@ -117,12 +117,12 @@
             </el-tabs>
             <div class="form-container">
               <div class="d-flex justify-content-start">
-                <FormTitle title="Product details" />
+                <FormTitle title="Информация о продукте" />
               </div>
               <div class="d-flex align-items-end">
                 <div class="products-input-grid-3 w-100">
                   <div class="form-block mb-0">
-                    <div><label>Category</label></div>
+                    <div><label>Категория</label></div>
                     <el-select
                       v-model="value"
                       allow-create
@@ -137,10 +137,10 @@
                       >
                       </el-option>
                     </el-select>
-                    <span class="bottom_text">Add product to a category</span>
+                    <span class="bottom_text">Добавить товар в категорию</span>
                   </div>
                   <div class="form-block mb-0">
-                    <div><label>Post category</label></div>
+                    <div><label>Дочерняя категория</label></div>
                     <el-select
                       v-model="value"
                       allow-create
@@ -155,10 +155,10 @@
                       >
                       </el-option>
                     </el-select>
-                    <span class="bottom_text">Add product to a category</span>
+                    <span class="bottom_text">Добавить товар в категорию</span>
                   </div>
                   <div class="form-block mb-0">
-                    <div><label>Last category</label></div>
+                    <div><label>Последняя категория</label></div>
                     <el-select
                       v-model="value"
                       allow-create
@@ -173,7 +173,7 @@
                       >
                       </el-option>
                     </el-select>
-                    <span class="bottom_text">Add product to a category</span>
+                    <span class="bottom_text">Добавить товар в категорию</span>
                   </div>
                 </div>
                 <div class="prducts-details-btns">
@@ -349,17 +349,17 @@
               >
                 <div class="form-container form-container-ltr">
                   <div class="d-flex justify-content-start">
-                    <FormTitle title="Product info" />
+                    <FormTitle title="Информация о продукте" />
                   </div>
                   <el-tabs
                     class="desc_tab"
                     v-model="activeDesc"
                     @tab-click="handleClick"
                   >
-                    <el-tab-pane label="Description" name="Description">
+                    <el-tab-pane label="Описание" name="Description">
                       <Editor editorClass="product-editor mt-1"
                     /></el-tab-pane>
-                    <el-tab-pane label="Character" name="Character">
+                    <el-tab-pane label="Характеристика" name="Character">
                       <ProductCharacterList />
                     </el-tab-pane>
                   </el-tabs>
@@ -435,6 +435,17 @@
                       </div>
                     </div>
                   </a-upload>
+                  <a-modal
+                    :visible="previewVisible"
+                    :footer="null"
+                    @cancel="handleCancel"
+                  >
+                    <img
+                      alt="example"
+                      style="width: 100%;"
+                      :src="previewImage"
+                    />
+                  </a-modal>
                 </div>
                 <p class="variant-img-text">
                   Изображение товар
@@ -628,7 +639,7 @@
                 action=""
               >
                 <div class="form-block status-style">
-                  <div><label for="status">Status</label></div>
+                  <div><label for="status">Статус</label></div>
                   <el-form-item>
                     <el-select
                       id="status"
@@ -636,7 +647,7 @@
                       v-model="value"
                       allow-create
                       default-first-option
-                      placeholder="Product name"
+                      placeholder="Статус"
                     >
                       <el-option
                         v-for="item in options"
@@ -647,15 +658,15 @@
                       </el-option>
                     </el-select>
                   </el-form-item>
-                  <span class="bottom_text">Set the product status</span>
+                  <span class="bottom_text">Установить статус продукта</span>
                 </div>
                 <div class="form-block mb-0">
-                  <div><label for="">Brand</label></div>
+                  <div><label for="">Бренд</label></div>
                   <div class="product-plus-btn">
                     <el-form-item prop="nbm">
                       <el-input
                         v-model="ruleForm.nbm"
-                        placeholder="Product model"
+                        placeholder="Бренд"
                       ></el-input>
                     </el-form-item>
                     <div class="outline-btn outline-light-blue-btn mt-1">
@@ -676,7 +687,7 @@
                       </svg>
                     </div>
                   </div>
-                  <div class="bottom_text">Set the product status</div>
+                  <div class="bottom_text">Установить статус продукта</div>
                 </div>
               </el-form>
             </div>
@@ -685,7 +696,7 @@
             </div>
             <div class="form-container">
               <div class="form-block mb-0">
-                <label for="">Comment</label>
+                <label for="">Комментарий</label>
               </div>
               <CommentCard />
               <CommentCard />
@@ -939,22 +950,31 @@ export default {
     text-align: center;
     color: #3699ff;
   }
+  .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
   .ant-upload.ant-upload-select-picture-card {
     background: #f3f6f9;
   }
-  .anticon {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(#fff, 0.4);
-    svg {
-      width: 16px;
-      height: 16px;
-    }
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-eye-o,
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-download,
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-delete {
+    color: #000;
   }
+  // .anticon {
+  //   width: 20px;
+  //   height: 20px;
+  //   border-radius: 50%;
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   background: rgba(#fff, 0.4);
+  //   color: #000;
+  //   svg {
+  //     width: 16px;
+  //     height: 16px;
+  //   }
+  // }
   // .ant-upload-list-item-actions {
   //   a {
   //     display: none;

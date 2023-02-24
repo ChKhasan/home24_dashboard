@@ -1,13 +1,13 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Characteristic"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Characteristic"
+      title="Характеристика"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Характеристика"
     >
-    <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
+      <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
         <span class="svg-icon"
-          ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
+          ><svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             width="24px"
@@ -28,9 +28,8 @@
                 fill="#000000"
               ></path>
             </g></svg
-          ><!--end::Svg Icon--></span
-        >
-        Add Product
+        ></span>
+        Добавить характеристику
       </div>
     </TitleBlock>
     <div class="container_xl app-container">
@@ -38,17 +37,18 @@
         <div
           class="d-flex justify-content-between align-items-center card_header"
         >
-          <!-- <Title title="Characteristic" /> -->
           <div class="d-flex align-items-between justify-content-between w-100">
-            <!-- <SearchBlock /> -->
-            <SearchInput />
+            <SearchInput placeholder="Характеристики поиска" />
             <div class="d-flex align-items-center">
-              <AddBtn name="Addition" :icon="true" :callback="toAddProduct" />
+              <AddBtn
+                name="Добавить характеристику"
+                :icon="true"
+                :callback="toAddProduct"
+              />
             </div>
           </div>
         </div>
-        <SelectAntTable :data="data" />
-        <!-- <Table /> -->
+        <SelectAntTable :data="data" :columns="columns" />
       </div>
     </div>
   </div>
@@ -135,6 +135,34 @@ export default {
             "OPTIONS",
           ],
           btns: "id",
+        },
+      ],
+      columns: [
+        {
+          title: "Характеристика",
+          dataIndex: "name",
+          key: "name",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "name" },
+          className: "column-name",
+          width: "30%",
+        },
+        {
+          title: "ПАРАМЕТРЫ",
+          dataIndex: "options",
+          scopedSlots: { customRender: "options" },
+          className: "column-options",
+          key: "options",
+        },
+
+        {
+          title: "ДЕЙСТВИЯ",
+          key: "btns",
+          dataIndex: "btns",
+          scopedSlots: { customRender: "btns" },
+          className: "column-btns",
+          width: "100px",
+          align: "right",
         },
       ],
     };

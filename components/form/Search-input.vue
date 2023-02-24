@@ -24,10 +24,12 @@
         ></path>
       </svg>
     </span>
-    <input type="text" placeholder="Search Product" />
+    <input type="text" :placeholder="placeholder" />
   </div>
 </template>
 <script>
-export default {};
+export default {
+  props: ["placeholder"],
+};
 </script>
 <style lang=""></style>

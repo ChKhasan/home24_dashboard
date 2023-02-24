@@ -1,57 +1,34 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Atributs"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Atributs"
+      title="Атрибуты"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Атрибуты"
     >
       <div class="d-flex">
-        <div
-          class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-          @click="$router.push('/catalog/atributs')"
-        >
-          Cancel
-        </div>
-        <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
-          <span class="svg-icon"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              version="1.1"
-            >
-              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                <path
-                  d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                  fill="#000000"
-                  fill-rule="nonzero"
-                  opacity="0.3"
-                ></path>
-                <path
-                  d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                  fill="#000000"
-                ></path>
-              </g></svg
-          ></span>
-          Save changes
-        </div>
+        <span class="mx-3">
+          <LayoutHeaderBtn
+            name="Отмена"
+            :headerbtnCallback="headerbtnCallback"
+            :light="true"
+          />
+        </span>
+        <LayoutHeaderBtn
+          name="Сохранить изменения"
+          :headerbtnCallback="headerbtnCallback"
+          :light="false"
+        />
       </div>
     </TitleBlock>
     <div class="container_xl">
       <div class="card_block-form py-5">
         <div
           class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
-        >
-          <!-- <Title title="Atributs" />
-        <AddBtn name="Add Atributs" :icon="true" :callback="toAddProduct" /> -->
-        </div>
+        ></div>
         <el-tabs class="form_tabs" v-model="activeName">
           <el-tab-pane v-for="item in lang" :label="item.key" :name="item.key">
             <div class="form-container form-container-ltr">
-              <FormTitle title="Atribut" />
+              <FormTitle title="Атрибут" />
               <el-form
                 label-position="top"
                 :model="ruleForm"
@@ -62,7 +39,7 @@
                 action=""
               >
                 <div class="form-block required">
-                  <div><label for="">Group</label></div>
+                  <div><label for="">Группа</label></div>
                   <div class="group-grid">
                     <el-form-item prop="atribut_group">
                       <el-select
@@ -104,44 +81,64 @@
                   </div>
                 </div>
                 <div class="atribut-input-grid">
+                  <!-- <FormBlock
+                    label="Atribut Name"
+                    placeholder="Atribut Name"
+                    text="A atribut name is required and recommended to be
+                      unique."
+                    :value="ruleForm.atribut_name"
+                    prop="atribut_name"
+                  /> -->
                   <div class="form-block required">
-                    <div><label for="">Atribut Name </label></div>
+                    <div><label for="">Имя атрибута</label></div>
                     <el-form-item prop="atribut_name">
                       <el-input
                         v-model="ruleForm.atribut_name"
-                        placeholder="Product model"
+                        placeholder="Atribut Name"
                       ></el-input>
                     </el-form-item>
                     <span class="bottom_text"
-                      >A atribut name is required and recommended to be
-                      unique.</span
+                      >Имя атрибута является обязательным и рекомендуется
+                      уникальный.</span
                     >
                   </div>
                   <div class="form-block required">
-                    <div><label>Options name</label></div>
-                    <el-form-item prop="options_option" label-position="top">
-                      <el-input
+                    <div><label>Имя опции</label></div>
+                    <el-form-item label-position="top">
+                      <el-select
+                        class="w-100"
                         v-model="ruleForm.options_option"
-                        placeholder="Product model"
-                      ></el-input>
+                        filterable
+                        multiple
+                        allow-create
+                        placeholder="Option name"
+                      >
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
                     </el-form-item>
                     <span class="bottom_text"
-                      >Set a list of keywords that the category is related to.
-                      Separate the keywords by adding a comma between each
-                      keyword.</span
+                      >Установите список ключевых слов, с которыми связана категория.
+                      Разделяйте ключевые слова, добавляя запятую между каждым
+                      ключевое слово.</span
                     >
                   </div>
                 </div>
                 <div class="d-flex justify-content-end">
                   <div class="form-btn form-outline-transparent mx-3">
-                    Cancel
+                    Отмена
                   </div>
                   <div
                     type="submit"
                     class="form-btn form-btn-primary"
                     @click="submitForm('ruleForm')"
                   >
-                    Save changes {{ item.key }}
+                  Сохранить изменения {{ item.key }}
                   </div>
                 </div>
               </el-form>
@@ -157,6 +154,8 @@ import AddBtn from "../../components/form/Add-btn.vue";
 import Title from "../../components/Title.vue";
 import FormTitle from "../../components/Form-title.vue";
 import TitleBlock from "../../components/Title-block.vue";
+import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
+import FormBlock from "../../components/form/FormBlock.vue";
 
 export default {
   layout: "toolbar",
@@ -204,13 +203,6 @@ export default {
             trigger: "change",
           },
         ],
-        options_option: [
-          {
-            required: true,
-            // message: "incorrec",
-            trigger: "change",
-          },
-        ],
       },
       ruleForm: {
         atribut_group: "",
@@ -222,12 +214,16 @@ export default {
 
   methods: {
     submitForm(ruleForm) {
-      this.$refs[ruleForm][0].validate((valid) => {
-        if (valid) {
-        } else {
-          return false;
-        }
-      });
+      console.log(this.ruleForm);
+      // this.$refs[ruleForm][0].validate((valid) => {
+      //   if (valid) {
+      //   } else {
+      //     return false;
+      //   }
+      // });
+    },
+    headerbtnCallback() {
+      console.log("fsfsdf");
     },
     show(name) {
       this.$modal.show(name);
@@ -235,7 +231,6 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-
     toAddProduct() {
       this.$router.push("/catalog/add_products");
     },
@@ -246,7 +241,8 @@ export default {
     Title,
     FormTitle,
     TitleBlock,
+    LayoutHeaderBtn,
+    FormBlock,
   },
 };
 </script>
-<style lang=""></style>

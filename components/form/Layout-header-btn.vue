@@ -1,11 +1,12 @@
-<template lang="html">
+<template lang="">
   <div
-    class="add-btn add-btn-padding add-btn-primary"
-    :class="{ 'add-btn-padding-icon': !icon }"
+    class="add-btn add-header-btn add-header-btn-padding"
+    :class="light ? 'btn-light-primary' : 'btn-primary'"
     @click="execute"
   >
     <span class="svg-icon"
       ><svg
+        v-if="!light"
         xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         width="24px"
@@ -25,35 +26,30 @@
             d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
             fill="#000000"
           ></path>
-        </g></svg
-    ></span>
-    {{ name }}
+        </g></svg></span
+    >{{ name }}
   </div>
 </template>
 <script>
 export default {
   props: {
-    callback: {
+    headerbtnCallback: {
       type: Function,
     },
     name: {
       type: String,
     },
-    icon: {
+    light: {
       type: Boolean,
     },
   },
-  data() {
-    return {
-      plusIcon: require("~/assets/svg/components/add-btn-icon.svg"),
-    };
-  },
   methods: {
     execute() {
-      if (this.callback) {
-        this.callback();
+      if (this.headerbtnCallback) {
+        this.headerbtnCallback();
       }
     },
   },
 };
 </script>
+<style lang=""></style>

@@ -16,7 +16,10 @@
 
       @include fontInter(14.3px, 400);
       line-height: 21.5px !important;
-      color: #a1a5bf;
+      color: #181c32 !important;
+      &::placeholder {
+        color: #a1a5bf;
+      }
       height: initial !important;
     }
   }
