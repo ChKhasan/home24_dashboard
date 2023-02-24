@@ -174,9 +174,10 @@
 .create-inner-variant {
   border: 1px dashed #3699ff;
   border-radius: 8px;
-  padding-top: 16px;
-  padding-bottom: 16px;
-  width: 100%;
+  // padding-top: 16px;
+  // padding-bottom: 16px;
+  // width: 100%;
+  padding: 16px 24px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -256,6 +257,26 @@
     }
   }
 }
+.variant-header {
+  padding-bottom: 16px;
+  margin-top: -8px;
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    border-bottom: 1px solid #ebedf3;
+    width: calc(100% + 48px);
+    left: -24px;
+  }
+}
+.variant-title {
+  @include fontPoppins(16.5px, 500);
+  color: #181c32;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+}
 .search-input-icon {
   display: flex;
   align-items: center;
@@ -291,9 +312,7 @@
     flex-direction: column;
     gap: 13px;
   }
-  .product-plus-btn {
-    grid-template-columns: auto 44px;
-  }
+
   .show-mode {
     border-radius: 5.46px;
     height: 44px;

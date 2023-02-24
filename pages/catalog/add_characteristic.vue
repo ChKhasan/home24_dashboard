@@ -80,7 +80,7 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <div class="outline-btn outline-light-blue-btn">
+                    <div class="outline-btn outline-light-blue-btn mt-1">
                       <svg
                         width="24"
                         height="24"

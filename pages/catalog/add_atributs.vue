@@ -6,6 +6,12 @@
       lastLink="Atributs"
     >
       <div class="d-flex">
+        <div
+          class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+          @click="$router.push('/catalog/atributs')"
+        >
+          Cancel
+        </div>
         <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
           <span class="svg-icon"
             ><svg
@@ -30,125 +36,121 @@
                 ></path>
               </g></svg
           ></span>
-          Add Atributs
+          Save changes
         </div>
       </div>
     </TitleBlock>
-  <div class="container_xl">
-    <div class="card_block-form py-5">
-      <div
-        class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
-      >
-        <!-- <Title title="Atributs" />
+    <div class="container_xl">
+      <div class="card_block-form py-5">
+        <div
+          class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
+        >
+          <!-- <Title title="Atributs" />
         <AddBtn name="Add Atributs" :icon="true" :callback="toAddProduct" /> -->
-      </div>
-      <el-tabs class="form_tabs" v-model="activeName">
-        <el-tab-pane v-for="item in lang" :label="item.key" :name="item.key">
-          <div class="form-container form-container-ltr">
-            <FormTitle title="Atribut" />
-            <el-form
-              label-position="top"
-              :model="ruleForm"
-              :rules="rules"
-              ref="ruleForm"
-              label-width="120px"
-              class="demo-ruleForm"
-              action=""
-            >
-              <div class="form-block required">
-                <div><label for="">Group</label></div>
-                <div class="group-grid">
-                  <el-form-item prop="atribut_group">
-                    <el-select
-                      class="w-100"
-                      v-model="ruleForm.atribut_group"
-                      filterable
-                      allow-create
-                      placeholder="Choose tags for your article"
-                    >
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+        </div>
+        <el-tabs class="form_tabs" v-model="activeName">
+          <el-tab-pane v-for="item in lang" :label="item.key" :name="item.key">
+            <div class="form-container form-container-ltr">
+              <FormTitle title="Atribut" />
+              <el-form
+                label-position="top"
+                :model="ruleForm"
+                :rules="rules"
+                ref="ruleForm"
+                label-width="120px"
+                class="demo-ruleForm"
+                action=""
+              >
+                <div class="form-block required">
+                  <div><label for="">Group</label></div>
+                  <div class="group-grid">
+                    <el-form-item prop="atribut_group">
+                      <el-select
+                        class="w-100"
+                        v-model="ruleForm.atribut_group"
+                        filterable
+                        allow-create
+                        placeholder="Choose tags for your article"
                       >
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <div
-                    class="outline-btn outline-light-blue-btn"
-                    @click="show('add_atribute')"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
+                    </el-form-item>
+                    <div
+                      class="outline-btn outline-light-blue-btn mt-2"
+                      @click="show('add_atribute_group')"
                     >
-                      <path
-                        d="M12 6V18M18 12L6 12"
-                        stroke="#5899FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 6V18M18 12L6 12"
+                          stroke="#5899FF"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="atribut-input-grid">
-                <div class="form-block required">
-                  <div><label for="">Atribut Name </label></div>
-                  <el-form-item prop="atribut_name">
-                    <el-input
-                      v-model="ruleForm.atribut_name"
-                      placeholder="Product model"
-                    ></el-input>
-                  </el-form-item>
-                  <span class="bottom_text"
-                    >A atribut name is required and recommended to be
-                    unique.</span
+                <div class="atribut-input-grid">
+                  <div class="form-block required">
+                    <div><label for="">Atribut Name </label></div>
+                    <el-form-item prop="atribut_name">
+                      <el-input
+                        v-model="ruleForm.atribut_name"
+                        placeholder="Product model"
+                      ></el-input>
+                    </el-form-item>
+                    <span class="bottom_text"
+                      >A atribut name is required and recommended to be
+                      unique.</span
+                    >
+                  </div>
+                  <div class="form-block required">
+                    <div><label>Options name</label></div>
+                    <el-form-item prop="options_option" label-position="top">
+                      <el-input
+                        v-model="ruleForm.options_option"
+                        placeholder="Product model"
+                      ></el-input>
+                    </el-form-item>
+                    <span class="bottom_text"
+                      >Set a list of keywords that the category is related to.
+                      Separate the keywords by adding a comma between each
+                      keyword.</span
+                    >
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <div class="form-btn form-outline-transparent mx-3">
+                    Cancel
+                  </div>
+                  <div
+                    type="submit"
+                    class="form-btn form-btn-primary"
+                    @click="submitForm('ruleForm')"
                   >
+                    Save changes {{ item.key }}
+                  </div>
                 </div>
-                <div class="form-block required">
-                  <div><label>Options name</label></div>
-                  <el-form-item prop="options_option" label-position="top">
-                    <el-input
-                      v-model="ruleForm.options_option"
-                      placeholder="Product model"
-                    ></el-input>
-                  </el-form-item>
-                  <span class="bottom_text"
-                    >Set a list of keywords that the category is related to.
-                    Separate the keywords by adding a comma between each
-                    keyword.</span
-                  >
-                </div>
-              </div>
-              <div class="d-flex justify-content-end">
-                <div class="form-btn form-outline-transparent mx-3">
-                  Cancel
-                </div>
-                <div
-                  type="submit"
-                  class="form-btn form-btn-primary"
-                  @click="submitForm('ruleForm')"
-                >
-                  Save changes {{ item.key }}
-                </div>
-              </div>
-            </el-form>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
+              </el-form>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
-    <modal :adaptive="true" name="add_atribute" width="546px" height="auto">
-      <h1 @click="hide('add_atribute')">Atribute</h1>
-    </modal>
   </div>
-</div>
-
 </template>
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
@@ -243,8 +245,8 @@ export default {
     AddBtn,
     Title,
     FormTitle,
-    TitleBlock
-},
+    TitleBlock,
+  },
 };
 </script>
 <style lang=""></style>

@@ -58,7 +58,6 @@
           </div>
         </div>
         <SelectAntTable :data="data" />
-        <!-- <Table /> -->
       </div>
     </div>
   </div>

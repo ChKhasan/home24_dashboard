@@ -367,8 +367,8 @@
               </el-tab-pane>
             </el-tabs>
             <div class="form-container" v-for="element in productVariant">
-              <div class="d-flex justify-content-between title_border_bottom">
-                <FormTitle :title="`Вариация №${element.id}`" />
+              <div class="d-flex justify-content-between variant-header">
+                <h4 class="variant-title">Вариация №{{ element.id }}</h4>
                 <div
                   class="variant-btn variant-btn-delete"
                   @click="deleteVariant(element.id)"
@@ -554,33 +554,35 @@
                   </div>
                 </div>
               </div>
-              <div
-                class="create-inner-variant"
-                @click="addInnerVariant(element.id)"
-              >
-                <svg
-                  width="17"
-                  height="16"
-                  viewBox="0 0 17 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+              <div class="d-flex justify-content-start">
+                <div
+                  class="create-inner-variant"
+                  @click="addInnerVariant(element.id)"
                 >
-                  <path
-                    d="M3 8H14"
-                    stroke="#3699FF"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M8.5 2.5V13.5"
-                    stroke="#3699FF"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                Добавит внутренний варизаци
+                  <svg
+                    width="17"
+                    height="16"
+                    viewBox="0 0 17 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 8H14"
+                      stroke="#3699FF"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M8.5 2.5V13.5"
+                      stroke="#3699FF"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  Добавит внутренний варизаци
+                </div>
               </div>
             </div>
             <div>
