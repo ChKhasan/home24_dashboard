@@ -2,7 +2,22 @@
   border: 0;
   padding-top: 0 !important;
   padding-bottom: 1.25rem !important;
-  border-radius: 0.625rem;
+  border-radius: 7.125px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  margin-top: 25px;
+  padding: 0 29.25px;
+}
+.card_block-form {
+  border: 0;
+  padding-top: 0 !important;
+  padding-bottom: 1.25rem !important;
+  border-radius: 7.125px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -10,14 +25,14 @@
   word-wrap: break-word;
   background-color: transparent;
   background-clip: border-box;
+  margin-top: 25px;
 }
 .card_block_padd {
   padding-left: 2.25 * 13px;
   padding-right: 2.25 * 13px;
 }
 .card_header {
-  padding-top: 54px;
-  padding-bottom: 50px;
+  padding: 16.25px 0;
 }
 .card_tabs_padding {
   padding-bottom: 18px !important;
@@ -31,19 +46,18 @@
 
 .form-container {
   background: #ffffff;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 8.125px;
+  padding: 29.25px;
+  box-shadow: 0px 0px 20px 0px rgba(76, 87, 125, 0.02);
 }
 .form-container-ltr {
   border-top-left-radius: 0 !important;
 }
 @media (max-width: 1440px) {
-  .card_header {
-    padding-top: 32px;
-    padding-bottom: 32px;
-  }
   .form-container {
     background: #ffffff;
     border-radius: 8.125px;
+  padding: 24px;
+
   }
 }

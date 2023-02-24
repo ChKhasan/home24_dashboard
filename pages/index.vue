@@ -5,8 +5,8 @@
 <script>
 export default {
   middleware: "auth",
-  // mounted() {
-  //   this.$router.push('/admin/signin')
-  // }
+  asyncData({ redirect }) {
+    redirect("/admin/login");
+  },
 };
 </script>

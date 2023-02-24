@@ -17,7 +17,11 @@
     top: 3.5px;
   }
 }
-
+.ant-table-row {
+  &:hover {
+    background: #fff !important;
+  }
+}
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: #1890ff !important;
   border-color: #1890ff !important;
@@ -26,7 +30,7 @@
   span {
     width: 100%;
     display: flex !important;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 }
 .ant-checkbox-checked {
@@ -38,27 +42,54 @@
   .ant-table-selection {
     display: flex;
     align-items: center;
+    .ant-checkbox-inner {
+      background: #f4f4f4;
+      border: 1px solid #f4f4f4;
+    }
+  }
+  .column-name {
+    line-height: 18px !important;
+    height: 18px;
+  }
+}
+
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: #f4f4f4 !important;
+}
+.ant-checkbox-wrapper {
+  .ant-checkbox-inner {
+    background: #f4f4f4;
+    border: 1px solid #f4f4f4;
+    width: 20px !important;
+    height: 20px !important;
   }
 }
 .ant-table-thead > tr > th {
-  background: #fafbfc !important;
-  border-bottom: 1px solid #d6dee9;
+  background: #fff !important;
+  border-bottom: 1px dashed #f4f4f4 !important;
+  padding: 14.25px 9.75px 14.25px 0 !important;
 }
 
-.ant-table-thead > tr > th,
 .ant-table-tbody > tr > td {
-  padding: 24px 16px 24px 0 !important;
+  padding-left: 0 !important;
+  &:last-child {
+    padding-right: 0 !important;
+  }
+  &:first-child {
+  }
 }
 .product_table {
   .ant-table-tbody > tr > td {
-    border-bottom: 1px solid #d6dee9 !important;
+    border-bottom: 1px dashed #f4f4f4 !important;
   }
 }
 .ant-table-column-title {
-  @include fontTTinterface(14px, 600);
+  @include fontInter(12.35px, 600);
   line-height: 18px !important;
   text-transform: uppercase;
-  color: #6c7b9a;
+  color: #b5b5c3;
 }
 .table_product_row {
   display: flex;
@@ -123,10 +154,27 @@
 .column-tags {
   .tags-style {
     line-height: 17px;
-    text-transform: uppercase;
+    text-transform: capitalize;
     border-radius: 8px;
     @include fontTTinterface(14px, 500);
     padding: 8px 24px;
+  }
+}
+.table_actions {
+  border-radius: 6.175px !important;
+  box-shadow: 0px 0px 50px 0px rgba(82, 63, 105, 0.15);
+  border: none !important;
+  .popper__arrow {
+    display: none !important;
+  }
+  .el-dropdown-menu__item {
+    color: #7e8299;
+    @include fontInter(12.35px, 500);
+    padding: 8.45px 9.75px;
+    line-height: 18px;
+    width: 117px;
+    border-radius: 6.175px;
+    margin: 0;
   }
 }
 .column-btns {
@@ -140,6 +188,28 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+    }
+  }
+  .el-dropdown {
+    .el-dropdown-link {
+      display: flex;
+      padding: 8px 17.25px;
+      color: #7e8299;
+      background: #f9f9f9;
+      border-radius: 5.525px;
+      @include fontInter(12.35px, 500);
+      line-height: 18px;
+      align-items: center;
+      transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      svg {
+        width: 15px;
+        height: 15px;
+      }
+      &:hover {
+        background: #f1faff;
+        color: #009ef7;
+      }
     }
   }
 }
@@ -172,6 +242,20 @@
   thead {
     display: none;
   }
+}
+.ant-table-thead
+  > tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+  > td,
+.ant-table-tbody
+  > tr.ant-table-row-hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+  > td,
+.ant-table-thead
+  > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+  > td,
+.ant-table-tbody
+  > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
+  > td {
+  background: #fff !important;
 }
 .ant-table-row-cell-break-word {
   position: relative;
@@ -295,15 +379,15 @@
   margin-right: 16px;
 }
 .select-table {
-  border-radius: 15px;
-  overflow: hidden;
   .ant-table-thead {
     .column-name {
       padding-left: 40px !important;
     }
   }
 }
-
+.column-btns {
+  padding-right: 0 !important;
+}
 @media (max-width: 1440px) {
   .table_product_row {
     h6 {

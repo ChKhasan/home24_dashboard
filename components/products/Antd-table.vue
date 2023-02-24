@@ -7,9 +7,15 @@
       }" -->
     <a-table
       :columns="columns"
-      :data-source="data"
+      :data-source="tableData"
       :pagination="false"
       align="center"
+      :row-selection="{
+        selectedRowKeys: selectedRowKeys,
+        onChange: onSelectChange,
+        columnWidth: '40px',
+        align: 'right',
+      }"
     >
       <a slot="img" slot-scope="text"
         ><img class="table-image" src="../../assets/images/image.png" alt=""
@@ -36,15 +42,34 @@
         {{ tags }}
       </span>
       <span slot="btns" slot-scope="text">
-        <span class="action-btn" @click="tableActions(text)">
+        <el-dropdown trigger="click">
+          <span class="el-dropdown-link">
+            Actions<svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                fill="currentColor"
+              ></path>
+            </svg>
+          </span>
+          <el-dropdown-menu slot="dropdown" class="table_actions">
+            <el-dropdown-item>Edit</el-dropdown-item>
+            <el-dropdown-item>Delete</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <!-- <span class="action-btn" @click="tableActions(text)">
           <img :src="editIcon" alt="" />
         </span>
         <span class="action-btn" @click="tableActions(text)">
           <img :src="deleteIcon" alt="" />
-        </span>
+        </span> -->
       </span>
     </a-table>
-
   </div>
 </template>
 <script>
@@ -55,8 +80,10 @@ const columns = [
     key: "img",
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "img" },
-    width: "8%",
+    // width: "8%",
     align: "right",
+    className: "column-img",
+    colSpan: 2,
   },
   {
     dataIndex: "name",
@@ -65,6 +92,7 @@ const columns = [
     scopedSlots: { customRender: "name" },
     className: "column-name",
     width: "30%",
+    colSpan: 0,
   },
   {
     title: "Code",
@@ -81,6 +109,8 @@ const columns = [
     key: "qty",
     align: "center",
     width: "10%",
+    sorter: (a, b) => a.qty - b.qty,
+
   },
   {
     title: "PRICE",
@@ -98,6 +128,13 @@ const columns = [
     dataIndex: "tags",
     scopedSlots: { customRender: "tags" },
     className: "column-tags",
+    filters: [
+      { text: "progress", value: "in progress" },
+      { text: "Success", value: "Success" },
+      { text: "rejected", value: "rejected" },
+      { text: "Approved", value: "Approved" },
+    ],
+    onFilter: (value, record) => record.tags.indexOf(value) === 0,
     width: "16%",
   },
   {
@@ -107,77 +144,18 @@ const columns = [
     scopedSlots: { customRender: "btns" },
     className: "column-btns",
     width: "10%",
+    align: "right",
   },
 ];
 
 export default {
+  props: ["data"],
   data() {
     return {
       pageSize: 10,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      data: [
-        {
-          key: "1",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          subtitle: "subtitle",
-          code: "02887003",
-          qty: "25",
-          price: "6 700 000 sum",
-          tags: "in progress",
-          img: "Published",
-
-          btns: "id",
-        },
-        {
-          key: "2",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          code: "02887003",
-          qty: "23",
-          price: "6 700 000 sum",
-
-          img: "Published",
-          tags: "Success",
-
-          btns: "id",
-        },
-        {
-          key: "3",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          code: "02887003",
-          qty: "45",
-          price: "6 700 000 sum",
-
-          img: "Published",
-          tags: "rejected",
-
-          btns: "id",
-        },
-        {
-          key: "4",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          code: "02887003",
-          qty: "45",
-          price: "6 700 000 sum",
-
-          img: "Published",
-          tags: "Approved",
-
-          btns: "id",
-        },
-      ],
+      tableData: [],
       columns,
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
@@ -187,6 +165,7 @@ export default {
     hasSelected() {
       return this.selectedRowKeys.length > 0;
     },
+
     classObject(tag) {
       return {
         tag_success: tag == "Success",
@@ -194,7 +173,24 @@ export default {
       };
     },
   },
+  mounted() {
+    if (this.data) {
+      this.tableData = this.data;
+    }
+  },
   methods: {
+    handleTableChange(pagination, filters, sorter) {
+      console.log(filters);
+      this.tableData = this.data.map((item) => {
+        // return item.tags == filters.tags[0];
+        filters.tags.forEach((element) => {
+          if (item.tags == element);
+          return item;
+        });
+      });
+      console.log(this.tableData);
+    },
+
     start() {
       this.loading = true;
       // ajax request after empty completing
@@ -241,5 +237,11 @@ td.column-rating {
 th.column-action {
   display: flex !important;
   justify-content: flex-end;
+}
+.ant-table-thead {
+  .column-img {
+    text-align: left !important;
+    // padding-left: 32px !important;
+  }
 }
 </style>

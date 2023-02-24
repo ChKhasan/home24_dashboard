@@ -9,7 +9,7 @@ export default {
     },
   },
   head: {
-    title: "admin-panel",
+    title: "Home24 admin panel",
     htmlAttrs: {
       lang: "en",
     },
@@ -19,7 +19,7 @@ export default {
       { hid: "description", name: "description", content: "" },
       { name: "format-detection", content: "telephone=no" },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    link: [{ rel: "icon", type: "image/jpg", href: "/logo.jpg" }],
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["~/assets/scss/app.scss", "~/assets/fonts/stylesheet.css"],
@@ -87,8 +87,12 @@ export default {
       login: "/admin/login",
       logout: "/admin/login",
       callback: "/admin/login",
-      home: "/catalog/add_products",
+      home: "/catalog/products",
     },
     watchLoggedIn: true,
+  },
+  server: {
+    port: 8000, // default: 3000
+    host: "localhost", // default: localhost
   },
 };

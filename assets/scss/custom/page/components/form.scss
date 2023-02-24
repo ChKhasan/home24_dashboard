@@ -1,7 +1,7 @@
 .form-block {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin-bottom: 32.5px;
 
   .el-form-item {
     width: 100%;
@@ -10,21 +10,21 @@
   .el-input {
     .el-input__inner {
       background: #ffffff;
-      padding: 14px 16px !important;
+      padding: 10px 13px !important;
       border: 1px solid #e4e6ef;
-      border-radius: 8px;
+      border-radius: 6.175px;
 
-      @include fontTTinterface(16px, 400);
-      line-height: 24px !important;
+      @include fontInter(14.3px, 400);
+      line-height: 21.5px !important;
       color: #a1a5bf;
       height: initial !important;
     }
   }
   label {
     display: inline-flex;
-    @include fontTTinterface(18px, 600);
+    @include fontInter(13.65px, 500);
     line-height: 24px;
-    margin-bottom: 11px;
+    margin-bottom: 6.5px;
     color: #181c32;
     position: relative;
   }
@@ -33,6 +33,9 @@
     line-height: 18px;
     color: #a1a5bf;
     margin-top: 8px;
+  }
+  .el-form-item__error {
+    position: static;
   }
 }
 .status-style {

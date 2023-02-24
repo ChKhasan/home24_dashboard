@@ -1,19 +1,28 @@
 .title-block {
+  position: sticky;
   padding: 0 30px;
   background: transparent;
   display: flex;
   align-items: center;
-  padding-top: 1.5rem !important;
-  padding-bottom: 1.5rem !important;
+  justify-content: space-between;
+  padding-top: 6.5px !important;
+  padding-bottom: 6.5px !important;
+  background: #fff;
+  top: 65px;
+  height: 50px;
+  z-index: 10;
+  box-shadow: 0px 10px 30px 0px rgb(82 63 105 / 8%);
   h1 {
-    @include fontPoppins(1.35rem, 600);
+    @include fontInter(17.55px, 600);
+    margin-top: 3.25px;
+    margin-bottom: 3.25px !important;
   }
   ul {
     margin-bottom: 0;
     padding-top: 0.25rem;
     li {
       color: #a1a5b7 !important;
-      @include fontPoppins(0.95rem, 500);
+      @include fontInter(12.35px, 500);
       display: flex;
       align-items: center;
       cursor: pointer;
@@ -59,8 +68,8 @@
 // form title
 .form-title {
   h1 {
-    @include fontTTinterface(24px, 600);
-    line-height: 32px;
+    @include fontTTinterface(19.5px, 600);
+    line-height: 15.6px;
     color: #181c32;
   }
   margin-bottom: 22px;

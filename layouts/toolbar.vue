@@ -128,6 +128,21 @@
                     >
                   </nuxt-link>
                 </el-menu-item-group>
+                <el-menu-item-group class="toolbar-menu-products">
+                  <nuxt-link to="/catalog/orders">
+                    <el-menu-item
+                      index="1-1-5"
+                      :class="{
+                        'is-active': $route.name == 'catalog-orders',
+                      }"
+                    >
+                      <span class="menu-bullet"
+                        ><span class="bullet-dot"></span
+                      ></span>
+                      <p>Orders</p></el-menu-item
+                    >
+                  </nuxt-link>
+                </el-menu-item-group>
                 <!-- <el-menu-item-group class="toolbar-menu-products">
                   <el-menu-item
                     index="1-1-2"
@@ -207,7 +222,7 @@
           style="text-align: right; font-size: 12px;"
           class="d-flex justify-content-between"
         >
-          <div><div class="header-btn">Products</div></div>
+          <div><div class="header-btn"></div></div>
           <div class="d-flex align-items-center">
             <!-- <el-dropdown>
               <i class="el-icon-setting" style="margin-right: 15px;"></i>
@@ -217,7 +232,10 @@
                 <el-dropdown-item>Delete</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown> -->
-            <div class="block d-flex align-items-center" @click="$auth.logout('local')">
+            <div
+              class="block d-flex align-items-center"
+              @click="$auth.logout('local')"
+            >
               <el-avatar
                 shape="circle"
                 size="medium"
@@ -254,6 +272,7 @@ export default {
     routerName() {
       return this.$route.name;
     },
+  
   },
   mounted() {
     this.checkToolbar();
@@ -264,6 +283,12 @@ export default {
     },
     collapsedToggle() {
       this.collapsed = !this.collapsed;
+      // const modalContainer = document.querySelector(".vm--container");
+      // if (!this.collapsed) {
+      //   modalContainer.style.paddingLeft = "265px";
+      // } else {
+      //   modalContainer.style.paddingLeft = "75px";
+      // }
     },
     checkToolbar() {
       switch (this.$route.name) {
@@ -280,6 +305,7 @@ export default {
       this.$router.push("/");
     },
   },
+
   watch: {
     routerName(oldVal, newVal) {
       if (oldVal !== newVal) {
@@ -294,6 +320,7 @@ export default {
         }
       }
     },
+   
   },
 };
 </script>

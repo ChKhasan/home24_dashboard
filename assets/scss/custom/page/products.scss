@@ -23,7 +23,7 @@
 }
 .product-plus-btn {
   display: grid;
-  grid-template-columns: auto 54px;
+  grid-template-columns: auto 30px;
   grid-gap: 8px;
 }
 .products-input-grid-3 {
@@ -38,7 +38,7 @@
 }
 .prducts-details-btns {
   display: flex;
-  margin-bottom: 26px;
+  margin-bottom: 32px;
   div {
     margin-left: 8px;
     &:first-child {
@@ -80,16 +80,42 @@
   }
 }
 .variant-btn {
-  border-radius: 8px;
-  width: 40px;
-  height: 40px;
+  border-radius: 5.46px;
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 }
 .variant-btn-delete {
-  background: #ffe2e5;
+  color: #f64e60;
+  background-color: #ffe2e5;
+  border-color: transparent;
+  transition: color 0.15s ease, background-color 0.15s ease,
+    border-color 0.15s ease, box-shadow 0.15s ease,
+    -webkit-box-shadow 0.15s ease;
+  svg {
+    width: 26px;
+    height: 26px;
+    display: block;
+    path {
+      stroke: #f64e60;
+    }
+  }
+  &:hover {
+    color: #ffffff;
+    background-color: #f64e60;
+    border-color: transparent;
+    svg {
+      width: 26px;
+      height: 26px;
+      display: block;
+      path {
+        stroke: #ffffff;
+      }
+    }
+  }
 }
 .variant-btn-check {
   background: #e2edff;
@@ -116,6 +142,7 @@
   }
   .ant-upload-list-picture-card-container {
     margin-right: 25px;
+    margin-bottom: 25px;
   }
   .ant-upload.ant-upload-select-picture-card {
     width: 119px;

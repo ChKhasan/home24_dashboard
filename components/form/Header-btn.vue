@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    class="add-btn add-btn-padding add-btn-primary"
+    class="add-btn add-header-btn add-header-btn-padding add-btn-primary"
     :class="{ 'add-btn-padding-icon': !icon }"
     @click="execute"
   >

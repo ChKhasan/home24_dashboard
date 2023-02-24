@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="title-block">
-    <div class="page-title d-flex flex-column">
+    <div class="page-title d-flex align-items-center">
       <h1>{{ title }}</h1>
-      <!-- <span class="vertical_hr"></span> -->
+      <span class="vertical_hr"></span>
       <ul class="d-flex">
         <li v-for="item in breadbrumb">
           {{ item }}
@@ -14,6 +14,9 @@
           {{ lastLink }}
         </li>
       </ul>
+    </div>
+    <div class="title-btns">
+      <slot></slot>
     </div>
   </div>
 </template>
