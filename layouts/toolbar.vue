@@ -662,7 +662,7 @@ export default {
 <style>
 .disabled {
   color: red !important;
-  background: rgba(255, 0, 0, 0.05);
+  background: rgba(255, 0, 0, 0.02);
   pointer-events: none !important;
 }
 </style>
