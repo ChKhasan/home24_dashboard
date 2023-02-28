@@ -329,7 +329,7 @@
                       ></rect>
                     </svg>
                   </span>
-                  <p class="mx-2">Клиенты</p></el-menu-item
+                  <p  class="mx-2 not-ul-menu">Клиенты</p></el-menu-item
                 >
               </nuxt-link>
             </el-menu-item-group>

@@ -276,6 +276,9 @@
   .toolbar-aside {
     width: 75px;
     overflow: hidden;
+    .not-ul-menu {
+      opacity: 0;
+    }
     .el-submenu__title {
       & > i {
         opacity: 0 !important;
@@ -333,6 +336,9 @@
           width: initial;
           position: static;
         }
+      }
+      .not-ul-menu {
+        opacity: 1;
       }
       .el-submenu__title {
         & > i {
