@@ -44,3 +44,9 @@ ul {
 .d-grid {
   display: grid;
 }
+.vm--modal {
+  overflow-y: scroll !important;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
+}

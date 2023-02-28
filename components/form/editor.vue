@@ -10,6 +10,7 @@ import { quillEditor } from "vue-quill-editor";
 export default {
   data() {
     return {
+      text: "",
       title: "Quill Editor",
       items: [
         {
@@ -37,7 +38,6 @@ export default {
             ],
             ["bold", "italic", "underline", "strike"],
 
-            
             ["image"],
             ["code-block"],
           ],
@@ -64,11 +64,16 @@ export default {
   },
   middleware: "router-auth",
   components: { quillEditor },
-  props: ['editorClass']
+  props: ["editorClass"],
 };
 </script>
 <template>
   <div :class="editorClass">
-    <quill-editor style="min-height: 250px;" :options="editorOption" />
+    <quill-editor
+      style="min-height: 250px;"
+      :options="editorOption"
+      :value="text"
+      v-model="text"
+    />
   </div>
 </template>

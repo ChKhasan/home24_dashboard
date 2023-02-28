@@ -1,10 +1,10 @@
 <template lang="html">
   <div class="all-orders">
-     <TitleBlock
-        title="Заказы"
-        :breadbrumb="['Главная', 'Заказы']"
-        lastLink="#192"
-      ></TitleBlock>
+    <TitleBlock
+      title="Заказы"
+      :breadbrumb="['Главная', 'Заказы']"
+      lastLink="#192"
+    ></TitleBlock>
     <div class="container_xl app-container mt-5">
       <el-tabs class="order_tabs" v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="Итог заказа" name="summa">
