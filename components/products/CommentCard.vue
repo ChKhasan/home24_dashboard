@@ -30,6 +30,8 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  name: "commentCard"
+};
 </script>
 <style lang=""></style>

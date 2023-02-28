@@ -73,90 +73,90 @@
   </div>
 </template>
 <script>
-const columns = [
-  {
-    title: "ПРОДУКТ",
-    dataIndex: "img",
-    key: "img",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "img" },
-    // width: "8%",
-    align: "right",
-    className: "column-img",
-    colSpan: 2,
-  },
-  {
-    dataIndex: "name",
-    key: "name",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "name" },
-    className: "column-name",
-    width: "30%",
-    colSpan: 0,
-  },
-  {
-    title: "Код",
-    dataIndex: "code",
-    scopedSlots: { customRender: "code" },
-    className: "column-code",
-    key: "code",
-    width: "10%",
-  },
-  {
-    title: "КОЛ-ВО",
-    dataIndex: "qty",
-    className: "column-qty",
-    key: "qty",
-    align: "center",
-    width: "10%",
-    sorter: (a, b) => a.qty - b.qty,
+// const columns = [
+//   {
+//     title: "ПРОДУКТ",
+//     dataIndex: "img",
+//     key: "img",
+//     slots: { title: "customTitle" },
+//     scopedSlots: { customRender: "img" },
+//     // width: "8%",
+//     align: "right",
+//     className: "column-img",
+//     colSpan: 2,
+//   },
+//   {
+//     dataIndex: "name",
+//     key: "name",
+//     slots: { title: "customTitle" },
+//     scopedSlots: { customRender: "name" },
+//     className: "column-name",
+//     width: "30%",
+//     colSpan: 0,
+//   },
+//   {
+//     title: "Код",
+//     dataIndex: "code",
+//     scopedSlots: { customRender: "code" },
+//     className: "column-code",
+//     key: "code",
+//     width: "10%",
+//   },
+//   {
+//     title: "КОЛ-ВО",
+//     dataIndex: "qty",
+//     className: "column-qty",
+//     key: "qty",
+//     align: "center",
+//     width: "10%",
+//     sorter: (a, b) => a.qty - b.qty,
 
-  },
-  {
-    title: "ЦЕНА",
-    dataIndex: "price",
-    className: "column-price",
+//   },
+//   {
+//     title: "ЦЕНА",
+//     dataIndex: "price",
+//     className: "column-price",
 
-    key: "price",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "price" },
-    width: "16%",
-  },
-  {
-    title: "Статус",
-    key: "tags",
-    dataIndex: "tags",
-    scopedSlots: { customRender: "tags" },
-    className: "column-tags",
-    filters: [
-      { text: "progress", value: "in progress" },
-      { text: "Success", value: "Success" },
-      { text: "rejected", value: "rejected" },
-      { text: "Approved", value: "Approved" },
-    ],
-    onFilter: (value, record) => record.tags.indexOf(value) === 0,
-    width: "16%",
-  },
-  {
-    title: "действия",
-    key: "btns",
-    dataIndex: "btns",
-    scopedSlots: { customRender: "btns" },
-    className: "column-btns",
-    width: "10%",
-    align: "right",
-  },
-];
+//     key: "price",
+//     slots: { title: "customTitle" },
+//     scopedSlots: { customRender: "price" },
+//     width: "16%",
+//   },
+//   {
+//     title: "Статус",
+//     key: "tags",
+//     dataIndex: "tags",
+//     scopedSlots: { customRender: "tags" },
+//     className: "column-tags",
+//     filters: [
+//       { text: "progress", value: "in progress" },
+//       { text: "Success", value: "Success" },
+//       { text: "rejected", value: "rejected" },
+//       { text: "Approved", value: "Approved" },
+//     ],
+//     onFilter: (value, record) => record.tags.indexOf(value) === 0,
+//     width: "16%",
+//   },
+//   {
+//     title: "действия",
+//     key: "btns",
+//     dataIndex: "btns",
+//     scopedSlots: { customRender: "btns" },
+//     className: "column-btns",
+//     width: "10%",
+//     align: "right",
+//   },
+// ];
 
 export default {
-  props: ["data"],
+  props: ["data", "columns"],
+  name: "antTable",
   data() {
     return {
       pageSize: 10,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
-      columns,
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
     };
@@ -182,7 +182,6 @@ export default {
     handleTableChange(pagination, filters, sorter) {
       console.log(filters);
       this.tableData = this.data.map((item) => {
-        // return item.tags == filters.tags[0];
         filters.tags.forEach((element) => {
           if (item.tags == element);
           return item;
@@ -193,7 +192,6 @@ export default {
 
     start() {
       this.loading = true;
-      // ajax request after empty completing
       setTimeout(() => {
         this.loading = false;
         this.selectedRowKeys = [];

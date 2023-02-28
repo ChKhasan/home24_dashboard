@@ -47,13 +47,13 @@
         >
           <!-- <Title title="Products panel" /> -->
           <div class="d-flex justify-content-between w-100">
-            <SearchInput placeholder="Поиск продукта"/>
+            <SearchInput placeholder="Поиск продукта" />
             <div class="d-flex align-items-center">
               <AddBtn name="Добавить продукт" :callback="toAddProduct" />
             </div>
           </div>
         </div>
-        <AntdTable :data="data" />
+        <AntdTable :data="data" :columns="columns" />
       </div>
     </div>
   </div>
@@ -71,6 +71,79 @@ export default {
   middleware: "auth",
   data() {
     return {
+      columns: [
+        {
+          title: "ПРОДУКТ",
+          dataIndex: "img",
+          key: "img",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "img" },
+          // width: "8%",
+          align: "right",
+          className: "column-img",
+          colSpan: 2,
+        },
+        {
+          dataIndex: "name",
+          key: "name",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "name" },
+          className: "column-name",
+          width: "30%",
+          colSpan: 0,
+        },
+        {
+          title: "Код",
+          dataIndex: "code",
+          scopedSlots: { customRender: "code" },
+          className: "column-code",
+          key: "code",
+          width: "10%",
+        },
+        {
+          title: "КОЛ-ВО",
+          dataIndex: "qty",
+          className: "column-qty",
+          key: "qty",
+          align: "center",
+          width: "10%",
+          sorter: (a, b) => a.qty - b.qty,
+        },
+        {
+          title: "ЦЕНА",
+          dataIndex: "price",
+          className: "column-price",
+
+          key: "price",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "price" },
+          width: "16%",
+        },
+        {
+          title: "Статус",
+          key: "tags",
+          dataIndex: "tags",
+          scopedSlots: { customRender: "tags" },
+          className: "column-tags",
+          filters: [
+            { text: "progress", value: "in progress" },
+            { text: "Success", value: "Success" },
+            { text: "rejected", value: "rejected" },
+            { text: "Approved", value: "Approved" },
+          ],
+          onFilter: (value, record) => record.tags.indexOf(value) === 0,
+          width: "16%",
+        },
+        {
+          title: "действия",
+          key: "btns",
+          dataIndex: "btns",
+          scopedSlots: { customRender: "btns" },
+          className: "column-btns",
+          width: "10%",
+          align: "right",
+        },
+      ],
       options: [
         {
           value: "All",

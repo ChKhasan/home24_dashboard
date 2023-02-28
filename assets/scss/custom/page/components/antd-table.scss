@@ -85,6 +85,22 @@
     border-bottom: 1px dashed #f4f4f4 !important;
   }
 }
+.ant-table-tbody {
+  .column-name {
+    line-height: 16px;
+    color: #181c32;
+    font-family: "TT Interfaces";
+    font-size: 14.04px;
+    font-weight: bold;
+    a {
+      line-height: 16px;
+      color: #181c32;
+      font-family: "TT Interfaces";
+      font-size: 14.04px;
+      font-weight: bold;
+    }
+  }
+}
 .ant-table-column-title {
   @include fontInter(12.35px, 600);
   line-height: 18px !important;
@@ -117,7 +133,11 @@
     text-align: start;
   }
 }
+
 .column-code {
+  @include fontTTinterface(16px, 500);
+  line-height: 20px;
+  color: #a1a5bf;
   h4 {
     @include fontTTinterface(16px, 500);
     line-height: 20px;

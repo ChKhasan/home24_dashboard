@@ -28,7 +28,13 @@
           </div>
         </div>
         <el-aside width="200px" style="background-color: rgb(238, 241, 246);">
-          <el-menu :default-openeds="defaultOpens">
+          <el-menu
+            @open="handleOpen"
+            @close="handleClose"
+            :default-active="activeRouterName"
+            :default-openeds="defaultOpens"
+            ref="mainMenu"
+          >
             <el-submenu index="1" class="home_menu">
               <div slot="title">
                 <span>
@@ -56,119 +62,183 @@
                     ></path>
                   </svg>
                 </span>
-                <p>eCommerce</p>
+                <p>Каталог</p>
               </div>
-              <!-- <el-menu-item-group>
-                <div slot="title">Group 1</div>
-              </el-menu-item-group> -->
-              <el-submenu index="1-1" class="sub_menu">
-                <div slot="title">
-                  <p class="d-flex">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span></span
-                    >Catalog
-                  </p>
-                </div>
-                <el-menu-item-group class="toolbar-menu-products">
-                  <nuxt-link to="/catalog/products">
-                    <el-menu-item
-                      index="1-1-1"
-                      :class="{
-                        'is-active': $route.name == 'catalog-products',
-                      }"
-                    >
-                      <span class="menu-bullet"
-                        ><span class="bullet-dot"></span
-                      ></span>
-                      <p>Products</p></el-menu-item
-                    >
-                  </nuxt-link>
-                </el-menu-item-group>
-                <el-menu-item-group class="toolbar-menu-products">
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/catalog/products">
                   <el-menu-item
-                    index="1-1-2"
-                    @click="$router.push('/catalog/categories')"
+                    index="1-1"
                     :class="{
-                      'is-active': $route.name == 'catalog-categories',
+                      'is-active': $route.name == 'catalog-products',
                     }"
                   >
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
                     ></span>
-                    <p>Categories</p></el-menu-item
+                    <p>Продукты</p></el-menu-item
                   >
-                </el-menu-item-group>
-                <el-menu-item-group class="toolbar-menu-products">
-                  <nuxt-link to="/catalog/atributs">
-                    <el-menu-item
-                      index="1-1-3"
-                      :class="{
-                        'is-active': $route.name == 'catalog-atributs',
-                      }"
-                    >
-                      <span class="menu-bullet"
-                        ><span class="bullet-dot"></span
-                      ></span>
-                      <p>Atributs</p></el-menu-item
-                    >
-                  </nuxt-link>
-                </el-menu-item-group>
-                <el-menu-item-group class="toolbar-menu-products">
-                  <nuxt-link to="/catalog/characteristic">
-                    <el-menu-item
-                      index="1-1-4"
-                      :class="{
-                        'is-active': $route.name == 'catalog-characteristic',
-                      }"
-                    >
-                      <span class="menu-bullet"
-                        ><span class="bullet-dot"></span
-                      ></span>
-                      <p>Characteristic</p></el-menu-item
-                    >
-                  </nuxt-link>
-                </el-menu-item-group>
-                <el-menu-item-group class="toolbar-menu-products">
-                  <nuxt-link to="/catalog/orders">
-                    <el-menu-item
-                      index="1-1-5"
-                      :class="{
-                        'is-active': $route.name == 'catalog-orders',
-                      }"
-                    >
-                      <span class="menu-bullet"
-                        ><span class="bullet-dot"></span
-                      ></span>
-                      <p>Orders</p></el-menu-item
-                    >
-                  </nuxt-link>
-                </el-menu-item-group>
-                <!-- <el-menu-item-group class="toolbar-menu-products">
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <el-menu-item
+                  index="12"
+                  @click="$router.push('/catalog/categories')"
+                  :class="{
+                    'is-active': $route.name == 'catalog-categories',
+                  }"
+                >
+                  <span class="menu-bullet"
+                    ><span class="bullet-dot"></span
+                  ></span>
+                  <p>Категории</p></el-menu-item
+                >
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/catalog/atributs">
                   <el-menu-item
-                    index="1-1-2"
-                    @click="$router.push('/products/add_products')"
+                    index="1-3"
+                    :class="{
+                      'is-active': $route.name == 'catalog-atributs',
+                    }"
                   >
                     <span class="menu-bullet"
-                      ><span class="bullet-dot"></span></span
-                    >Add Product</el-menu-item
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Атрибуты</p></el-menu-item
                   >
-                </el-menu-item-group> -->
-              </el-submenu>
-              <!-- <el-menu-item-group title="Group 2">
-                <el-menu-item index="1-3">Option 3</el-menu-item>
-              </el-menu-item-group> -->
-              <!-- <el-submenu index="1-4"  class="sub_menu">
-                <div slot="title"> <span class="menu-bullet"
-                    ><span class="bullet-dot"></span
-                  ></span>Categories</div>
-                <el-menu-item
-                  index="1-4-1"
-                  @click="$router.push('/products/products')"
-                  >Categories</el-menu-item
-                >
-              </el-submenu> -->
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/catalog/characteristic">
+                  <el-menu-item
+                    index="1-4"
+                    :class="{
+                      'is-active': $route.name == 'catalog-characteristic',
+                    }"
+                  >
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Характеристика</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
             </el-submenu>
             <el-submenu index="2" class="home_menu">
+              <div slot="title">
+                <span>
+                  <svg
+                    class="menu-icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    version="1.1"
+                  >
+                    <g
+                      stroke="none"
+                      stroke-width="1"
+                      fill="none"
+                      fill-rule="evenodd"
+                    >
+                      <rect x="0" y="0" width="24" height="24"></rect>
+                      <path
+                        d="M2.56066017,10.6819805 L4.68198052,8.56066017 C5.26776695,7.97487373 6.21751442,7.97487373 6.80330086,8.56066017 L8.9246212,10.6819805 C9.51040764,11.267767 9.51040764,12.2175144 8.9246212,12.8033009 L6.80330086,14.9246212 C6.21751442,15.5104076 5.26776695,15.5104076 4.68198052,14.9246212 L2.56066017,12.8033009 C1.97487373,12.2175144 1.97487373,11.267767 2.56066017,10.6819805 Z M14.5606602,10.6819805 L16.6819805,8.56066017 C17.267767,7.97487373 18.2175144,7.97487373 18.8033009,8.56066017 L20.9246212,10.6819805 C21.5104076,11.267767 21.5104076,12.2175144 20.9246212,12.8033009 L18.8033009,14.9246212 C18.2175144,15.5104076 17.267767,15.5104076 16.6819805,14.9246212 L14.5606602,12.8033009 C13.9748737,12.2175144 13.9748737,11.267767 14.5606602,10.6819805 Z"
+                        fill="currentColor"
+                      ></path>
+                      <path
+                        opacity="0.3"
+                        d="M8.56066017,16.6819805 L10.6819805,14.5606602 C11.267767,13.9748737 12.2175144,13.9748737 12.8033009,14.5606602 L14.9246212,16.6819805 C15.5104076,17.267767 15.5104076,18.2175144 14.9246212,18.8033009 L12.8033009,20.9246212 C12.2175144,21.5104076 11.267767,21.5104076 10.6819805,20.9246212 L8.56066017,18.8033009 C7.97487373,18.2175144 7.97487373,17.267767 8.56066017,16.6819805 Z M8.56066017,4.68198052 L10.6819805,2.56066017 C11.267767,1.97487373 12.2175144,1.97487373 12.8033009,2.56066017 L14.9246212,4.68198052 C15.5104076,5.26776695 15.5104076,6.21751442 14.9246212,6.80330086 L12.8033009,8.9246212 C12.2175144,9.51040764 11.267767,9.51040764 10.6819805,8.9246212 L8.56066017,6.80330086 C7.97487373,6.21751442 7.97487373,5.26776695 8.56066017,4.68198052 Z"
+                        fill="currentColor"
+                      ></path>
+                    </g>
+                  </svg>
+                </span>
+                <p>Заказы</p>
+              </div>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/all-orders">
+                  <el-menu-item index="21">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Все заказы</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/new-orders">
+                  <el-menu-item index="22">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Новые заказы (0)</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/accepted-orders">
+                  <el-menu-item index="23">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Принятые заказы (0)</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/ready-orders">
+                  <el-menu-item index="24">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Готовые в отправке (0)</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/delivery-orders">
+                  <el-menu-item index="25">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>В доставке (0)</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/return-orders">
+                  <el-menu-item index="26">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Возврат (0)</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/delivered-orders">
+                  <el-menu-item index="27">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Доставленные (0)</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/orders/canceled-orders">
+                  <el-menu-item index="28">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>Отмененные (0)</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="3" class="home_menu">
               <div slot="title">
                 <span>
                   <svg
@@ -180,35 +250,64 @@
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M21 10H13V11C13 11.6 12.6 12 12 12C11.4 12 11 11.6 11 11V10H3C2.4 10 2 10.4 2 11V13H22V11C22 10.4 21.6 10 21 10Z"
+                      opacity="0.3"
+                      d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19Z"
                       fill="currentColor"
                     ></path>
                     <path
-                      opacity="0.3"
-                      d="M12 12C11.4 12 11 11.6 11 11V3C11 2.4 11.4 2 12 2C12.6 2 13 2.4 13 3V11C13 11.6 12.6 12 12 12Z"
+                      d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z"
                       fill="currentColor"
                     ></path>
-                    <path
-                      opacity="0.3"
-                      d="M18.1 21H5.9C5.4 21 4.9 20.6 4.8 20.1L3 13H21L19.2 20.1C19.1 20.6 18.6 21 18.1 21ZM13 18V15C13 14.4 12.6 14 12 14C11.4 14 11 14.4 11 15V18C11 18.6 11.4 19 12 19C12.6 19 13 18.6 13 18ZM17 18V15C17 14.4 16.6 14 16 14C15.4 14 15 14.4 15 15V18C15 18.6 15.4 19 16 19C16.6 19 17 18.6 17 18ZM9 18V15C9 14.4 8.6 14 8 14C7.4 14 7 14.4 7 15V18C7 18.6 7.4 19 8 19C8.6 19 9 18.6 9 18Z"
-                      fill="currentColor"
-                    ></path></svg
-                ></span>
-                <p>Navigator Two</p>
+                  </svg>
+                </span>
+                <p>Рассылки</p>
               </div>
               <el-menu-item-group class="toolbar-menu-products">
-                <div slot="title">Group 1</div>
-                <el-menu-item index="2-1">Option 1</el-menu-item>
-                <el-menu-item index="2-2">Option 2</el-menu-item>
+                <nuxt-link to="/inbox/email">
+                  <el-menu-item index="21">
+                      <svg
+                        class="menu-icon"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          opacity="0.3"
+                          d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                    <p>По Email</p></el-menu-item
+                  >
+                </nuxt-link>
               </el-menu-item-group>
-              <el-menu-item-group title="Group 2" class="toolbar-menu-products">
-                <el-menu-item index="2-3">Option 3</el-menu-item>
+              <el-menu-item-group class="toolbar-menu-products">
+                <nuxt-link to="/inbox/sms">
+                  <el-menu-item index="22">
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
+                    <p>По SMS</p></el-menu-item
+                  >
+                </nuxt-link>
               </el-menu-item-group>
-              <el-submenu index="2-4" class="home_menu">
-                <div slot="title">Option 4</div>
-                <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
-              </el-submenu>
             </el-submenu>
+            <el-menu-item-group class="toolbar-menu-products">
+              <nuxt-link to="/inbox/email">
+                <el-menu-item index="21">
+                  <span class="menu-bullet"
+                    ><span class="bullet-dot"></span
+                  ></span>
+                  <p>По Email</p></el-menu-item
+                >
+              </nuxt-link>
+            </el-menu-item-group>
           </el-menu>
         </el-aside>
         <div class="toolbar-setting pt-05r pr-15r pl-15r pb-15r">
@@ -286,10 +385,11 @@ export default {
       address: "No. 189, Grove St, Los Angeles",
     };
     return {
+      activeRouterName: "",
       tableData: Array(20).fill(item),
       sidebarToggle: true,
       collapsed: false,
-      defaultOpens: ["1", "1-1", "1-1-1"],
+      defaultOpens: ["1", "1-2"],
       squareUrl:
         "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
     };
@@ -300,7 +400,8 @@ export default {
     },
   },
   mounted() {
-    this.checkToolbar();
+    this.handleOpen();
+    this.handleClose();
   },
   methods: {
     takeChange(e) {
@@ -308,6 +409,12 @@ export default {
     },
     getData() {
       console.log("dadasdaadas");
+    },
+    handleOpen(key, keyPath) {
+      console.log(key, keyPath);
+    },
+    handleClose(key, keyPath) {
+      console.log(key, keyPath);
     },
     collapsedToggle() {
       this.collapsed = !this.collapsed;
@@ -320,11 +427,13 @@ export default {
     },
     checkToolbar() {
       switch (this.$route.name) {
-        case "catalog-products":
-          this.defaultOpens = ["1", "1-1"];
+        case "orders-all-orders":
+          this.activeRouterName = "21";
+
           break;
-        case "catalog-categories":
-          this.defaultOpens = ["1", "1-1"];
+        case "orders-new-orders":
+          this.activeRouterName = "22";
+          // this.defaultOpens = ["2"];
           break;
       }
     },
@@ -336,13 +445,33 @@ export default {
   watch: {
     routerName(oldVal, newVal) {
       if (oldVal !== newVal) {
-        console.log(oldVal);
         switch (oldVal) {
           case "catalog-products":
             this.defaultOpens = ["1", "1-1", "1-1-1"];
             break;
-          case "catalog-categories":
-            this.defaultOpens = ["1", "1-1"];
+          case "orders-all-orders":
+            this.activeRouterName = "21";
+            break;
+          case "orders-new-orders":
+            this.activeRouterName = "22";
+            break;
+          case "orders-accepted-orders":
+            this.activeRouterName = "23";
+            break;
+          case "orders-ready-orders":
+            this.activeRouterName = "24";
+            break;
+          case "orders-delivery-orders":
+            this.activeRouterName = "25";
+            break;
+          case "orders-return-orders":
+            this.activeRouterName = "26";
+            break;
+          case "orders-delivered-orders":
+            this.activeRouterName = "27";
+            break;
+          case "orders-canceled-orders":
+            this.activeRouterName = "28";
             break;
         }
       }

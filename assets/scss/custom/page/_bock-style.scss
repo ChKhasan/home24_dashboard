@@ -13,6 +13,12 @@
   margin-top: 25px;
   padding: 0 29.25px;
 }
+.custom_block {
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border-radius: 7.125px;
+}
 .card_block-form {
   border: 0;
   padding-top: 0 !important;
@@ -57,7 +63,6 @@
   .form-container {
     background: #ffffff;
     border-radius: 8.125px;
-  padding: 24px;
-
+    padding: 24px;
   }
 }
