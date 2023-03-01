@@ -102,7 +102,22 @@ export default {
           align: "right",
         },
       ],
-      data: [
+      data: []
+    };
+  },
+  mounted() {
+    this.__GET_ATRIBUTES();
+  },
+  methods: {
+    toAddProduct() {
+      this.$router.push("/catalog/add_atributs");
+      console.log("errors");
+    },
+    async __GET_ATRIBUTES() {
+      this.atributes = await this.$store.dispatch(
+        "fetchAtributes/getAtributes"
+      );
+      this.data = [
         {
           key: "1",
           name: {
@@ -175,12 +190,7 @@ export default {
           btns: "id",
         },
       ],
-    };
-  },
-  methods: {
-    toAddProduct() {
-      this.$router.push("/catalog/add_atributs");
-      console.log("errors");
+      console.log(this.atributes);
     },
   },
   components: {

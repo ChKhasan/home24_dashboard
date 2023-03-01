@@ -45,9 +45,10 @@
                 @tab-click="handleClick"
               >
                 <el-tab-pane
-                  v-for="item in lang"
+                  v-for="(item, index) in lang"
                   :label="item.key"
                   :name="item.key"
+                  :key="index"
                 >
                   <div class="form-container form-container-ltr">
                     <div class="d-flex justify-content-between">

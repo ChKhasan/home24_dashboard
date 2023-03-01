@@ -11,9 +11,13 @@
         >
           Cancel
         </div>
-        <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
+        <div
+          class="add-btn add-header-btn add-header-btn-padding btn-primary"
+          type="submit"
+          @click="submitForm('ruleForm')"
+        >
           <span class="svg-icon"
-            ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
+            ><svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
               width="24px"
@@ -34,8 +38,7 @@
                   fill="#000000"
                 ></path>
               </g></svg
-            ><!--end::Svg Icon--></span
-          >
+          ></span>
           Add Product
         </div>
       </div>
@@ -44,10 +47,7 @@
       <div class="card_block-form py-5">
         <div
           class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
-        >
-          <!-- <Title title="Product edit" />
-          <AddBtn name="Save" :icon="false" :callback="toAddProduct" /> -->
-        </div>
+        ></div>
         <div class="products-from-grid">
           <div class="products-select-grid">
             <el-tabs
@@ -56,9 +56,10 @@
               @tab-click="handleClick"
             >
               <el-tab-pane
-                v-for="item in lang"
-                :label="item.key"
-                :name="item.key"
+                v-for="(item, index) in lang"
+                :label="item.label"
+                :name="item.label"
+                :key="index"
               >
                 <div class="form-container form-container-ltr">
                   <div class="d-flex justify-content-start">
@@ -75,9 +76,9 @@
                   >
                     <div class="form-block required">
                       <div><label for="">Имя</label></div>
-                      <el-form-item prop="nbm">
+                      <el-form-item :prop="`name_${item.key}`">
                         <el-input
-                          v-model="ruleForm.nbm"
+                          v-model="ruleForm[`name_${item.key}`]"
                           placeholder="Product model"
                         ></el-input>
                       </el-form-item>
@@ -85,9 +86,9 @@
                     <div class="products-input-grid-3">
                       <div class="form-block">
                         <div><label for="">Модель</label></div>
-                        <el-form-item prop="nbm">
+                        <el-form-item prop="model">
                           <el-input
-                            v-model="ruleForm.nbm"
+                            v-model="ruleForm.model"
                             placeholder="Product model"
                           ></el-input>
                         </el-form-item>
@@ -160,7 +161,7 @@
                   <div class="form-block mb-0">
                     <div><label>Последняя категория</label></div>
                     <el-select
-                      v-model="value"
+                      v-model="ruleForm.category_id"
                       allow-create
                       default-first-option
                       placeholder="Select last category"
@@ -343,9 +344,10 @@
               @tab-click="handleClick"
             >
               <el-tab-pane
-                v-for="item in lang"
-                :label="item.key"
-                :name="item.key"
+                v-for="(item, index) in lang"
+                :label="item.label"
+                :name="item.label"
+                :key="index"
               >
                 <div class="form-container form-container-ltr">
                   <div class="d-flex justify-content-start">
@@ -357,8 +359,14 @@
                     @tab-click="handleClick"
                   >
                     <el-tab-pane label="Описание" name="Description">
-                      <Editor editorClass="product-editor mt-1"
-                    /></el-tab-pane>
+                      <div class="mt-1">
+                        <quill-editor
+                          style="min-height: 250px;"
+                          :options="editorOption"
+                          :value="ruleForm.desc[item.key]"
+                          v-model="ruleForm.desc[item.key]"
+                        /></div
+                    ></el-tab-pane>
                     <el-tab-pane label="Характеристика" name="Character">
                       <ProductCharacterList />
                     </el-tab-pane>
@@ -644,8 +652,7 @@
                     <el-select
                       id="status"
                       class="w-100"
-                      v-model="value"
-                      allow-create
+                      v-model="ruleForm.status"
                       default-first-option
                       placeholder="Статус"
                     >
@@ -663,9 +670,9 @@
                 <div class="form-block mb-0">
                   <div><label for="">Бренд</label></div>
                   <div class="product-plus-btn">
-                    <el-form-item prop="nbm">
+                    <el-form-item prop="brand_id">
                       <el-input
-                        v-model="ruleForm.nbm"
+                        v-model="ruleForm.brand_id"
                         placeholder="Бренд"
                       ></el-input>
                     </el-form-item>
@@ -730,13 +737,17 @@
 </template>
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
-import Editor from "../../components/form/editor.vue";
 import FilterBtn from "../../components/form/Filter-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
 import ProductsStatistic from "../../components/products/Products-statistic.vue";
 import ProductCharacterList from "../../components/products/Product-character-list.vue";
 import CommentCard from "../../components/products/CommentCard.vue";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+
+import { quillEditor } from "vue-quill-editor";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -750,18 +761,69 @@ export default {
   middleware: "auth",
   data() {
     return {
+      title: "Quill Editor",
+      items: [
+        {
+          text: "Minton",
+          href: "/",
+        },
+        {
+          text: "Forms",
+          href: "/",
+        },
+        {
+          text: "Quill Editor",
+          active: true,
+        },
+      ],
+      editorOption: {
+        theme: "snow",
+        modules: {
+          toolbar: [
+            [
+              {
+                size: [],
+              },
+            ],
+            ["bold", "italic", "underline", "strike"],
+
+            ["image"],
+            ["code-block"],
+          ],
+        },
+      },
+      option: {
+        theme: "bubble",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "link"],
+            [
+              {
+                header: 1,
+              },
+              {
+                header: 2,
+              },
+              "blockquote",
+            ],
+          ],
+        },
+      },
       activeName: "Русский",
       activeDesc: "Description",
       searchBlock: false,
       lang: [
         {
-          key: "Русский",
+          key: "ru",
+          label: "Русский",
         },
         {
-          key: "Uzbek",
+          key: "uz",
+          label: "Uzbek",
         },
         {
-          key: "English",
+          key: "en",
+          label: "English",
         },
       ],
       options: [
@@ -795,7 +857,30 @@ export default {
         ],
       },
       ruleForm: {
-        nbm: "",
+        name_ru: "",
+        name_uz: "",
+        name_en: "",
+        model: "",
+        desc: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
+        brand_id: "",
+        status: "active",
+        category_id: "",
+        products: [
+          {
+            images: [""],
+            variations: [
+              {
+                options: [],
+                price: "",
+                is_default: "",
+              },
+            ],
+          },
+        ],
       },
 
       productVariant: [
@@ -829,10 +914,11 @@ export default {
     // const imgText = document.querySelector(".ant-upload-text");
     // imgText.innerHTML = "Добавить изображение";
     // this.$store.dispatch("fetchCharacters/getCharacters");
-    this.__GET_DATA()
+    this.__GET_DATA();
   },
   methods: {
     submitForm(ruleForm) {
+      console.log(this.ruleForm);
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
         } else {
@@ -902,12 +988,11 @@ export default {
       this.$router.push("/catalog/add_products");
     },
     async __GET_DATA() {
-      const data = await this.$store.dispatch('fetchCharacters/getCharacters');
+      const data = await this.$store.dispatch("fetchCharacters/getCharacters");
       console.log(data);
-    }
+    },
   },
   components: {
-    Editor,
     FilterBtn,
     Title,
     AddBtn,
@@ -915,6 +1000,7 @@ export default {
     ProductCharacterList,
     CommentCard,
     TitleBlock,
+    quillEditor,
   },
 };
 </script>

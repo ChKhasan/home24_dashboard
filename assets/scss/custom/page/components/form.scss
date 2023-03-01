@@ -91,6 +91,16 @@
     }
   }
 }
+.multi-select-required {
+  .el-form-item.is-error {
+    .el-input__inner {
+      border-color: #e4e6ef !important;
+    }
+    .el-form-item__error {
+      display: none !important;
+    }
+  }
+}
 .el-select {
   .el-tag--small {
     height: initial !important;

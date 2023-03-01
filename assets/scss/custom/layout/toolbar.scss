@@ -56,7 +56,9 @@
     width: 265px;
   }
   .menu-icon {
-    margin-right: 10px;
+    svg {
+      margin-right: 10px;
+    }
   }
 }
 
@@ -85,7 +87,10 @@
         background-color: transparent !important;
         color: #fff !important;
         .menu-icon {
-          color: #fff;
+          svg {
+
+            color: #fff;
+          }
         }
         .bullet-dot {
           background: #fff;
@@ -137,7 +142,10 @@
     color: #fff !important;
     background: #2a2a3c !important;
     & > div > .menu-icon {
-      color: #fff;
+      svg {
+
+        color: #fff;
+      }
     }
     .bullet-dot {
       background: #fff;

@@ -1,17 +1,6 @@
-<script>
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-
-import { quillEditor } from "vue-quill-editor";
-/**
- * Form Quill Editor component
- */
 export default {
-  props: ["editorClass", "editorValue"],
   data() {
     return {
-      text: this.editorValue,
       title: "Quill Editor",
       items: [
         {
@@ -64,18 +53,4 @@ export default {
     };
   },
   middleware: "router-auth",
-  components: { quillEditor },
 };
-</script>
-<template>
-  <div :class="editorClass">
-    {{ editorValue }}
-    <quill-editor
-      style="min-height: 250px;"
-      :options="editorOption"
-      :value="editorValue"
-      v-model="editorValue"
-    />
-    {{ editorValue }}
-  </div>
-</template>

@@ -1,5 +1,12 @@
-<template lang="">
-  <modal :adaptive="true" :name="name" width="546px" :clickToClose="false" height="auto" :ref="refName">
+<template lang="html">
+  <modal
+    :adaptive="true"
+    :name="name"
+    width="546px"
+    :clickToClose="false"
+    height="auto"
+    :ref="refName"
+  >
     <div>
       <div class="add_modal-container">
         <div class="add_modal-header">
@@ -72,8 +79,8 @@ export default {
       type: String,
     },
     refName: {
-      type: String
-    }
+      type: String,
+    },
   },
   methods: {
     show(name) {

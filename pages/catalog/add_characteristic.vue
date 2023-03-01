@@ -70,9 +70,10 @@
             @tab-click="handleClick"
           >
             <el-tab-pane
-              v-for="item in lang"
+              v-for="(item, index) in lang"
               :label="item.key"
               :name="item.key"
+              :key="index"
             >
               <div class="form-container form-container-ltr">
                 <FormTitle title="Характеристика" />
@@ -145,18 +146,6 @@
                       категория. Разделите ключевые слова, добавив запятую между
                       каждым ключевым словом.</span
                     >
-                  </div>
-                </div>
-                <div class="d-flex justify-content-end">
-                  <div class="form-btn form-outline-transparent mx-3">
-                    Отмена
-                  </div>
-                  <div
-                    type="submit"
-                    class="form-btn form-btn-primary"
-                    @click="submitForm('ruleForm')"
-                  >
-                    Сохранить изменения {{ item.key }}
                   </div>
                 </div>
               </div>
