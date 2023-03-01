@@ -1,10 +1,12 @@
 export const actions = {
   async getCharacters() {
     try {
-      this.$axios.$get(`/api/categories`).then((res) => {
-        console.log(res);
-      });
-      console.log(res);
-    } catch (e) {}
+      const res = this.$axios.$get(
+        `https://jsonplaceholder.typicode.com/todos/1`
+      );
+      return res;
+    } catch (e) {
+      return e.response;
+    }
   },
 };

@@ -73,7 +73,6 @@
   </div>
 </template>
 <script>
-
 export default {
   props: ["data", "columns"],
   name: "antTable",
@@ -167,5 +166,10 @@ th.column-action {
     text-align: left !important;
     // padding-left: 32px !important;
   }
+}
+.ant-table-filter-dropdown-btns {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
 }
 </style>

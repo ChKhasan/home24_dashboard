@@ -828,7 +828,8 @@ export default {
   mounted() {
     // const imgText = document.querySelector(".ant-upload-text");
     // imgText.innerHTML = "Добавить изображение";
-    this.$store.dispatch("fetchCharacters/getCharacters");
+    // this.$store.dispatch("fetchCharacters/getCharacters");
+    this.__GET_DATA()
   },
   methods: {
     submitForm(ruleForm) {
@@ -900,6 +901,10 @@ export default {
     toAddProduct() {
       this.$router.push("/catalog/add_products");
     },
+    async __GET_DATA() {
+      const data = await this.$store.dispatch('fetchCharacters/getCharacters');
+      console.log(data);
+    }
   },
   components: {
     Editor,

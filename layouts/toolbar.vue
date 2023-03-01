@@ -64,72 +64,18 @@
                 </span>
                 <p>Каталог</p>
               </div>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/catalog/products">
-                  <el-menu-item
-                    index="1-1"
-                    :class="{
-                      'is-active': $route.name == 'catalog-products',
-                    }"
-                  >
+              <el-menu-item-group
+                v-for="(items, index) in toolbarMenu.category"
+                class="toolbar-menu-products"
+                :class="{ disabled: items.disabled }"
+                :key="index"
+              >
+                <nuxt-link :to="items.to">
+                  <el-menu-item :index="items.index">
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
                     ></span>
-                    <p>Продукты</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <el-menu-item
-                  index="12"
-                  @click="$router.push('/catalog/categories')"
-                  :class="{
-                    'is-active': $route.name == 'catalog-categories',
-                  }"
-                >
-                  <span class="menu-bullet"
-                    ><span class="bullet-dot"></span
-                  ></span>
-                  <p>Категории</p></el-menu-item
-                >
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/catalog/atributs">
-                  <el-menu-item
-                    index="1-3"
-                    :class="{
-                      'is-active': $route.name == 'catalog-atributs',
-                    }"
-                  >
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Атрибуты</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/catalog/characteristic">
-                  <el-menu-item
-                    index="1-4"
-                    :class="{
-                      'is-active': $route.name == 'catalog-characteristic',
-                    }"
-                  >
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Характеристика</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/catalog/characteristic">
-                  <el-menu-item index="1-5">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Бренды</p></el-menu-item
+                    <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
               </el-menu-item-group>
@@ -167,83 +113,18 @@
                 </span>
                 <p>Заказы</p>
               </div>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/all-orders">
-                  <el-menu-item index="21">
+              <el-menu-item-group
+                v-for="(items, index) in toolbarMenu.orders"
+                class="toolbar-menu-products"
+                :key="index"
+                :class="{ disabled: items.disabled }"
+              >
+                <nuxt-link :to="items.to">
+                  <el-menu-item :index="items.index">
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
                     ></span>
-                    <p>Все заказы</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/new-orders">
-                  <el-menu-item index="22">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Новые заказы (0)</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/accepted-orders">
-                  <el-menu-item index="23">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Принятые заказы (0)</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/ready-orders">
-                  <el-menu-item index="24">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Готовые в отправке (0)</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/delivery-orders">
-                  <el-menu-item index="25">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>В доставке (0)</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/return-orders">
-                  <el-menu-item index="26">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Возврат (0)</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/delivered-orders">
-                  <el-menu-item index="27">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Доставленные (0)</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/orders/canceled-orders">
-                  <el-menu-item index="28">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Отмененные (0)</p></el-menu-item
+                    <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
               </el-menu-item-group>
@@ -272,33 +153,18 @@
                 </span>
                 <p>Маркетинг</p>
               </div>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/inbox/sms">
-                  <el-menu-item index="31">
+              <el-menu-item-group
+                class="toolbar-menu-products"
+                v-for="(items, index) in toolbarMenu.marketing"
+                :key="index"
+                :class="{ disabled: items.disabled }"
+              >
+                <nuxt-link :to="items.to">
+                  <el-menu-item :index="items.index">
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
                     ></span>
-                    <p>Скидки</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/inbox/email">
-                  <el-menu-item index="32">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>По Email</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/inbox/sms">
-                  <el-menu-item index="33">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>По SMS</p></el-menu-item
+                    <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
               </el-menu-item-group>
@@ -329,7 +195,7 @@
                       ></rect>
                     </svg>
                   </span>
-                  <p  class="mx-2 not-ul-menu">Клиенты</p></el-menu-item
+                  <p class="mx-2 not-ul-menu">Клиенты</p></el-menu-item
                 >
               </nuxt-link>
             </el-menu-item-group>
@@ -369,43 +235,18 @@
                 </span>
                 <p>Контент сайта</p>
               </div>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/contents/blog">
-                  <el-menu-item index="51">
+              <el-menu-item-group
+                class="toolbar-menu-products"
+                v-for="(items, index) in toolbarMenu.content"
+                :key="index"
+                :class="{ disabled: items.disabled }"
+              >
+                <nuxt-link :to="items.to">
+                  <el-menu-item :index="items.index">
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
                     ></span>
-                    <p>Блог</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/contents/banners">
-                  <el-menu-item index="52">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Баннеры</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products">
-                <nuxt-link to="/contents/comments">
-                  <el-menu-item index="53">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Вопрос и ответы</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/contents/comments">
-                  <el-menu-item index="54">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Отзывы</p></el-menu-item
+                    <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
               </el-menu-item-group>
@@ -446,47 +287,52 @@
                 </span>
                 <p>настройки</p>
               </div>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/contents/blog">
-                  <el-menu-item index="61">
+              <el-menu-item-group
+                class="toolbar-menu-products"
+                v-for="(items, index) in toolbarMenu.settings"
+                :key="index"
+                :class="{ disabled: items.disabled }"
+              >
+                <nuxt-link :to="items.to">
+                  <el-menu-item :index="items.index">
                     <span class="menu-bullet"
                       ><span class="bullet-dot"></span
                     ></span>
-                    <p>Переводы</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/contents/banners">
-                  <el-menu-item index="62">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Справочник</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/contents/comments">
-                  <el-menu-item index="63">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Общие данные</p></el-menu-item
-                  >
-                </nuxt-link>
-              </el-menu-item-group>
-              <el-menu-item-group class="toolbar-menu-products disabled">
-                <nuxt-link to="/contents/comments">
-                  <el-menu-item index="64">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
-                    <p>Пользователи</p></el-menu-item
+                    <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
+            <el-menu-item-group class="home_menu toolbar-menu-products">
+              <nuxt-link to="/home/content-manager">
+                <el-menu-item index="70">
+                  <span>
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z"
+                        fill="currentColor"
+                      ></path>
+                      <rect
+                        opacity="0.3"
+                        x="8"
+                        y="3"
+                        width="8"
+                        height="8"
+                        rx="4"
+                        fill="currentColor"
+                      ></rect>
+                    </svg>
+                  </span>
+                  <p class="mx-2 not-ul-menu">Контент-менеджеры</p></el-menu-item
+                >
+              </nuxt-link>
+            </el-menu-item-group>
           </el-menu>
         </el-aside>
         <div class="toolbar-setting pt-05r pr-15r pl-15r pb-15r">
@@ -502,14 +348,6 @@
         >
           <div><div class="header-btn"></div></div>
           <div class="d-flex align-items-center">
-            <!-- <el-dropdown>
-              <i class="el-icon-setting" style="margin-right: 15px;"></i>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>View</el-dropdown-item>
-                <el-dropdown-item>Add</el-dropdown-item>
-                <el-dropdown-item>Delete</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown> -->
             <div
               class="block d-flex align-items-center"
               @click="$auth.logout('local')"
@@ -571,8 +409,165 @@ export default {
       defaultOpens: ["1", "1-2"],
       squareUrl:
         "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+      toolbarMenu: {
+        category: [
+          {
+            name: "Продукты",
+            index: "11",
+            to: "/catalog/products",
+            disabled: false,
+          },
+          {
+            name: "Категории",
+            index: "12",
+            to: "/catalog/categories",
+            disabled: false,
+          },
+          {
+            name: "Атрибуты",
+            index: "13",
+            to: "/catalog/atributs",
+            disabled: false,
+          },
+          {
+            name: "Характеристика",
+            index: "14",
+            to: "/catalog/characteristic",
+            disabled: false,
+          },
+          {
+            name: "Бренды",
+            index: "15",
+            to: "/catalog/characteristic",
+            disabled: true,
+          },
+        ],
+        orders: [
+          {
+            name: "Все заказы (0)",
+            index: "21",
+            to: "/orders/all-orders",
+            disabled: false,
+          },
+          {
+            name: "Новые заказы (0)",
+            index: "22",
+            to: "/orders/new-orders",
+            disabled: false,
+          },
+          {
+            name: "Принятые заказы (0)",
+            index: "23",
+            to: "/orders/accepted-orders",
+            disabled: false,
+          },
+          {
+            name: "Готовые в отправке (0)",
+            index: "24",
+            to: "/orders/ready-orders",
+            disabled: false,
+          },
+          {
+            name: "В доставке (0)",
+            index: "25",
+            to: "/orders/delivery-orders",
+            disabled: false,
+          },
+          {
+            name: "Возврат (0)",
+            index: "26",
+            to: "/orders/return-orders",
+            disabled: false,
+          },
+          {
+            name: "Доставленные (0)",
+            index: "27",
+            to: "/orders/delivered-orders",
+            disabled: false,
+          },
+          {
+            name: "Отмененные (0)",
+            index: "28",
+            to: "/orders/canceled-orders",
+            disabled: false,
+          },
+        ],
+        marketing: [
+          {
+            name: "Скидки",
+            index: "31",
+            to: "/inbox/sms",
+            disabled: true,
+          },
+          {
+            name: "По Email",
+            index: "32",
+            to: "/inbox/email",
+            disabled: false,
+          },
+          {
+            name: "По SMS",
+            index: "33",
+            to: "/inbox/sms",
+            disabled: false,
+          },
+        ],
+        content: [
+          {
+            name: "Блог",
+            index: "51",
+            to: "/contents/blog",
+            disabled: false,
+          },
+          {
+            name: "Баннеры",
+            index: "52",
+            to: "/contents/banners",
+            disabled: true,
+          },
+          {
+            name: "Вопрос и ответы",
+            index: "53",
+            to: "/contents/comments",
+            disabled: false,
+          },
+          {
+            name: "Отзывы",
+            index: "54",
+            to: "/contents/banners",
+            disabled: true,
+          },
+        ],
+        settings: [
+          {
+            name: "Переводы",
+            index: "61",
+            to: "/contents/blog",
+            disabled: true,
+          },
+          {
+            name: "Справочник",
+            index: "62",
+            to: "/contents/banners",
+            disabled: true,
+          },
+          {
+            name: "Общие данные",
+            index: "63",
+            to: "/contents/comments",
+            disabled: true,
+          },
+          {
+            name: "Пользователи",
+            index: "64",
+            to: "/contents/banners",
+            disabled: true,
+          },
+        ],
+      },
     };
   },
+
   computed: {
     routerName() {
       return this.$route.name;
@@ -581,11 +576,30 @@ export default {
   mounted() {
     this.handleOpen();
     this.handleClose();
+    this.activeOpens();
   },
+
   methods: {
     takeChange(e) {
       console.log(e);
     },
+    activeOpens() {
+      const routerName = this.$route.name;
+      if (routerName.includes("catalog")) {
+        this.defaultOpens = ["1"];
+      } else if (routerName.includes("orders")) {
+        this.defaultOpens = ["2"];
+      } else if (routerName.includes("inbox")) {
+        this.defaultOpens = ["3"];
+      } else if (routerName.includes("contents")) {
+        this.defaultOpens = ["5"];
+      } else if (routerName.includes("contents")) {
+        this.defaultOpens = ["5"];
+      } else if (routerName.includes("settings")) {
+        this.defaultOpens = ["6"];
+      }
+    },
+
     getData() {
       console.log("dadasdaadas");
     },
@@ -624,9 +638,22 @@ export default {
   watch: {
     routerName(oldVal, newVal) {
       if (oldVal !== newVal) {
+        if (oldVal.includes("catalog")) {
+          this.defaultOpens = ["1"];
+        } else if (oldVal.includes("orders")) {
+          this.defaultOpens = ["2"];
+        } else if (oldVal.includes("inbox")) {
+          this.defaultOpens = ["3"];
+        } else if (oldVal.includes("contents")) {
+          this.defaultOpens = ["5"];
+        } else if (oldVal.includes("contents")) {
+          this.defaultOpens = ["5"];
+        } else if (oldVal.includes("settings")) {
+          this.defaultOpens = ["6"];
+        }
         switch (oldVal) {
           case "catalog-products":
-            this.defaultOpens = ["1", "1-1", "1-1-1"];
+            this.defaultOpens = ["1"];
             break;
           case "orders-all-orders":
             this.activeRouterName = "21";

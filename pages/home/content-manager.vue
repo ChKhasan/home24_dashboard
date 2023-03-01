@@ -3,10 +3,10 @@
     <TitleBlock title="Блог" :breadbrumb="['Контент сайта']" lastLink="Блог">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
-        @click="show('add_blog')"
+        @click="show('edit_manager')"
       >
         <span class="svg-icon"
-          ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
+          ><svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             width="24px"
@@ -27,8 +27,7 @@
                 fill="#000000"
               ></path>
             </g></svg
-          ><!--end::Svg Icon--></span
-        >
+        ></span>
         Добавить
       </div>
     </TitleBlock>
@@ -92,21 +91,11 @@
     </div>
     <AddModal
       title="Изменения блога"
-      name="add_blog"
+      name="edit_manager"
       btnText="Save"
       :callback="getData"
+      refName="modalClose"
     >
-      <div class="modal_tab mb-4">
-        <span
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          @click="modalTab = item.index"
-          :class="{ 'avtive-modalTab': modalTab == item.index }"
-        >
-          {{ item.label }}
-        </span>
-      </div>
-
       <el-form
         label-position="top"
         :model="ruleForm"
@@ -116,79 +105,99 @@
         class="demo-ruleForm"
         action=""
       >
-        <div
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          v-if="modalTab == item.index"
-        >
-          <div class="form-block required">
-            <div>
-              <label for="">Зоговолок {{ item.label }}</label>
-            </div>
-            <el-form-item>
-              <el-input
-                type="text"
-                placeholder="Зоговолок"
-                v-model="ruleForm.title"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div class="form-block required">
-            <div><label for="">Подзоговолок </label></div>
-            <el-form-item>
-              <el-input
-                placeholder="Подзоговолок"
-                v-model="ruleForm.subTitle"
-              ></el-input>
-            </el-form-item>
-          </div>
-          <div class="form-block mb-0">
-            <div><label for="">Описание </label></div>
-            <Editor editorClass="product-editor mt-1" />
-          </div>
-          <div class="clearfix">
-            <a-upload
-              list-type="picture-card"
-              :file-list="fileList"
-              @preview="handlePreview"
-              @change="handleChange"
-            >
-              <div v-if="fileList.length < 1">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                <div class="ant-upload-text">
-                  Upload image
-                </div>
+        <div class="form-block required mb-3">
+          <div><label for="">ФИО </label></div>
+          <el-form-item>
+            <el-input
+              type="text"
+              placeholder="Зоговолок"
+              v-model="ruleForm.name"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="form-block required mb-3">
+          <div><label for="">Номер телефона </label></div>
+          <el-form-item>
+            <el-input
+              type="number"
+              placeholder="Подзоговолок"
+              v-model="ruleForm.number"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="form-block required mb-3">
+          <div><label for="">Username </label></div>
+          <el-form-item>
+            <el-input
+              type="text"
+              placeholder="Зоговолок"
+              v-model="ruleForm.username"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="form-block required mb-3">
+          <div><label for="">Пароль </label></div>
+          <el-form-item>
+            <el-input
+              type="password"
+              placeholder="Зоговолок"
+              v-model="ruleForm.password"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="form-block required mb-3">
+          <div><label for="">Подтверждение пароля</label></div>
+          <el-form-item>
+            <el-input
+              type="password"
+              placeholder="Зоговолок"
+              v-model="ruleForm.returnPassword"
+            ></el-input>
+          </el-form-item>
+        </div>
+
+        <div class="clearfix">
+          <a-upload
+            list-type="picture-card"
+            :file-list="fileList"
+            @preview="handlePreview"
+            @change="handleChange"
+          >
+            <div v-if="fileList.length < 1">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
+                  stroke="#3699FF"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
+                  stroke="#3699FF"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <div class="ant-upload-text">
+                Upload image
               </div>
-            </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
-              <img alt="example" style="width: 100%;" :src="previewImage" />
-            </a-modal>
-          </div>
+            </div>
+          </a-upload>
+          <a-modal
+            :visible="previewVisible"
+            :footer="null"
+            @cancel="handleCancel"
+          >
+            <img alt="example" style="width: 100%;" :src="previewImage" />
+          </a-modal>
         </div>
       </el-form>
     </AddModal>
@@ -212,26 +221,17 @@ export default {
   data() {
     return {
       pageSize: 10,
-      modalTab: 1,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
-      modalTabData: [
-        {
-          label: "Русский",
-          index: 1,
-        },
-        {
-          label: "O'zbek",
-          index: 2,
-        },
-      ],
       ruleForm: {
-        title: "Sub title",
-        subTitle: "Sub title",
-        desc: "desc",
+        name: "Sub title",
+        number: "Sub title",
+        password: "desc",
+        returnPassword: "desc",
+        username: "desc",
       },
       columns: [
         {
@@ -245,7 +245,7 @@ export default {
           width: "60px",
         },
         {
-          title: "Зоговолок",
+          title: "ФИО",
           dataIndex: "img",
           key: "img",
           slots: { title: "customTitle" },
@@ -265,7 +265,7 @@ export default {
           colSpan: 0,
         },
         {
-          title: "Подзоговолок",
+          title: "Номер телефона",
           dataIndex: "number",
           scopedSlots: { customRender: "number" },
           className: "column-code",
@@ -273,10 +273,10 @@ export default {
           //   width: "10%",
         },
         {
-          title: "Slug",
-          dataIndex: "slug",
+          title: "Username",
+          dataIndex: "username",
           className: "column-qty",
-          key: "slug",
+          key: "username",
           align: "center",
           //   width: "10%",
         },
@@ -315,16 +315,16 @@ export default {
           key: "1",
           id: "#12",
           name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
+          number: "+998 99 730 14 99",
+          username: "Fullname Lastname",
           btns: "id",
         },
         {
           key: "2",
           id: "#12",
           name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
+          number: "+998 99 730 14 99",
+          username: "Fullname Lastname",
 
           btns: "id",
         },
@@ -333,8 +333,8 @@ export default {
           id: "#12",
 
           name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
+          number: "+998 99 730 14 99",
+          username: "Fullname Lastname",
 
           btns: "id",
         },
@@ -342,8 +342,8 @@ export default {
           key: "4",
           id: "#12",
           name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
+          number: "+998 99 730 14 99",
+          username: "Fullname Lastname",
 
           btns: "id",
         },
@@ -356,9 +356,13 @@ export default {
   methods: {
     show(name) {
       this.$modal.show(name);
+      document.body.style.overflowY = "hidden";
+      document.body.style.height = "100vh";
     },
     hide(name) {
       this.$modal.hide(name);
+      document.body.style.overflowY = "auto";
+      document.body.style.height = "auto";
     },
     toAddProduct() {
       this.$router.push("/catalog/add_products");
@@ -431,6 +435,7 @@ export default {
       this.tableData = this.data;
     }
   },
+
   components: {
     AddBtn,
     FilterBtn,
