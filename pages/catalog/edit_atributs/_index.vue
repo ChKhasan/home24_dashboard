@@ -56,7 +56,7 @@
                 </g></svg
               ><!--end::Svg Icon--></span
             >
-            Add Product
+            Сохранить в изменении
           </div>
         </div>
       </TitleBlock>
@@ -143,12 +143,13 @@
                         multiple
                         allow-create
                         placeholder="Option name"
+                        loading-text="atribute"
                       >
                         <el-option
                           v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
+                          :key="item.id"
+                          :label="item.name.ru"
+                          :value="item.id"
                         >
                         </el-option>
                       </el-select>
@@ -160,6 +161,18 @@
                     >
                   </div>
                 </div>
+                <!-- <div class="d-flex justify-content-end">
+                    <div class="form-btn form-outline-transparent mx-3">
+                      Отмена
+                    </div>
+                    <div
+                      type="submit"
+                      class="form-btn form-btn-primary"
+                      @click="submitForm('ruleForm')"
+                    >
+                    Сохранить изменения {{ item.key }}
+                    </div>
+                  </div> -->
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -210,13 +223,13 @@
   </div>
 </template>
 <script>
-import AddBtn from "../../components/form/Add-btn.vue";
-import Title from "../../components/Title.vue";
-import FormTitle from "../../components/Form-title.vue";
-import TitleBlock from "../../components/Title-block.vue";
-import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
-import FormBlock from "../../components/form/FormBlock.vue";
-import AddModal from "../../components/modals/Add-modal.vue";
+import AddBtn from "../../../components/form/Add-btn.vue";
+import Title from "../../../components/Title.vue";
+import FormTitle from "../../../components/Form-title.vue";
+import TitleBlock from "../../../components/Title-block.vue";
+import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
+import FormBlock from "../../../components/form/FormBlock.vue";
+import AddModal from "../../../components/modals/Add-modal.vue";
 
 export default {
   layout: "toolbar",
@@ -225,6 +238,7 @@ export default {
       activeName: "Русский",
       multiSelectError: true,
       groups: [],
+      options: [],
       modalTabData: [
         {
           label: "Русский",
@@ -254,21 +268,6 @@ export default {
           label: "English",
         },
       ],
-      options: [
-        {
-          value: "HTML",
-          label: "HTML",
-        },
-        {
-          value: "CSS",
-          label: "CSS",
-        },
-        {
-          value: "JavaScript",
-          label: "JavaScript",
-        },
-      ],
-      value: [],
       rules: {
         group_id: [
           {
@@ -285,7 +284,7 @@ export default {
             trigger: "change",
           },
         ],
-        options: [
+        options_option: [
           {
             required: true,
             message: "Atribut name is required",
@@ -309,6 +308,7 @@ export default {
         name_en: "",
         options: [],
       },
+      group_id: null,
       atributGroup: {
         name: {
           ru: "",
@@ -323,29 +323,65 @@ export default {
     submitForm(ruleForm) {
       this.multiSelectError = false;
       this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-          const data = {
-            ...this.ruleForm,
-            name: {
-              ru: this.ruleForm.name_ru,
-              uz: this.ruleForm.name_uz,
-              en: this.ruleForm.name_en,
-            },
-          };
-          delete data["name_ru"];
-          delete data["name_uz"];
-          delete data["name_en"];
-          this.__POST_ATRIBUTES(data);
+        valid ? this.dataEditEnd() : false;
+      });
+    },
+
+    dataEditEnd() {
+      if (typeof this.ruleForm.group_id == "string") {
+        this.ruleForm.group_id = this.group_id;
+      }
+      const newOptionsNames = this.options.map(
+        (item) => (item.name = item.name.ru)
+      );
+      const newOptions = this.ruleForm.options.map((item) => {
+        if (newOptionsNames.includes(item)) {
+          return this.options.find((item2) => item2.name == item);
         } else {
-          return false;
+          return {
+            id: 0,
+            name: item,
+          };
         }
       });
+      const data = {
+        ...this.ruleForm,
+        options: newOptions,
+        name: {
+          ru: this.ruleForm.name_ru,
+          uz: this.ruleForm.name_uz,
+          en: this.ruleForm.name_en,
+        },
+      };
+      delete data["name_ru"];
+      delete data["name_uz"];
+      delete data["name_en"];
+      this.__EDIT_ATRIBUTES(data);
     },
     headerbtnCallback() {
       this.$router.push("/catalog/atributs");
     },
     show(name) {
       this.$modal.show(name);
+    },
+    async __GET_ATRIBUT_BY_ID() {
+      const data = await this.$store.dispatch(
+        "fetchAtributes/getAtributesById",
+        this.$route.params.index
+      );
+      this.dataEditStart(data);
+    },
+    dataEditStart(data) {
+      this.ruleForm.name_ru = data.attribute.name.ru;
+      this.ruleForm.name_uz = data.attribute.name.uz;
+      this.ruleForm.name_en = data.attribute.name.en;
+      this.ruleForm.group_id = data.attribute.group.name.ru;
+      this.group_id = data.attribute.group.id;
+      this.atribut_id = data.attribute.id;
+      this.options = data.attribute.options;
+      this.ruleForm.options = data.attribute.options.map(
+        (item) => item.name.ru
+      );
     },
     getData() {
       this.$refs["atributGroup"].validate((valid) =>
@@ -358,14 +394,13 @@ export default {
     toAddProduct() {
       this.$router.push("/catalog/add_products");
     },
-    async __POST_ATRIBUTES(data) {
+    async __EDIT_ATRIBUTES(data) {
       try {
-        await this.$store.dispatch("fetchAtributes/postAtributes", data);
-        await this.$notify({
-          title: "Success",
-          message: "Атрибут успешно добавлен",
-          type: "success",
+        await this.$store.dispatch("fetchAtributes/editAtributes", {
+          id: this.atribut_id,
+          data: data,
         });
+        await this.successNotify("Атрибут успешно изменена");
         this.$router.push("/catalog/atributs");
       } catch (e) {
         this.statusFunc(e.response);
@@ -374,7 +409,6 @@ export default {
     async __GET_GROUPS() {
       const data = await this.$store.dispatch("fetchAtributes/getGroups");
       this.groups = data?.groups;
-      console.log(this.groups);
     },
     statusFunc(res) {
       switch (res.status) {
@@ -404,25 +438,24 @@ export default {
           "fetchAtributes/postGroups",
           this.atributGroup
         );
-        this.$notify({
-          title: "Success",
-          message: "Группа успешно добавлен",
-          type: "success",
-        });
-        this.hide("add_atribute_group");
+        this.successNotify("Группа успешно добавлен");
         this.__GET_GROUPS();
-        this.atributGroup.name.ru = "";
-        this.atributGroup.name.uz = "";
-        this.atributGroup.name.en = "";
+        this.hide("add_atribute_group");
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    toBack() {},
-    handleClick() {},
+    successNotify(message) {
+      this.$notify({
+        title: "Success",
+        message: message,
+        type: "success",
+      });
+    },
   },
   mounted() {
     this.__GET_GROUPS();
+    this.__GET_ATRIBUT_BY_ID();
   },
   components: {
     AddBtn,
@@ -435,3 +468,8 @@ export default {
   },
 };
 </script>
+<style>
+.el-select-dropdown__empty {
+  display: none;
+}
+</style>

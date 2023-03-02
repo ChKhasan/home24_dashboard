@@ -78,6 +78,7 @@ export default {
             method: "post",
             propertyName: "access",
           },
+          refresh: { url: "/api/auth/refresh", method: "post" },
           logout: { url: "/api/account/logout", method: "post" },
           user: false,
         },

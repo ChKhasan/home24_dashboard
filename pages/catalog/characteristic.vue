@@ -5,7 +5,10 @@
       :breadbrumb="['эКоммерция', 'Каталог']"
       lastLink="Характеристика"
     >
-      <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
+      <div
+        class="add-btn add-header-btn add-header-btn-padding btn-primary"
+        @click="$router.push('/catalog/add_characteristic')"
+      >
         <span class="svg-icon"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
@@ -40,15 +43,60 @@
           <div class="d-flex align-items-between justify-content-between w-100">
             <SearchInput placeholder="Характеристики поиска" />
             <div class="d-flex align-items-center">
-              <AddBtn
+              <!-- <AddBtn
                 name="Добавить характеристику"
                 :icon="true"
                 :callback="toAddProduct"
-              />
+              /> -->
             </div>
           </div>
         </div>
-        <SelectAntTable :data="data" :columns="columns" />
+        <div class="antd_table product_table">
+          <a-table
+            :columns="columns"
+            :data-source="atributes"
+            :pagination="false"
+            align="center"
+            :row-selection="{
+              selectedRowKeys: selectedRowKeys,
+              onChange: onSelectChange,
+              columnWidth: '40px',
+              align: 'right',
+            }"
+          >
+            <a
+              slot="name"
+              slot-scope="text"
+              align="center"
+              class="table_product_row"
+            >
+              <h6>{{ text?.ru }}</h6>
+              <span>{{ text.subtitle }}</span>
+            </a>
+            <div
+              slot="categories"
+              slot-scope="text"
+              align="center"
+              class="option-container"
+            >
+              <!-- <span v-for="item in text" class="option-items">{{ item }}</span> -->
+              <span class="option-items">{{ text ? text : "-----" }}</span>
+            </div>
+            <span slot="customTitle"></span>
+
+            <span slot="id" slot-scope="text">
+              <span
+                class="action-btn"
+                @click="$router.push(`/catalog/edit_characteristic/${text}`)"
+              >
+                <img :src="editIcon" alt="" />
+              </span>
+              <span class="action-btn" @click="deleteAtribut(text)">
+                <img :src="deleteIcon" alt="" />
+              </span>
+            </span>
+          </a-table>
+        </div>
       </div>
     </div>
   </div>
@@ -64,82 +112,15 @@ export default {
   layout: "toolbar",
   data() {
     return {
-      data: [
-        {
-          key: "1",
-          name: {
-            name:
-              "HONOR MagicBook X 15BBR-WAI9885 WAI9885 5BBR-WAI9885 WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          options: [
-            "Техника",
-            "Компьютеры и оргтехника",
-            "Ноутбуки",
-            "Ноутбуки",
-            "OPTIONS",
-            "OPTIONS",
-            "OPTIONS",
-          ],
-          btns: "id",
-        },
-        {
-          key: "2",
-          name: {
-            name: "Iphone 14 pro max",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          options: [
-            "Техника",
-            "Компьютеры и оргтехника",
-            "Ноутбуки",
-            "Ноутбуки",
-            "OPTIONS",
-            "OPTIONS",
-            "OPTIONS",
-          ],
-
-          btns: "id",
-        },
-        {
-          key: "3",
-          name: {
-            name: "Iphone 14 pro max",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          options: [
-            "Техника",
-            "Компьютеры и оргтехника",
-            "Ноутбуки",
-            "Ноутбуки",
-            "OPTIONS",
-            "OPTIONS",
-            "OPTIONS",
-          ],
-
-          btns: "id",
-        },
-        {
-          key: "4",
-          name: {
-            name: "Iphone 14 pro max",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          options: [
-            "Техника",
-            "Компьютеры и оргтехника",
-            "Ноутбуки",
-            "Ноутбуки",
-            "OPTIONS",
-            "OPTIONS",
-            "OPTIONS",
-          ],
-          btns: "id",
-        },
-      ],
+      pageSize: 10,
+      editIcon: require("../../assets/svg/components/edit-icon.svg"),
+      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      selectedRowKeys: [], // Check here to configure the default column
+      loading: false,
+      atributes: [],
       columns: [
         {
-          title: "Характеристика",
+          title: "АТРИБУТЫ",
           dataIndex: "name",
           key: "name",
           slots: { title: "customTitle" },
@@ -149,28 +130,103 @@ export default {
         },
         {
           title: "ПАРАМЕТРЫ",
-          dataIndex: "options",
-          scopedSlots: { customRender: "options" },
+          dataIndex: "categories",
+          scopedSlots: { customRender: "categories" },
           className: "column-options",
-          key: "options",
+          key: "categories",
         },
 
         {
           title: "ДЕЙСТВИЯ",
-          key: "btns",
-          dataIndex: "btns",
-          scopedSlots: { customRender: "btns" },
+          key: "id",
+          dataIndex: "id",
+          scopedSlots: { customRender: "id" },
           className: "column-btns",
           width: "100px",
           align: "right",
         },
       ],
+      data: [],
     };
+  },
+  mounted() {
+    this.__GET_CHARACTERISTIC();
   },
   methods: {
     toAddProduct() {
       this.$router.push("/catalog/add_characteristic");
       console.log("errors");
+    },
+    start() {
+      this.loading = true;
+      // ajax request after empty completing
+      setTimeout(() => {
+        this.loading = false;
+        this.selectedRowKeys = [];
+      }, 1000);
+    },
+    tableActions(id) {
+      console.log(id);
+    },
+    onSelectChange(selectedRowKeys) {
+      console.log("selectedRowKeys changed: ", selectedRowKeys);
+      this.selectedRowKeys = selectedRowKeys;
+    },
+    handleSizeChange(val) {
+      console.log(`${val} items per page`);
+    },
+    handleCurrentChange(val) {
+      console.log(`current page: ${val}`);
+    },
+    handleCommand(command) {
+      this.pageSize = command;
+    },
+    deleteAtribut(id) {
+      this.__DELETE_CHARACTERISTIC(id);
+    },
+    async __DELETE_CHARACTERISTIC(id) {
+      try {
+        const data = await this.$store.dispatch(
+          "fetchCharacters/deleteCharacteristics",
+          id
+        );
+        await this.$notify({
+          title: "Success",
+          message: "Характеристика был успешно удален",
+          type: "success",
+        });
+        this.__GET_CHARACTERISTIC();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    statusFunc(res) {
+      switch (res.status) {
+        case 422:
+          this.$notify.error({
+            title: "Error",
+            message: "Указанные данные недействительны.",
+          });
+          break;
+        case 500:
+          this.$notify.error({
+            title: "Error",
+            message: "Cервер не работает",
+          });
+          break;
+        case 404:
+          this.$notify.error({
+            title: "Error",
+            message: res.data.errors,
+          });
+          break;
+      }
+    },
+    async __GET_CHARACTERISTIC() {
+      const data = await this.$store.dispatch(
+        "fetchCharacters/getCharacteristics"
+      );
+      this.atributes = data.characteristics?.data;
     },
   },
   components: { SelectAntTable, AddBtn, Title, TitleBlock, SearchInput },

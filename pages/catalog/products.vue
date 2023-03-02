@@ -53,7 +53,62 @@
             </div>
           </div>
         </div>
-        <AntdTable :data="data" :columns="columns" />
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+          align="center"
+          :row-selection="{
+            selectedRowKeys: selectedRowKeys,
+            onChange: onSelectChange,
+            columnWidth: '40px',
+            align: 'right',
+          }"
+        >
+          <a slot="img" slot-scope="text"
+            ><img
+              class="table-image"
+              src="../../assets/images/image.png"
+              alt=""
+          /></a>
+          <a
+            slot="name"
+            slot-scope="text"
+            align="center"
+            class="table_product_row"
+          >
+            <h6>{{ text.ru }}</h6>
+            <!-- <span>{{ text.subtitle }}</span> -->
+          </a>
+          <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
+          <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
+          <a slot="price" slot-scope="text">{{
+            text ? `${text}` : "------"
+          }}</a>
+          <span slot="customTitle"></span>
+
+          <span
+            slot="status"
+            slot-scope="text"
+            class="tags-style"
+            :class="{
+              tag_success: tags == 'Success',
+              tag_inProgress: tags == 'in progress',
+              tag_approved: tags == 'Approved',
+              tag_rejected: tags == 'rejected',
+            }"
+          >
+            {{ text ? text : "------" }}
+          </span>
+          <span slot="id" slot-scope="text">
+            <span class="action-btn" @click="deletePoduct(text)">
+              <img :src="editIcon" alt="" />
+            </span>
+            <span class="action-btn" @click="tableActions(text)">
+              <img :src="deleteIcon" alt="" />
+            </span>
+          </span>
+        </a-table>
       </div>
     </div>
   </div>
@@ -71,6 +126,12 @@ export default {
   middleware: "auth",
   data() {
     return {
+      pageSize: 10,
+      editIcon: require("../../assets/svg/components/edit-icon.svg"),
+      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      tableData: [],
+      selectedRowKeys: [], // Check here to configure the default column
+      loading: false,
       columns: [
         {
           title: "ПРОДУКТ",
@@ -94,16 +155,17 @@ export default {
         },
         {
           title: "Код",
-          dataIndex: "code",
-          scopedSlots: { customRender: "code" },
+          dataIndex: "model",
+          scopedSlots: { customRender: "model" },
           className: "column-code",
-          key: "code",
+          key: "model",
           width: "10%",
         },
         {
           title: "КОЛ-ВО",
           dataIndex: "qty",
           className: "column-qty",
+          scopedSlots: { customRender: "qty" },
           key: "qty",
           align: "center",
           width: "10%",
@@ -113,7 +175,6 @@ export default {
           title: "ЦЕНА",
           dataIndex: "price",
           className: "column-price",
-
           key: "price",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "price" },
@@ -121,9 +182,9 @@ export default {
         },
         {
           title: "Статус",
-          key: "tags",
-          dataIndex: "tags",
-          scopedSlots: { customRender: "tags" },
+          key: "status",
+          dataIndex: "status",
+          scopedSlots: { customRender: "status" },
           className: "column-tags",
           filters: [
             { text: "progress", value: "in progress" },
@@ -136,9 +197,9 @@ export default {
         },
         {
           title: "действия",
-          key: "btns",
-          dataIndex: "btns",
-          scopedSlots: { customRender: "btns" },
+          key: "id",
+          dataIndex: "id",
+          scopedSlots: { customRender: "id" },
           className: "column-btns",
           width: "10%",
           align: "right",
@@ -163,13 +224,11 @@ export default {
         },
       ],
       value: "",
+      products: [],
       data: [
         {
           key: "1",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
+          name: "sfsdfds",
           subtitle: "subtitle",
           code: "02887003",
           qty: "25",
@@ -179,59 +238,110 @@ export default {
 
           btns: "id",
         },
-        {
-          key: "2",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          code: "02887003",
-          qty: "23",
-          price: "6 700 000 sum",
-
-          img: "Published",
-          tags: "Success",
-
-          btns: "id",
-        },
-        {
-          key: "3",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          code: "02887003",
-          qty: "45",
-          price: "6 700 000 sum",
-
-          img: "Published",
-          tags: "rejected",
-
-          btns: "id",
-        },
-        {
-          key: "4",
-          name: {
-            name: "HONOR MagicBook X 15BBR-WAI9885 BR-WAI9885 BR-WAI9885",
-            subtitle: "Техника / Техника / Техника / Техника",
-          },
-          code: "02887003",
-          qty: "45",
-          price: "6 700 000 sum",
-
-          img: "Published",
-          tags: "Approved",
-
-          btns: "id",
-        },
       ],
     };
+  },
+  computed: {
+    hasSelected() {
+      return this.selectedRowKeys.length > 0;
+    },
+
+    classObject(tag) {
+      return {
+        tag_success: tag == "Success",
+        tag_inProgress: tag == "in progress",
+      };
+    },
   },
   methods: {
     toAddProduct() {
       this.$router.push("/catalog/add_products");
       console.log("errors");
     },
+    async __GET_PRODUCTS() {
+      this.products = await this.$store.dispatch("fetchProducts/postProducts");
+      this.data = this.products.products.data;
+      console.log(this.data);
+    },
+    handleTableChange(pagination, filters, sorter) {
+      console.log(filters);
+      this.tableData = this.data.map((item) => {
+        filters.tags.forEach((element) => {
+          if (item.tags == element);
+          return item;
+        });
+      });
+      console.log(this.tableData);
+    },
+
+    start() {
+      this.loading = true;
+      setTimeout(() => {
+        this.loading = false;
+        this.selectedRowKeys = [];
+      }, 1000);
+    },
+    tableActions(id) {
+      console.log(id);
+    },
+    onSelectChange(selectedRowKeys) {
+      console.log("selectedRowKeys changed: ", selectedRowKeys);
+      this.selectedRowKeys = selectedRowKeys;
+    },
+    handleSizeChange(val) {
+      console.log(`${val} items per page`);
+    },
+    handleCurrentChange(val) {
+      console.log(`current page: ${val}`);
+    },
+    handleCommand(command) {
+      this.pageSize = command;
+    },
+    deletePoduct(id) {
+      console.log(id);
+      this.__DELETE_PRODUCTS(id);
+    },
+    async __DELETE_PRODUCTS(id) {
+      try {
+        const data = await this.$store.dispatch(
+          "fetchProducts/deleteProducts",
+          id
+        );
+        await this.$notify({
+          title: "Success",
+          message: "Продукт был успешно удален",
+          type: "success",
+        });
+        this.__GET_PRODUCTS();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    statusFunc(res) {
+      switch (res.status) {
+        case 422:
+          this.$notify.error({
+            title: res.data.message,
+            message: res.data.errors,
+          });
+          break;
+        case 500:
+          this.$notify.error({
+            title: res.data.message,
+            message: res.data.errors,
+          });
+          break;
+        case 404:
+          this.$notify.error({
+            title: res.data.message,
+            message: res.data.errors,
+          });
+          break;
+      }
+    },
+  },
+  mounted() {
+    this.__GET_PRODUCTS();
   },
   components: {
     AddBtn,

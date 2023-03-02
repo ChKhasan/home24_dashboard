@@ -27,7 +27,7 @@
             @click="submitForm('ruleForm')"
           >
             <span class="svg-icon"
-              ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
+              ><svg
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 width="24px"
@@ -53,9 +53,8 @@
                     fill="#000000"
                   ></path>
                 </g></svg
-              ><!--end::Svg Icon--></span
-            >
-            Add Product
+            ></span>
+            Добавить характеристику
           </div>
         </div>
       </TitleBlock>
@@ -71,8 +70,8 @@
           >
             <el-tab-pane
               v-for="(item, index) in lang"
-              :label="item.key"
-              :name="item.key"
+              :label="item.label"
+              :name="item.label"
               :key="index"
             >
               <div class="form-container form-container-ltr">
@@ -81,24 +80,27 @@
                 <div class="form-block required">
                   <div><label for="character_group">Группа</label></div>
                   <div class="group-grid" id="character_group">
-                    <el-form-item prop="character_group">
+                    <el-form-item prop="group_id">
                       <el-select
                         class="w-100"
-                        v-model="ruleForm.character_group"
+                        v-model="ruleForm.group_id"
                         filterable
                         allow-create
                         placeholder="Choose tags for your article"
                       >
                         <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
+                          v-for="item in groups"
+                          :key="item.id"
+                          :label="item.name.ru"
+                          :value="item.id"
                         >
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <div class="outline-btn outline-light-blue-btn mt-1">
+                    <div
+                      class="outline-btn outline-light-blue-btn mt-1"
+                      @click="show('add_atribute_group')"
+                    >
                       <svg
                         width="24"
                         height="24"
@@ -120,10 +122,10 @@
                 <div class="atribut-input-grid">
                   <div class="form-block required">
                     <div><label for="">Имя характеристики </label></div>
-                    <el-form-item prop="character_name">
+                    <el-form-item :prop="`name_${item.key}`">
                       <el-input
-                        v-model="ruleForm.character_name"
-                        placeholder="Product model"
+                        v-model="ruleForm[`name_${item.key}`]"
+                        placeholder="Atribut Name"
                       ></el-input>
                     </el-form-item>
                     <span class="bottom_text"
@@ -132,13 +134,28 @@
                       каждым ключевым словом.</span
                     >
                   </div>
-                  <div class="form-block">
+                  <div
+                    class="form-block"
+                    :class="{ 'multi-select-required': multiSelectError }"
+                  >
                     <div><label>Имя опции</label></div>
-                    <el-form-item label-position="top">
-                      <el-input
-                        v-model="ruleForm.character_option"
-                        placeholder="Product model"
-                      ></el-input>
+                    <el-form-item label-position="top" prop="options">
+                      <el-select
+                        class="w-100"
+                        v-model="ruleForm.options"
+                        filterable
+                        multiple
+                        allow-create
+                        placeholder="Option name"
+                      >
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        >
+                        </el-option>
+                      </el-select>
                     </el-form-item>
 
                     <span class="bottom_text"
@@ -154,11 +171,53 @@
         </div>
       </div>
     </el-form>
+    <AddModal
+      title="New group"
+      name="add_atribute_group"
+      btnText="Add Group"
+      :callback="getData"
+    >
+      <el-form
+        label-position="top"
+        :model="characteristic"
+        :rules="rulesModal"
+        ref="characteristic"
+        label-width="120px"
+        class="demo-ruleForm"
+        action=""
+      >
+        <div class="modal_tab mb-4">
+          <span
+            v-for="(item, index) in modalTabData"
+            :key="index"
+            @click="modalTab = item.index"
+            :class="{ 'avtive-modalTab': modalTab == item.index }"
+          >
+            {{ item.label }}
+          </span>
+        </div>
+        <div
+          class="form-block required"
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          v-if="modalTab == item.index"
+        >
+          <div><label for="">Group </label></div>
+          <el-form-item prop="character_name">
+            <el-input
+              placeholder="Product model"
+              v-model="characteristic.name[item.index]"
+            ></el-input>
+          </el-form-item>
+        </div>
+      </el-form>
+    </AddModal>
   </div>
 </template>
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
+import AddModal from "../../components/modals/Add-modal.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
 
@@ -167,100 +226,205 @@ export default {
   data() {
     return {
       activeName: "Русский",
+      multiSelectError: true,
+      groups: [],
+      modalTabData: [
+        {
+          label: "Русский",
+          index: "ru",
+        },
+        {
+          label: "O'zbek",
+          index: "uz",
+        },
+        {
+          label: "English",
+          index: "en",
+        },
+      ],
+      modalTab: "ru",
       lang: [
         {
-          key: "Русский",
+          key: "ru",
+          label: "Русский",
         },
         {
-          key: "Uzbek",
+          key: "uz",
+          label: "Uzbek",
         },
         {
-          key: "English",
+          key: "en",
+          label: "English",
         },
       ],
-      options: [
-        {
-          value: "HTML",
-          label: "HTML",
-        },
-        {
-          value: "CSS",
-          label: "CSS",
-        },
-        {
-          value: "JavaScript",
-          label: "JavaScript",
-        },
-      ],
+      options: [],
       value: [],
       rules: {
-        character_group: [
+        group_id: [
           {
             required: true,
-            // message: "incorrec",
+            message: "Atribut group is required",
             trigger: "change",
           },
         ],
-        character_name: [
+
+        name_ru: [
           {
             required: true,
-            // message: "incorrec",
+            message: "Atribut name is required",
+            trigger: "change",
+          },
+        ],
+        options: [
+          {
+            required: true,
+            message: "Atribut name is required",
+            trigger: "change",
+          },
+        ],
+      },
+      rulesModal: {
+        group_id: [
+          {
+            required: true,
+            message: "Atribut group is required",
             trigger: "change",
           },
         ],
       },
       ruleForm: {
-        character_group: "",
-        character_name: "",
-        character_option: "",
+        group_id: null,
+        name_ru: "",
+        name_uz: "",
+        name_en: "",
+        options: [],
       },
-      count: 10,
-      rows: [
-        {
-          total_price_with_nds: 123.213,
+      characteristic: {
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
         },
-        {
-          total_price_with_nds: 123.123,
-        },
-        {
-          total_price_with_nds: 1232.1321,
-        },
-        {
-          total_price_with_nds: 21.3213,
-        },
-        {
-          total_price_with_nds: 21.3213,
-        },
-      ],
+      },
     };
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     submitForm(ruleForm) {
+      this.multiSelectError = false;
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm);
+          const data = {
+            ...this.ruleForm,
+            name: {
+              ru: this.ruleForm.name_ru,
+              uz: this.ruleForm.name_uz,
+              en: this.ruleForm.name_en,
+            },
+          };
+          delete data["name_ru"];
+          delete data["name_uz"];
+          delete data["name_en"];
+          this.__POST_CHARACTERISTIC(data);
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
     },
-    toAddProduct(val) {
-      // this.$router.push("/catalog/add_products");
+    headerbtnCallback() {
+      console.log("fsfsdf");
+    },
+    show(name) {
+      this.$modal.show(name);
+    },
+    getData() {
+      this.$refs["characteristic"].validate((valid) =>
+        valid ? this.__POST_GROUPS() : false
+      );
+    },
+    hide(name) {
+      this.$modal.hide(name);
+    },
+    toAddProduct() {
+      this.$router.push("/catalog/add_products");
+    },
+    async __POST_CHARACTERISTIC(data) {
+      try {
+        await this.$store.dispatch("fetchCharacters/postCharacteristics", data);
+        await this.$notify({
+          title: "Success",
+          message: "Характеристика успешно добавлен",
+          type: "success",
+        });
+        this.$router.push("/catalog/characteristic");
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    async __GET_GROUPS() {
+      const data = await this.$store.dispatch("fetchCharacters/getGroups");
+      this.groups = data?.groups;
+    },
+    statusFunc(res) {
+      switch (res.status) {
+        case 422:
+          this.$notify.error({
+            title: "Error",
+            message: "Указанные данные недействительны.",
+          });
+          break;
+        case 500:
+          this.$notify.error({
+            title: "Error",
+            message: "Cервер не работает",
+          });
+          break;
+        case 404:
+          this.$notify.error({
+            title: "Error",
+            message: res.data.errors,
+          });
+          break;
+      }
+    },
+    async __POST_GROUPS() {
+      try {
+        await this.$store.dispatch(
+          "fetchCharacters/postGroups",
+          this.characteristic
+        );
+        this.$notify({
+          title: "Success",
+          message: "Группа успешно добавлен",
+          type: "success",
+        });
+        this.hide("add_atribute_group");
+        this.__GET_GROUPS();
+        this.characteristic.name.ru = "";
+        this.characteristic.name.uz = "";
+        this.characteristic.name.en = "";
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
     },
     toBack() {
       this.$router.push("/catalog/characteristic");
     },
+    handleClick() {},
+  },
+  mounted() {
+    this.__GET_GROUPS();
   },
   components: {
     AddBtn,
     Title,
     TitleBlock,
     LayoutHeaderBtn,
+    AddModal,
   },
 };
 </script>
-<style lang=""></style>
+<style lang="scss">
+.el-select-dropdown__empty {
+  display: none;
+}
+</style>

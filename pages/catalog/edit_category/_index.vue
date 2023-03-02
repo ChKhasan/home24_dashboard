@@ -26,7 +26,7 @@
           class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
         >
           <!-- <Title title="Category edit" />
-        <AddBtn name="Save" :icon="false" :callback="toAddProduct" /> -->
+          <AddBtn name="Save" :icon="false" :callback="toAddProduct" /> -->
         </div>
         <div class="category-from-grid">
           <el-form
@@ -303,12 +303,12 @@
   </div>
 </template>
 <script>
-import AddBtn from "../../components/form/Add-btn.vue";
-import Title from "../../components/Title.vue";
-import FormTitle from "../../components/Form-title.vue";
-import Editor from "../../components/form/editor.vue";
-import TitleBlock from "../../components/Title-block.vue";
-import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
+import AddBtn from "../../../components/form/Add-btn.vue";
+import Title from "../../../components/Title.vue";
+import FormTitle from "../../../components/Form-title.vue";
+import Editor from "../../../components/form/editor.vue";
+import TitleBlock from "../../../components/Title-block.vue";
+import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
@@ -552,6 +552,14 @@ export default {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = data.categories?.data;
     },
+    async __GET_CATEGORY_BY_ID() {
+      const data = await this.$store.dispatch(
+        "fetchCategories/getCategoriesById",
+        this.$route.params.index
+      );
+
+      console.log(data);
+    },
     statusFunc(res) {
       switch (res.status) {
         case 422:
@@ -594,7 +602,6 @@ export default {
           type: "success",
         });
         this.$router.push("/catalog/categories");
-        
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -604,6 +611,7 @@ export default {
     this.__GET_CATEGORIES();
     this.__GET_ATRIBUTES();
     this.__GET_GROUPS();
+    this.__GET_CATEGORY_BY_ID();
   },
   components: {
     AddBtn,
