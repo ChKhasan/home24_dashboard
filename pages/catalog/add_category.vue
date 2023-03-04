@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="category-input-grid">
-                      <div class="form-block required">
+                      <div class="form-block required mb-0">
                         <div><label for="">Название категории</label></div>
                         <el-form-item :prop="`name_${item.key}`">
                           <el-input
@@ -71,7 +71,10 @@
                           <el-select
                             v-model="ruleForm.parent_id"
                             class="w-100"
+                            filterable
                             placeholder="Choose tags for your article"
+                            loading-text="Loading..."
+                            no-match-text="no category"
                           >
                             <el-option
                               v-for="item in categories"
@@ -370,8 +373,6 @@ export default {
       ],
       value: [],
       rules: {
-
-
         group_atribut: [
           {
             required: true,
