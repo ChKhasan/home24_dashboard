@@ -30,10 +30,10 @@ export const actions = {
       return e.response;
     }
   },
-  async editCategories() {
+  async editCategories({},payload) {
     try {
-      const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/categories`
+      const res = this.$axios.$put(
+        `https://test.loftcity.uz/api/admin/categories/${payload.id}`,payload.data
       );
       return res;
     } catch (e) {

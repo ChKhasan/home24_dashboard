@@ -36,16 +36,16 @@
             :expanded-row-keys.sync="expandedRowKeys"
             :pagination="false"
           >
-            <div
-              slot="name"
+          <div
+              slot="img"
               slot-scope="text"
               align="center"
               class="table_product_row select-table-child"
             >
               <img
                 class="table-image select-img"
-                v-if="text?.img"
-                :src="text?.img"
+                v-if="text"
+                :src="text"
                 alt=""
               />
               <img
@@ -55,7 +55,17 @@
                 alt=""
               />
 
-              <h6>{{ text?.name?.ru ? text?.name?.ru : "------" }}</h6>
+            </div>
+            <div
+              slot="name"
+              slot-scope="text"
+              align="center"
+              class="table_product_row select-table-child"
+            >
+   
+
+              <h6>{{ text?.ru ? text?.ru : "----" }}</h6>
+
             </div>
             <div
               slot="md_icon"
@@ -84,7 +94,8 @@
             >
               {{ tags }}
             </span>
-            <span slot="btns" slot-scope="text">
+
+            <span slot="id" slot-scope="text">
               <span
                 class="action-btn"
                 @click="$router.push(`/catalog/edit_category/${text}`)"
@@ -119,12 +130,24 @@ import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 const columns = [
   {
     title: "Категория",
-    dataIndex: "nameInfo",
-    key: "nameInfo",
+    dataIndex: "img",
+    key: "img",
     className: "column-name",
+    slots: { title: "customTitle" },
+    scopedSlots: { customRender: "img" },
+    align: "left",
+    colSpan: 0,
+  },
+  {
+    title: "Категория",
+    dataIndex: "name",
+    key: "name",
+    className: "column-name1",
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "name" },
     align: "left",
+    colSpan: 2,
+
   },
   {
     title: "Икона",
@@ -155,52 +178,12 @@ const columns = [
     title: "действия",
     key: "id",
     dataIndex: "id",
-    scopedSlots: { customRender: "btns" },
+    scopedSlots: { customRender: "id" },
     className: "column-btns",
     width: "10%",
   },
 ];
-// const columns = [
-//   {
-//     title: "Категория",
-//     dataIndex: "category",
-//     key: "category",
-//     className: "column-name",
-//     slots: { title: "customTitle" },
-//     scopedSlots: { customRender: "category" },
-//     align: "left",
-//   },
-//   {
-//     title: "Икона",
-//     dataIndex: "icon",
-//     key: "icon",
-//     width: "12%",
-//   },
-//   {
-//     title: "ПОПУЛЯРНЫЙ",
-//     dataIndex: "popular",
-//     key: "popular",
-//     align: "center",
-//     scopedSlots: { customRender: "popular" },
-//     width: "30%",
-//   },
-//   {
-//     title: "Статус",
-//     key: "tags",
-//     dataIndex: "tags",
-//     scopedSlots: { customRender: "tags" },
-//     className: "column-tags",
-//     width: "16%",
-//   },
-//   {
-//     title: "действия",
-//     key: "btns",
-//     dataIndex: "btns",
-//     scopedSlots: { customRender: "btns" },
-//     className: "column-btns",
-//     width: "10%",
-//   },
-// ];
+
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
     console.log(
@@ -361,12 +344,64 @@ export default {
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
 
-      this.categories = data.categories?.data.map((item) => {
-        return {
-          ...item,
-          nameInfo: { name: item.name, img: item.md_img },
-          children: [{ nameInfo: { name: item.name, img: item.md_img } }],
-        };
+      this.categories = data.categories?.data.map((item, index) => {
+        let newChild = [];
+        let newChild2 = [];
+        if (item.children) {
+          newChild = item.children.map((childItem) => {
+            if (childItem.children) {
+              newChild2 = childItem.children.map((childItem2) => {
+                return {
+                  key: index + 10,
+                  ...childItem2,
+                  dataName: {
+                    name: childItem2.name,
+                    img: childItem2.md_img,
+                  },
+                };
+              });
+              const newItem2 = {
+                key: index + 10,
+                ...item,
+                dataName: {
+                  name: item.name,
+                  img: item.md_img,
+                },
+                children: newChild2,
+              };
+              return newItem2;
+            }
+            return {
+              key: index + 1,
+              ...childItem,
+              dataName: {
+                name: childItem.name,
+                img: childItem.md_img,
+              },
+            };
+          });
+          const newItem = {
+            key: index + 1,
+            ...item,
+            dataName: {
+              name: item.name,
+              img: item.md_img,
+            },
+            children: newChild,
+          };
+          return newItem;
+        } else {
+          const newItem = {
+            key: index + 1,
+            ...item,
+            dataName: {
+              name: item.name,
+              img: item.md_img,
+            },
+            children: newChild,
+          };
+          return newItem;
+        }
       });
       console.log(this.categories);
     },

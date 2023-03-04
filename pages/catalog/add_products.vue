@@ -125,16 +125,16 @@
                   <div class="form-block mb-0">
                     <div><label>Категория</label></div>
                     <el-select
-                      v-model="value"
+                      v-model="ruleForm.category_id"
                       allow-create
                       default-first-option
                       placeholder="Select category"
                     >
                       <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                        v-for="item in categories"
+                        :key="item.id"
+                        :label="item.name?.ru"
+                        :value="item.id"
                       >
                       </el-option>
                     </el-select>
@@ -143,16 +143,17 @@
                   <div class="form-block mb-0">
                     <div><label>Дочерняя категория</label></div>
                     <el-select
-                      v-model="value"
+                      v-model="categoryChild.child1.id"
                       allow-create
                       default-first-option
+                      :disabled="categoryChild.child1.arr.length < 1"
                       placeholder="Select post category"
                     >
                       <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                        v-for="item in categoryChild.child1.arr"
+                        :key="item.id"
+                        :label="item.name.ru"
+                        :value="item.id"
                       >
                       </el-option>
                     </el-select>
@@ -161,16 +162,17 @@
                   <div class="form-block mb-0">
                     <div><label>Последняя категория</label></div>
                     <el-select
-                      v-model="ruleForm.category_id"
+                      v-model="categoryChild.child2.id"
                       allow-create
+                      :disabled="categoryChild.child2.arr.length < 1"
                       default-first-option
                       placeholder="Select last category"
                     >
                       <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
+                        v-for="item in categoryChild.child2.arr"
+                        :key="item.id"
+                        :label="item.name?.ru"
+                        :value="item.id"
                       >
                       </el-option>
                     </el-select>
@@ -374,7 +376,8 @@
                 </div>
               </el-tab-pane>
             </el-tabs>
-            <div class="form-container" v-for="element in productVariant">
+            <!-- Product Variants -->
+            <div class="form-container" v-for="element in ruleForm.products">
               <div class="d-flex justify-content-between variant-header">
                 <h4 class="variant-title">Вариация №{{ element.id }}</h4>
                 <div
@@ -404,12 +407,14 @@
                 <div class="variant-img">
                   <a-upload
                     list-type="picture-card"
-                    :file-list="fileList"
+                    :file-list="element.imagesData"
                     :multiple="true"
                     @preview="handlePreview"
-                    @change="handleChange"
+                    @change="
+                      ($event) => handleChangeVatiant($event, element.id)
+                    "
                   >
-                    <div v-if="fileList.length < 50">
+                    <div v-if="element.imagesData.length < 50">
                       <svg
                         width="20"
                         height="20"
@@ -461,13 +466,42 @@
                 </p>
               </div>
               <div>
-                <div
-                  class="product-variant"
-                  v-for="item in element.innerVariants"
-                >
+                <!-- Validations -->
+                <div class="product-variant" v-for="item in element.variations">
                   <div class="d-flex w-100 align-items-end">
                     <div class="variant-grid-4 w-100">
-                      <div class="form-variant-block">
+                      <div
+                        class="form-variant-block"
+                        v-for="(atribut, index) in atributes"
+                      >
+                        <div>
+                          <label>{{ atribut.name.ru }}</label>
+                        </div>
+                        <el-select
+                          v-model="item.optionName[atribut.name.ru]"
+                          allow-create
+                          class="w-100"
+                          default-first-option
+                          placeholder="265 gb"
+                          @change="
+                            atributOptions({
+                              productId: element.id,
+                              variantId: item.id,
+                              index: index,
+                              name: atribut.name.ru,
+                            })
+                          "
+                        >
+                          <el-option
+                            v-for="optionElement in atribut.options"
+                            :key="optionElement.id"
+                            :label="optionElement.name.ru"
+                            :value="optionElement.id"
+                          >
+                          </el-option>
+                        </el-select>
+                      </div>
+                      <!-- <div class="form-variant-block">
                         <div><label>Цвета</label></div>
                         <el-select
                           v-model="value"
@@ -520,25 +554,7 @@
                           >
                           </el-option>
                         </el-select>
-                      </div>
-                      <div class="form-variant-block">
-                        <div><label>Цвета</label></div>
-                        <el-select
-                          v-model="value"
-                          allow-create
-                          class="w-100"
-                          default-first-option
-                          placeholder="265 gb"
-                        >
-                          <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          >
-                          </el-option>
-                        </el-select>
-                      </div>
+                      </div> -->
                     </div>
                     <div class="d-flex mb-1">
                       <div
@@ -563,15 +579,14 @@
                       </div>
                       <div
                         class="variant-btn variant-btn-check"
-                        @click="onChangeVariants(item.id)"
+                        @click="onChangeVariants(element.id, item.id)"
                       >
-                        <a-radio
-                          :checked="atributVariants.includes(item.id)"
-                        ></a-radio>
+                        <a-radio :checked="item.is_default == 1"></a-radio>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- Validations -->
               </div>
               <div class="d-flex justify-content-start">
                 <div
@@ -604,6 +619,8 @@
                 </div>
               </div>
             </div>
+            <!-- Product Variants -->
+
             <div>
               <div
                 class="add-variant create-inner-variant mt-0"
@@ -635,6 +652,7 @@
               </div>
             </div>
           </div>
+          <!-- Product right details -->
           <div class="products-img-grid">
             <div class="form-container">
               <el-form
@@ -671,12 +689,28 @@
                   <div><label for="">Бренд</label></div>
                   <div class="product-plus-btn">
                     <el-form-item prop="brand_id">
-                      <el-input
+                      <el-select
+                        class="w-100"
                         v-model="ruleForm.brand_id"
+                        allow-create
+                        default-first-option
+                        :loading="brands.length < 1"
+                        loading-text="Loading..."
                         placeholder="Бренд"
-                      ></el-input>
+                      >
+                        <el-option
+                          v-for="item in brands"
+                          :key="item?.id"
+                          :label="item?.name"
+                          :value="item?.id"
+                        >
+                        </el-option>
+                      </el-select>
                     </el-form-item>
-                    <div class="outline-btn outline-light-blue-btn mt-1">
+                    <div
+                      class="outline-btn outline-light-blue-btn mt-1"
+                      @click="show('add_brand_modal')"
+                    >
                       <svg
                         width="24"
                         height="24"
@@ -730,9 +764,80 @@
               </div>
             </div>
           </div>
+          <!-- Product right details -->
         </div>
       </div>
     </div>
+    <AddModal
+      title="New group"
+      name="add_brand_modal"
+      btnText="Add Group"
+      :callback="getData"
+      :loadingBtn="loadingBrand"
+    >
+      <el-form
+        label-position="top"
+        :model="brandData"
+        :rules="rulesModal"
+        ref="atributGroup"
+        label-width="120px"
+        class="demo-ruleForm"
+        action=""
+      >
+        <div class="form-block required">
+          <div><label for="">Brand </label></div>
+          <el-form-item prop="character_name">
+            <el-input
+              placeholder="Product model"
+              v-model="brandData.name"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="clearfix">
+          <a-upload
+            list-type="picture-card"
+            :file-list="fileListBrand"
+            @preview="handlePreview"
+            @change="handleChangeBrand"
+          >
+            <div v-if="fileListBrand.length < 1">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
+                  stroke="#3699FF"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
+                  stroke="#3699FF"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <div class="ant-upload-text">
+                Upload image
+              </div>
+            </div>
+          </a-upload>
+          <a-modal
+            :visible="previewVisible"
+            :footer="null"
+            @cancel="handleCancel"
+          >
+            <img alt="example" style="width: 100%;" :src="previewImage" />
+          </a-modal>
+        </div>
+      </el-form>
+    </AddModal>
   </div>
 </template>
 <script>
@@ -748,6 +853,7 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 
 import { quillEditor } from "vue-quill-editor";
+import AddModal from "../../components/modals/Add-modal.vue";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -809,6 +915,54 @@ export default {
           ],
         },
       },
+      varinatOptions: {},
+      atributes: [
+        {
+          name: "color",
+          options: [
+            {
+              id: 1,
+              name: "red",
+            },
+            {
+              id: 2,
+              name: "green",
+            },
+          ],
+        },
+        {
+          name: "size",
+          options: [
+            {
+              id: 3,
+              name: "12",
+            },
+            {
+              id: 4,
+              name: "32",
+            },
+          ],
+        },
+        {
+          name: "price",
+          options: [
+            {
+              id: 5,
+              name: "123123",
+            },
+            {
+              id: 6,
+              name: "657657",
+            },
+            {
+              id: 7,
+              name: "909099",
+            },
+          ],
+        },
+      ],
+      variantId: "12",
+      loadingBrand: false,
       activeName: "Русский",
       activeDesc: "Description",
       searchBlock: false,
@@ -828,19 +982,15 @@ export default {
       ],
       options: [
         {
-          value: "HTML",
-          label: "HTML",
+          value: "active",
+          label: "Active",
         },
         {
-          value: "CSS",
-          label: "CSS",
-        },
-        {
-          value: "JavaScript",
-          label: "JavaScript",
+          value: "disactive",
+          label: "Disactive",
         },
       ],
-      value: [],
+      value: "",
       rules: {
         nbm: [
           {
@@ -856,6 +1006,18 @@ export default {
           },
         ],
       },
+      categories: [],
+      categoryChild: {
+        child1: {
+          id: "",
+          arr: [],
+        },
+        child2: {
+          id: "",
+          arr: [],
+        },
+      },
+
       ruleForm: {
         name_ru: "",
         name_uz: "",
@@ -871,64 +1033,196 @@ export default {
         category_id: "",
         products: [
           {
-            images: [""],
+            id: 1,
+            images: [],
+            imagesData: [],
             variations: [
               {
-                options: [],
-                price: "",
-                is_default: "",
+                id: 1,
+                options: [1],
+                optionName: {},
+                price: "10000 ",
+                is_default: 1,
+                is_popular: 0,
+                product_of_the_day: 1,
               },
             ],
           },
         ],
       },
 
-      productVariant: [
-        {
-          id: 1,
-          innerVariants: [
-            {
-              id: 1,
-            },
-            {
-              id: 2,
-            },
-          ],
-        },
-      ],
       atributVariants: [],
       previewVisible: false,
       previewImage: "",
-      fileList: [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          url:
-            "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        },
-      ],
+      variantImages: [{}],
+      fileListBrand: [],
+      fileList: [],
+      brandData: {
+        name: "",
+        logo: "",
+      },
+      rulesModal: {
+        group_id: [
+          {
+            required: true,
+            message: "Atribut group is required",
+            trigger: "change",
+          },
+        ],
+      },
+      brands: [],
     };
   },
   mounted() {
-    // const imgText = document.querySelector(".ant-upload-text");
-    // imgText.innerHTML = "Добавить изображение";
-    // this.$store.dispatch("fetchCharacters/getCharacters");
-    this.__GET_DATA();
+    this.__GET_BRANDS();
+    this.__GET_CATEGORIES();
+    this.__GET_ATRIBUTES();
+    // this.ruleForm.products.map((item) => {
+    //   item.variations.map((item2) => {
+    //     this.atributes.forEach((elem) => {
+    //       return (item2.optionName[elem.name] = "");
+    //     });
+    //   });
+    // });
   },
+
   methods: {
+    // products
     submitForm(ruleForm) {
-      console.log(this.ruleForm);
-      this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-        } else {
-          console.log("error submit!!");
-          return false;
+      this.ruleForm = {
+        ...this.ruleForm,
+        name: {
+          ru: this.ruleForm.name_ru,
+          uz: this.ruleForm.name_uz,
+          en: this.ruleForm.name_en,
+        },
+      };
+      delete this.ruleForm["name_ru"];
+      delete this.ruleForm["name_uz"];
+      delete this.ruleForm["name_en"];
+      const newData = {
+        ...this.ruleForm,
+        products: this.ruleForm.products.map((item) => {
+          const newVariation = item.variations.map((elem) => {
+            return {
+              options: elem.options,
+              price: elem.price,
+              is_default: elem.is_default,
+              is_popular: elem.is_popular,
+              product_of_the_day: elem.product_of_the_day,
+            };
+          });
+          const newItem = {
+            variations: newVariation,
+            images: item.images,
+          };
+          return newItem;
+        }),
+      };
+      this.__POST_PRODUCTS(newData);
+      // products: this.ruleForm.products.map((item) => {
+      //     const newItem = {
+      //       id: item.id,
+      //       variations: item.variations,
+      //       images: item.images,
+      //     };
+      //     return newItem;
+      //   }),
+      // this.ruleForm.products = newData;
+      console.log(newData);
+
+      // this.$refs[ruleForm].validate((valid) => {
+      //   if (valid) {
+      //   } else {
+      //     console.log("error submit!!");
+      //     return false;
+      //   }
+      // });
+    },
+
+    async __POST_PRODUCTS(data) {
+      try {
+
+        const products = await this.$store.dispatch(
+          "fetchProducts/postProducts",
+          data
+        );
+        this.$notify({
+          title: "Success",
+          message: "Продукт успешно добавлен",
+          type: "success",
+        });
+      } catch(e) {
+        this.statusFunc(e.response)
+      }
+    },
+
+    handleChangeVatiant({ fileList }, id) {
+      this.variantId = id;
+      this.fileList = fileList;
+      // this.ruleForm.products.find(
+      //   (item) => item.id == id
+      // ).imagesData = fileList;
+      // this.now(id) = fileList
+      // const newImages = [];
+      // fileList.forEach((element, index) => {
+      //   let formData = new FormData();
+      //   formData.append("file", element.originFileObj);
+      //   newImages[index] = formData;
+      // });
+      // this.__UPLOAD_FILE_VARIANT(newImages, this.productId);
+      console.log("Upload");
+    },
+
+    __UPLOAD_FILE_VARIANT(newImages, id) {
+      const currentProduct = this.ruleForm.products.find(
+        (item) => item.id == id
+      );
+      console.log("img data");
+      newImages.forEach(async (element, index) => {
+        try {
+          const data = await this.$store.dispatch(
+            "uploadFile/uploadFile",
+            element
+          );
+          currentProduct.images[index] = data.path;
+        } catch (e) {
+          this.statusFunc(e.response);
         }
       });
+      this.loadingBrand = false;
+    },
+    atributOptions(obj) {
+      console.log("this.varinatOptions");
+      const product = this.ruleForm.products.find(
+        (productId) => productId.id == obj.productId
+      );
+      product.variations.find((varId) => varId.id == obj.variantId).options[
+        obj.index
+      ] = product.variations.find(
+        (varId) => varId.id == obj.variantId
+      ).optionName[obj.name];
+      this.value = obj;
+      this.ruleForm.products = this.ruleForm.products;
+      console.log(this.ruleForm.products);
+    },
+
+    getData() {
+      this.$refs["atributGroup"].validate((valid) =>
+        valid ? this.__POST_BRAND() : false
+      );
+    },
+    show(name) {
+      this.$modal.show(name);
+    },
+    hide(name) {
+      this.$modal.hide(name);
     },
     handleCancel() {
       this.previewVisible = false;
+    },
+    getVariantId(id) {
+      console.log(id);
     },
     async handlePreview(file) {
       if (!file.url && !file.preview) {
@@ -937,59 +1231,234 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    handleChange({ fileList }) {
-      this.fileList = fileList;
-    },
-    handleClick(tab, event) {
-      console.log("handlchange", tab, event);
-      this.formVal = "";
-    },
-    onChangeVariants(checked) {
-      this.atributVariants.includes(checked)
-        ? (this.atributVariants = this.atributVariants.filter(
-            (item) => item != checked
-          ))
-        : this.atributVariants.push(checked);
-    },
+
+    //variant
     addInnerVariant(variantId) {
       const addVar = this.findVarintWithId(variantId);
-      addVar.innerVariants.push({ id: addVar.innerVariants.at(-1).id + 1 });
+      const options = {};
+      this.atributes.forEach((elem) => {
+        return (options[elem.name] = "");
+      });
+      addVar.variations.push({
+        id: addVar.variations.at(-1).id + 1,
+        options: [1],
+        price: "1000",
+        is_default: 0,
+        product_of_the_day: 1,
+        is_popular: 0,
+        optionName: options,
+      });
     },
     deleteVariant(variantId) {
-      if (this.productVariant.length > 1) {
-        this.productVariant = this.productVariant.filter(
+      if (this.ruleForm.products.length > 1) {
+        this.ruleForm.products = this.ruleForm.products.filter(
           (item) => item.id != variantId
         );
       }
     },
     deleteInnerVariant(variantId, innerVarId) {
       const addVar = this.findVarintWithId(variantId);
-      if (addVar.innerVariants.length > 1) {
-        addVar.innerVariants = addVar.innerVariants.filter(
+      if (addVar.variations.length > 1) {
+        addVar.variations = addVar.variations.filter(
           (item) => item.id != innerVarId
         );
       }
     },
     findVarintWithId(variantId) {
-      return this.productVariant.find((element) => element.id == variantId);
+      return this.ruleForm.products.find((element) => element.id == variantId);
     },
     addVariant() {
+      const options = {};
+      this.atributes.forEach((elem) => {
+        return (options[elem.name] = "");
+      });
       const newInnerVar = [
         {
           id: 1,
+          options: [1],
+          price: "1000",
+          is_default: 0,
+          product_of_the_day: 1,
+          is_popular: 0,
+          optionName: options,
         },
       ];
-      this.productVariant.push({
-        id: this.productVariant.at(-1).id + 1,
-        innerVariants: newInnerVar,
+      this.ruleForm.products.push({
+        id: this.ruleForm.products.at(-1).id + 1,
+        images: [],
+        imagesData: [],
+        variations: newInnerVar,
       });
     },
     toAddProduct() {
       this.$router.push("/catalog/add_products");
     },
-    async __GET_DATA() {
-      const data = await this.$store.dispatch("fetchCharacters/getCharacters");
-      console.log(data);
+    // variant
+
+    handleChangeBrand({ fileList }) {
+      this.loadingBrand = true;
+      this.fileListBrand = fileList;
+      let formData = new FormData();
+      const newImg = fileList;
+      if (newImg.length > 0) {
+        formData.append("file", newImg[0].originFileObj);
+        this.__UPLOAD_FILE("brandData", formData);
+      }
+    },
+    async __UPLOAD_FILE(item, formData) {
+      try {
+        const data = await this.$store.dispatch(
+          "uploadFile/uploadFile",
+          formData
+        );
+        this[item].logo = data.path;
+        this.loadingBrand = false;
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+
+    handleClick(tab, event) {
+      console.log("handlchange", tab, event);
+      this.formVal = "";
+    },
+    onChangeVariants(elementId, varId) {
+      console.log(this.ruleForm.products);
+      this.ruleForm.products
+        .find((proId) => proId.id == elementId)
+        .variations.find((variantId) => variantId.id == varId).is_default = 1;
+      this.ruleForm.products
+        .find((proId) => proId.id == elementId)
+        .variations.filter((element) => element.id != varId)
+        .forEach((item) => {
+          item.is_default = 0;
+        });
+    },
+
+    async __POST_BRAND() {
+      try {
+        await this.$store.dispatch("fetchBrands/postBrands", this.brandData);
+        this.$notify({
+          title: "Success",
+          message: "Бранд успешно добавлен",
+          type: "success",
+        });
+        this.hide("add_brand_modal");
+        this.__GET_BRANDS();
+        this.brandData.name = "";
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    async __GET_BRANDS() {
+      const data = await this.$store.dispatch("fetchBrands/getBrands");
+      this.brands = data?.brands.data;
+    },
+    statusFunc(res) {
+      console.log("status");
+      switch (res.status) {
+        case 422:
+          this.$notify.error({
+            title: "Error",
+            message: "Указанные данные недействительны.",
+          });
+          break;
+        case 500:
+          this.$notify.error({
+            title: "Error",
+            message: "Cервер не работает",
+          });
+          break;
+        case 404:
+          this.$notify.error({
+            title: "Error",
+            message: res.data.errors,
+          });
+          break;
+      }
+    },
+    async __GET_CATEGORIES() {
+      const data = await this.$store.dispatch("fetchCategories/getCategories");
+
+      this.categories = data.categories?.data;
+      console.log(data.categories?.data);
+    },
+
+    async __GET_ATRIBUTES() {
+      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
+      this.atributes = data.attributes?.data;
+    },
+  },
+  watch: {
+    "ruleForm.category_id"(val) {
+      const child1 = this.categories.find((item) => item.id == val);
+      // this.atributes = child1.attributes;
+      // console.log(this.atributes);
+      this.ruleForm.products.map((item) => {
+        item.variations.map((item2) => {
+          this.atributes.forEach((elem) => {
+            return (item2.optionName[elem.name.ru] = "");
+          });
+        });
+      });
+      console.log(this.ruleForm.products);
+      if (child1.children.length > 0) {
+        this.categoryChild.child1.arr = child1.children;
+      } else {
+        this.categoryChild.child1.arr = [];
+        this.categoryChild.child1.id = "";
+        this.categoryChild.child2.arr = [];
+        this.categoryChild.child2.id = "";
+      }
+    },
+    "categoryChild.child1.id"(val) {
+      console.log(this.categoryChild.child1.arr.find((item) => item.id == val));
+      const child2 = this.categoryChild.child1.arr.find(
+        (item) => item.id == val
+      );
+      if (child2.attributes) {
+        this.atributes = child2.attributes;
+        this.ruleForm.products.map((item) => {
+          item.variations.map((item2) => {
+            this.atributes.forEach((elem) => {
+              return (item2.optionName[elem.name.ru] = "");
+            });
+          });
+        });
+      }
+
+      if (child2.children.length > 0) {
+        this.categoryChild.child2.arr = child2.children;
+      } else {
+        this.categoryChild.child2.arr = [];
+        this.categoryChild.child2.id = "";
+      }
+    },
+    variantId(val, val2) {
+      console.log("watcher");
+      this.ruleForm.products.find(
+        (item) => item.id == val
+      ).imagesData = this.fileList;
+      const newImages = [];
+      this.fileList.forEach((element, index) => {
+        let formData = new FormData();
+        formData.append("file", element.originFileObj);
+        newImages[index] = formData;
+      });
+      this.__UPLOAD_FILE_VARIANT(newImages, val);
+    },
+    fileList(val) {
+      this.ruleForm.products.find(
+        (item) => item.id == this.variantId
+      ).imagesData = this.fileList;
+      const newImages = [];
+      this.fileList.forEach((element, index) => {
+        let formData = new FormData();
+        formData.append("file", element.originFileObj);
+        newImages[index] = formData;
+      });
+      this.__UPLOAD_FILE_VARIANT(newImages, this.variantId);
+      console.log(this.ruleForm);
     },
   },
   components: {
@@ -1001,6 +1470,7 @@ export default {
     CommentCard,
     TitleBlock,
     quillEditor,
+    AddModal,
   },
 };
 </script>

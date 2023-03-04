@@ -101,7 +101,7 @@
                   <div><label>Атрибуты группы</label></div>
                   <el-form-item prop="group_atribut">
                     <el-select
-                      v-model="ruleForm.group_attributes"
+                      v-model="ruleForm.attributes"
                       multiple
                       filterable
                       class="w-100"
@@ -370,21 +370,8 @@ export default {
       ],
       value: [],
       rules: {
-        category_name: [
-          {
-            required: true,
-            message: "Category name is required",
-            trigger: "change",
-          },
-        ],
-        choose_category: [
-          {
-            required: true,
-            message: "Choose category is required",
 
-            trigger: "change",
-          },
-        ],
+
         group_atribut: [
           {
             required: true,
@@ -413,7 +400,7 @@ export default {
         name_en: "",
         icon: "",
         img: "",
-        group_attributes: [],
+        attributes: [],
         group_characteristics: [],
         position: null,
       },
@@ -517,14 +504,20 @@ export default {
     handleChange({ fileList }) {
       this.fileList = fileList;
       let formData = new FormData();
-      formData.append("file", fileList[0].originFileObj);
-      this.__UPLOAD_FILE("img", formData);
+      const newImg = fileList;
+      if (newImg.length > 0) {
+        formData.append("file", newImg[0].originFileObj);
+        this.__UPLOAD_FILE("img", formData);
+      }
     },
     handleChange1({ fileList }) {
       this.fileList1 = fileList;
       let formData = new FormData();
-      formData.append("file", fileList[0].originFileObj);
-      this.__UPLOAD_FILE("icon", formData);
+      const newImg = fileList;
+      if (newImg.length > 0) {
+        formData.append("file", newImg[0].originFileObj);
+        this.__UPLOAD_FILE("icon", formData);
+      }
     },
     async __UPLOAD_FILE(item, formData) {
       try {
@@ -550,7 +543,14 @@ export default {
     },
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
-      this.categories = data.categories?.data;
+      data.categories?.data.forEach((item) => {
+        if (item.children.length > 0) {
+          this.categories = [item, ...item.children, ...this.categories];
+        } else {
+          this.categories = [item, ...this.categories];
+        }
+      });
+      console.log(this.categories);
     },
     statusFunc(res) {
       switch (res.status) {
@@ -594,7 +594,6 @@ export default {
           type: "success",
         });
         this.$router.push("/catalog/categories");
-        
       } catch (e) {
         this.statusFunc(e.response);
       }

@@ -86,8 +86,12 @@
               class="option-container"
             >
               <!-- <span v-for="item in text" class="option-items">{{ item }}</span> -->
-              <span  class="option-items">{{ text ? text:'-----' }}</span>
-
+              <span
+                class="option-items"
+                v-for="(item, index) in text"
+                :key="index"
+                >{{ item.name.ru ? item.name.ru : "-----" }}</span
+              >
             </div>
             <span slot="customTitle"></span>
 
@@ -130,10 +134,10 @@ export default {
         {
           title: "АТРИБУТЫ",
           dataIndex: "name",
-          key: "name",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "name" },
           className: "column-name",
+          key: "name",
           width: "30%",
         },
         {
@@ -146,11 +150,11 @@ export default {
 
         {
           title: "ДЕЙСТВИЯ",
-          key: "id",
           dataIndex: "id",
           scopedSlots: { customRender: "id" },
           className: "column-btns",
           width: "100px",
+          key: "id",
           align: "right",
         },
       ],

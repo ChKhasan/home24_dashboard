@@ -347,13 +347,13 @@ export default {
     show(name) {
       this.$modal.show(name);
     },
+    hide(name) {
+      this.$modal.hide(name);
+    },
     getData() {
       this.$refs["atributGroup"].validate((valid) =>
         valid ? this.__POST_GROUPS() : false
       );
-    },
-    hide(name) {
-      this.$modal.hide(name);
     },
     toAddProduct() {
       this.$router.push("/catalog/add_products");

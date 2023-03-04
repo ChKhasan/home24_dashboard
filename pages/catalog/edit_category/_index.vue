@@ -77,7 +77,7 @@
                               v-for="item in categories"
                               :key="item.id"
                               :label="item.name?.ru"
-                              :value="item.id"
+                              :value="item.name?.ru"
                             >
                             </el-option>
                           </el-select>
@@ -101,9 +101,8 @@
                   <div><label>Атрибуты группы</label></div>
                   <el-form-item prop="group_atribut">
                     <el-select
-                      v-model="ruleForm.group_attributes"
+                      v-model="ruleForm.attributes"
                       multiple
-                      filterable
                       class="w-100"
                       allow-create
                       default-first-option
@@ -113,7 +112,7 @@
                         v-for="item in atributes"
                         :key="item.id"
                         :label="item.name.ru"
-                        :value="item.id"
+                        :value="item.name.ru"
                       >
                       </el-option>
                     </el-select>
@@ -135,7 +134,7 @@
                         v-for="item in groups"
                         :key="item.id"
                         :label="item.name.ru"
-                        :value="item.id"
+                        :value="item.name.ru"
                       >
                       </el-option>
                     </el-select>
@@ -186,12 +185,23 @@
               <div
                 class="switch-text form-block d-flex flex-row align-items-center"
               >
-                <a-switch @change="onChange" />
+                <a-switch
+                  @change="onChange"
+                  :checked="ruleForm.is_popular == 1"
+                />
                 <label class="mx-3 mb-0">Популярный</label>
               </div>
               <div class="form-block">
                 <div><label for="">Добавить изображения категории</label></div>
-                <div class="clearfix">
+                <div class="last_img" v-if="ruleForm.imgOldImg != ''">
+                  <div>
+                    <span @click="deleteImg(true)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </div>
+                  <img :src="ruleForm.imgOldImg" alt="" />
+                </div>
+                <div class="clearfix" v-if="ruleForm.imgOldImg == ''">
                   <a-upload
                     list-type="picture-card"
                     :file-list="fileList"
@@ -246,7 +256,15 @@
               </div>
               <div class="form-block">
                 <div><label for="">Добавить значок продукта</label></div>
-                <div class="clearfix">
+                <div class="last_img" v-if="ruleForm.oldIcon != ''">
+                  <div>
+                    <span @click="deleteImg(false)">
+                      <i class="el-icon-delete"></i>
+                    </span>
+                  </div>
+                  <img :src="ruleForm.oldIcon" alt="" />
+                </div>
+                <div class="clearfix" v-if="ruleForm.oldIcon == ''">
                   <a-upload
                     list-type="picture-card"
                     :file-list="fileList1"
@@ -408,12 +426,14 @@ export default {
           uz: "",
           en: "",
         },
+        imgOldImg: "",
+        oldIcon: "",
         name_ru: "",
         name_uz: "",
         name_en: "",
-        icon: "",
-        img: "",
-        group_attributes: [],
+        icon: null,
+        img: null,
+        attributes: [],
         group_characteristics: [],
         position: null,
       },
@@ -474,7 +494,6 @@ export default {
   methods: {
     submitForm(ruleForm) {
       console.log(this.fileList, this.fileList1);
-      console.log(this.ruleForm);
       const data = {
         ...this.ruleForm,
         name: {
@@ -486,9 +505,33 @@ export default {
       delete data["name_ru"];
       delete data["name_uz"];
       delete data["name_en"];
+      data.attributes = this.atributes.map((item) => {
+        if (data.attributes.includes(item.name.ru)) return item.id;
+      });
+      data.group_characteristics = this.groups.map((item) => {
+        if (data.group_characteristics.includes(item.name.ru)) return item.id;
+      });
+      data.attributes = data.attributes.filter((elem) => elem);
+      data.group_characteristics = data.group_characteristics.filter(
+        (elem) => elem
+      );
+      data.parent_id = this.categories.map((item) => {
+        if (data.parent_id == item.name.ru) return item.id;
+      });
+      data.parent_id = data.parent_id.filter((elem) => elem);
+      data.parent_id = data.parent_id[0];
+      if (data.imgOldImg) {
+        data.img = null;
+        console.log("asdasdasdasjdhjsdfghsfg");
+      }
+      if (data.oldIcon) {
+        data.icon = null;
+      }
+      delete data["imgOldImg"];
+      delete data["oldIcon"];
       console.log(data);
 
-      this.__POST_CATEGORIES(data);
+      this.__EDIT_CATEGORIES(data);
       // this.$refs[ruleForm].validate((valid) => {
       //   if (valid) {
       //   } else {
@@ -506,6 +549,18 @@ export default {
     },
     headerbtnCallback() {
       console.log("fsfsdf");
+    },
+    deleteImg(type) {
+      if (type) {
+        this.ruleForm.imgOldImg = "";
+      } else {
+        this.ruleForm.oldIcon = "";
+      }
+    },
+    deleteIcon() {
+      this.ruleForm.oldIcon = "";
+      this.ruleForm = this.ruleForm;
+      console.log("asdsad", this.ruleForm);
     },
     async handlePreview(file) {
       if (!file.url && !file.preview) {
@@ -550,7 +605,13 @@ export default {
     },
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
-      this.categories = data.categories?.data;
+      data.categories?.data.forEach((item) => {
+        if (item.children.length > 0) {
+          this.categories = [item, ...item.children, ...this.categories];
+        } else {
+          this.categories = [item, ...this.categories];
+        }
+      });
     },
     async __GET_CATEGORY_BY_ID() {
       const data = await this.$store.dispatch(
@@ -558,7 +619,27 @@ export default {
         this.$route.params.index
       );
 
-      console.log(data);
+      this.ruleForm.parent_id = data.category.parent_id;
+      this.ruleForm.name_ru = data.category.name.ru;
+      this.ruleForm.name_uz = data.category.name.uz;
+      this.ruleForm.name_en = data.category.name.en;
+      this.ruleForm.desc.ru = data.category.desc.ru;
+      this.ruleForm.desc.uz = data.category.desc.uz;
+      this.ruleForm.desc.en = data.category.desc.en;
+      this.ruleForm.attributes = data.category.attributes.map(
+        (item) => item.name.ru
+      );
+      this.ruleForm.group_characteristics = data.category.characteristic_groups.map(
+        (item) => item.name.ru
+      );
+      this.ruleForm.imgOldImg = data.category.md_img;
+      this.ruleForm.oldIcon = data.category.md_icon;
+      this.ruleForm.is_popular = data.category.is_popular;
+      if (data.parent_id) {
+        this.ruleForm.parent_id = data.parent_id;
+      }
+
+      console.log(data.category);
     },
     statusFunc(res) {
       switch (res.status) {
@@ -590,11 +671,11 @@ export default {
       const data = await this.$store.dispatch("fetchCharacters/getGroups");
       this.groups = data?.groups;
     },
-    async __POST_CATEGORIES(res) {
+    async __EDIT_CATEGORIES(res) {
       try {
         const data = await this.$store.dispatch(
-          "fetchCategories/postCategories",
-          res
+          "fetchCategories/editCategories",
+          { id: this.$route.params.index, data: res }
         );
         this.$notify({
           title: "Success",
@@ -678,6 +759,47 @@ export default {
     text-transform: uppercase;
     margin-top: 4px;
     color: #a1a5bf;
+  }
+  .last_img {
+    width: 100%;
+    height: 100%;
+    height: 218px;
+    border: 1px dashed #d9d9d9;
+    position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    div {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        display: none;
+        cursor: pointer;
+        i {
+          font-size: 32px;
+          height: 40px;
+          width: 40px;
+        }
+      }
+    }
+    &:hover {
+      div {
+        z-index: 100;
+        background: rgba(255, 255, 255, 0.5);
+        span {
+          display: block;
+        }
+      }
+    }
   }
   @media (max-width: 1440px) {
     .ant-upload.ant-upload-select-picture-card {

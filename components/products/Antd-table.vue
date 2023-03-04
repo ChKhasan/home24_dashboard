@@ -68,6 +68,7 @@
         <span class="action-btn" @click="tableActions(text)">
           <img :src="deleteIcon" alt="" />
         </span>
+     
       </span>
     </a-table>
   </div>
@@ -79,11 +80,12 @@ export default {
   data() {
     return {
       pageSize: 10,
+      loading: false,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
-      loading: false,
+ 
     };
   },
   computed: {

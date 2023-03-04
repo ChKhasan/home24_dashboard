@@ -104,7 +104,7 @@
             <span class="action-btn" @click="deletePoduct(text)">
               <img :src="editIcon" alt="" />
             </span>
-            <span class="action-btn" @click="tableActions(text)">
+            <span class="action-btn" @click="deletePoduct(text)">
               <img :src="deleteIcon" alt="" />
             </span>
           </span>
@@ -259,7 +259,7 @@ export default {
       console.log("errors");
     },
     async __GET_PRODUCTS() {
-      this.products = await this.$store.dispatch("fetchProducts/postProducts");
+      this.products = await this.$store.dispatch("fetchProducts/getProducts");
       this.data = this.products.products.data;
       console.log(this.data);
     },

@@ -11,7 +11,7 @@ export const actions = {
   },
   async postProducts({}, data) {
     try {
-      const res = this.$axios.$get(
+      const res = this.$axios.$post(
         `https://test.loftcity.uz/api/admin/products`,
         data
       );
