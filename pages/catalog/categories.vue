@@ -92,9 +92,17 @@
               >
                 <img :src="editIcon" alt="" />
               </span>
-              <span class="action-btn" @click="deleteCategory(text)">
-                <img :src="deleteIcon" alt="" />
-              </span>
+              <a-popconfirm
+                title="Are you sure delete this task?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="deleteCategory(text)"
+                @cancel="cancel"
+              >
+                <span class="action-btn">
+                  <img :src="deleteIcon" alt="" />
+                </span>
+              </a-popconfirm>
             </span>
             <span slot="is_popular" slot-scope="text">
               <a-checkbox
@@ -319,6 +327,14 @@ export default {
     LayoutHeaderBtn,
   },
   methods: {
+    confirm(e) {
+      console.log(e);
+      this.$message.success("Click on Yes");
+    },
+    cancel(e) {
+      console.log(e);
+      this.$message.error("Click on No");
+    },
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
 
