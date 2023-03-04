@@ -36,36 +36,26 @@
             :expanded-row-keys.sync="expandedRowKeys"
             :pagination="false"
           >
-          <div
-              slot="img"
+            <div
+              slot="dataName"
               slot-scope="text"
               align="center"
               class="table_product_row select-table-child"
             >
               <img
                 class="table-image select-img"
-                v-if="text"
-                :src="text"
+                v-if="text?.img"
+                :src="text?.img"
                 alt=""
               />
               <img
                 class="table-image select-img"
                 v-else
-                src="../../assets/images/image.png"
+                src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
                 alt=""
               />
 
-            </div>
-            <div
-              slot="name"
-              slot-scope="text"
-              align="center"
-              class="table_product_row select-table-child"
-            >
-   
-
-              <h6>{{ text?.ru ? text?.ru : "----" }}</h6>
-
+              <h6>{{ text?.name?.ru ? text?.name?.ru : "----" }}</h6>
             </div>
             <div
               slot="md_icon"
@@ -130,24 +120,12 @@ import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 const columns = [
   {
     title: "Категория",
-    dataIndex: "img",
-    key: "img",
+    dataIndex: "dataName",
+    key: "dataName",
     className: "column-name",
     slots: { title: "customTitle" },
-    scopedSlots: { customRender: "img" },
+    scopedSlots: { customRender: "dataName" },
     align: "left",
-    colSpan: 0,
-  },
-  {
-    title: "Категория",
-    dataIndex: "name",
-    key: "name",
-    className: "column-name1",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "name" },
-    align: "left",
-    colSpan: 2,
-
   },
   {
     title: "Икона",
@@ -352,7 +330,7 @@ export default {
             if (childItem.children) {
               newChild2 = childItem.children.map((childItem2) => {
                 return {
-                  key: index + 10,
+                  key: index + 100,
                   ...childItem2,
                   dataName: {
                     name: childItem2.name,
@@ -361,7 +339,7 @@ export default {
                 };
               });
               const newItem2 = {
-                key: index + 10,
+                key: index + 1,
                 ...item,
                 dataName: {
                   name: item.name,
@@ -372,7 +350,7 @@ export default {
               return newItem2;
             }
             return {
-              key: index + 1,
+              key: index + 10,
               ...childItem,
               dataName: {
                 name: childItem.name,
