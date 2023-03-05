@@ -20,7 +20,7 @@
         <div class="add_modal-footer d-flex justify-content-end">
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-            @click="hide(name)"
+            @click="execute2"
           >
             Cancel
           </div>
@@ -122,13 +122,11 @@ export default {
     loadingBtn: {
       type: Boolean,
     },
+    closeModal: {
+      type: Function,
+    },
   },
   methods: {
-    show(name) {
-      this.$modal.show(name);
-      document.body.style.overflowY = "hidden";
-      document.body.style.height = "100vh";
-    },
     hide(name) {
       this.$modal.hide(name);
       document.body.style.overflowY = "auto";
@@ -136,8 +134,12 @@ export default {
     },
     execute() {
       if (this.callback) {
-        console.log("sadsdfsd");
         this.callback();
+      }
+    },
+    execute2() {
+      if (this.closeModal) {
+        this.closeModal();
       }
     },
   },

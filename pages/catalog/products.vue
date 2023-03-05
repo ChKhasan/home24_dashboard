@@ -65,12 +65,15 @@
             align: 'right',
           }"
         >
-          <a slot="img" slot-scope="text"
-            ><img
+          <a slot="img" slot-scope="text">
+            <img v-if="text" class="table-image" :src="text" alt="" />
+            <img
+              v-else
               class="table-image"
-              src="../../assets/images/image.png"
+              src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
               alt=""
-          /></a>
+            />
+          </a>
           <a
             slot="name"
             slot-scope="text"
@@ -78,12 +81,11 @@
             class="table_product_row"
           >
             <h6>{{ text.ru }}</h6>
-            <!-- <span>{{ text.subtitle }}</span> -->
           </a>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
           <a slot="price" slot-scope="text">{{
-            text ? `${text}` : "------"
+            text ? `$${text}` : "------"
           }}</a>
           <span slot="customTitle"></span>
 
@@ -92,21 +94,29 @@
             slot-scope="text"
             class="tags-style"
             :class="{
-              tag_success: tags == 'Success',
-              tag_inProgress: tags == 'in progress',
-              tag_approved: tags == 'Approved',
-              tag_rejected: tags == 'rejected',
+              tag_success: text == 'active',
+              tag_inProgress: text == 'in progress',
+              tag_approved: text == 'Approved',
+              tag_rejected: text == 'rejected',
             }"
           >
-            {{ text ? text : "------" }}
+            {{ text }}
           </span>
           <span slot="id" slot-scope="text">
-            <span class="action-btn" @click="deletePoduct(text)">
+            <span class="action-btn" @click="editProduct(text)">
               <img :src="editIcon" alt="" />
             </span>
-            <span class="action-btn" @click="deletePoduct(text)">
-              <img :src="deleteIcon" alt="" />
-            </span>
+            <a-popconfirm
+              title="Are you sure delete this product?"
+              ok-text="Yes"
+              cancel-text="No"
+              @confirm="deletePoduct(text)"
+              @cancel="cancel"
+            >
+              <span class="action-btn">
+                <img :src="deleteIcon" alt="" />
+              </span>
+            </a-popconfirm>
           </span>
         </a-table>
       </div>
@@ -260,8 +270,25 @@ export default {
     },
     async __GET_PRODUCTS() {
       this.products = await this.$store.dispatch("fetchProducts/getProducts");
-      this.data = this.products.products.data;
-      console.log(this.data);
+      this.data = this.products.products.data.map((item) => {
+        console.log(item.products);
+        if (item.products[0].images.length > 0) {
+          return {
+            ...item,
+            price: item.products[0].price,
+            model: item.products[0].model,
+            img: item.products[0].images[0].md_img,
+            status: item.products[0].status,
+          };
+        } else {
+          return {
+            ...item,
+            price: item.products[0].price,
+            model: item.products[0].model,
+            img: null,
+          };
+        }
+      });
     },
     handleTableChange(pagination, filters, sorter) {
       console.log(filters);
@@ -271,15 +298,20 @@ export default {
           return item;
         });
       });
-      console.log(this.tableData);
     },
-
+    editProduct(id) {
+      this.$router.push(`/catalog/edit_products/${id}`);
+    },
     start() {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
         this.selectedRowKeys = [];
       }, 1000);
+    },
+    cancel(e) {
+      console.log(e);
+      this.$message.error("Click on No");
     },
     tableActions(id) {
       console.log(id);

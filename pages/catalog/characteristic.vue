@@ -74,13 +74,15 @@
               <span>{{ text.subtitle }}</span>
             </a>
             <div
-              slot="categories"
+              slot="options"
               slot-scope="text"
               align="center"
               class="option-container"
             >
               <!-- <span v-for="item in text" class="option-items">{{ item }}</span> -->
-              <span class="option-items">{{ text ? text : "-----" }}</span>
+              <span class="option-items" v-for="item in text">{{
+                item?.name?.ru ? item?.name?.ru : "-----"
+              }}</span>
             </div>
             <span slot="customTitle"></span>
 
@@ -91,9 +93,18 @@
               >
                 <img :src="editIcon" alt="" />
               </span>
-              <span class="action-btn" @click="deleteAtribut(text)">
-                <img :src="deleteIcon" alt="" />
-              </span>
+
+              <a-popconfirm
+                title="Are you sure delete this characteristic?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="deleteAtribut(text)"
+                @cancel="cancel"
+              >
+                <span class="action-btn">
+                  <img :src="deleteIcon" alt="" />
+                </span>
+              </a-popconfirm>
             </span>
           </a-table>
         </div>
@@ -120,7 +131,7 @@ export default {
       atributes: [],
       columns: [
         {
-          title: "АТРИБУТЫ",
+          title: "характеристики",
           dataIndex: "name",
           key: "name",
           slots: { title: "customTitle" },
@@ -130,10 +141,10 @@ export default {
         },
         {
           title: "ПАРАМЕТРЫ",
-          dataIndex: "categories",
-          scopedSlots: { customRender: "categories" },
+          dataIndex: "options",
+          scopedSlots: { customRender: "options" },
           className: "column-options",
-          key: "categories",
+          key: "options",
         },
 
         {
@@ -183,6 +194,10 @@ export default {
     },
     deleteAtribut(id) {
       this.__DELETE_CHARACTERISTIC(id);
+    },
+    cancel(e) {
+      console.log(e);
+      this.$message.error("Click on No");
     },
     async __DELETE_CHARACTERISTIC(id) {
       try {

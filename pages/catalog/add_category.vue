@@ -13,11 +13,37 @@
             :light="true"
           />
         </span>
-        <LayoutHeaderBtn
-          name=" Добавить категорию"
-          :headerbtnCallback="headerbtnCallback"
-          :light="false"
-        />
+        <a-button
+          class="add-btn add-header-btn btn-primary d-flex align-items-center"
+          type="primary"
+          @click="headerbtnCallback('ruleForm')"
+          :loading="uploadLoading"
+        >
+          <span class="svg-icon" v-if="!uploadLoading"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="24px"
+              height="24px"
+              viewBox="0 0 24 24"
+              version="1.1"
+            >
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                <path
+                  d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
+                  fill="#000000"
+                  fill-rule="nonzero"
+                  opacity="0.3"
+                ></path>
+                <path
+                  d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
+                  fill="#000000"
+                ></path>
+              </g></svg
+          ></span>
+          Добавить категорию
+        </a-button>
       </div>
     </TitleBlock>
     <div class="container_xl">
@@ -58,7 +84,7 @@
                     <div class="category-input-grid">
                       <div class="form-block required mb-0">
                         <div><label for="">Название категории</label></div>
-                        <el-form-item :prop="`name_${item.key}`">
+                        <el-form-item :prop="`name_ru`">
                           <el-input
                             v-model="ruleForm[`name_${item.key}`]"
                             placeholder="Product model"
@@ -75,6 +101,7 @@
                             placeholder="Choose tags for your article"
                             loading-text="Loading..."
                             no-match-text="no category"
+                            no-data-text="No Category"
                           >
                             <el-option
                               v-for="item in categories"
@@ -373,10 +400,17 @@ export default {
       ],
       value: [],
       rules: {
+        name_ru: [
+          {
+            required: true,
+            message: "Category name is required",
+            trigger: "blur",
+          },
+        ],
         group_atribut: [
           {
             required: true,
-            message: "Group atribut is required",
+            message: "Atribut is required",
             trigger: "blur",
           },
         ],
@@ -457,6 +491,7 @@ export default {
           active: true,
         },
       ],
+      uploadLoading: false,
     };
   },
   methods: {
@@ -476,14 +511,14 @@ export default {
       delete data["name_en"];
       console.log(data);
 
-      this.__POST_CATEGORIES(data);
-      // this.$refs[ruleForm].validate((valid) => {
-      //   if (valid) {
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
+      this.$refs[ruleForm].validate((valid) => {
+        if (valid) {
+          this.__POST_CATEGORIES(data);
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     toAddProduct() {
       this.$router.push("/catalog/add_products");
@@ -508,6 +543,7 @@ export default {
       const newImg = fileList;
       if (newImg.length > 0) {
         formData.append("file", newImg[0].originFileObj);
+        this.uploadLoading = true;
         this.__UPLOAD_FILE("img", formData);
       }
     },
@@ -517,6 +553,8 @@ export default {
       const newImg = fileList;
       if (newImg.length > 0) {
         formData.append("file", newImg[0].originFileObj);
+        this.uploadLoading = true;
+
         this.__UPLOAD_FILE("icon", formData);
       }
     },
@@ -527,6 +565,7 @@ export default {
           formData
         );
         this.ruleForm[item] = data.path;
+        this.uploadLoading = false;
       } catch (e) {
         this.statusFunc(e.response);
       }

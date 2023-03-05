@@ -83,6 +83,7 @@
                         v-model="ruleForm.group_id"
                         filterable
                         allow-create
+                        no-data-text="No group"
                         placeholder="Choose tags for your article"
                       >
                         <el-option
@@ -143,6 +144,7 @@
                         multiple
                         allow-create
                         placeholder="Option name"
+                        no-data-text="No options"
                       >
                         <el-option
                           v-for="item in options"
@@ -171,6 +173,7 @@
       name="add_atribute_group"
       btnText="Add Group"
       :callback="getData"
+      :closeModal="closeModal"
     >
       <el-form
         label-position="top"
@@ -198,10 +201,10 @@
           v-if="modalTab == item.index"
         >
           <div><label for="">Group </label></div>
-          <el-form-item prop="character_name">
+          <el-form-item prop="name_ru">
             <el-input
               placeholder="Product model"
-              v-model="atributGroup.name[item.index]"
+              v-model="atributGroup[`name_${item.index}`]"
             ></el-input>
           </el-form-item>
         </div>
@@ -254,20 +257,7 @@ export default {
           label: "English",
         },
       ],
-      options: [
-        {
-          value: "HTML",
-          label: "HTML",
-        },
-        {
-          value: "CSS",
-          label: "CSS",
-        },
-        {
-          value: "JavaScript",
-          label: "JavaScript",
-        },
-      ],
+      options: [],
       value: [],
       rules: {
         group_id: [
@@ -294,10 +284,10 @@ export default {
         ],
       },
       rulesModal: {
-        group_id: [
+        name_ru: [
           {
             required: true,
-            message: "Atribut group is required",
+            message: "Group name is required",
             trigger: "change",
           },
         ],
@@ -310,11 +300,9 @@ export default {
         options: [],
       },
       atributGroup: {
-        name: {
-          ru: "",
-          uz: "",
-          en: "",
-        },
+        name_ru: "",
+        name_uz: "",
+        name_en: "",
       },
     };
   },
@@ -351,8 +339,16 @@ export default {
       this.$modal.hide(name);
     },
     getData() {
+      const newData = {
+        name: {
+          ru: this.atributGroup.name_ru,
+          uz: this.atributGroup.name_uz,
+          en: this.atributGroup.name_en,
+        },
+      };
+
       this.$refs["atributGroup"].validate((valid) =>
-        valid ? this.__POST_GROUPS() : false
+        valid ? this.__POST_GROUPS(newData) : false
       );
     },
     toAddProduct() {
@@ -370,11 +366,6 @@ export default {
       } catch (e) {
         this.statusFunc(e.response);
       }
-    },
-    async __GET_GROUPS() {
-      const data = await this.$store.dispatch("fetchAtributes/getGroups");
-      this.groups = data?.groups;
-      console.log(this.groups);
     },
     statusFunc(res) {
       switch (res.status) {
@@ -398,12 +389,15 @@ export default {
           break;
       }
     },
-    async __POST_GROUPS() {
+    async __GET_GROUPS() {
+      const data = await this.$store.dispatch("fetchAtributes/getGroups");
+      this.groups = data?.groups;
+      console.log(this.groups);
+    },
+
+    async __POST_GROUPS(data) {
       try {
-        await this.$store.dispatch(
-          "fetchAtributes/postGroups",
-          this.atributGroup
-        );
+        await this.$store.dispatch("fetchAtributes/postGroups", data);
         this.$notify({
           title: "Success",
           message: "Группа успешно добавлен",
@@ -411,14 +405,16 @@ export default {
         });
         this.hide("add_atribute_group");
         this.__GET_GROUPS();
-        this.atributGroup.name.ru = "";
-        this.atributGroup.name.uz = "";
-        this.atributGroup.name.en = "";
+        this.atributGroup.name_ru = "";
+        this.atributGroup.name_uz = "";
+        this.atributGroup.name_en = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    toBack() {},
+    closeModal() {
+      this.hide("add_atribute_group");
+    },
     handleClick() {},
   },
   mounted() {

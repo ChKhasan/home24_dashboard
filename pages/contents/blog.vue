@@ -3,7 +3,7 @@
     <TitleBlock title="Блог" :breadbrumb="['Контент сайта']" lastLink="Блог">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
-        @click="show('add_blog')"
+        @click="openAddModal"
       >
         <span class="svg-icon"
           ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
@@ -42,26 +42,35 @@
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
-            :data-source="tableData"
+            :data-source="posts"
             :pagination="false"
             align="center"
           >
-            <a slot="img" slot-scope="text"
-              ><img
+            <a slot="img" slot-scope="text">
+              <img
+                v-if="typeof text == 'string'"
                 class="table-image"
-                src="../../assets/images/image.png"
+                :src="text"
                 alt=""
-            /></a>
+              />
+              <img
+                v-else
+                class="table-image"
+                src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                alt=""
+              />
+            </a>
             <span
               @click="$router.push('/home/customer-info/123')"
-              slot="name"
+              slot="title"
               slot-scope="text"
               align="center"
               class="table_product_row"
             >
-              <h6>{{ text }}</h6>
+              <h6>{{ text?.ru }}</h6>
             </span>
-            <h4 slot="number" slot-scope="text">{{ text }}</h4>
+            <div slot="desc" slot-scope="text" v-html="text?.ru"></div>
+            <span slot="numberId" slot-scope="text">#{{ text }}</span>
             <a slot="price" slot-scope="text">${{ text }}</a>
             <span slot="customTitle"></span>
 
@@ -78,13 +87,21 @@
             >
               {{ tags }}
             </span>
-            <span slot="btns" slot-scope="text">
-              <span class="action-btn" @click="tableActions(text)">
+            <span slot="id" slot-scope="text">
+              <span class="action-btn" @click="editPost(text)">
                 <img :src="editIcon" alt="" />
               </span>
-              <span class="action-btn" @click="tableActions(text)">
-                <img :src="deleteIcon" alt="" />
-              </span>
+              <a-popconfirm
+                title="Are you sure delete this blog?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="deletePost(text)"
+                @cancel="cancel"
+              >
+                <span class="action-btn">
+                  <img :src="deleteIcon" alt="" />
+                </span>
+              </a-popconfirm>
             </span>
           </a-table>
         </div>
@@ -95,6 +112,8 @@
       name="add_blog"
       btnText="Save"
       :callback="getData"
+      :closeModal="closeModal"
+      :loadingBtn="loadingBtn"
     >
       <div class="modal_tab mb-4">
         <span
@@ -125,28 +144,43 @@
             <div>
               <label for="">Зоговолок {{ item.label }}</label>
             </div>
-            <el-form-item>
+            <el-form-item prop="title_ru">
               <el-input
                 type="text"
                 placeholder="Зоговолок"
-                v-model="ruleForm.title"
+                v-model="ruleForm[`title_${item.index}`]"
               ></el-input>
             </el-form-item>
           </div>
-          <div class="form-block required">
+          <!-- <div class="form-block required">
             <div><label for="">Подзоговолок </label></div>
             <el-form-item>
               <el-input
                 placeholder="Подзоговолок"
-                v-model="ruleForm.subTitle"
+                v-model="ruleForm.subTitle[item.index]"
               ></el-input>
             </el-form-item>
-          </div>
-          <div class="form-block mb-0">
+          </div> -->
+          <div class="form-block">
             <div><label for="">Описание </label></div>
-            <Editor editorClass="product-editor mt-1" />
+            <el-form-item prop="desc_ru">
+              <quill-editor
+                class="product-editor mt-1"
+                :options="editorOption"
+                :value="ruleForm[`desc_${item.index}`]"
+                v-model="ruleForm[`desc_${item.index}`]"
+              />
+            </el-form-item>
           </div>
-          <div class="clearfix">
+          <div class="post_img" v-if="editImage != ''">
+            <div>
+              <span @click="deleteImg()">
+                <i class="el-icon-delete"></i>
+              </span>
+            </div>
+            <img :src="editImage" alt="" />
+          </div>
+          <div class="clearfix" v-else>
             <a-upload
               list-type="picture-card"
               :file-list="fileList"
@@ -206,48 +240,99 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
-
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
 export default {
   middleware: "auth",
   data() {
     return {
       pageSize: 10,
-      modalTab: 1,
+      modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
+      loadingBtn: false,
+      editorOption: {
+        theme: "snow",
+        modules: {
+          toolbar: [
+            [
+              {
+                size: [],
+              },
+            ],
+            ["bold", "italic", "underline", "strike"],
+
+            ["image"],
+            ["code-block"],
+          ],
+        },
+      },
+      option: {
+        theme: "bubble",
+        modules: {
+          toolbar: [
+            ["bold", "italic", "link"],
+            [
+              {
+                header: 1,
+              },
+              {
+                header: 2,
+              },
+              "blockquote",
+            ],
+          ],
+        },
+      },
       modalTabData: [
         {
           label: "Русский",
-          index: 1,
+          index: "ru",
         },
         {
           label: "O'zbek",
-          index: 2,
+          index: "uz",
+        },
+        {
+          label: "English",
+          index: "en",
         },
       ],
       ruleForm: {
-        title: "Sub title",
-        subTitle: "Sub title",
-        desc: "desc",
+        title_ru: "",
+        title_uz: "",
+        title_en: "",
+        desc_ru: "",
+        desc_uz: "",
+        desc_en: "",
+
+        img: "",
       },
+      editImage: "",
       columns: [
         {
           title: "ID",
-          dataIndex: "id",
-          key: "id",
+          dataIndex: "numberId",
+          key: "numberId",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "id" },
+          scopedSlots: { customRender: "numberId" },
           align: "left",
           className: "column-name",
           width: "60px",
         },
         {
           title: "Зоговолок",
-          dataIndex: "img",
-          key: "img",
+          dataIndex: "md_img",
+          key: "md_img",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
@@ -256,21 +341,21 @@ export default {
           width: "45px",
         },
         {
-          dataIndex: "name",
-          key: "name",
+          dataIndex: "title",
+          key: "title",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "name" },
+          scopedSlots: { customRender: "title" },
           className: "column-name",
           width: "30%",
           colSpan: 0,
         },
         {
           title: "Подзоговолок",
-          dataIndex: "number",
-          scopedSlots: { customRender: "number" },
+          dataIndex: "desc",
+          scopedSlots: { customRender: "desc" },
           className: "column-code",
-          key: "number",
-          //   width: "10%",
+          key: "desc",
+          width: "30%",
         },
         {
           title: "Slug",
@@ -283,74 +368,38 @@ export default {
 
         {
           title: "действия",
-          key: "btns",
-          dataIndex: "btns",
-          scopedSlots: { customRender: "btns" },
+          key: "id",
+          dataIndex: "id",
+          scopedSlots: { customRender: "id" },
           className: "column-btns",
           //   width: "10%",
           align: "right",
         },
       ],
-      options: [
-        {
-          value: "All",
-          label: "All",
-        },
-        {
-          value: "Published",
-          label: "Published",
-        },
-        {
-          value: "Scheduled",
-          label: "Scheduled",
-        },
-        {
-          value: "Inactive",
-          label: "Inactive",
-        },
-      ],
+
       value: "",
-      data: [
-        {
-          key: "1",
-          id: "#12",
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-          btns: "id",
-        },
-        {
-          key: "2",
-          id: "#12",
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-
-          btns: "id",
-        },
-        {
-          key: "3",
-          id: "#12",
-
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-
-          btns: "id",
-        },
-        {
-          key: "4",
-          id: "#12",
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-
-          btns: "id",
-        },
-      ],
+      editId: "",
       previewVisible: false,
       previewImage: "",
       fileList: [],
+      posts: [],
+      rules: {
+        title_ru: [
+          {
+            required: true,
+            message: "Blog title is required",
+            trigger: "change",
+          },
+        ],
+
+        desc_ru: [
+          {
+            required: true,
+            message: "Blog desc is required",
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -375,7 +424,91 @@ export default {
       console.log(this.tableData);
     },
     getData() {
-      console.log("dadasdaadas");
+      const newData = {
+        img: this.ruleForm.img,
+        title: {
+          ru: this.ruleForm.title_ru,
+          uz: this.ruleForm.title_uz,
+          en: this.ruleForm.title_en,
+        },
+        desc: {
+          ru: this.ruleForm.desc_ru,
+          uz: this.ruleForm.desc_uz,
+          en: this.ruleForm.desc_en,
+        },
+      };
+      this.$refs["ruleForm"].validate((valid) => {
+        if (valid) {
+          this.editId != ""
+            ? this.__EDIT_POSTS(newData)
+            : this.__POST_POSTS(newData);
+        } else {
+          return false;
+        }
+      });
+    },
+    cancel(e) {
+      console.log(e);
+      this.$message.error("Click on No");
+    },
+    deleteImg() {
+      this.editImage = "";
+    },
+    openAddModal() {
+      this.show("add_blog");
+      this.editId = "";
+    },
+    editPost(id) {
+      this.editId = id;
+      const data = this.posts.find((item) => item.id == id);
+
+      this.ruleForm = {
+        ...data,
+        title_ru: data.title.ru,
+        title_uz: data.title.uz,
+        title_en: data.title.en,
+        desc_ru: data.desc.ru,
+        desc_uz: data.desc.uz,
+        desc_en: data.desc.en,
+      };
+      this.editImage = this.ruleForm.md_img;
+      this.show("add_blog");
+      console.log(this.posts);
+
+      // this.__GET_POSTS_BY_ID(id);
+    },
+    closeModal() {
+      this.hide("add_blog");
+      this.ruleForm.title_ru = "";
+      this.ruleForm.title_uz = "";
+      this.ruleForm.title_en = "";
+      this.ruleForm.desc_ru = "";
+      this.ruleForm.desc_uz = "";
+      this.ruleForm.desc_en = "";
+      this.ruleForm.img = "";
+      this.editImage = "";
+
+      this.editId = "";
+      this.__GET_POSTS();
+
+      console.log(this.ruleForm);
+      console.log(this.posts);
+    },
+    deletePost(id) {
+      this.__DELETE_POSTS(id);
+    },
+    async __DELETE_POSTS(id) {
+      try {
+        const data = await this.$store.dispatch("fetchPosts/deletePosts", id);
+        await this.$notify({
+          title: "Success",
+          message: "Пост был успешно удален",
+          type: "success",
+        });
+        this.__GET_POSTS();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
     },
     start() {
       this.loading = true;
@@ -408,10 +541,109 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }) {
+      this.loadingBtn = true;
+
       this.fileList = fileList;
+      let formData = new FormData();
+      const newImg = fileList;
+      if (newImg.length > 0) {
+        formData.append("file", newImg[0].originFileObj);
+        this.__UPLOAD_FILE(formData);
+      }
+    },
+    async __UPLOAD_FILE(formData) {
+      try {
+        const data = await this.$store.dispatch(
+          "uploadFile/uploadFile",
+          formData
+        );
+        this.ruleForm.img = data.path;
+        this.loadingBtn = false;
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
     },
     handleCancel() {
       this.previewVisible = false;
+    },
+    async __GET_POSTS() {
+      const data = await this.$store.dispatch("fetchPosts/getPosts");
+      this.posts = data.posts?.data;
+      this.posts = this.posts.map((item) => {
+        return {
+          ...item,
+          numberId: item.id,
+        };
+      });
+    },
+    async __POST_POSTS(res) {
+      try {
+        await this.$store.dispatch("fetchPosts/postPosts", res);
+        await this.$notify({
+          title: "Success",
+          message: "Атрибут успешно добавлен",
+          type: "success",
+        });
+        this.hide("add_blog");
+        this.__GET_POSTS();
+        this.ruleForm.title_ru = "";
+        this.ruleForm.title_uz = "";
+        this.ruleForm.title_en = "";
+        this.ruleForm.desc_ru = "";
+        this.ruleForm.desc_uz = "";
+        this.ruleForm.desc_en = "";
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    statusFunc(res) {
+      switch (res.status) {
+        case 422:
+          this.$notify.error({
+            title: "Error",
+            message: "Указанные данные недействительны.",
+          });
+          break;
+        case 500:
+          this.$notify.error({
+            title: "Error",
+            message: "Cервер не работает",
+          });
+          break;
+        case 404:
+          this.$notify.error({
+            title: "Error",
+            message: res.data.errors,
+          });
+          break;
+      }
+    },
+    async __EDIT_POSTS(res) {
+      try {
+        const data = await this.$store.dispatch("fetchPosts/editPosts", {
+          id: this.editId,
+          data: res,
+        });
+        this.$notify({
+          title: "Success",
+          message: "Пост успешно добавлен",
+          type: "success",
+        });
+        this.hide("add_blog");
+        this.__GET_POSTS();
+        this.ruleForm.title_ru = "";
+        this.ruleForm.title_uz = "";
+        this.ruleForm.title_en = "";
+        this.ruleForm.desc_ru = "";
+        this.ruleForm.desc_uz = "";
+        this.ruleForm.desc_en = "";
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    async __GET_POSTS_BY_ID(id) {
+      const data = await this.$store.dispatch("fetchPosts/getPostsById", id);
+      console.log(data);
     },
   },
   computed: {
@@ -427,6 +659,7 @@ export default {
     },
   },
   mounted() {
+    this.__GET_POSTS();
     if (this.data) {
       this.tableData = this.data;
     }
@@ -446,3 +679,45 @@ export default {
   layout: "toolbar",
 };
 </script>
+<style lang="scss">
+.post_img {
+  width: 101px;
+  height: 101px;
+  border: 1px dashed #d9d9d9;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      display: none;
+      cursor: pointer;
+      i {
+        font-size: 32px;
+        height: 40px;
+        width: 40px;
+      }
+    }
+  }
+  &:hover {
+    div {
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.5);
+      span {
+        display: block;
+      }
+    }
+  }
+}
+</style>

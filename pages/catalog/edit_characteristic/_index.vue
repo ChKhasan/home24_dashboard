@@ -83,6 +83,7 @@
                         v-model="ruleForm.group_id"
                         filterable
                         allow-create
+                        no-data-text="No group"
                         placeholder="Choose tags for your article"
                       >
                         <el-option
@@ -172,6 +173,7 @@
       name="add_atribute_group"
       btnText="Add Group"
       :callback="getData"
+      :closeModal="closeModal"
     >
       <el-form
         label-position="top"
@@ -353,7 +355,7 @@ export default {
       });
     },
     headerbtnCallback() {
-      console.log("fsfsdf");
+      this.$router.push("/catalog/characteristic");
     },
     show(name) {
       this.$modal.show(name);
@@ -380,6 +382,9 @@ export default {
       this.$refs["atributGroup"].validate((valid) =>
         valid ? this.__POST_GROUPS() : false
       );
+    },
+    closeModal() {
+      this.hide("add_atribute_group");
     },
     hide(name) {
       this.$modal.hide(name);
@@ -461,8 +466,3 @@ export default {
   },
 };
 </script>
-<style>
-.el-select-dropdown__empty {
-  display: none;
-}
-</style>

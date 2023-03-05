@@ -13,11 +13,37 @@
             :light="true"
           />
         </span>
-        <LayoutHeaderBtn
-          name=" Добавить категорию"
-          :headerbtnCallback="headerbtnCallback"
-          :light="false"
-        />
+        <a-button
+          class="add-btn add-header-btn btn-primary d-flex align-items-center"
+          type="primary"
+          @click="headerbtnCallback('ruleForm')"
+          :loading="uploadLoading"
+        >
+          <span class="svg-icon" v-if="!uploadLoading"
+            ><svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="24px"
+              height="24px"
+              viewBox="0 0 24 24"
+              version="1.1"
+            >
+              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                <path
+                  d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
+                  fill="#000000"
+                  fill-rule="nonzero"
+                  opacity="0.3"
+                ></path>
+                <path
+                  d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
+                  fill="#000000"
+                ></path>
+              </g></svg
+          ></span>
+          Добавить категорию
+        </a-button>
       </div>
     </TitleBlock>
     <div class="container_xl">
@@ -56,22 +82,25 @@
                     </div>
 
                     <div class="category-input-grid">
-                      <div class="form-block required">
+                      <div class="form-block required mb-0">
                         <div><label for="">Название категории</label></div>
-                        <el-form-item :prop="`name_${item.key}`">
+                        <el-form-item prop="name_ru">
                           <el-input
                             v-model="ruleForm[`name_${item.key}`]"
                             placeholder="Product model"
                           ></el-input>
                         </el-form-item>
                       </div>
-                      <div class="form-block required">
+                      <div class="form-block">
                         <div><label for="">Выберите категорию</label></div>
-                        <el-form-item prop="choose_category">
+                        <el-form-item>
                           <el-select
                             v-model="ruleForm.parent_id"
                             class="w-100"
                             placeholder="Choose tags for your article"
+                            filterable
+                            no-match-text="No Category"
+                            no-data-text="No Category"
                           >
                             <el-option
                               v-for="item in categories"
@@ -99,7 +128,7 @@
               <div class="form-container">
                 <div class="form-block required">
                   <div><label>Атрибуты группы</label></div>
-                  <el-form-item prop="group_atribut">
+                  <el-form-item prop="attributes">
                     <el-select
                       v-model="ruleForm.attributes"
                       multiple
@@ -120,7 +149,7 @@
                 </div>
                 <div class="form-block required">
                   <div><label>Групповая характеристика</label></div>
-                  <el-form-item prop="group_characters">
+                  <el-form-item prop="group_characteristics">
                     <el-select
                       v-model="ruleForm.group_characteristics"
                       class="w-100"
@@ -388,33 +417,26 @@ export default {
       ],
       value: [],
       rules: {
-        category_name: [
+        name_ru: [
           {
             required: true,
             message: "Category name is required",
             trigger: "change",
           },
         ],
-        choose_category: [
+
+        attributes: [
           {
             required: true,
-            message: "Choose category is required",
-
+            message: "Atribut is required",
             trigger: "change",
           },
         ],
-        group_atribut: [
-          {
-            required: true,
-            message: "Group atribut is required",
-            trigger: "blur",
-          },
-        ],
-        group_characters: [
+        group_characteristics: [
           {
             required: true,
             message: "Group characters is required",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },
@@ -489,6 +511,7 @@ export default {
           active: true,
         },
       ],
+      uploadLoading: false,
     };
   },
   methods: {
@@ -515,11 +538,11 @@ export default {
       data.group_characteristics = data.group_characteristics.filter(
         (elem) => elem
       );
-      data.parent_id = this.categories.map((item) => {
-        if (data.parent_id == item.name.ru) return item.id;
-      });
-      data.parent_id = data.parent_id.filter((elem) => elem);
-      data.parent_id = data.parent_id[0];
+      // data.parent_id = this.categories.map((item) => {
+      //   if (data.parent_id == item.name.ru) return item.id;
+      // });
+      // data.parent_id = data.parent_id.filter((elem) => elem);
+      // data.parent_id = data.parent_id[0];
       if (data.imgOldImg) {
         data.img = null;
         console.log("asdasdasdasjdhjsdfghsfg");
@@ -529,16 +552,18 @@ export default {
       }
       delete data["imgOldImg"];
       delete data["oldIcon"];
-      console.log(data);
-
-      this.__EDIT_CATEGORIES(data);
-      // this.$refs[ruleForm].validate((valid) => {
-      //   if (valid) {
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
+      if (data.parent_id) {
+        data.parent_id = this.categories.filter(
+          (item) => item.name.ru == data.parent_id
+        )[0].id;
+      }
+      this.$refs[ruleForm].validate((valid) => {
+        if (valid) {
+          this.__EDIT_CATEGORIES(data);
+        } else {
+          return false;
+        }
+      });
     },
     toAddProduct() {
       this.$router.push("/catalog/add_products");
@@ -573,12 +598,15 @@ export default {
       this.fileList = fileList;
       let formData = new FormData();
       formData.append("file", fileList[0].originFileObj);
+      this.uploadLoading = true;
       this.__UPLOAD_FILE("img", formData);
     },
     handleChange1({ fileList }) {
       this.fileList1 = fileList;
       let formData = new FormData();
       formData.append("file", fileList[0].originFileObj);
+      this.uploadLoading = true;
+
       this.__UPLOAD_FILE("icon", formData);
     },
     async __UPLOAD_FILE(item, formData) {
@@ -588,6 +616,7 @@ export default {
           formData
         );
         this.ruleForm[item] = data.path;
+        this.uploadLoading = false;
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -603,23 +632,29 @@ export default {
     toBack() {
       this.$router.push("/catalog/categories");
     },
-    async __GET_CATEGORIES() {
-      const data = await this.$store.dispatch("fetchCategories/getCategories");
-      data.categories?.data.forEach((item) => {
+
+    async __GET_CATEGORY_BY_ID() {
+      const data = await this.$store.dispatch(
+        "fetchCategories/getCategoriesById",
+        this.$route.params.index
+      );
+      const dataCat = await this.$store.dispatch(
+        "fetchCategories/getCategories"
+      );
+      dataCat.categories?.data.forEach((item) => {
         if (item.children.length > 0) {
           this.categories = [item, ...item.children, ...this.categories];
         } else {
           this.categories = [item, ...this.categories];
         }
       });
-    },
-    async __GET_CATEGORY_BY_ID() {
-      const data = await this.$store.dispatch(
-        "fetchCategories/getCategoriesById",
-        this.$route.params.index
-      );
-
-      this.ruleForm.parent_id = data.category.parent_id;
+      this.categories = this.categories
+        .filter((elem) => elem.id != this.$route.params.index)
+        .filter(
+          (item) =>
+            !data.category.children.find((childId) => childId.id == item.id)
+        );
+      console.log();
       this.ruleForm.name_ru = data.category.name.ru;
       this.ruleForm.name_uz = data.category.name.uz;
       this.ruleForm.name_en = data.category.name.en;
@@ -635,11 +670,11 @@ export default {
       this.ruleForm.imgOldImg = data.category.md_img;
       this.ruleForm.oldIcon = data.category.md_icon;
       this.ruleForm.is_popular = data.category.is_popular;
-      if (data.parent_id) {
-        this.ruleForm.parent_id = data.parent_id;
+      if (data.category.parent_id) {
+        this.ruleForm.parent_id = this.categories.filter(
+          (item) => item.id == data.category.parent_id
+        )[0].name.ru;
       }
-
-      console.log(data.category);
     },
     statusFunc(res) {
       switch (res.status) {
@@ -689,7 +724,6 @@ export default {
     },
   },
   mounted() {
-    this.__GET_CATEGORIES();
     this.__GET_ATRIBUTES();
     this.__GET_GROUPS();
     this.__GET_CATEGORY_BY_ID();

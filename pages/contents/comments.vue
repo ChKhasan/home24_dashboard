@@ -5,12 +5,12 @@
       :breadbrumb="['Контент сайта']"
       lastLink="Комментарии"
     >
-      <div
+      <!-- <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="show('edit_comment')"
       >
         <span class="svg-icon"
-          ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
+          ><svg
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             width="24px"
@@ -31,10 +31,10 @@
                 fill="#000000"
               ></path>
             </g></svg
-          ><!--end::Svg Icon--></span
+          ></span
         >
         Добавить
-      </div>
+      </div> -->
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
@@ -46,7 +46,7 @@
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
-            :data-source="tableData"
+            :data-source="comments"
             :pagination="false"
             align="center"
           >
@@ -82,13 +82,21 @@
             >
               {{ tags }}
             </span>
-            <span slot="btns" slot-scope="text">
-              <span class="action-btn" @click="tableActions(text)">
+            <span slot="editId" slot-scope="text">
+              <span class="action-btn" @click="commnetAnswer(text)">
                 <img :src="editIcon" alt="" />
               </span>
-              <span class="action-btn" @click="tableActions(text)">
-                <img :src="deleteIcon" alt="" />
-              </span>
+              <a-popconfirm
+                title="Are you sure delete this comment?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="deleteComment(text)"
+                @cancel="cancel"
+              >
+                <span class="action-btn">
+                  <img :src="deleteIcon" alt="" />
+                </span>
+              </a-popconfirm>
             </span>
           </a-table>
         </div>
@@ -99,6 +107,7 @@
       name="edit_comment"
       btnText="Save"
       :callback="getData"
+      :closeModal="closeModal"
     >
       <el-form
         label-position="top"
@@ -117,7 +126,7 @@
               disabled
               rows="6"
               placeholder="Зоговолок"
-              v-model="ruleForm.title"
+              v-model="ruleForm.comment"
             ></el-input>
           </el-form-item>
         </div>
@@ -128,7 +137,7 @@
               type="textarea"
               rows="6"
               placeholder="Зоговолок"
-              v-model="ruleForm.title"
+              v-model="ruleForm.answer"
             ></el-input>
           </el-form-item>
         </div>
@@ -148,7 +157,14 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
-
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
 export default {
   middleware: "auth",
   data() {
@@ -160,15 +176,15 @@ export default {
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
       ruleForm: {
-        title: "Sub title",
-        subTitle: "Sub title",
-        desc: "desc",
+        product_id: null,
+        comment: "desc",
+        answer: "",
       },
       columns: [
         {
           title: "ID",
-          dataIndex: "id",
-          key: "id",
+          dataIndex: "user_id",
+          key: "user_id",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "id" },
           align: "left",
@@ -176,7 +192,7 @@ export default {
           width: "60px",
         },
         {
-          title: "Зоговолок",
+          title: "Пользователь",
           dataIndex: "img",
           key: "img",
           slots: { title: "customTitle" },
@@ -187,7 +203,7 @@ export default {
           width: "45px",
         },
         {
-          dataIndex: "name",
+          dataIndex: "Пользователь",
           key: "name",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "name" },
@@ -196,15 +212,22 @@ export default {
           colSpan: 0,
         },
         {
-          title: "Подзоговолок",
-          dataIndex: "number",
-          scopedSlots: { customRender: "number" },
+          dataIndex: "Продукт",
+          key: "product",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "product" },
+          className: "column-name",
+        },
+        {
+          title: "Коммент",
+          dataIndex: "comment",
+          scopedSlots: { customRender: "comment" },
           className: "column-code",
-          key: "number",
+          key: "comment",
           //   width: "10%",
         },
         {
-          title: "Slug",
+          title: "Ответ",
           dataIndex: "slug",
           className: "column-qty",
           key: "slug",
@@ -214,9 +237,9 @@ export default {
 
         {
           title: "действия",
-          key: "btns",
-          dataIndex: "btns",
-          scopedSlots: { customRender: "btns" },
+          key: "editId",
+          dataIndex: "editId",
+          scopedSlots: { customRender: "editId" },
           className: "column-btns",
           //   width: "10%",
           align: "right",
@@ -241,47 +264,35 @@ export default {
         },
       ],
       value: "",
-      data: [
-        {
-          key: "1",
-          id: "#12",
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-          btns: "id",
-        },
-        {
-          key: "2",
-          id: "#12",
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-
-          btns: "id",
-        },
-        {
-          key: "3",
-          id: "#12",
-
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-
-          btns: "id",
-        },
-        {
-          key: "4",
-          id: "#12",
-          name: "HONOR MagicBook X 15BBR",
-          number: "Left or right",
-          slug: "Lorem ipsum asdas sadh uasdasdgja sgdhad g",
-
-          btns: "id",
-        },
-      ],
+      data: [],
       previewVisible: false,
       previewImage: "",
       fileList: [],
+      comments: [],
+      rules: {
+        group_id: [
+          {
+            required: true,
+            message: "Characteristic group is required",
+            trigger: "change",
+          },
+        ],
+
+        name_ru: [
+          {
+            required: true,
+            message: "Characteristic name is required",
+            trigger: "change",
+          },
+        ],
+        options: [
+          {
+            required: true,
+            message: "Characteristic name is required",
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -308,12 +319,19 @@ export default {
     getData() {
       console.log("dadasdaadas");
     },
+    closeModal() {
+      this.hide("edit_comment");
+    },
     start() {
       this.loading = true;
       setTimeout(() => {
         this.loading = false;
         this.selectedRowKeys = [];
       }, 1000);
+    },
+    commnetAnswer(id) {
+      this.show("edit_comment");
+      console.log(this.ruleForm);
     },
     tableActions(id) {
       console.log(id);
@@ -344,6 +362,56 @@ export default {
     handleCancel() {
       this.previewVisible = false;
     },
+    async __GET_COMMENTS() {
+      const data = await this.$store.dispatch("fetchComments/getComments");
+      this.comments = data.comments?.data.map((item) => {
+        return {
+          ...item,
+          editId: item.id,
+        };
+      });
+    },
+    deleteComment(id) {
+      this.__DELETE_COMMENT(id);
+    },
+    async __DELETE_COMMENT(id) {
+      try {
+        const data = await this.$store.dispatch(
+          "fetchComments/deleteComments",
+          id
+        );
+        await this.$notify({
+          title: "Success",
+          message: "Пост был успешно удален",
+          type: "success",
+        });
+        this.__GET_COMMENTS();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    statusFunc(res) {
+      switch (res.status) {
+        case 422:
+          this.$notify.error({
+            title: "Error",
+            message: "Указанные данные недействительны.",
+          });
+          break;
+        case 500:
+          this.$notify.error({
+            title: "Error",
+            message: "Cервер не работает",
+          });
+          break;
+        case 404:
+          this.$notify.error({
+            title: "Error",
+            message: res.data.errors,
+          });
+          break;
+      }
+    },
   },
   computed: {
     hasSelected() {
@@ -358,6 +426,7 @@ export default {
     },
   },
   mounted() {
+    this.__GET_COMMENTS();
     if (this.data) {
       this.tableData = this.data;
     }
@@ -377,3 +446,9 @@ export default {
   layout: "toolbar",
 };
 </script>
+<style lang="scss">
+.ant-modal-mask,
+.ant-modal-wrap {
+  z-index: 1002 !important;
+}
+</style>

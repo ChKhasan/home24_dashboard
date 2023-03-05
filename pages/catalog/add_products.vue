@@ -11,12 +11,13 @@
         >
           Cancel
         </div>
-        <div
-          class="add-btn add-header-btn add-header-btn-padding btn-primary"
-          type="submit"
+        <a-button
+          class="add-btn add-header-btn btn-primary d-flex align-items-center"
+          type="primary"
           @click="submitForm('ruleForm')"
+          :loading="uploadLoading"
         >
-          <span class="svg-icon"
+          <span class="svg-icon" v-if="!uploadLoading"
             ><svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -40,43 +41,43 @@
               </g></svg
           ></span>
           Add Product
-        </div>
+        </a-button>
       </div>
     </TitleBlock>
     <div class="container_xl">
       <div class="card_block-form py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
-        ></div>
-        <div class="products-from-grid">
-          <div class="products-select-grid">
-            <el-tabs
-              class="form_tabs"
-              v-model="activeName"
-              @tab-click="handleClick"
-            >
-              <el-tab-pane
-                v-for="(item, index) in lang"
-                :label="item.label"
-                :name="item.label"
-                :key="index"
+        <el-form
+          label-position="top"
+          :model="ruleForm"
+          :rules="rules"
+          ref="ruleForm"
+          label-width="120px"
+          class="demo-ruleForm"
+          action=""
+        >
+          <div
+            class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
+          ></div>
+          <div class="products-from-grid">
+            <div class="products-select-grid">
+              <el-tabs
+                class="form_tabs"
+                v-model="activeName"
+                @tab-click="handleClick"
               >
-                <div class="form-container form-container-ltr">
-                  <div class="d-flex justify-content-start">
-                    <FormTitle title="Добавить продукт" />
-                  </div>
-                  <el-form
-                    label-position="top"
-                    :model="ruleForm"
-                    :rules="rules"
-                    ref="ruleForm"
-                    label-width="120px"
-                    class="demo-ruleForm"
-                    action=""
-                  >
+                <el-tab-pane
+                  v-for="(item, index) in lang"
+                  :label="item.label"
+                  :name="item.label"
+                  :key="index"
+                >
+                  <div class="form-container form-container-ltr">
+                    <div class="d-flex justify-content-start">
+                      <FormTitle title="Добавить продукт" />
+                    </div>
                     <div class="form-block required">
                       <div><label for="">Имя</label></div>
-                      <el-form-item :prop="`name_${item.key}`">
+                      <el-form-item :prop="`name_ru`">
                         <el-input
                           v-model="ruleForm[`name_${item.key}`]"
                           placeholder="Product model"
@@ -112,486 +113,529 @@
                         </el-form-item>
                       </div>
                     </div>
-                  </el-form>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+              <div class="form-container">
+                <div class="d-flex justify-content-start">
+                  <FormTitle title="Информация о продукте" />
                 </div>
-              </el-tab-pane>
-            </el-tabs>
-            <div class="form-container">
-              <div class="d-flex justify-content-start">
-                <FormTitle title="Информация о продукте" />
-              </div>
-              <div class="d-flex align-items-end">
-                <div class="products-input-grid-3 w-100">
-                  <div class="form-block mb-0">
-                    <div><label>Категория</label></div>
-                    <el-select
-                      v-model="ruleForm.category_id"
-                      allow-create
-                      default-first-option
-                      placeholder="Select category"
-                    >
-                      <el-option
-                        v-for="item in categories"
-                        :key="item.id"
-                        :label="item.name?.ru"
-                        :value="item.id"
-                      >
-                      </el-option>
-                    </el-select>
-                    <span class="bottom_text">Добавить товар в категорию</span>
-                  </div>
-                  <div class="form-block mb-0">
-                    <div><label>Дочерняя категория</label></div>
-                    <el-select
-                      v-model="categoryChild.child1.id"
-                      allow-create
-                      default-first-option
-                      :disabled="categoryChild.child1.arr.length < 1"
-                      placeholder="Select post category"
-                    >
-                      <el-option
-                        v-for="item in categoryChild.child1.arr"
-                        :key="item.id"
-                        :label="item.name.ru"
-                        :value="item.id"
-                      >
-                      </el-option>
-                    </el-select>
-                    <span class="bottom_text">Добавить товар в категорию</span>
-                  </div>
-                  <div class="form-block mb-0">
-                    <div><label>Последняя категория</label></div>
-                    <el-select
-                      v-model="categoryChild.child2.id"
-                      allow-create
-                      :disabled="categoryChild.child2.arr.length < 1"
-                      default-first-option
-                      placeholder="Select last category"
-                    >
-                      <el-option
-                        v-for="item in categoryChild.child2.arr"
-                        :key="item.id"
-                        :label="item.name?.ru"
-                        :value="item.id"
-                      >
-                      </el-option>
-                    </el-select>
-                    <span class="bottom_text">Добавить товар в категорию</span>
-                  </div>
-                </div>
-                <div class="prducts-details-btns">
-                  <div
-                    class="outline-btn outline-light-green-btn"
-                    @click="searchBlock = true"
-                  >
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
-                        stroke="#181C32"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div class="outline-btn outline-light-green-btn">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
-                        stroke="#181C32"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div class="outline-btn outline-light-blue-btn">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M12 6V18M18 12L6 12"
-                        stroke="#5899FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex" v-if="searchBlock">
-                <div class="search-container">
-                  <div class="search-input-block">
-                    <div class="form-block w-100 mb-0">
-                      <div class="position-relative search-input-icon">
-                        <el-input
-                          class="w-100"
-                          v-model="ruleForm.nbm"
-                          placeholder="Product model"
-                        ></el-input>
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                <div class="d-flex align-items-end">
+                  <div class="products-input-grid-3 w-100">
+                    <div class="form-block mb-0 required">
+                      <div><label>Категория</label></div>
+                      <el-form-item prop="category_id">
+                        <el-select
+                          v-model="ruleForm.category_id"
+                          allow-create
+                          default-first-option
+                          placeholder="Select category"
                         >
-                          <path
-                            d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
-                            stroke="#A1A5BF"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </div>
-                      <div class="search-resoults">
-                        <div class="search-clear">
-                          <p>Вы недавно искали</p>
-                          <span>Очистить</span>
-                        </div>
-                        <div class="search-resoult-items">
-                          <p>Строймате</p>
-                        </div>
-                        <div class="search-resoult-items">
-                          <p>Строймате</p>
-                        </div>
-                        <div class="search-resoult-items">
-                          <p>Строймате</p>
-                        </div>
-                      </div>
+                          <el-option
+                            v-for="item in categories"
+                            :key="item.id"
+                            :label="item.name?.ru"
+                            :value="item.id"
+                          >
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                      <span class="bottom_text"
+                        >Добавить товар в категорию</span
+                      >
                     </div>
-                    <div>
-                      <div
-                        class="outline-btn outline-white-btn"
-                        @click="searchBlock = false"
+                    <div class="form-block mb-0">
+                      <div><label>Дочерняя категория</label></div>
+                      <el-select
+                        v-model="categoryChild.child1.id"
+                        allow-create
+                        default-first-option
+                        :disabled="categoryChild.child1.arr.length < 1"
+                        placeholder="Select post category"
                       >
-                        <svg
-                          width="30"
-                          height="30"
-                          viewBox="0 0 30 30"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <el-option
+                          v-for="item in categoryChild.child1.arr"
+                          :key="item.id"
+                          :label="item.name.ru"
+                          :value="item.id"
                         >
-                          <path
-                            d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                            stroke="#28303F"
-                            stroke-width="1.5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </svg>
-                      </div>
+                        </el-option>
+                      </el-select>
+                      <span class="bottom_text"
+                        >Добавить товар в категорию</span
+                      >
+                    </div>
+                    <div class="form-block mb-0">
+                      <div><label>Последняя категория</label></div>
+                      <el-select
+                        v-model="categoryChild.child2.id"
+                        allow-create
+                        :disabled="categoryChild.child2.arr.length < 1"
+                        default-first-option
+                        placeholder="Select last category"
+                      >
+                        <el-option
+                          v-for="item in categoryChild.child2.arr"
+                          :key="item.id"
+                          :label="item.name?.ru"
+                          :value="item.id"
+                        >
+                        </el-option>
+                      </el-select>
+                      <span class="bottom_text"
+                        >Добавить товар в категорию</span
+                      >
                     </div>
                   </div>
-                </div>
-                <div class="d-flex search-container-btns">
-                  <div class="outline-btn outline-light-gray-btn mx-3">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  <div class="prducts-details-btns">
+                    <div
+                      class="outline-btn outline-light-green-btn"
+                      @click="searchBlock = true"
                     >
-                      <path
-                        d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
-                        stroke="#181C32"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                  <div class="outline-btn outline-blue-btn">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M12 6V18M18 12L6 12"
-                        stroke="#5899FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <el-tabs
-              class="form_tabs"
-              v-model="activeName"
-              @tab-click="handleClick"
-            >
-              <el-tab-pane
-                v-for="(item, index) in lang"
-                :label="item.label"
-                :name="item.label"
-                :key="index"
-              >
-                <div class="form-container form-container-ltr">
-                  <div class="d-flex justify-content-start">
-                    <FormTitle title="Информация о продукте" />
-                  </div>
-                  <el-tabs
-                    class="desc_tab"
-                    v-model="activeDesc"
-                    @tab-click="handleClick"
-                  >
-                    <el-tab-pane label="Описание" name="Description">
-                      <div class="mt-1">
-                        <quill-editor
-                          style="min-height: 250px;"
-                          :options="editorOption"
-                          :value="ruleForm.desc[item.key]"
-                          v-model="ruleForm.desc[item.key]"
-                        /></div
-                    ></el-tab-pane>
-                    <el-tab-pane label="Характеристика" name="Character">
-                      <ProductCharacterList />
-                    </el-tab-pane>
-                  </el-tabs>
-                </div>
-              </el-tab-pane>
-            </el-tabs>
-            <!-- Product Variants -->
-            <div class="form-container" v-for="element in ruleForm.products">
-              <div class="d-flex justify-content-between variant-header">
-                <h4 class="variant-title">Вариация №{{ element.id }}</h4>
-                <div
-                  class="variant-btn variant-btn-delete"
-                  @click="deleteVariant(element.id)"
-                >
-                  <svg
-                    width="30"
-                    height="30"
-                    viewBox="0 0 30 30"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                      stroke="#F65160"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div class="variant-img-container">
-                <h5 class="variant-img-title">Изображение товара</h5>
-
-                <div class="variant-img">
-                  <a-upload
-                    list-type="picture-card"
-                    :file-list="element.imagesData"
-                    :multiple="true"
-                    @preview="handlePreview"
-                    @change="
-                      ($event) => handleChangeVatiant($event, element.id)
-                    "
-                  >
-                    <div v-if="element.imagesData.length < 50">
                       <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 20 20"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          d="M15.2765 17.7765H4.72315C3.34231 17.7765 2.22314 16.6573 2.22314 15.2765V4.72315C2.22314 3.34231 3.34231 2.22314 4.72315 2.22314H15.2765C16.6573 2.22314 17.7765 3.34231 17.7765 4.72315V15.2765C17.7765 16.6573 16.6573 17.7765 15.2765 17.7765Z"
-                          fill="#3699FF"
-                        />
-                        <path
-                          d="M2.22314 11.4292C3.44814 11.1117 4.73231 10.9434 6.05648 10.9434C10.6106 10.9434 14.6981 12.94 17.4915 16.105"
-                          fill="#3699FF"
-                        />
-                        <path
-                          d="M2.22314 11.4292C3.44814 11.1117 4.73231 10.9434 6.05648 10.9434C10.6106 10.9434 14.6981 12.94 17.4915 16.105"
-                          stroke="white"
+                          d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
+                          stroke="#181C32"
                           stroke-width="1.5"
-                          stroke-miterlimit="10"
                           stroke-linecap="round"
                           stroke-linejoin="round"
                         />
+                      </svg>
+                    </div>
+                    <div class="outline-btn outline-light-green-btn">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
                         <path
-                          d="M12.8753 9.48016C14.1028 9.48016 15.0978 8.48511 15.0978 7.25766C15.0978 6.0302 14.1028 5.03516 12.8753 5.03516C11.6479 5.03516 10.6528 6.0302 10.6528 7.25766C10.6528 8.48511 11.6479 9.48016 12.8753 9.48016Z"
-                          fill="white"
+                          d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
+                          stroke="#181C32"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
                         />
                       </svg>
-                      <div class="ant-upload-text">
-                        Добавить изображение
-                      </div>
                     </div>
-                  </a-upload>
-                  <a-modal
-                    :visible="previewVisible"
-                    :footer="null"
-                    @cancel="handleCancel"
-                  >
-                    <img
-                      alt="example"
-                      style="width: 100%;"
-                      :src="previewImage"
-                    />
-                  </a-modal>
+                    <div class="outline-btn outline-light-blue-btn">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 6V18M18 12L6 12"
+                          stroke="#5899FF"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
-                <p class="variant-img-text">
-                  Изображение товар
-                  <span>Первое изображение товара является главной.</span>
-                </p>
-              </div>
-              <div>
-                <!-- Validations -->
-                <div class="product-variant" v-for="item in element.variations">
-                  <div class="d-flex w-100 align-items-end">
-                    <div class="variant-grid-4 w-100">
-                      <div
-                        class="form-variant-block"
-                        v-for="(atribut, index) in atributes"
-                      >
-                        <div>
-                          <label>{{ atribut.name.ru }}</label>
+                <div class="d-flex" v-if="searchBlock">
+                  <div class="search-container">
+                    <div class="search-input-block">
+                      <div class="form-block w-100 mb-0">
+                        <div class="position-relative search-input-icon">
+                          <el-input
+                            class="w-100"
+                            v-model="ruleForm.nbm"
+                            placeholder="Product model"
+                          ></el-input>
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
+                              stroke="#A1A5BF"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
                         </div>
-                        <el-select
-                          v-model="item.optionName[atribut.name.ru]"
-                          allow-create
-                          class="w-100"
-                          default-first-option
-                          placeholder="265 gb"
-                          @change="
-                            atributOptions({
-                              productId: element.id,
-                              variantId: item.id,
-                              index: index,
-                              name: atribut.name.ru,
-                            })
-                          "
-                        >
-                          <el-option
-                            v-for="optionElement in atribut.options"
-                            :key="optionElement.id"
-                            :label="optionElement.name.ru"
-                            :value="optionElement.id"
-                          >
-                          </el-option>
-                        </el-select>
+                        <div class="search-resoults">
+                          <div class="search-clear">
+                            <p>Вы недавно искали</p>
+                            <span>Очистить</span>
+                          </div>
+                          <div class="search-resoult-items">
+                            <p>Строймате</p>
+                          </div>
+                          <div class="search-resoult-items">
+                            <p>Строймате</p>
+                          </div>
+                          <div class="search-resoult-items">
+                            <p>Строймате</p>
+                          </div>
+                        </div>
                       </div>
-                      <!-- <div class="form-variant-block">
-                        <div><label>Цвета</label></div>
-                        <el-select
-                          v-model="value"
-                          allow-create
-                          class="w-100"
-                          default-first-option
-                          placeholder="265 gb"
+                      <div>
+                        <div
+                          class="outline-btn outline-white-btn"
+                          @click="searchBlock = false"
                         >
-                          <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
+                          <svg
+                            width="30"
+                            height="30"
+                            viewBox="0 0 30 30"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
                           >
-                          </el-option>
-                        </el-select>
+                            <path
+                              d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                              stroke="#28303F"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
                       </div>
-                      <div class="form-variant-block">
-                        <div><label>Цвета</label></div>
-                        <el-select
-                          v-model="value"
-                          allow-create
-                          class="w-100"
-                          default-first-option
-                          placeholder="265 gb"
-                        >
-                          <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          >
-                          </el-option>
-                        </el-select>
-                      </div>
-                      <div class="form-variant-block">
-                        <div><label>Цвета</label></div>
-                        <el-select
-                          v-model="value"
-                          allow-create
-                          class="w-100"
-                          default-first-option
-                          placeholder="265 gb"
-                        >
-                          <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
-                          >
-                          </el-option>
-                        </el-select>
-                      </div> -->
                     </div>
-                    <div class="d-flex mb-1">
-                      <div
-                        class="variant-btn variant-btn-delete mx-2"
-                        @click="deleteInnerVariant(element.id, item.id)"
+                  </div>
+                  <div class="d-flex search-container-btns">
+                    <div class="outline-btn outline-light-gray-btn mx-3">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
+                        <path
+                          d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
+                          stroke="#181C32"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <div class="outline-btn outline-blue-btn">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M12 6V18M18 12L6 12"
+                          stroke="#5899FF"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <el-tabs
+                class="form_tabs"
+                v-model="activeName"
+                @tab-click="handleClick"
+              >
+                <el-tab-pane
+                  v-for="(item, index) in lang"
+                  :label="item.label"
+                  :name="item.label"
+                  :key="index"
+                >
+                  <div class="form-container form-container-ltr">
+                    <div class="d-flex justify-content-start">
+                      <FormTitle title="Информация о продукте" />
+                    </div>
+                    <el-tabs
+                      class="desc_tab"
+                      v-model="activeDesc"
+                      @tab-click="handleClick"
+                    >
+                      <el-tab-pane label="Описание" name="Description">
+                        <div class="mt-1">
+                          <quill-editor
+                            style="min-height: 250px;"
+                            :options="editorOption"
+                            :value="ruleForm.desc[item.key]"
+                            v-model="ruleForm.desc[item.key]"
+                          /></div
+                      ></el-tab-pane>
+                      <el-tab-pane label="Характеристика" name="Character">
+                        <ProductCharacterList />
+                      </el-tab-pane>
+                    </el-tabs>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+              <!-- Product Variants -->
+              <div class="form-container" v-for="element in ruleForm.products">
+                <div class="d-flex justify-content-between variant-header">
+                  <h4 class="variant-title">Вариация №{{ element.id }}</h4>
+                  <div
+                    class="variant-btn variant-btn-delete"
+                    @click="deleteVariant(element.id)"
+                  >
+                    <svg
+                      width="30"
+                      height="30"
+                      viewBox="0 0 30 30"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                        stroke="#F65160"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div class="variant-img-container">
+                  <h5 class="variant-img-title">Изображение товара</h5>
+
+                  <div class="variant-img">
+                    <a-upload
+                      list-type="picture-card"
+                      :file-list="element.imagesData"
+                      :multiple="true"
+                      @preview="handlePreview"
+                      @change="
+                        ($event) => handleChangeVatiant($event, element.id)
+                      "
+                    >
+                      <div v-if="element.imagesData.length < 50">
                         <svg
-                          width="30"
-                          height="30"
-                          viewBox="0 0 30 30"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 20 20"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                            stroke="#F65160"
+                            d="M15.2765 17.7765H4.72315C3.34231 17.7765 2.22314 16.6573 2.22314 15.2765V4.72315C2.22314 3.34231 3.34231 2.22314 4.72315 2.22314H15.2765C16.6573 2.22314 17.7765 3.34231 17.7765 4.72315V15.2765C17.7765 16.6573 16.6573 17.7765 15.2765 17.7765Z"
+                            fill="#3699FF"
+                          />
+                          <path
+                            d="M2.22314 11.4292C3.44814 11.1117 4.73231 10.9434 6.05648 10.9434C10.6106 10.9434 14.6981 12.94 17.4915 16.105"
+                            fill="#3699FF"
+                          />
+                          <path
+                            d="M2.22314 11.4292C3.44814 11.1117 4.73231 10.9434 6.05648 10.9434C10.6106 10.9434 14.6981 12.94 17.4915 16.105"
+                            stroke="white"
                             stroke-width="1.5"
+                            stroke-miterlimit="10"
                             stroke-linecap="round"
                             stroke-linejoin="round"
                           />
+                          <path
+                            d="M12.8753 9.48016C14.1028 9.48016 15.0978 8.48511 15.0978 7.25766C15.0978 6.0302 14.1028 5.03516 12.8753 5.03516C11.6479 5.03516 10.6528 6.0302 10.6528 7.25766C10.6528 8.48511 11.6479 9.48016 12.8753 9.48016Z"
+                            fill="white"
+                          />
                         </svg>
+                        <div class="ant-upload-text">
+                          Добавить изображение
+                        </div>
                       </div>
-                      <div
-                        class="variant-btn variant-btn-check"
-                        @click="onChangeVariants(element.id, item.id)"
-                      >
-                        <a-radio :checked="item.is_default == 1"></a-radio>
+                    </a-upload>
+                    <a-modal
+                      :visible="previewVisible"
+                      :footer="null"
+                      @cancel="handleCancel"
+                    >
+                      <img
+                        alt="example"
+                        style="width: 100%;"
+                        :src="previewImage"
+                      />
+                    </a-modal>
+                  </div>
+                  <p class="variant-img-text">
+                    Изображение товар
+                    <span>Первое изображение товара является главной.</span>
+                  </p>
+                </div>
+                <div>
+                  <!-- Validations -->
+                  <div
+                    class="product-variant"
+                    v-for="item in element.variations"
+                  >
+                    <div
+                      class="product_variant_block"
+                      v-if="atributes.length > 0"
+                    >
+                      <div class="variant-grid-4 w-100">
+                        <div
+                          class="form-variant-block"
+                          v-for="(atribut, index) in atributes"
+                        >
+                          <div>
+                            <label>{{ atribut.name.ru }}</label>
+                          </div>
+                          <el-select
+                            v-model="item.optionName[`at_${atribut.id}`]"
+                            allow-create
+                            class="w-100"
+                            default-first-option
+                            placeholder="265 gb"
+                            @change="
+                              atributOptions({
+                                productId: element.id,
+                                variantId: item.id,
+                                index: index,
+                                name: atribut.name.ru,
+                                id: atribut.id,
+                              })
+                            "
+                          >
+                            <el-option
+                              v-for="optionElement in atribut.options"
+                              :key="optionElement.id"
+                              :label="optionElement.name.ru"
+                              :value="optionElement.id"
+                            >
+                            </el-option>
+                          </el-select>
+                        </div>
+                        <div class="form-variant-block">
+                          <div><label>Popular</label></div>
+                          <el-select
+                            v-model="item.is_popular"
+                            allow-create
+                            class="w-100"
+                            default-first-option
+                            placeholder="265 gb"
+                          >
+                            <el-option
+                              v-for="item in [
+                                { label: `Да`, id: 1 },
+                                { label: `Нет`, id: 0 },
+                              ]"
+                              :key="item.id"
+                              :label="item.label"
+                              :value="item.id"
+                            >
+                            </el-option>
+                          </el-select>
+                        </div>
+                        <div class="form-variant-block">
+                          <div><label>day</label></div>
+                          <el-select
+                            v-model="item.product_of_the_day"
+                            allow-create
+                            class="w-100"
+                            default-first-option
+                            placeholder="265 gb"
+                          >
+                            <el-option
+                              v-for="item in [
+                                { label: `Да`, id: 1 },
+                                { label: `Нет`, id: 0 },
+                              ]"
+                              :key="item.id"
+                              :label="item.label"
+                              :value="item.id"
+                            >
+                            </el-option>
+                          </el-select>
+                        </div>
+                        <div class="form-variant-block">
+                          <div><label>day</label></div>
+                          <el-input
+                            v-model="item.price"
+                            placeholder="Price"
+                            type="number"
+                          ></el-input>
+                        </div>
+                      </div>
+                      <div class="variant_btns mb-1">
+                        <div
+                          class="variant-btn variant-btn-delete mx-2"
+                          @click="deleteInnerVariant(element.id, item.id)"
+                        >
+                          <svg
+                            width="30"
+                            height="30"
+                            viewBox="0 0 30 30"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                              stroke="#F65160"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </div>
+                        <div
+                          class="variant-btn variant-btn-check"
+                          @click="onChangeVariants(element.id, item.id)"
+                        >
+                          <a-radio :checked="item.is_default == 1"></a-radio>
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <!-- Validations -->
                 </div>
-                <!-- Validations -->
+                <div class="d-flex justify-content-start">
+                  <div
+                    class="create-inner-variant"
+                    @click="addInnerVariant(element.id)"
+                  >
+                    <svg
+                      width="17"
+                      height="16"
+                      viewBox="0 0 17 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M3 8H14"
+                        stroke="#3699FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M8.5 2.5V13.5"
+                        stroke="#3699FF"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    Добавит внутренний варизаци
+                  </div>
+                </div>
               </div>
-              <div class="d-flex justify-content-start">
+              <!-- Product Variants -->
+
+              <div>
                 <div
-                  class="create-inner-variant"
-                  @click="addInnerVariant(element.id)"
+                  class="add-variant create-inner-variant mt-0"
+                  @click="addVariant"
                 >
                   <svg
                     width="17"
@@ -615,157 +659,125 @@
                       stroke-linejoin="round"
                     />
                   </svg>
-                  Добавит внутренний варизаци
+                  Добавит варизаци
                 </div>
               </div>
             </div>
-            <!-- Product Variants -->
-
-            <div>
-              <div
-                class="add-variant create-inner-variant mt-0"
-                @click="addVariant"
-              >
-                <svg
-                  width="17"
-                  height="16"
-                  viewBox="0 0 17 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+            <!-- Product right details -->
+            <div class="products-img-grid">
+              <div class="form-container">
+                <el-form
+                  label-position="top"
+                  :model="ruleForm"
+                  :rules="rules"
+                  ref="ruleForm"
+                  label-width="120px"
+                  class="demo-ruleForm"
+                  action=""
                 >
-                  <path
-                    d="M3 8H14"
-                    stroke="#3699FF"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M8.5 2.5V13.5"
-                    stroke="#3699FF"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                Добавит варизаци
-              </div>
-            </div>
-          </div>
-          <!-- Product right details -->
-          <div class="products-img-grid">
-            <div class="form-container">
-              <el-form
-                label-position="top"
-                :model="ruleForm"
-                :rules="rules"
-                ref="ruleForm"
-                label-width="120px"
-                class="demo-ruleForm"
-                action=""
-              >
-                <div class="form-block status-style">
-                  <div><label for="status">Статус</label></div>
-                  <el-form-item>
-                    <el-select
-                      id="status"
-                      class="w-100"
-                      v-model="ruleForm.status"
-                      default-first-option
-                      placeholder="Статус"
-                    >
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      >
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                  <span class="bottom_text">Установить статус продукта</span>
-                </div>
-                <div class="form-block mb-0">
-                  <div><label for="">Бренд</label></div>
-                  <div class="product-plus-btn">
-                    <el-form-item prop="brand_id">
+                  <div class="form-block status-style">
+                    <div><label for="status">Статус</label></div>
+                    <el-form-item>
                       <el-select
+                        id="status"
                         class="w-100"
-                        v-model="ruleForm.brand_id"
-                        allow-create
+                        v-model="ruleForm.status"
                         default-first-option
-                        :loading="brands.length < 1"
-                        loading-text="Loading..."
-                        placeholder="Бренд"
+                        placeholder="Статус"
                       >
                         <el-option
-                          v-for="item in brands"
-                          :key="item?.id"
-                          :label="item?.name"
-                          :value="item?.id"
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
                         >
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <div
-                      class="outline-btn outline-light-blue-btn mt-1"
-                      @click="show('add_brand_modal')"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 6V18M18 12L6 12"
-                          stroke="#5899FF"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <span class="bottom_text">Установить статус продукта</span>
                   </div>
-                  <div class="bottom_text">Установить статус продукта</div>
+                  <div class="form-block mb-0">
+                    <div><label for="">Бренд</label></div>
+                    <div class="product-plus-btn">
+                      <el-form-item prop="brand_id">
+                        <el-select
+                          class="w-100"
+                          v-model="ruleForm.brand_id"
+                          allow-create
+                          default-first-option
+                          :loading="brands.length < 1"
+                          loading-text="Loading..."
+                          placeholder="Бренд"
+                        >
+                          <el-option
+                            v-for="item in brands"
+                            :key="item?.id"
+                            :label="item?.name"
+                            :value="item?.id"
+                          >
+                          </el-option>
+                        </el-select>
+                      </el-form-item>
+                      <div
+                        class="outline-btn outline-light-blue-btn mt-1"
+                        @click="show('add_brand_modal')"
+                      >
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12 6V18M18 12L6 12"
+                            stroke="#5899FF"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="bottom_text">Установить статус продукта</div>
+                  </div>
+                </el-form>
+              </div>
+              <div class="form-container">
+                <ProductsStatistic />
+              </div>
+              <div class="form-container">
+                <div class="form-block mb-0">
+                  <label for="">Комментарий</label>
                 </div>
-              </el-form>
-            </div>
-            <div class="form-container">
-              <ProductsStatistic />
-            </div>
-            <div class="form-container">
-              <div class="form-block mb-0">
-                <label for="">Комментарий</label>
-              </div>
-              <CommentCard />
-              <CommentCard />
-              <CommentCard />
-              <CommentCard />
-              <div class="show-mode">
-                <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
-                    stroke="#3699FF"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <CommentCard />
+                <CommentCard />
+                <CommentCard />
+                <CommentCard />
+                <div class="show-mode">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
+                      stroke="#3699FF"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
 
-                Показать ещё
+                  Показать ещё
+                </div>
               </div>
             </div>
+            <!-- Product right details -->
           </div>
-          <!-- Product right details -->
-        </div>
+        </el-form>
       </div>
     </div>
     <AddModal
@@ -774,19 +786,20 @@
       btnText="Add Group"
       :callback="getData"
       :loadingBtn="loadingBrand"
+      :closeModal="closeModal"
     >
       <el-form
         label-position="top"
         :model="brandData"
         :rules="rulesModal"
-        ref="atributGroup"
+        ref="brandData"
         label-width="120px"
         class="demo-ruleForm"
         action=""
       >
         <div class="form-block required">
           <div><label for="">Brand </label></div>
-          <el-form-item prop="character_name">
+          <el-form-item prop="name">
             <el-input
               placeholder="Product model"
               v-model="brandData.name"
@@ -916,51 +929,7 @@ export default {
         },
       },
       varinatOptions: {},
-      atributes: [
-        {
-          name: "color",
-          options: [
-            {
-              id: 1,
-              name: "red",
-            },
-            {
-              id: 2,
-              name: "green",
-            },
-          ],
-        },
-        {
-          name: "size",
-          options: [
-            {
-              id: 3,
-              name: "12",
-            },
-            {
-              id: 4,
-              name: "32",
-            },
-          ],
-        },
-        {
-          name: "price",
-          options: [
-            {
-              id: 5,
-              name: "123123",
-            },
-            {
-              id: 6,
-              name: "657657",
-            },
-            {
-              id: 7,
-              name: "909099",
-            },
-          ],
-        },
-      ],
+      atributes: [],
       variantId: "12",
       loadingBrand: false,
       activeName: "Русский",
@@ -992,16 +961,17 @@ export default {
       ],
       value: "",
       rules: {
-        nbm: [
+        name_ru: [
           {
             required: true,
-            message: "incorrect email",
+            message: "Product name is required",
             trigger: "change",
           },
+        ],
+        category_id: [
           {
-            min: 10,
-            max: 10,
-            message: "Length should be 10",
+            required: true,
+            message: "Product name is required",
             trigger: "change",
           },
         ],
@@ -1039,12 +1009,12 @@ export default {
             variations: [
               {
                 id: 1,
-                options: [1],
+                options: [],
                 optionName: {},
-                price: "10000 ",
+                price: 0,
                 is_default: 1,
                 is_popular: 0,
-                product_of_the_day: 1,
+                product_of_the_day: 0,
               },
             ],
           },
@@ -1062,46 +1032,34 @@ export default {
         logo: "",
       },
       rulesModal: {
-        group_id: [
+        name: [
           {
             required: true,
-            message: "Atribut group is required",
+            message: "Brand name is required",
             trigger: "change",
           },
         ],
       },
       brands: [],
+      oldLength: 0,
+      uploadLoading: false,
     };
   },
   mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
-    this.__GET_ATRIBUTES();
-    // this.ruleForm.products.map((item) => {
-    //   item.variations.map((item2) => {
-    //     this.atributes.forEach((elem) => {
-    //       return (item2.optionName[elem.name] = "");
-    //     });
-    //   });
-    // });
   },
 
   methods: {
     // products
     submitForm(ruleForm) {
-      this.ruleForm = {
+      const newData = {
         ...this.ruleForm,
         name: {
           ru: this.ruleForm.name_ru,
           uz: this.ruleForm.name_uz,
           en: this.ruleForm.name_en,
         },
-      };
-      delete this.ruleForm["name_ru"];
-      delete this.ruleForm["name_uz"];
-      delete this.ruleForm["name_en"];
-      const newData = {
-        ...this.ruleForm,
         products: this.ruleForm.products.map((item) => {
           const newVariation = item.variations.map((elem) => {
             return {
@@ -1119,66 +1077,52 @@ export default {
           return newItem;
         }),
       };
-      this.__POST_PRODUCTS(newData);
-      // products: this.ruleForm.products.map((item) => {
-      //     const newItem = {
-      //       id: item.id,
-      //       variations: item.variations,
-      //       images: item.images,
-      //     };
-      //     return newItem;
-      //   }),
-      // this.ruleForm.products = newData;
-      console.log(newData);
+      delete newData["name_ru"];
+      delete newData["name_uz"];
+      delete newData["name_en"];
+      if (this.categoryChild.child1.id) {
+        newData.category_id = this.categoryChild.child1.id;
+        if (this.categoryChild.child2.id) {
+          newData.category_id = this.categoryChild.child2.id;
+        }
+      }
 
-      // this.$refs[ruleForm].validate((valid) => {
-      //   if (valid) {
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
+      this.$refs[ruleForm].validate((valid) => {
+        console.log("valid", valid);
+        if (valid) {
+          console.log(newData);
+          this.__POST_PRODUCTS(newData);
+        } else {
+          return false;
+        }
+      });
     },
-
+    closeModal() {
+      this.hide("add_brand_modal");
+    },
     async __POST_PRODUCTS(data) {
       try {
-
-        const products = await this.$store.dispatch(
-          "fetchProducts/postProducts",
-          data
-        );
+        await this.$store.dispatch("fetchProducts/postProducts", data);
+        this.$router.push("/catalog/products");
         this.$notify({
           title: "Success",
           message: "Продукт успешно добавлен",
           type: "success",
         });
-      } catch(e) {
-        this.statusFunc(e.response)
+      } catch (e) {
+        this.statusFunc(e.response);
       }
     },
 
     handleChangeVatiant({ fileList }, id) {
       this.variantId = id;
       this.fileList = fileList;
-      // this.ruleForm.products.find(
-      //   (item) => item.id == id
-      // ).imagesData = fileList;
-      // this.now(id) = fileList
-      // const newImages = [];
-      // fileList.forEach((element, index) => {
-      //   let formData = new FormData();
-      //   formData.append("file", element.originFileObj);
-      //   newImages[index] = formData;
-      // });
-      // this.__UPLOAD_FILE_VARIANT(newImages, this.productId);
-      console.log("Upload");
     },
 
     __UPLOAD_FILE_VARIANT(newImages, id) {
       const currentProduct = this.ruleForm.products.find(
         (item) => item.id == id
       );
-      console.log("img data");
       newImages.forEach(async (element, index) => {
         try {
           const data = await this.$store.dispatch(
@@ -1186,6 +1130,7 @@ export default {
             element
           );
           currentProduct.images[index] = data.path;
+          this.uploadLoading = false;
         } catch (e) {
           this.statusFunc(e.response);
         }
@@ -1193,7 +1138,6 @@ export default {
       this.loadingBrand = false;
     },
     atributOptions(obj) {
-      console.log("this.varinatOptions");
       const product = this.ruleForm.products.find(
         (productId) => productId.id == obj.productId
       );
@@ -1201,14 +1145,11 @@ export default {
         obj.index
       ] = product.variations.find(
         (varId) => varId.id == obj.variantId
-      ).optionName[obj.name];
-      this.value = obj;
-      this.ruleForm.products = this.ruleForm.products;
-      console.log(this.ruleForm.products);
+      ).optionName[`at_${obj.id}`];
     },
 
     getData() {
-      this.$refs["atributGroup"].validate((valid) =>
+      this.$refs["brandData"].validate((valid) =>
         valid ? this.__POST_BRAND() : false
       );
     },
@@ -1221,9 +1162,7 @@ export default {
     handleCancel() {
       this.previewVisible = false;
     },
-    getVariantId(id) {
-      console.log(id);
-    },
+
     async handlePreview(file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
@@ -1242,9 +1181,9 @@ export default {
       addVar.variations.push({
         id: addVar.variations.at(-1).id + 1,
         options: [1],
-        price: "1000",
+        price: 0,
         is_default: 0,
-        product_of_the_day: 1,
+        product_of_the_day: 0,
         is_popular: 0,
         optionName: options,
       });
@@ -1276,9 +1215,9 @@ export default {
         {
           id: 1,
           options: [1],
-          price: "1000",
-          is_default: 0,
-          product_of_the_day: 1,
+          price: 0,
+          is_default: 1,
+          product_of_the_day: 0,
           is_popular: 0,
           optionName: options,
         },
@@ -1290,9 +1229,7 @@ export default {
         variations: newInnerVar,
       });
     },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-    },
+
     // variant
 
     handleChangeBrand({ fileList }) {
@@ -1355,7 +1292,6 @@ export default {
       this.brands = data?.brands.data;
     },
     statusFunc(res) {
-      console.log("status");
       switch (res.status) {
         case 422:
           this.$notify.error({
@@ -1379,21 +1315,13 @@ export default {
     },
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
-
       this.categories = data.categories?.data;
-      console.log(data.categories?.data);
-    },
-
-    async __GET_ATRIBUTES() {
-      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
-      this.atributes = data.attributes?.data;
     },
   },
   watch: {
     "ruleForm.category_id"(val) {
       const child1 = this.categories.find((item) => item.id == val);
-      // this.atributes = child1.attributes;
-      // console.log(this.atributes);
+      this.atributes = child1.attributes;
       this.ruleForm.products.map((item) => {
         item.variations.map((item2) => {
           this.atributes.forEach((elem) => {
@@ -1401,8 +1329,9 @@ export default {
           });
         });
       });
-      console.log(this.ruleForm.products);
       if (child1.children.length > 0) {
+        this.categoryChild.child1.id = "";
+        this.categoryChild.child2.id = "";
         this.categoryChild.child1.arr = child1.children;
       } else {
         this.categoryChild.child1.arr = [];
@@ -1412,40 +1341,27 @@ export default {
       }
     },
     "categoryChild.child1.id"(val) {
-      console.log(this.categoryChild.child1.arr.find((item) => item.id == val));
-      const child2 = this.categoryChild.child1.arr.find(
-        (item) => item.id == val
-      );
-      if (child2.attributes) {
-        this.atributes = child2.attributes;
-        this.ruleForm.products.map((item) => {
-          item.variations.map((item2) => {
-            this.atributes.forEach((elem) => {
-              return (item2.optionName[elem.name.ru] = "");
+      if (val) {
+        const child2 = this.categoryChild.child1.arr.find(
+          (item) => item.id == val
+        );
+        if (child2.attributes) {
+          this.atributes = child2.attributes;
+          this.ruleForm.products.map((item) => {
+            item.variations.map((item2) => {
+              this.atributes.forEach((elem) => {
+                return (item2.optionName[elem.name.ru] = "");
+              });
             });
           });
-        });
+        }
+        if (child2.children.length > 0) {
+          this.categoryChild.child2.arr = child2.children;
+        } else {
+          this.categoryChild.child2.arr = [];
+          this.categoryChild.child2.id = "";
+        }
       }
-
-      if (child2.children.length > 0) {
-        this.categoryChild.child2.arr = child2.children;
-      } else {
-        this.categoryChild.child2.arr = [];
-        this.categoryChild.child2.id = "";
-      }
-    },
-    variantId(val, val2) {
-      console.log("watcher");
-      this.ruleForm.products.find(
-        (item) => item.id == val
-      ).imagesData = this.fileList;
-      const newImages = [];
-      this.fileList.forEach((element, index) => {
-        let formData = new FormData();
-        formData.append("file", element.originFileObj);
-        newImages[index] = formData;
-      });
-      this.__UPLOAD_FILE_VARIANT(newImages, val);
     },
     fileList(val) {
       this.ruleForm.products.find(
@@ -1457,8 +1373,8 @@ export default {
         formData.append("file", element.originFileObj);
         newImages[index] = formData;
       });
+      this.uploadLoading = true;
       this.__UPLOAD_FILE_VARIANT(newImages, this.variantId);
-      console.log(this.ruleForm);
     },
   },
   components: {

@@ -165,11 +165,36 @@
   }
 }
 .variant-grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 12px;
+  display: flex;
+  width: 100%;
+
   margin-right: 4px;
   margin-top: 16px;
+  overflow-x: scroll;
+  padding-bottom: 5px;
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(136, 136, 136, 0.3);
+    border-radius: 5px;
+  }
+  .form-variant-block {
+    min-width: 200px;
+    margin-right: 16px;
+  }
+}
+.variant_btns {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.product_variant_block {
+  display: grid;
+  grid-template-columns: auto 100px;
 }
 .create-inner-variant {
   border: 1px dashed #3699ff;

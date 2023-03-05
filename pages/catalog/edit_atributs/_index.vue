@@ -184,6 +184,7 @@
       name="add_atribute_group"
       btnText="Add Group"
       :callback="getData"
+      :closeModal="closeModal"
     >
       <el-form
         label-position="top"
@@ -431,6 +432,9 @@ export default {
           });
           break;
       }
+    },
+    closeModal() {
+      this.hide("add_atribute_group");
     },
     async __POST_GROUPS() {
       try {

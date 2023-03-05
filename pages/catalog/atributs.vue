@@ -102,9 +102,18 @@
               >
                 <img :src="editIcon" alt="" />
               </span>
-              <span class="action-btn" @click="deleteAtribut(text)">
-                <img :src="deleteIcon" alt="" />
-              </span>
+
+              <a-popconfirm
+                title="Are you sure delete this atribut?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="deleteAtribut(text)"
+                @cancel="cancel"
+              >
+                <span class="action-btn">
+                  <img :src="deleteIcon" alt="" />
+                </span>
+              </a-popconfirm>
             </span>
           </a-table>
         </div>
@@ -183,6 +192,10 @@ export default {
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
+    },
+    cancel(e) {
+      console.log(e);
+      this.$message.error("Click on No");
     },
     handleSizeChange(val) {
       console.log(`${val} items per page`);

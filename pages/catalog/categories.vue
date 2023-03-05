@@ -93,7 +93,7 @@
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                title="Are you sure delete this task?"
+                title="Are you sure delete this category?"
                 ok-text="Yes"
                 cancel-text="No"
                 @confirm="deleteCategory(text)"
@@ -342,39 +342,30 @@ export default {
         let newChild = [];
         let newChild2 = [];
         if (item.children) {
-          newChild = item.children.map((childItem) => {
-            if (childItem.children) {
-              newChild2 = childItem.children.map((childItem2) => {
+          newChild = item.children.map((childItem, index1) => {
+            if (childItem.children.length > 0) {
+              newChild2 = childItem.children.map((lastChild, index2) => {
                 return {
-                  key: index + 100,
-                  ...childItem2,
+                  ...lastChild,
+                  key: (index + 1) * 100 + (index1 + 1) * 10 + index2 + 1,
                   dataName: {
-                    name: childItem2.name,
-                    img: childItem2.md_img,
+                    name: lastChild.name,
+                    img: lastChild.md_img,
                   },
                 };
               });
-              const newItem2 = {
-                key: index + 1,
-                ...item,
-                dataName: {
-                  name: item.name,
-                  img: item.md_img,
-                },
-                children: newChild2,
-              };
-              return newItem2;
             }
             return {
-              key: index + 10,
+              key: (index1 + 1) * 1 + (index + 1) * 10,
               ...childItem,
               dataName: {
                 name: childItem.name,
                 img: childItem.md_img,
               },
+              children: newChild2,
             };
           });
-          const newItem = {
+          return {
             key: index + 1,
             ...item,
             dataName: {
@@ -383,18 +374,6 @@ export default {
             },
             children: newChild,
           };
-          return newItem;
-        } else {
-          const newItem = {
-            key: index + 1,
-            ...item,
-            dataName: {
-              name: item.name,
-              img: item.md_img,
-            },
-            children: newChild,
-          };
-          return newItem;
         }
       });
       console.log(this.categories);

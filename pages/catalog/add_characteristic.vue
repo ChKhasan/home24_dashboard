@@ -146,6 +146,7 @@
                         filterable
                         multiple
                         allow-create
+                        no-data-text="No options"
                         placeholder="Option name"
                       >
                         <el-option
@@ -176,6 +177,7 @@
       name="add_atribute_group"
       btnText="Add Group"
       :callback="getData"
+      :closeModal="closeModal"
     >
       <el-form
         label-position="top"
@@ -203,10 +205,10 @@
           v-if="modalTab == item.index"
         >
           <div><label for="">Group </label></div>
-          <el-form-item prop="character_name">
+          <el-form-item prop="name_ru">
             <el-input
-              placeholder="Product model"
-              v-model="characteristic.name[item.index]"
+              placeholder="Group"
+              v-model="characteristic[`name_${item.index}`]"
             ></el-input>
           </el-form-item>
         </div>
@@ -263,7 +265,7 @@ export default {
         group_id: [
           {
             required: true,
-            message: "Atribut group is required",
+            message: "Characteristic group is required",
             trigger: "change",
           },
         ],
@@ -271,23 +273,23 @@ export default {
         name_ru: [
           {
             required: true,
-            message: "Atribut name is required",
+            message: "Characteristic name is required",
             trigger: "change",
           },
         ],
         options: [
           {
             required: true,
-            message: "Atribut name is required",
+            message: "Characteristic name is required",
             trigger: "change",
           },
         ],
       },
       rulesModal: {
-        group_id: [
+        name_ru: [
           {
             required: true,
-            message: "Atribut group is required",
+            message: "Characteristic group is required",
             trigger: "change",
           },
         ],
@@ -300,11 +302,9 @@ export default {
         options: [],
       },
       characteristic: {
-        name: {
-          ru: "",
-          uz: "",
-          en: "",
-        },
+        name_ru: "",
+        name_uz: "",
+        name_en: "",
       },
     };
   },
@@ -330,6 +330,9 @@ export default {
         }
       });
     },
+    closeModal() {
+      this.hide("add_atribute_group");
+    },
     headerbtnCallback() {
       console.log("fsfsdf");
     },
@@ -337,8 +340,16 @@ export default {
       this.$modal.show(name);
     },
     getData() {
+      const newData = {
+        name: {
+          ru: this.characteristic.name_ru,
+          uz: this.characteristic.name_uz,
+          en: this.characteristic.name_en,
+        },
+      };
+
       this.$refs["characteristic"].validate((valid) =>
-        valid ? this.__POST_GROUPS() : false
+        valid ? this.__POST_GROUPS(newData) : false
       );
     },
     hide(name) {
@@ -386,12 +397,9 @@ export default {
           break;
       }
     },
-    async __POST_GROUPS() {
+    async __POST_GROUPS(data) {
       try {
-        await this.$store.dispatch(
-          "fetchCharacters/postGroups",
-          this.characteristic
-        );
+        await this.$store.dispatch("fetchCharacters/postGroups", data);
         this.$notify({
           title: "Success",
           message: "Группа успешно добавлен",
@@ -399,9 +407,9 @@ export default {
         });
         this.hide("add_atribute_group");
         this.__GET_GROUPS();
-        this.characteristic.name.ru = "";
-        this.characteristic.name.uz = "";
-        this.characteristic.name.en = "";
+        this.characteristic.name_ru = "";
+        this.characteristic.name_uz = "";
+        this.characteristic.name_en = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -423,8 +431,4 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.el-select-dropdown__empty {
-  display: none;
-}
-</style>
+
