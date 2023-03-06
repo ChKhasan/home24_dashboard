@@ -86,6 +86,7 @@
                         v-model="ruleForm.group_id"
                         filterable
                         allow-create
+                        no-data-text="No group"
                         placeholder="Choose tags for your article"
                       >
                         <el-option

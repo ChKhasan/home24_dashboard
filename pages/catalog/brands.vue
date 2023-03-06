@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Блог" :breadbrumb="['Контент сайта']" lastLink="Блог">
+    <TitleBlock
+      title="Бренды"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Бренды"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -36,23 +40,18 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Блог" />
+            <FormTitle title="Бренды" />
           </div>
         </div>
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
-            :data-source="posts"
+            :data-source="brands"
             :pagination="false"
             align="center"
           >
             <a slot="img" slot-scope="text">
-              <img
-                v-if="typeof text == 'string'"
-                class="table-image"
-                :src="text"
-                alt=""
-              />
+              <img v-if="text" class="table-image" :src="text" alt="" />
               <img
                 v-else
                 class="table-image"
@@ -92,7 +91,7 @@
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                title="Are you sure delete this blog?"
+                title="Are you sure delete this brand?"
                 ok-text="Yes"
                 cancel-text="No"
                 @confirm="deletePost(text)"
@@ -108,24 +107,13 @@
       </div>
     </div>
     <AddModal
-      :title="editId ? 'Изменить блога' : 'Добавить блога'"
-      name="add_blog"
+      :title="editId ? 'Изменения бренда' : 'Добавить бренда'"
+      name="add_brand"
       btnText="Save"
       :callback="getData"
       :closeModal="closeModal"
       :loadingBtn="loadingBtn"
     >
-      <div class="modal_tab mb-4">
-        <span
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          @click="modalTab = item.index"
-          :class="{ 'avtive-modalTab': modalTab == item.index }"
-        >
-          {{ item.label }}
-        </span>
-      </div>
-
       <el-form
         label-position="top"
         :model="ruleForm"
@@ -135,44 +123,28 @@
         class="demo-ruleForm"
         action=""
       >
-        <div
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          v-if="modalTab == item.index"
-        >
+        <div>
           <div class="form-block required">
             <div>
-              <label for="">Зоговолок {{ item.label }}</label>
+              <label for="">Бренд </label>
             </div>
-            <el-form-item prop="title_ru">
+            <el-form-item prop="name">
               <el-input
                 type="text"
                 placeholder="Зоговолок"
-                v-model="ruleForm[`title_${item.index}`]"
+                v-model="ruleForm.name"
               ></el-input>
-            </el-form-item>
-          </div>
-          <!-- <div class="form-block required">
-            <div><label for="">Подзоговолок </label></div>
-            <el-form-item>
-              <el-input
-                placeholder="Подзоговолок"
-                v-model="ruleForm.subTitle[item.index]"
-              ></el-input>
-            </el-form-item>
-          </div> -->
-          <div class="form-block">
-            <div><label for="">Описание </label></div>
-            <el-form-item prop="desc_ru">
-              <quill-editor
-                class="product-editor mt-1"
-                :options="editorOption"
-                :value="ruleForm[`desc_${item.index}`]"
-                v-model="ruleForm[`desc_${item.index}`]"
-              />
             </el-form-item>
           </div>
 
+          <!-- <div class="post_img" v-if="editImage != ''">
+            <div>
+              <span @click="deleteImg()">
+                <i class="el-icon-delete"></i>
+              </span>
+            </div>
+            <img :src="editImage" alt="" />
+          </div> -->
           <div class="clearfix">
             <a-upload
               list-type="picture-card"
@@ -301,15 +273,10 @@ export default {
         },
       ],
       ruleForm: {
-        title_ru: "",
-        title_uz: "",
-        title_en: "",
-        desc_ru: "",
-        desc_uz: "",
-        desc_en: "",
-
-        img: "",
+        name: "",
+        logo: "",
       },
+      editImage: "",
       columns: [
         {
           title: "ID",
@@ -322,9 +289,9 @@ export default {
           width: "60px",
         },
         {
-          title: "Зоговолок",
-          dataIndex: "md_img",
-          key: "md_img",
+          title: "Бренд",
+          dataIndex: "lg_logo",
+          key: "lg_logo",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
@@ -333,29 +300,13 @@ export default {
           width: "45px",
         },
         {
-          dataIndex: "title",
-          key: "title",
+          dataIndex: "name",
+          key: "name",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "title" },
+          scopedSlots: { customRender: "name" },
           className: "column-name",
           width: "30%",
           colSpan: 0,
-        },
-        {
-          title: "Подзоговолок",
-          dataIndex: "desc",
-          scopedSlots: { customRender: "desc" },
-          className: "column-code",
-          key: "desc",
-          width: "30%",
-        },
-        {
-          title: "Slug",
-          dataIndex: "slug",
-          className: "column-qty",
-          key: "slug",
-          align: "center",
-          //   width: "10%",
         },
 
         {
@@ -374,7 +325,7 @@ export default {
       previewVisible: false,
       previewImage: "",
       fileList: [],
-      posts: [],
+      brands: [],
       rules: {
         title_ru: [
           {
@@ -416,31 +367,17 @@ export default {
       console.log(this.tableData);
     },
     getData() {
-      const newData = {
-        img: this.ruleForm.img,
-        title: {
-          ru: this.ruleForm.title_ru,
-          uz: this.ruleForm.title_uz,
-          en: this.ruleForm.title_en,
-        },
-        desc: {
-          ru: this.ruleForm.desc_ru,
-          uz: this.ruleForm.desc_uz,
-          en: this.ruleForm.desc_en,
-        },
-      };
-      if (this.editId != "") {
-        if (this.fileList.lenth > 0) {
-          if (this.fileList[0].oldImg) {
-            newData.img = this.fileList[0].url;
-          }
+      console.log(this.fileList);
+      if (this.fileList.length > 0) {
+        if (this.fileList[0].oldImg) {
+          this.ruleForm.logo = this.fileList[0].url;
         }
       }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editId != ""
-            ? this.__EDIT_POSTS(newData)
-            : this.__POST_POSTS(newData);
+            ? this.__EDIT_BRANDS(this.ruleForm)
+            : this.__POST_BRANDS(this.ruleForm);
         } else {
           return false;
         }
@@ -450,66 +387,56 @@ export default {
       console.log(e);
       this.$message.error("Click on No");
     },
+    deleteImg() {
+      this.editImage = "";
+    },
     openAddModal() {
-      this.fileList = [];
+      this.show("add_brand");
       this.editId = "";
-      this.show("add_blog");
+      this.fileList = [];
     },
     editPost(id) {
       this.editId = id;
-      const data = this.posts.find((item) => item.id == id);
+      const data = this.brands.find((item) => item.id == id);
+      this.slug = data.slug;
       this.ruleForm = {
         ...data,
-        title_ru: data.title.ru,
-        title_uz: data.title.uz,
-        title_en: data.title.en,
-        desc_ru: data.desc.ru,
-        desc_uz: data.desc.uz,
-        desc_en: data.desc.en,
+        log: data.lg_logo,
       };
+      //   this.editImage = this.ruleForm.lg_logo;
+      this.show("add_brand");
       this.fileList = [
         {
           uid: "-1",
           name: "image.png",
           status: "done",
           oldImg: true,
-          url: this.ruleForm.md_img,
+          url: this.ruleForm.lg_logo,
         },
       ];
-      this.show("add_blog");
-      console.log(this.posts);
+      console.log(this.ruleForm);
 
-      // this.__GET_POSTS_BY_ID(id);
+      // this.__GET_BRANDS_BY_ID(id);
     },
     closeModal() {
-      this.hide("add_blog");
-      this.ruleForm.title_ru = "";
-      this.ruleForm.title_uz = "";
-      this.ruleForm.title_en = "";
-      this.ruleForm.desc_ru = "";
-      this.ruleForm.desc_uz = "";
-      this.ruleForm.desc_en = "";
-      this.ruleForm.img = "";
-      this.editImage = "";
-
+      this.hide("add_brand");
+      this.ruleForm.logo = "";
+      this.ruleForm.name = "";
       this.editId = "";
-      this.__GET_POSTS();
-
-      console.log(this.ruleForm);
-      console.log(this.posts);
+      this.__GET_BRANDS();
     },
     deletePost(id) {
-      this.__DELETE_POSTS(id);
+      this.__DELETE_BRANDS(id);
     },
-    async __DELETE_POSTS(id) {
+    async __DELETE_BRANDS(id) {
       try {
-        const data = await this.$store.dispatch("fetchPosts/deletePosts", id);
+        const data = await this.$store.dispatch("fetchBrands/deleteBrands", id);
         await this.$notify({
           title: "Success",
-          message: "Пост был успешно удален",
+          message: "Бранд был успешно удален",
           type: "success",
         });
-        this.__GET_POSTS();
+        this.__GET_BRANDS();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -549,11 +476,11 @@ export default {
       let formData = new FormData();
       const newImg = fileList;
       if (newImg.length > 0) {
-        this.loadingBtn = true;
         formData.append("file", newImg[0].originFileObj);
+        this.loadingBtn = true;
         this.__UPLOAD_FILE(formData);
       } else {
-        this.ruleForm.img = null;
+        this.ruleForm.logo = null;
       }
     },
     async __UPLOAD_FILE(formData) {
@@ -562,7 +489,7 @@ export default {
           "uploadFile/uploadFile",
           formData
         );
-        this.ruleForm.img = data.path;
+        this.ruleForm.logo = data.path;
         this.loadingBtn = false;
       } catch (e) {
         this.statusFunc(e.response);
@@ -571,32 +498,28 @@ export default {
     handleCancel() {
       this.previewVisible = false;
     },
-    async __GET_POSTS() {
-      const data = await this.$store.dispatch("fetchPosts/getPosts");
-      this.posts = data.posts?.data;
-      this.posts = this.posts.map((item) => {
+    async __GET_BRANDS() {
+      const data = await this.$store.dispatch("fetchBrands/getBrands");
+      this.brands = data.brands?.data;
+      this.brands = this.brands.map((item) => {
         return {
           ...item,
           numberId: item.id,
         };
       });
     },
-    async __POST_POSTS(res) {
+    async __POST_BRANDS(res) {
       try {
-        await this.$store.dispatch("fetchPosts/postPosts", res);
+        await this.$store.dispatch("fetchBrands/postBrands", res);
         await this.$notify({
           title: "Success",
-          message: "Атрибут успешно добавлен",
+          message: "Бранд успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
-        this.__GET_POSTS();
-        this.ruleForm.title_ru = "";
-        this.ruleForm.title_uz = "";
-        this.ruleForm.title_en = "";
-        this.ruleForm.desc_ru = "";
-        this.ruleForm.desc_uz = "";
-        this.ruleForm.desc_en = "";
+        this.hide("add_brand");
+        this.__GET_BRANDS();
+        this.ruleForm.logo = "";
+        this.ruleForm.name = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -623,30 +546,26 @@ export default {
           break;
       }
     },
-    async __EDIT_POSTS(res) {
+    async __EDIT_BRANDS(res) {
       try {
-        const data = await this.$store.dispatch("fetchPosts/editPosts", {
+        const data = await this.$store.dispatch("fetchBrands/editBrands", {
           id: this.editId,
-          data: res,
+          data: { ...res, slug: this.slug },
         });
         this.$notify({
           title: "Success",
           message: "Пост успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
-        this.__GET_POSTS();
-        this.ruleForm.title_ru = "";
-        this.ruleForm.title_uz = "";
-        this.ruleForm.title_en = "";
-        this.ruleForm.desc_ru = "";
-        this.ruleForm.desc_uz = "";
-        this.ruleForm.desc_en = "";
+        this.hide("add_brand");
+        this.__GET_BRANDS();
+        this.ruleForm.logo = "";
+        this.ruleForm.name = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    async __GET_POSTS_BY_ID(id) {
+    async __GET_BRANDS_BY_ID(id) {
       const data = await this.$store.dispatch("fetchPosts/getPostsById", id);
       console.log(data);
     },
@@ -664,7 +583,7 @@ export default {
     },
   },
   mounted() {
-    this.__GET_POSTS();
+    this.__GET_BRANDS();
     if (this.data) {
       this.tableData = this.data;
     }

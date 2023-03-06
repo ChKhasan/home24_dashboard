@@ -242,8 +242,8 @@ export default {
           {
             name: "Бренды",
             index: "15",
-            to: "/catalog/characteristic",
-            disabled: true,
+            to: "/catalog/brands",
+            disabled: false,
           },
         ],
         orders: [
@@ -327,10 +327,10 @@ export default {
             name: "Баннеры",
             index: "52",
             to: "/contents/banners",
-            disabled: true,
+            disabled: false,
           },
           {
-            name: "Вопрос и ответы",
+            name: "Комментарии",
             index: "53",
             to: "/contents/comments",
             disabled: false,
@@ -340,6 +340,18 @@ export default {
             index: "54",
             to: "/contents/banners",
             disabled: true,
+          },
+          {
+            name: "Вопрос и ответы",
+            index: "55",
+            to: "/contents/faq",
+            disabled: false,
+          },
+          {
+            name: "Категории (Faqs)",
+            index: "56",
+            to: "/contents/faq_categories",
+            disabled: false,
           },
         ],
         settings: [

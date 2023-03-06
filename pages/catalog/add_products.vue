@@ -559,7 +559,7 @@
                           </el-select>
                         </div>
                         <div class="form-variant-block">
-                          <div><label>day</label></div>
+                          <div><label>Price</label></div>
                           <el-input
                             v-model="item.price"
                             placeholder="Price"
@@ -955,8 +955,8 @@ export default {
           label: "Active",
         },
         {
-          value: "disactive",
-          label: "Disactive",
+          value: "inactive",
+          label: "Inactive",
         },
       ],
       value: "",
@@ -1064,7 +1064,7 @@ export default {
           const newVariation = item.variations.map((elem) => {
             return {
               options: elem.options,
-              price: elem.price,
+              price: Number(elem.price),
               is_default: elem.is_default,
               is_popular: elem.is_popular,
               product_of_the_day: elem.product_of_the_day,

@@ -1,28 +1,26 @@
 export const actions = {
-  async getProducts() {
+  async getFaqs() {
+    try {
+      const res = this.$axios.$get(`https://test.loftcity.uz/api/admin/faqs`);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+  async getFaqsById({}, id) {
     try {
       const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/products`
+        `https://test.loftcity.uz/api/admin/faqs/${id}`
       );
       return res;
     } catch (e) {
       return e.response;
     }
   },
-  async getProductsById({}, id) {
-    try {
-      const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/products/${id}`
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
-  },
-  async postProducts({}, data) {
+  async postFaqs({}, data) {
     try {
       const res = this.$axios.$post(
-        `https://test.loftcity.uz/api/admin/products`,
+        `https://test.loftcity.uz/api/admin/faqs`,
         data
       );
       return res;
@@ -30,20 +28,21 @@ export const actions = {
       return e.response;
     }
   },
-  async editProducts() {
+  async editFaqs({}, payload) {
     try {
-      const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/products`
+      const res = this.$axios.$put(
+        `https://test.loftcity.uz/api/admin/faqs/${payload.id}`,
+        payload.data
       );
       return res;
     } catch (e) {
       return e.response;
     }
   },
-  async deleteProducts({}, id) {
+  async deleteFaqs({}, id) {
     try {
       const res = this.$axios.$delete(
-        `https://test.loftcity.uz/api/admin/products/${id}`
+        `https://test.loftcity.uz/api/admin/faqs/${id}`
       );
       return res;
     } catch (e) {
@@ -52,8 +51,14 @@ export const actions = {
   },
   async postGroups({}, data) {
     const res = this.$axios.$post(
-      `https://test.loftcity.uz/api/admin/products_groups`,
+      `https://test.loftcity.uz/api/admin/faqs_groups`,
       data
+    );
+    return res;
+  },
+  async getGroups() {
+    const res = this.$axios.$get(
+      `https://test.loftcity.uz/api/admin/faqs_groups/all`
     );
     return res;
   },

@@ -222,20 +222,13 @@
               </div>
               <div class="form-block">
                 <div><label for="">Добавить изображения категории</label></div>
-                <div class="last_img" v-if="ruleForm.imgOldImg != ''">
-                  <div>
-                    <span @click="deleteImg(true)">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </div>
-                  <img :src="ruleForm.imgOldImg" alt="" />
-                </div>
-                <div class="clearfix" v-if="ruleForm.imgOldImg == ''">
+
+                <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
                     :file-list="fileList"
                     @preview="handlePreview"
-                    @change="handleChange"
+                    @change="($event) => handleChange($event, fileList)"
                   >
                     <div v-if="fileList.length < 1">
                       <svg
@@ -285,15 +278,8 @@
               </div>
               <div class="form-block">
                 <div><label for="">Добавить значок продукта</label></div>
-                <div class="last_img" v-if="ruleForm.oldIcon != ''">
-                  <div>
-                    <span @click="deleteImg(false)">
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </div>
-                  <img :src="ruleForm.oldIcon" alt="" />
-                </div>
-                <div class="clearfix" v-if="ruleForm.oldIcon == ''">
+
+                <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
                     :file-list="fileList1"
@@ -448,8 +434,7 @@ export default {
           uz: "",
           en: "",
         },
-        imgOldImg: "",
-        oldIcon: "",
+
         name_ru: "",
         name_uz: "",
         name_en: "",
@@ -511,12 +496,14 @@ export default {
           active: true,
         },
       ],
+      slug: "",
       uploadLoading: false,
     };
   },
   methods: {
     submitForm(ruleForm) {
       console.log(this.fileList, this.fileList1);
+
       const data = {
         ...this.ruleForm,
         name: {
@@ -538,24 +525,16 @@ export default {
       data.group_characteristics = data.group_characteristics.filter(
         (elem) => elem
       );
-      // data.parent_id = this.categories.map((item) => {
-      //   if (data.parent_id == item.name.ru) return item.id;
-      // });
-      // data.parent_id = data.parent_id.filter((elem) => elem);
-      // data.parent_id = data.parent_id[0];
-      if (data.imgOldImg) {
-        data.img = null;
-        console.log("asdasdasdasjdhjsdfghsfg");
-      }
-      if (data.oldIcon) {
-        data.icon = null;
-      }
-      delete data["imgOldImg"];
-      delete data["oldIcon"];
       if (data.parent_id) {
         data.parent_id = this.categories.filter(
           (item) => item.name.ru == data.parent_id
         )[0].id;
+      }
+      if (this.fileList[0].oldImg) {
+        data.img = this.fileList[0].url;
+      }
+      if (this.fileList1[0].oldImg) {
+        data.icon = this.fileList1[0].url;
       }
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
@@ -575,40 +554,43 @@ export default {
     headerbtnCallback() {
       console.log("fsfsdf");
     },
-    deleteImg(type) {
-      if (type) {
-        this.ruleForm.imgOldImg = "";
-      } else {
-        this.ruleForm.oldIcon = "";
-      }
-    },
+
     deleteIcon() {
       this.ruleForm.oldIcon = "";
       this.ruleForm = this.ruleForm;
       console.log("asdsad", this.ruleForm);
     },
     async handlePreview(file) {
+      console.log("delete1", file);
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    handleChange({ fileList }) {
+    handleChange({ fileList }, img) {
       this.fileList = fileList;
       let formData = new FormData();
-      formData.append("file", fileList[0].originFileObj);
-      this.uploadLoading = true;
-      this.__UPLOAD_FILE("img", formData);
+      if (this.fileList.length > 0) {
+        formData.append("file", fileList[0].originFileObj);
+        this.uploadLoading = true;
+        this.__UPLOAD_FILE("img", formData);
+      } else {
+        this.ruleForm["img"] = null;
+      }
     },
     handleChange1({ fileList }) {
       this.fileList1 = fileList;
       let formData = new FormData();
-      formData.append("file", fileList[0].originFileObj);
-      this.uploadLoading = true;
-
-      this.__UPLOAD_FILE("icon", formData);
+      if (this.fileList1.length > 0) {
+        formData.append("file", fileList[0].originFileObj);
+        this.uploadLoading = true;
+        this.__UPLOAD_FILE("icon", formData);
+      } else {
+        this.ruleForm["icon"] = null;
+      }
     },
+
     async __UPLOAD_FILE(item, formData) {
       try {
         const data = await this.$store.dispatch(
@@ -648,6 +630,8 @@ export default {
           this.categories = [item, ...this.categories];
         }
       });
+      this.slug = data.category.slug;
+
       this.categories = this.categories
         .filter((elem) => elem.id != this.$route.params.index)
         .filter(
@@ -667,8 +651,24 @@ export default {
       this.ruleForm.group_characteristics = data.category.characteristic_groups.map(
         (item) => item.name.ru
       );
-      this.ruleForm.imgOldImg = data.category.md_img;
-      this.ruleForm.oldIcon = data.category.md_icon;
+      this.fileList = [
+        {
+          uid: "-1",
+          name: "image.png",
+          status: "done",
+          oldImg: true,
+          url: data.category.md_img,
+        },
+      ];
+      this.fileList1 = [
+        {
+          uid: "-1",
+          name: "image.png",
+          status: "done",
+          oldImg: true,
+          url: data.category.md_icon,
+        },
+      ];
       this.ruleForm.is_popular = data.category.is_popular;
       if (data.category.parent_id) {
         this.ruleForm.parent_id = this.categories.filter(
@@ -710,7 +710,7 @@ export default {
       try {
         const data = await this.$store.dispatch(
           "fetchCategories/editCategories",
-          { id: this.$route.params.index, data: res }
+          { id: this.$route.params.index, data: { ...res, slug: this.slug } }
         );
         this.$notify({
           title: "Success",

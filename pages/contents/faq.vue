@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Блог" :breadbrumb="['Контент сайта']" lastLink="Блог">
+    <TitleBlock
+      title="Вопрос и ответы"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Вопрос и ответы"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -36,13 +40,13 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Блог" />
+            <FormTitle title="Вопрос и ответы" />
           </div>
         </div>
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
-            :data-source="posts"
+            :data-source="faqs"
             :pagination="false"
             align="center"
           >
@@ -62,37 +66,24 @@
             </a>
             <span
               @click="$router.push('/home/customer-info/123')"
-              slot="title"
+              slot="question"
               slot-scope="text"
               align="center"
               class="table_product_row"
             >
               <h6>{{ text?.ru }}</h6>
             </span>
-            <div slot="desc" slot-scope="text" v-html="text?.ru"></div>
+            <div slot="answer" slot-scope="text" v-html="text?.ru"></div>
             <span slot="numberId" slot-scope="text">#{{ text }}</span>
-            <a slot="price" slot-scope="text">${{ text }}</a>
+            <a slot="category" slot-scope="text">{{ text.title.ru }}</a>
             <span slot="customTitle"></span>
 
-            <span
-              slot="tags"
-              slot-scope="tags"
-              class="tags-style"
-              :class="{
-                tag_success: tags == 'Success',
-                tag_inProgress: tags == 'in progress',
-                tag_approved: tags == 'Approved',
-                tag_rejected: tags == 'rejected',
-              }"
-            >
-              {{ tags }}
-            </span>
             <span slot="id" slot-scope="text">
               <span class="action-btn" @click="editPost(text)">
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                title="Are you sure delete this blog?"
+                title="Are you sure delete this faq?"
                 ok-text="Yes"
                 cancel-text="No"
                 @confirm="deletePost(text)"
@@ -108,8 +99,8 @@
       </div>
     </div>
     <AddModal
-      :title="editId ? 'Изменить блога' : 'Добавить блога'"
-      name="add_blog"
+      :title="editId ? 'Изменить' : 'Добавить'"
+      name="add_faqs"
       btnText="Save"
       :callback="getData"
       :closeModal="closeModal"
@@ -142,79 +133,48 @@
         >
           <div class="form-block required">
             <div>
-              <label for="">Зоговолок {{ item.label }}</label>
+              <label for="">Categories</label>
             </div>
-            <el-form-item prop="title_ru">
+            <el-form-item prop="category_id">
+              <el-select
+                class="w-100"
+                v-model="ruleForm.category_id"
+                placeholder="faq category"
+                no-data-text="No category"
+              >
+                <el-option
+                  v-for="item in categories"
+                  :key="item.id"
+                  :label="item.title.ru"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </div>
+          <div class="form-block required">
+            <div>
+              <label for="">Question</label>
+            </div>
+            <el-form-item prop="question_ru">
               <el-input
                 type="text"
                 placeholder="Зоговолок"
-                v-model="ruleForm[`title_${item.index}`]"
+                v-model="ruleForm[`question_${item.index}`]"
               ></el-input>
             </el-form-item>
           </div>
-          <!-- <div class="form-block required">
-            <div><label for="">Подзоговолок </label></div>
-            <el-form-item>
+          <div class="form-block required">
+            <div>
+              <label for="">Answer</label>
+            </div>
+            <el-form-item prop="answer_ru">
               <el-input
-                placeholder="Подзоговолок"
-                v-model="ruleForm.subTitle[item.index]"
+                type="text"
+                placeholder="Answer"
+                v-model="ruleForm[`answer_${item.index}`]"
               ></el-input>
             </el-form-item>
-          </div> -->
-          <div class="form-block">
-            <div><label for="">Описание </label></div>
-            <el-form-item prop="desc_ru">
-              <quill-editor
-                class="product-editor mt-1"
-                :options="editorOption"
-                :value="ruleForm[`desc_${item.index}`]"
-                v-model="ruleForm[`desc_${item.index}`]"
-              />
-            </el-form-item>
-          </div>
-
-          <div class="clearfix">
-            <a-upload
-              list-type="picture-card"
-              :file-list="fileList"
-              @preview="handlePreview"
-              @change="handleChange"
-            >
-              <div v-if="fileList.length < 1">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                <div class="ant-upload-text">
-                  Upload image
-                </div>
-              </div>
-            </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
-              <img alt="example" style="width: 100%;" :src="previewImage" />
-            </a-modal>
           </div>
         </div>
       </el-form>
@@ -301,14 +261,13 @@ export default {
         },
       ],
       ruleForm: {
-        title_ru: "",
-        title_uz: "",
-        title_en: "",
-        desc_ru: "",
-        desc_uz: "",
-        desc_en: "",
-
-        img: "",
+        category_id: "",
+        question_ru: "",
+        question_uz: "",
+        question_en: "",
+        answer_ru: "",
+        answer_uz: "",
+        answer_en: "",
       },
       columns: [
         {
@@ -322,40 +281,31 @@ export default {
           width: "60px",
         },
         {
-          title: "Зоговолок",
-          dataIndex: "md_img",
-          key: "md_img",
+          title: "question",
+          dataIndex: "question",
+          key: "question",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
+          scopedSlots: { customRender: "question" },
           align: "left",
-          className: "column-img",
-          colSpan: 2,
-          width: "45px",
-        },
-        {
-          dataIndex: "title",
-          key: "title",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "title" },
           className: "column-name",
-          width: "30%",
-          colSpan: 0,
         },
         {
-          title: "Подзоговолок",
-          dataIndex: "desc",
-          scopedSlots: { customRender: "desc" },
+          title: "answer",
+
+          dataIndex: "answer",
+          key: "answer",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "answer" },
+          className: "column-name",
+          //   width: "30%",
+        },
+        {
+          title: "category",
+          dataIndex: "category",
+          scopedSlots: { customRender: "category" },
           className: "column-code",
-          key: "desc",
-          width: "30%",
-        },
-        {
-          title: "Slug",
-          dataIndex: "slug",
-          className: "column-qty",
-          key: "slug",
-          align: "center",
-          //   width: "10%",
+          key: "category",
+          //   width: "30%",
         },
 
         {
@@ -374,9 +324,10 @@ export default {
       previewVisible: false,
       previewImage: "",
       fileList: [],
-      posts: [],
+      faqs: [],
+      categories: [],
       rules: {
-        title_ru: [
+        category_id: [
           {
             required: true,
             message: "Blog title is required",
@@ -384,7 +335,14 @@ export default {
           },
         ],
 
-        desc_ru: [
+        question_ru: [
+          {
+            required: true,
+            message: "Blog desc is required",
+            trigger: "change",
+          },
+        ],
+        answer_ru: [
           {
             required: true,
             message: "Blog desc is required",
@@ -417,30 +375,23 @@ export default {
     },
     getData() {
       const newData = {
-        img: this.ruleForm.img,
-        title: {
-          ru: this.ruleForm.title_ru,
-          uz: this.ruleForm.title_uz,
-          en: this.ruleForm.title_en,
+        category_id: this.ruleForm.category_id,
+        question: {
+          ru: this.ruleForm.question_ru,
+          uz: this.ruleForm.question_uz,
+          en: this.ruleForm.question_en,
         },
-        desc: {
-          ru: this.ruleForm.desc_ru,
-          uz: this.ruleForm.desc_uz,
-          en: this.ruleForm.desc_en,
+        answer: {
+          ru: this.ruleForm.answer_ru,
+          uz: this.ruleForm.answer_uz,
+          en: this.ruleForm.answer_en,
         },
       };
-      if (this.editId != "") {
-        if (this.fileList.lenth > 0) {
-          if (this.fileList[0].oldImg) {
-            newData.img = this.fileList[0].url;
-          }
-        }
-      }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editId != ""
-            ? this.__EDIT_POSTS(newData)
-            : this.__POST_POSTS(newData);
+            ? this.__EDIT_FAQS(newData)
+            : this.__POST_FAQS(newData);
         } else {
           return false;
         }
@@ -450,66 +401,51 @@ export default {
       console.log(e);
       this.$message.error("Click on No");
     },
+
     openAddModal() {
-      this.fileList = [];
+      this.show("add_faqs");
       this.editId = "";
-      this.show("add_blog");
     },
     editPost(id) {
       this.editId = id;
-      const data = this.posts.find((item) => item.id == id);
+      const data = this.faqs.find((item) => item.id == id);
       this.ruleForm = {
         ...data,
-        title_ru: data.title.ru,
-        title_uz: data.title.uz,
-        title_en: data.title.en,
-        desc_ru: data.desc.ru,
-        desc_uz: data.desc.uz,
-        desc_en: data.desc.en,
+        question_ru: data.question.ru,
+        question_uz: data.question.uz,
+        question_en: data.question.en,
+        answer_ru: data.answer.ru,
+        answer_uz: data.answer.uz,
+        answer_en: data.answer.en,
+        category_id: data.category_id,
       };
-      this.fileList = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: this.ruleForm.md_img,
-        },
-      ];
-      this.show("add_blog");
-      console.log(this.posts);
 
-      // this.__GET_POSTS_BY_ID(id);
+      this.show("add_faqs");
     },
     closeModal() {
-      this.hide("add_blog");
-      this.ruleForm.title_ru = "";
-      this.ruleForm.title_uz = "";
-      this.ruleForm.title_en = "";
-      this.ruleForm.desc_ru = "";
-      this.ruleForm.desc_uz = "";
-      this.ruleForm.desc_en = "";
-      this.ruleForm.img = "";
-      this.editImage = "";
-
+      this.hide("add_faqs");
+      this.ruleForm.question_ru = "";
+      this.ruleForm.question_uz = "";
+      this.ruleForm.question_en = "";
+      this.ruleForm.answer_ru = "";
+      this.ruleForm.answer_uz = "";
+      this.ruleForm.answer_en = "";
+      this.ruleForm.category_id = "";
       this.editId = "";
-      this.__GET_POSTS();
-
-      console.log(this.ruleForm);
-      console.log(this.posts);
+      this.__GET_FAQS();
     },
     deletePost(id) {
-      this.__DELETE_POSTS(id);
+      this.__DELETE_FAQS(id);
     },
-    async __DELETE_POSTS(id) {
+    async __DELETE_FAQS(id) {
       try {
-        const data = await this.$store.dispatch("fetchPosts/deletePosts", id);
+        const data = await this.$store.dispatch("fetchFaqs/deleteFaqs", id);
         await this.$notify({
           title: "Success",
           message: "Пост был успешно удален",
           type: "success",
         });
-        this.__GET_POSTS();
+        this.__GET_FAQS();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -545,15 +481,14 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }) {
+      this.loadingBtn = true;
+
       this.fileList = fileList;
       let formData = new FormData();
       const newImg = fileList;
       if (newImg.length > 0) {
-        this.loadingBtn = true;
         formData.append("file", newImg[0].originFileObj);
         this.__UPLOAD_FILE(formData);
-      } else {
-        this.ruleForm.img = null;
       }
     },
     async __UPLOAD_FILE(formData) {
@@ -571,32 +506,45 @@ export default {
     handleCancel() {
       this.previewVisible = false;
     },
-    async __GET_POSTS() {
-      const data = await this.$store.dispatch("fetchPosts/getPosts");
-      this.posts = data.posts?.data;
-      this.posts = this.posts.map((item) => {
+    async __GET_FAQS() {
+      const data = await this.$store.dispatch("fetchFaqs/getFaqs");
+      this.faqs = data.faqs?.data;
+      this.faqs = this.faqs.map((item) => {
         return {
           ...item,
           numberId: item.id,
         };
       });
     },
-    async __POST_POSTS(res) {
+    async __GET_FAQ_CATEGORIES() {
+      const data = await this.$store.dispatch(
+        "fetchFaqCategories/getFaqsCategories"
+      );
+      this.categories = data.categories?.data;
+      this.categories = this.categories.map((item) => {
+        return {
+          ...item,
+          numberId: item.id,
+        };
+      });
+    },
+    async __POST_FAQS(res) {
       try {
-        await this.$store.dispatch("fetchPosts/postPosts", res);
+        await this.$store.dispatch("fetchFaqs/postFaqs", res);
         await this.$notify({
           title: "Success",
           message: "Атрибут успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
-        this.__GET_POSTS();
-        this.ruleForm.title_ru = "";
-        this.ruleForm.title_uz = "";
-        this.ruleForm.title_en = "";
-        this.ruleForm.desc_ru = "";
-        this.ruleForm.desc_uz = "";
-        this.ruleForm.desc_en = "";
+        this.hide("add_faqs");
+        this.__GET_FAQS();
+        this.ruleForm.question_ru = "";
+        this.ruleForm.question_uz = "";
+        this.ruleForm.question_en = "";
+        this.ruleForm.answer_ru = "";
+        this.ruleForm.answer_uz = "";
+        this.ruleForm.answer_en = "";
+        this.ruleForm.category_id = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -623,9 +571,9 @@ export default {
           break;
       }
     },
-    async __EDIT_POSTS(res) {
+    async __EDIT_FAQS(res) {
       try {
-        const data = await this.$store.dispatch("fetchPosts/editPosts", {
+        const data = await this.$store.dispatch("fetchFaqs/editFaqs", {
           id: this.editId,
           data: res,
         });
@@ -634,8 +582,8 @@ export default {
           message: "Пост успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
-        this.__GET_POSTS();
+        this.hide("add_faqs");
+        this.__GET_FAQS();
         this.ruleForm.title_ru = "";
         this.ruleForm.title_uz = "";
         this.ruleForm.title_en = "";
@@ -646,8 +594,8 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    async __GET_POSTS_BY_ID(id) {
-      const data = await this.$store.dispatch("fetchPosts/getPostsById", id);
+    async __GET_FAQS_BY_ID(id) {
+      const data = await this.$store.dispatch("fetchFaqs/getFaqsById", id);
       console.log(data);
     },
   },
@@ -664,7 +612,8 @@ export default {
     },
   },
   mounted() {
-    this.__GET_POSTS();
+    this.__GET_FAQS();
+    this.__GET_FAQ_CATEGORIES();
     if (this.data) {
       this.tableData = this.data;
     }

@@ -1,28 +1,28 @@
 export const actions = {
-  async getProducts() {
+  async getBanners() {
     try {
       const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/products`
+        `https://test.loftcity.uz/api/admin/banners`
       );
       return res;
     } catch (e) {
       return e.response;
     }
   },
-  async getProductsById({}, id) {
+  async getBannersById({}, id) {
     try {
       const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/products/${id}`
+        `https://test.loftcity.uz/api/admin/banners/${id}`
       );
       return res;
     } catch (e) {
       return e.response;
     }
   },
-  async postProducts({}, data) {
+  async postBanners({}, data) {
     try {
       const res = this.$axios.$post(
-        `https://test.loftcity.uz/api/admin/products`,
+        `https://test.loftcity.uz/api/admin/banners`,
         data
       );
       return res;
@@ -30,20 +30,21 @@ export const actions = {
       return e.response;
     }
   },
-  async editProducts() {
+  async editBanners({}, payload) {
     try {
-      const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/products`
+      const res = this.$axios.$put(
+        `https://test.loftcity.uz/api/admin/banners/${payload.id}`,
+        payload.data
       );
       return res;
     } catch (e) {
       return e.response;
     }
   },
-  async deleteProducts({}, id) {
+  async deleteBanners({}, id) {
     try {
       const res = this.$axios.$delete(
-        `https://test.loftcity.uz/api/admin/products/${id}`
+        `https://test.loftcity.uz/api/admin/banners/${id}`
       );
       return res;
     } catch (e) {
@@ -52,8 +53,14 @@ export const actions = {
   },
   async postGroups({}, data) {
     const res = this.$axios.$post(
-      `https://test.loftcity.uz/api/admin/products_groups`,
+      `https://test.loftcity.uz/api/admin/banners_groups`,
       data
+    );
+    return res;
+  },
+  async getGroups() {
+    const res = this.$axios.$get(
+      `https://test.loftcity.uz/api/admin/banners_groups/all`
     );
     return res;
   },

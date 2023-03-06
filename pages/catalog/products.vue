@@ -85,7 +85,7 @@
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
           <a slot="price" slot-scope="text">{{
-            text ? `$${text}` : "------"
+            text ? `${text}` : "------"
           }}</a>
           <span slot="customTitle"></span>
 
@@ -95,9 +95,7 @@
             class="tags-style"
             :class="{
               tag_success: text == 'active',
-              tag_inProgress: text == 'in progress',
-              tag_approved: text == 'Approved',
-              tag_rejected: text == 'rejected',
+              tag_rejected: text == 'inactive',
             }"
           >
             {{ text }}
@@ -189,6 +187,7 @@ export default {
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "price" },
           width: "16%",
+          sorter: (a, b) => a.price - b.price,
         },
         {
           title: "Статус",
@@ -277,7 +276,9 @@ export default {
             ...item,
             price: item.products[0].price,
             model: item.products[0].model,
-            img: item.products[0].images[0].md_img,
+            img: item.products[0].images[0].md_img
+              ? item.products[0].images[0].md_img
+              : null,
             status: item.products[0].status,
           };
         } else {

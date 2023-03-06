@@ -403,7 +403,16 @@
               </div>
               <div class="variant-img-container">
                 <h5 class="variant-img-title">Изображение товара</h5>
-
+                <div class="product_old_images">
+                  <div class="old_images" v-for="image in element.oldImages">
+                    <div>
+                      <span @click="deleteImg(false)">
+                        <i class="el-icon-delete"></i>
+                      </span>
+                    </div>
+                    <img :src="image.md_img" alt="" />
+                  </div>
+                </div>
                 <div class="variant-img">
                   <a-upload
                     list-type="picture-card"
@@ -793,6 +802,7 @@
             ></el-input>
           </el-form-item>
         </div>
+
         <div class="clearfix">
           <a-upload
             list-type="picture-card"
@@ -992,6 +1002,7 @@ export default {
             id: 1,
             images: [],
             imagesData: [],
+            oldImages: [],
             variations: [
               {
                 id: 1,
@@ -1032,6 +1043,7 @@ export default {
   mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
+    this.__GET_PRODUCT_BY_ID();
   },
 
   methods: {
@@ -1088,7 +1100,7 @@ export default {
       //   }
       // });
     },
-
+    deleteImg(type) {},
     async __POST_PRODUCTS(data) {
       try {
         const products = await this.$store.dispatch(
@@ -1337,54 +1349,114 @@ export default {
     //   const data = await this.$store.dispatch("fetchAtributes/getAtributes");
     //   this.atributes = data.attributes?.data;
     // },
+    async __GET_PRODUCT_BY_ID() {
+      const data = await this.$store.dispatch("fetchProducts/getProducts");
+      console.log(data.products.data);
+      const dataCat = await this.$store.dispatch(
+        "fetchCategories/getCategories"
+      );
+
+      this.categories = dataCat.categories?.data;
+      const oldData = data.products.data.find(
+        (item) => item.id == this.$route.params.index
+      );
+
+      this.ruleForm = {
+        ...oldData,
+        name_ru: oldData.name.ru,
+        name_uz: oldData.name.uz,
+        name_en: oldData.name.en,
+        // category_id: oldData.category.name.ru,
+        products: oldData.products.map((item) => {
+          return {
+            ...item,
+            imagesData: [],
+            oldImages: [...item.images],
+          };
+        }),
+      };
+
+      console.log(this.categories);
+      console.log(this.ruleForm);
+      // ruleForm: {
+      //   name_ru: "",
+      //   name_uz: "",
+      //   name_en: "",
+      //   model: "",
+      //   desc: {
+      //     ru: "",
+      //     uz: "",
+      //     en: "",
+      //   },
+      //   brand_id: "",
+      //   status: "active",
+      //   category_id: "",
+      //   products: [
+      //     {
+      //       id: 1,
+      //       images: [],
+      //       imagesData: [],
+      //       variations: [
+      //         {
+      //           id: 1,
+      //           options: [1],
+      //           optionName: {},
+      //           price: 0,
+      //           is_default: 1,
+      //           is_popular: 0,
+      //           product_of_the_day: 0,
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
+    },
   },
   watch: {
-    "ruleForm.category_id"(val) {
-      const child1 = this.categories.find((item) => item.id == val);
-      this.atributes = child1.attributes;
-      // console.log(this.atributes);
-      this.ruleForm.products.map((item) => {
-        item.variations.map((item2) => {
-          this.atributes.forEach((elem) => {
-            return (item2.optionName[elem.name.ru] = "");
-          });
-        });
-      });
-      if (child1.children.length > 0) {
-        this.categoryChild.child1.arr = child1.children;
-      } else {
-        this.categoryChild.child1.arr = [];
-        this.categoryChild.child1.id = "";
-        this.categoryChild.child2.arr = [];
-        this.categoryChild.child2.id = "";
-      }
-      console.log("atr", this.atributes);
-      console.log("cat2", child1);
-    },
-    "categoryChild.child1.id"(val) {
-      const child2 = this.categoryChild.child1.arr.find(
-        (item) => item.id == val
-      );
-      if (child2.attributes) {
-        this.atributes = child2.attributes;
-        this.ruleForm.products.map((item) => {
-          item.variations.map((item2) => {
-            this.atributes.forEach((elem) => {
-              return (item2.optionName[elem.name.ru] = "");
-            });
-          });
-        });
-      }
+    // "ruleForm.category_id"(val) {
+    //   const child1 = this.categories.find((item) => item.id == val);
+    //   this.atributes = child1.attributes;
+    //   // console.log(this.atributes);
+    //   this.ruleForm.products.map((item) => {
+    //     item.variations.map((item2) => {
+    //       this.atributes.forEach((elem) => {
+    //         return (item2.optionName[elem.name.ru] = "");
+    //       });
+    //     });
+    //   });
+    //   if (child1.children.length > 0) {
+    //     this.categoryChild.child1.arr = child1.children;
+    //   } else {
+    //     this.categoryChild.child1.arr = [];
+    //     this.categoryChild.child1.id = "";
+    //     this.categoryChild.child2.arr = [];
+    //     this.categoryChild.child2.id = "";
+    //   }
+    //   console.log("atr", this.atributes);
+    //   console.log("cat2", child1);
+    // },
+    // "categoryChild.child1.id"(val) {
+    //   const child2 = this.categoryChild.child1.arr.find(
+    //     (item) => item.id == val
+    //   );
+    //   if (child2.attributes) {
+    //     this.atributes = child2.attributes;
+    //     this.ruleForm.products.map((item) => {
+    //       item.variations.map((item2) => {
+    //         this.atributes.forEach((elem) => {
+    //           return (item2.optionName[elem.name.ru] = "");
+    //         });
+    //       });
+    //     });
+    //   }
 
-      if (child2.children.length > 0) {
-        this.categoryChild.child2.arr = child2.children;
-      } else {
-        this.categoryChild.child2.arr = [];
-        this.categoryChild.child2.id = "";
-      }
-      console.log("atributs", this.atributes, child2);
-      console.log("cat2", child2);
-    },
+    //   if (child2.children.length > 0) {
+    //     this.categoryChild.child2.arr = child2.children;
+    //   } else {
+    //     this.categoryChild.child2.arr = [];
+    //     this.categoryChild.child2.id = "";
+    //   }
+    // },
     variantId(val, val2) {
       this.ruleForm.products.find(
         (item) => item.id == val
@@ -1472,47 +1544,52 @@ export default {
   .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-delete {
     color: #000;
   }
-  // .anticon {
-  //   width: 20px;
-  //   height: 20px;
-  //   border-radius: 50%;
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  //   background: rgba(#fff, 0.4);
-  //   color: #000;
-  //   svg {
-  //     width: 16px;
-  //     height: 16px;
-  //   }
-  // }
-  // .ant-upload-list-item-actions {
-  //   a {
-  //     display: none;
-  //   }
-  //   opacity: 1;
-  //   left: auto;
-  //   top: 0;
-  //   right: -20px;
-  //   background: red;
-  //   border-radius: 50%;
-  //   i {
-  //     svg {
-  //       display: none;
-  //     }
-  //     position: relative;
-  //     display: flex;
-  //     align-items: center;
-  //     width: 20px !important;
-  //     height: 20px;
-  //     margin: 0 !important;
-  //     justify-content: center;
-  //     &:after {
-  //       content: "x";
-  //       position: absolute;
-  //       top: 8px;
-  //     }
-  //   }
-  // }
+}
+.product_old_images {
+  display: flex;
+
+}
+.old_images {
+  width: 119px;
+  height: 119px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  margin-right: 10px;
+  padding: 8px;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span {
+      display: none;
+      cursor: pointer;
+      i {
+        font-size: 32px;
+        height: 40px;
+        width: 40px;
+      }
+    }
+  }
+  &:hover {
+    div {
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.5);
+      span {
+        display: block;
+      }
+    }
+  }
 }
 </style>

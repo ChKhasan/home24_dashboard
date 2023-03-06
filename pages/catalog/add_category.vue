@@ -137,6 +137,7 @@
                       class="w-100"
                       allow-create
                       default-first-option
+                      no-data-text="No atribut"
                       placeholder="Choose tags for your article"
                     >
                       <el-option
@@ -159,6 +160,7 @@
                       filterable
                       allow-create
                       default-first-option
+                      no-data-text="No characteristics"
                       placeholder="Choose tags for your article"
                     >
                       <el-option
@@ -394,8 +396,8 @@ export default {
           label: "Active",
         },
         {
-          value: "disactive",
-          label: "Disactive",
+          value: "inactive",
+          label: "Inactive",
         },
       ],
       value: [],
@@ -407,14 +409,14 @@ export default {
             trigger: "blur",
           },
         ],
-        group_atribut: [
+        attributes: [
           {
             required: true,
             message: "Atribut is required",
             trigger: "blur",
           },
         ],
-        group_characters: [
+        group_characteristics: [
           {
             required: true,
             message: "Group characters is required",
@@ -531,6 +533,8 @@ export default {
       console.log("fsfsdf");
     },
     async handlePreview(file) {
+      console.log("delete1", file);
+
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
@@ -538,6 +542,7 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }) {
+      console.log("delete", fileList);
       this.fileList = fileList;
       let formData = new FormData();
       const newImg = fileList;
@@ -554,7 +559,6 @@ export default {
       if (newImg.length > 0) {
         formData.append("file", newImg[0].originFileObj);
         this.uploadLoading = true;
-
         this.__UPLOAD_FILE("icon", formData);
       }
     },

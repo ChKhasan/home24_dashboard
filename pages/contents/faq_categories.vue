@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Блог" :breadbrumb="['Контент сайта']" lastLink="Блог">
+    <TitleBlock
+      title="Вопрос и ответы"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Вопрос и ответы"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -36,13 +40,13 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Блог" />
+            <FormTitle title="Вопрос и ответы" />
           </div>
         </div>
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
-            :data-source="posts"
+            :data-source="categories"
             :pagination="false"
             align="center"
           >
@@ -69,24 +73,24 @@
             >
               <h6>{{ text?.ru }}</h6>
             </span>
-            <div slot="desc" slot-scope="text" v-html="text?.ru"></div>
+            <div slot="faqs" slot-scope="text" v-html="text?.ru"></div>
+            <div
+              slot="faqs"
+              slot-scope="text"
+              align="center"
+              class="option-container"
+            >
+              <!-- <span v-for="item in text" class="option-items">{{ item }}</span> -->
+              <span
+                class="option-items"
+                v-for="(item, index) in text"
+                :key="index"
+                >{{ item.question.ru ? item.question.ru : "-----" }}</span
+              >
+            </div>
             <span slot="numberId" slot-scope="text">#{{ text }}</span>
-            <a slot="price" slot-scope="text">${{ text }}</a>
             <span slot="customTitle"></span>
 
-            <span
-              slot="tags"
-              slot-scope="tags"
-              class="tags-style"
-              :class="{
-                tag_success: tags == 'Success',
-                tag_inProgress: tags == 'in progress',
-                tag_approved: tags == 'Approved',
-                tag_rejected: tags == 'rejected',
-              }"
-            >
-              {{ tags }}
-            </span>
             <span slot="id" slot-scope="text">
               <span class="action-btn" @click="editPost(text)">
                 <img :src="editIcon" alt="" />
@@ -108,8 +112,8 @@
       </div>
     </div>
     <AddModal
-      :title="editId ? 'Изменить блога' : 'Добавить блога'"
-      name="add_blog"
+      :title="editId ? 'Изменить категорию':'Добавить категорию'"
+      name="add_faqs"
       btnText="Save"
       :callback="getData"
       :closeModal="closeModal"
@@ -142,79 +146,15 @@
         >
           <div class="form-block required">
             <div>
-              <label for="">Зоговолок {{ item.label }}</label>
+              <label for="">Category name</label>
             </div>
             <el-form-item prop="title_ru">
               <el-input
                 type="text"
-                placeholder="Зоговолок"
+                placeholder="Category"
                 v-model="ruleForm[`title_${item.index}`]"
               ></el-input>
             </el-form-item>
-          </div>
-          <!-- <div class="form-block required">
-            <div><label for="">Подзоговолок </label></div>
-            <el-form-item>
-              <el-input
-                placeholder="Подзоговолок"
-                v-model="ruleForm.subTitle[item.index]"
-              ></el-input>
-            </el-form-item>
-          </div> -->
-          <div class="form-block">
-            <div><label for="">Описание </label></div>
-            <el-form-item prop="desc_ru">
-              <quill-editor
-                class="product-editor mt-1"
-                :options="editorOption"
-                :value="ruleForm[`desc_${item.index}`]"
-                v-model="ruleForm[`desc_${item.index}`]"
-              />
-            </el-form-item>
-          </div>
-
-          <div class="clearfix">
-            <a-upload
-              list-type="picture-card"
-              :file-list="fileList"
-              @preview="handlePreview"
-              @change="handleChange"
-            >
-              <div v-if="fileList.length < 1">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-                <div class="ant-upload-text">
-                  Upload image
-                </div>
-              </div>
-            </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
-              <img alt="example" style="width: 100%;" :src="previewImage" />
-            </a-modal>
           </div>
         </div>
       </el-form>
@@ -233,14 +173,7 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
+
 export default {
   middleware: "auth",
   data() {
@@ -304,12 +237,8 @@ export default {
         title_ru: "",
         title_uz: "",
         title_en: "",
-        desc_ru: "",
-        desc_uz: "",
-        desc_en: "",
-
-        img: "",
       },
+      editImage: "",
       columns: [
         {
           title: "ID",
@@ -322,42 +251,23 @@ export default {
           width: "60px",
         },
         {
-          title: "Зоговолок",
-          dataIndex: "md_img",
-          key: "md_img",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
-          align: "left",
-          className: "column-img",
-          colSpan: 2,
-          width: "45px",
-        },
-        {
+          title: "title",
           dataIndex: "title",
           key: "title",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "title" },
+          align: "left",
           className: "column-name",
-          width: "30%",
-          colSpan: 0,
         },
         {
-          title: "Подзоговолок",
-          dataIndex: "desc",
-          scopedSlots: { customRender: "desc" },
-          className: "column-code",
-          key: "desc",
-          width: "30%",
+          title: "faqs",
+          dataIndex: "faqs",
+          key: "faqs",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "faqs" },
+          className: "column-options",
+          //   width: "30%",
         },
-        {
-          title: "Slug",
-          dataIndex: "slug",
-          className: "column-qty",
-          key: "slug",
-          align: "center",
-          //   width: "10%",
-        },
-
         {
           title: "действия",
           key: "id",
@@ -374,20 +284,13 @@ export default {
       previewVisible: false,
       previewImage: "",
       fileList: [],
-      posts: [],
+      faqs: [],
+      categories: [],
       rules: {
         title_ru: [
           {
             required: true,
-            message: "Blog title is required",
-            trigger: "change",
-          },
-        ],
-
-        desc_ru: [
-          {
-            required: true,
-            message: "Blog desc is required",
+            message: "category nameis required",
             trigger: "change",
           },
         ],
@@ -417,30 +320,17 @@ export default {
     },
     getData() {
       const newData = {
-        img: this.ruleForm.img,
         title: {
           ru: this.ruleForm.title_ru,
           uz: this.ruleForm.title_uz,
           en: this.ruleForm.title_en,
         },
-        desc: {
-          ru: this.ruleForm.desc_ru,
-          uz: this.ruleForm.desc_uz,
-          en: this.ruleForm.desc_en,
-        },
       };
-      if (this.editId != "") {
-        if (this.fileList.lenth > 0) {
-          if (this.fileList[0].oldImg) {
-            newData.img = this.fileList[0].url;
-          }
-        }
-      }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editId != ""
-            ? this.__EDIT_POSTS(newData)
-            : this.__POST_POSTS(newData);
+            ? this.__EDIT_FAQ_CATEGORIES(newData)
+            : this.__POST_FAQ_CATEGORIES(newData);
         } else {
           return false;
         }
@@ -450,153 +340,81 @@ export default {
       console.log(e);
       this.$message.error("Click on No");
     },
+
     openAddModal() {
-      this.fileList = [];
+      this.show("add_faqs");
       this.editId = "";
-      this.show("add_blog");
     },
     editPost(id) {
       this.editId = id;
-      const data = this.posts.find((item) => item.id == id);
+      const data = this.categories.find((item) => item.id == id);
       this.ruleForm = {
         ...data,
         title_ru: data.title.ru,
         title_uz: data.title.uz,
         title_en: data.title.en,
-        desc_ru: data.desc.ru,
-        desc_uz: data.desc.uz,
-        desc_en: data.desc.en,
       };
-      this.fileList = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: this.ruleForm.md_img,
-        },
-      ];
-      this.show("add_blog");
-      console.log(this.posts);
+      this.show("add_faqs");
 
-      // this.__GET_POSTS_BY_ID(id);
+      // this.__GET_FAQ_CATEGORIES_BY_ID(id);
     },
     closeModal() {
-      this.hide("add_blog");
+      this.hide("add_faqs");
       this.ruleForm.title_ru = "";
       this.ruleForm.title_uz = "";
       this.ruleForm.title_en = "";
-      this.ruleForm.desc_ru = "";
-      this.ruleForm.desc_uz = "";
-      this.ruleForm.desc_en = "";
-      this.ruleForm.img = "";
-      this.editImage = "";
 
       this.editId = "";
-      this.__GET_POSTS();
-
-      console.log(this.ruleForm);
-      console.log(this.posts);
+      this.__GET_FAQ_CATEGORIES();
     },
     deletePost(id) {
-      this.__DELETE_POSTS(id);
+      this.__DELETE_FAQ_CATEGORIES(id);
     },
-    async __DELETE_POSTS(id) {
+    async __DELETE_FAQ_CATEGORIES(id) {
       try {
-        const data = await this.$store.dispatch("fetchPosts/deletePosts", id);
+        const data = await this.$store.dispatch(
+          "fetchFaqCategories/deleteFaqsCategories",
+          id
+        );
         await this.$notify({
           title: "Success",
           message: "Пост был успешно удален",
           type: "success",
         });
-        this.__GET_POSTS();
+        this.__GET_FAQ_CATEGORIES();
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
-    tableActions(id) {
-      console.log(id);
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
-    },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
-    },
-    handleChange({ fileList }) {
-      this.fileList = fileList;
-      let formData = new FormData();
-      const newImg = fileList;
-      if (newImg.length > 0) {
-        this.loadingBtn = true;
-        formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE(formData);
-      } else {
-        this.ruleForm.img = null;
-      }
-    },
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        this.ruleForm.img = data.path;
-        this.loadingBtn = false;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    handleCancel() {
-      this.previewVisible = false;
-    },
-    async __GET_POSTS() {
-      const data = await this.$store.dispatch("fetchPosts/getPosts");
-      this.posts = data.posts?.data;
-      this.posts = this.posts.map((item) => {
+
+    async __GET_FAQ_CATEGORIES() {
+      const data = await this.$store.dispatch(
+        "fetchFaqCategories/getFaqsCategories"
+      );
+      this.categories = data.categories?.data;
+      this.categories = this.categories.map((item) => {
         return {
           ...item,
           numberId: item.id,
         };
       });
     },
-    async __POST_POSTS(res) {
+    async __POST_FAQ_CATEGORIES(res) {
       try {
-        await this.$store.dispatch("fetchPosts/postPosts", res);
+        await this.$store.dispatch(
+          "fetchFaqCategories/postFaqsCategories",
+          res
+        );
         await this.$notify({
           title: "Success",
           message: "Атрибут успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
-        this.__GET_POSTS();
+        this.hide("add_faqs");
+        this.__GET_FAQ_CATEGORIES();
         this.ruleForm.title_ru = "";
         this.ruleForm.title_uz = "";
         this.ruleForm.title_en = "";
-        this.ruleForm.desc_ru = "";
-        this.ruleForm.desc_uz = "";
-        this.ruleForm.desc_en = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -623,19 +441,22 @@ export default {
           break;
       }
     },
-    async __EDIT_POSTS(res) {
+    async __EDIT_FAQ_CATEGORIES(res) {
       try {
-        const data = await this.$store.dispatch("fetchPosts/editPosts", {
-          id: this.editId,
-          data: res,
-        });
+        const data = await this.$store.dispatch(
+          "fetchFaqCategories/editFaqsCategories",
+          {
+            id: this.editId,
+            data: res,
+          }
+        );
         this.$notify({
           title: "Success",
           message: "Пост успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
-        this.__GET_POSTS();
+        this.hide("add_faqs");
+        this.__GET_FAQ_CATEGORIES();
         this.ruleForm.title_ru = "";
         this.ruleForm.title_uz = "";
         this.ruleForm.title_en = "";
@@ -645,10 +466,6 @@ export default {
       } catch (e) {
         this.statusFunc(e.response);
       }
-    },
-    async __GET_POSTS_BY_ID(id) {
-      const data = await this.$store.dispatch("fetchPosts/getPostsById", id);
-      console.log(data);
     },
   },
   computed: {
@@ -664,7 +481,7 @@ export default {
     },
   },
   mounted() {
-    this.__GET_POSTS();
+    this.__GET_FAQ_CATEGORIES();
     if (this.data) {
       this.tableData = this.data;
     }
