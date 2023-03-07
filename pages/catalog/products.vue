@@ -276,8 +276,8 @@ export default {
             ...item,
             price: item.products[0].price,
             model: item.products[0].model,
-            img: item.products[0].images[0].md_img
-              ? item.products[0].images[0].md_img
+            img: item.products[0].images[0].lg_img
+              ? item.products[0].images[0].lg_img
               : null,
             status: item.products[0].status,
           };
