@@ -75,46 +75,15 @@
               <div class="form-container form-container-ltr">
                 <FormTitle title="Атрибут" />
                 <div class="form-block required">
-                  <div><label for="">Группа</label></div>
-                  <div class="group-grid">
-                    <el-form-item prop="group_id">
-                      <el-select
-                        class="w-100"
-                        v-model="ruleForm.group_id"
-                        filterable
-                        allow-create
-                        no-data-text="No group"
-                        placeholder="Choose tags for your article"
-                      >
-                        <el-option
-                          v-for="item in groups"
-                          :key="item.id"
-                          :label="item.name.ru"
-                          :value="item.id"
-                        >
-                        </el-option>
-                      </el-select>
+                  <div><label for="">Keywords</label></div>
+                  <div class="w-100">
+                    <el-form-item prop="keywords">
+                      <el-input
+                        type="text"
+                        v-model="ruleForm.keywords"
+                        placeholder="Keywords"
+                      ></el-input>
                     </el-form-item>
-                    <div
-                      class="outline-btn outline-light-blue-btn mt-2"
-                      @click="show('add_atribute_group')"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 6V18M18 12L6 12"
-                          stroke="#5899FF"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
                   </div>
                 </div>
                 <div class="atribut-input-grid">
@@ -293,7 +262,7 @@ export default {
         ],
       },
       ruleForm: {
-        group_id: null,
+        keywords: "",
         name_ru: "",
         name_uz: "",
         name_en: "",

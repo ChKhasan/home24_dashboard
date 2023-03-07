@@ -376,7 +376,7 @@ export default {
       this.ruleForm.name_ru = data.attribute.name.ru;
       this.ruleForm.name_uz = data.attribute.name.uz;
       this.ruleForm.name_en = data.attribute.name.en;
-      this.ruleForm.group_id = data.attribute.group.name.ru;
+      this.ruleForm.group_id = data.attribute.group.id;
       this.group_id = data.attribute.group.id;
       this.atribut_id = data.attribute.id;
       this.options = data.attribute.options;

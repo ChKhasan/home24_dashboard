@@ -130,6 +130,7 @@
                           allow-create
                           default-first-option
                           placeholder="Select category"
+                          no-data-text="no-category"
                         >
                           <el-option
                             v-for="item in categories"
@@ -379,8 +380,51 @@
                       ></el-tab-pane>
                       <el-tab-pane label="Характеристика" name="Character">
                         <ProductCharacterList />
+                        <div
+                          class="character-products-container d-flex"
+                          ref="productScroll"
+                        >
+                          <span
+                            v-for="product in ruleForm.products"
+                            class="d-flex"
+                          >
+                            <div
+                              class="character-product-card"
+                              v-for="variations in product.variations"
+                            >
+                              <div class="ch-product-img">
+                                <img
+                                  v-if="product.images.length > 0"
+                                  :src="product.images[0]"
+                                  alt=""
+                                />
+                                <img
+                                  v-else
+                                  src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                                  alt=""
+                                />
+                              </div>
+                              <div class="ch-product-body">
+                                <span class="ch-product-info">
+                                  Пурпурные
+                                </span>
+                                <span class="ch-product-info">
+                                  dual SIM 265 gb
+                                </span>
+                                <span class="ch-product-info">
+                                  17 100 000 сум LL A
+                                </span>
+                              </div>
+                            </div>
+                          </span>
+                        </div>
                       </el-tab-pane>
                     </el-tabs>
+                    <a-button
+                      type="primary"
+                      @click="show('characteristic_modal')"
+                      >Character</a-button
+                    >
                   </div>
                 </el-tab-pane>
               </el-tabs>
@@ -851,6 +895,173 @@
         </div>
       </el-form>
     </AddModal>
+    <modal
+      :adaptive="true"
+      name="characteristic_modal"
+      width="95%"
+      height="100%"
+      :clickToClose="false"
+    >
+      <div class="add_modal-container" ref="ruleForm1">
+        <div class="character_modal-header">
+          <div class="character_modal-header_btn">
+            <div
+              class="character-close-btn"
+              @click="hide('characteristic_modal')"
+            >
+              <span class="character-close-icon" v-html="closeIcon"></span>
+              Закрыть
+            </div>
+          </div>
+          <div
+            class="character-products-container d-flex"
+            ref="productScroll"
+            @scroll="handleScroll"
+          >
+            <span v-for="product in ruleForm.products" class="d-flex">
+              <div
+                class="character-product-card"
+                v-for="variations in product.variations"
+              >
+                <div class="ch-product-img">
+                  <img
+                    v-if="product.images.length > 0"
+                    :src="product.images[0]"
+                    alt=""
+                  />
+                  <img
+                    v-else
+                    src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                    alt=""
+                  />
+                </div>
+                <div class="ch-product-body">
+                  <span class="ch-product-info">
+                    Пурпурные
+                  </span>
+                  <span class="ch-product-info">
+                    dual SIM 265 gb
+                  </span>
+                  <span class="ch-product-info">
+                    17 100 000 сум LL A
+                  </span>
+                </div>
+              </div>
+            </span>
+          </div>
+        </div>
+
+        <div class="product-character-container" ref="characterScroll">
+          <div class="d-inline-flex flex-column w-100">
+            <div
+              class="product-character-block"
+              v-for="(characterGroup, characterGroupIndex) in character_group"
+            >
+              <div class="character-group">
+                <h5 @click="characterValueCopy">
+                  {{ characterGroup.name.ru }}
+                </h5>
+                <div
+                  class="character_copy-btn"
+                  v-if="characterGroupIndex == 0"
+                  @click="characterValueCopy"
+                >
+                  <span v-html="copyIcon"> </span> Коп. характеристику
+                  {{ characterGroupIndex }}
+                </div>
+              </div>
+              <div
+                class="product-character-items"
+                v-for="(characters, index) in characterGroup.characteristics"
+              >
+                <div class="product-character-name">
+                  {{ characters.name.ru }}
+                </div>
+                <span class="character_scroll_span" ref="characterScrollItems">
+                  <span v-for="product in ruleForm.products" class="d-flex">
+                    <div
+                      class="product-character-info"
+                      v-for="variations in product.variations"
+                    >
+                      <el-form
+                        label-position="top"
+                        :model="variations.characteristicsValues"
+                        :rules="rulesCharacter"
+                        ref="ruleFormCharacter"
+                        label-width="120px"
+                        class="demo-ruleForm character_form"
+                        action=""
+                      >
+                        <el-form-item :prop="`char_${characters.id}`">
+                          <el-select
+                            v-model="
+                              variations.characteristicsValues[
+                                `char_${characters.id}`
+                              ]
+                            "
+                            allow-create
+                            default-first-option
+                            placeholder="Select category"
+                            no-data-text="no-category"
+                          >
+                            <el-option
+                              v-for="optionsItem in characters.options"
+                              :key="optionsItem.id"
+                              :label="optionsItem.name?.ru"
+                              :value="optionsItem.id"
+                            >
+                            </el-option>
+                          </el-select>
+                        </el-form-item>
+                      </el-form>
+                    </div>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div></div>
+        </div>
+
+        <div class="character_modal-footer d-flex justify-content-end mt-4">
+          <a-button
+            @click="submitFormCharacter('ruleFormCharacter')"
+            class="character_save-btn btn-primary d-flex align-items-center"
+            type="primary"
+          >
+            <span class="svg-icon"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                width="24px"
+                height="24px"
+                viewBox="0 0 24 24"
+                version="1.1"
+              >
+                <g
+                  stroke="none"
+                  stroke-width="1"
+                  fill="none"
+                  fill-rule="evenodd"
+                >
+                  <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                  <path
+                    d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
+                    fill="#000000"
+                    fill-rule="nonzero"
+                    opacity="0.3"
+                  ></path>
+                  <path
+                    d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
+                    fill="#000000"
+                  ></path>
+                </g></svg
+            ></span>
+            Add Product
+          </a-button>
+        </div>
+      </div>
+    </modal>
   </div>
 </template>
 <script>
@@ -880,6 +1091,8 @@ export default {
   middleware: "auth",
   data() {
     return {
+      closeIcon: require("../../assets/svg/components/remove.svg?raw"),
+      copyIcon: require("../../assets/svg/components/copy.svg?raw"),
       title: "Quill Editor",
       items: [
         {
@@ -1011,6 +1224,8 @@ export default {
                 id: 1,
                 options: [],
                 optionName: {},
+                characteristics: [],
+                characteristicsValues: {},
                 price: 0,
                 is_default: 1,
                 is_popular: 0,
@@ -1040,9 +1255,13 @@ export default {
           },
         ],
       },
+      rulesCharacter: {},
       brands: [],
       oldLength: 0,
       uploadLoading: false,
+      character_group: [],
+      productScrollState: true,
+      valueCharacter: "",
     };
   },
   mounted() {
@@ -1068,6 +1287,7 @@ export default {
               is_default: elem.is_default,
               is_popular: elem.is_popular,
               product_of_the_day: elem.product_of_the_day,
+              characteristics: [...Object.values(elem.characteristicsValues)],
             };
           });
           const newItem = {
@@ -1091,10 +1311,22 @@ export default {
         console.log("valid", valid);
         if (valid) {
           console.log(newData);
-          this.__POST_PRODUCTS(newData);
+          // this.__POST_PRODUCTS(newData);
         } else {
           return false;
         }
+      });
+    },
+    submitFormCharacter(ruleForm) {
+      console.log(this.$refs);
+      this.$refs[ruleForm].forEach((item) => {
+        item.validate((valid) => {
+          console.log("valid", valid);
+          if (valid) {
+          } else {
+            return false;
+          }
+        });
       });
     },
     closeModal() {
@@ -1112,6 +1344,16 @@ export default {
       } catch (e) {
         this.statusFunc(e.response);
       }
+    },
+
+    saveCharacters() {
+      console.log(this.ruleForm);
+    },
+    handleScroll(event) {
+      this.$refs.characterScrollItems.forEach((item) => {
+        item.scrollLeft = this.$refs.productScroll.scrollLeft;
+      });
+      this.$refs.characterScroll.scrollLeft = this.$refs.productScroll.scrollLeft;
     },
 
     handleChangeVatiant({ fileList }, id) {
@@ -1153,11 +1395,26 @@ export default {
         valid ? this.__POST_BRAND() : false
       );
     },
+    selectCharacters(e, obj) {
+      const product = this.ruleForm.products.find(
+        (item) => item.id == obj.productId
+      );
+      console.log(obj, product);
+      const validat = product.variations.find(
+        (elem) => elem.id == obj.variationId
+      );
+      validat.characteristics.push(e);
+      // console.log(e, arr)
+    },
     show(name) {
       this.$modal.show(name);
+      document.body.style.overflowY = "hidden";
+      document.body.style.height = "100vh";
     },
     hide(name) {
       this.$modal.hide(name);
+      document.body.style.overflowY = "auto";
+      document.body.style.height = "auto";
     },
     handleCancel() {
       this.previewVisible = false;
@@ -1185,6 +1442,8 @@ export default {
         is_default: 0,
         product_of_the_day: 0,
         is_popular: 0,
+        characteristics: [],
+        characteristicsValues: {},
         optionName: options,
       });
     },
@@ -1220,6 +1479,8 @@ export default {
           product_of_the_day: 0,
           is_popular: 0,
           optionName: options,
+          characteristics: [],
+          characteristicsValues: {},
         },
       ];
       this.ruleForm.products.push({
@@ -1317,11 +1578,40 @@ export default {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = data.categories?.data;
     },
+    characterValueCopy() {
+      var copyCharacter = {};
+      this.ruleForm.products.forEach((item, itemIndex) => {
+        item.variations.forEach((elem, elemIndex) => {
+          if (itemIndex == 0 && elemIndex == 0) {
+            copyCharacter = { ...elem.characteristicsValues };
+          } else {
+            elem.characteristicsValues = { ...copyCharacter };
+          }
+        });
+      });
+      console.log(this.ruleForm);
+      copyCharacter = {};
+    },
+  },
+  computed: {
+    productScroll() {
+      if (this.$refs.productScroll) {
+        return this.$refs.productScroll.scrollLeft;
+      }
+    },
+    characterScroll() {
+      if (this.$refs.productScroll) {
+        return this.$refs.productScroll.scrollLeft;
+      }
+    },
   },
   watch: {
     "ruleForm.category_id"(val) {
       const child1 = this.categories.find((item) => item.id == val);
       this.atributes = child1.attributes;
+      console.log(child1.characteristic_groups);
+
+      this.character_group = child1.characteristic_groups;
       this.ruleForm.products.map((item) => {
         item.variations.map((item2) => {
           this.atributes.forEach((elem) => {
@@ -1329,6 +1619,20 @@ export default {
           });
         });
       });
+      child1.characteristic_groups.forEach((item) => {
+        item.characteristics.forEach((elem) => {
+          this.rulesCharacter[`char_${elem.id}`] = [
+            {
+              required: true,
+              message: "Brand name is required",
+              trigger: "change",
+            },
+          ];
+        });
+      });
+      // rulesCharacter
+      console.log(this.rulesCharacter);
+      console.log(this.rules);
       if (child1.children.length > 0) {
         this.categoryChild.child1.id = "";
         this.categoryChild.child2.id = "";
@@ -1375,6 +1679,14 @@ export default {
       });
       this.uploadLoading = true;
       this.__UPLOAD_FILE_VARIANT(newImages, this.variantId);
+    },
+    productScrollState() {
+      console.log(this.$refs.characterScroll.scrollLeft);
+    },
+    "$refs.productScroll.scrollLeft"(val, val2) {
+      if (val != val2) {
+        console.log(this.$refs.productScroll.scrollLeft);
+      }
     },
   },
   components: {
@@ -1480,5 +1792,13 @@ export default {
   //     }
   //   }
   // }
+}
+.character_scroll_span {
+  overflow-x: scroll;
+  width: 100%;
+  display: flex;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
