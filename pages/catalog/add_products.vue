@@ -128,6 +128,7 @@
                         <el-select
                           v-model="ruleForm.category_id"
                           allow-create
+                          class="w-100"
                           default-first-option
                           placeholder="Select category"
                           no-data-text="no-category"
@@ -1311,7 +1312,7 @@ export default {
         console.log("valid", valid);
         if (valid) {
           console.log(newData);
-          // this.__POST_PRODUCTS(newData);
+          this.__POST_PRODUCTS(newData);
         } else {
           return false;
         }
@@ -1323,6 +1324,7 @@ export default {
         item.validate((valid) => {
           console.log("valid", valid);
           if (valid) {
+            this.hide('characteristic_modal');
           } else {
             return false;
           }
