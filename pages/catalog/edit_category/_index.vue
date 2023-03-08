@@ -140,7 +140,7 @@
                       <el-option
                         v-for="item in atributes"
                         :key="item.id"
-                        :label="item.name"
+                        :label="item.name.ru"
                         :value="item.id"
                       >
                       </el-option>
@@ -541,7 +541,7 @@ export default {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           console.log(data);
-          // this.__EDIT_CATEGORIES(data);
+          this.__EDIT_CATEGORIES(data);
         } else {
           return false;
         }

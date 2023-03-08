@@ -64,4 +64,10 @@ export const actions = {
     );
     return res;
   },
+  async deleteGroups({},id) {
+    const res = this.$axios.$delete(
+      `https://test.loftcity.uz/api/admin/characteristics/${id}`
+    );
+    return res;
+  },
 };

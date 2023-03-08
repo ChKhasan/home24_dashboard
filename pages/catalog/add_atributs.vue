@@ -181,7 +181,7 @@
     </AddModal>
   </div>
 </template>
-<script>
+<script lang="js">
 import AddBtn from "../../components/form/Add-btn.vue";
 import Title from "../../components/Title.vue";
 import FormTitle from "../../components/Form-title.vue";

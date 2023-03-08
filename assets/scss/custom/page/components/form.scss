@@ -20,7 +20,7 @@
       &::placeholder {
         color: #a1a5bf;
       }
-      height: initial !important;
+      min-height: 42px !important;
     }
   }
   label {
@@ -181,7 +181,7 @@
         @include fontTTinterface(14.04px, 400);
         line-height: 19.5px !important;
         color: #a1a5bf;
-        height: initial !important;
+        min-height: 42px !important;
       }
     }
     label {

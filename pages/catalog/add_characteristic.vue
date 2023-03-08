@@ -85,8 +85,8 @@
                         class="w-100"
                         v-model="ruleForm.group_id"
                         filterable
-                        allow-create
                         no-data-text="No group"
+                        no-match-text="No group"
                         placeholder="Choose tags for your article"
                       >
                         <el-option

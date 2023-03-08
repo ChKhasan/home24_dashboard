@@ -154,7 +154,6 @@
                         filterable
                         no-data-text="no category"
                         no-match-text="no category"
-                        default-first-option
                         :disabled="categoryChild.child1.arr.length < 1"
                         placeholder="Select post category"
                       >
@@ -178,7 +177,6 @@
                         no-data-text="no category"
                         no-match-text="no category"
                         :disabled="categoryChild.child2.arr.length < 1"
-                        default-first-option
                         placeholder="Select last category"
                       >
                         <el-option
@@ -426,15 +424,18 @@
                         </div>
                       </el-tab-pane>
                     </el-tabs>
-                    <a-button
-                      type="primary"
-                      @click="show('characteristic_modal')"
-                      >Character</a-button
-                    >
                   </div>
                 </el-tab-pane>
               </el-tabs>
               <!-- Product Variants -->
+              <div>
+              
+                    <a-button
+                      type="primary"
+                      @click="show('characteristic_modal')"
+                      >Редактировать характеристику </a-button
+                    >
+              </div>
               <div class="form-container" v-for="element in ruleForm.products">
                 <div class="d-flex justify-content-between variant-header">
                   <h4 class="variant-title">Вариация №{{ element.id }}</h4>
@@ -534,37 +535,53 @@
                       v-if="atributes.length > 0"
                     >
                       <div class="variant-grid-4 w-100">
-                        <div
-                          class="form-variant-block"
-                          v-for="(atribut, index) in atributes"
+                        <el-form
+                          label-position="top"
+                          :model="item.optionName"
+                          :rules="rulesAtributes"
+                          ref="ruleFormAtributes"
+                          label-width="120px"
+                          class="demo-ruleForm d-flex"
+                          action=""
                         >
-                          <div>
-                            <label>{{ atribut.name.ru }}</label>
-                          </div>
-                          <el-select
-                            v-model="item.optionName[`at_${atribut.id}`]"
-                            class="w-100"
-                            default-first-option
-                            placeholder="265 gb"
-                            @change="
-                              atributOptions({
-                                productId: element.id,
-                                variantId: item.id,
-                                index: index,
-                                name: atribut.name.ru,
-                                id: atribut.id,
-                              })
-                            "
+                          <div
+                            class="form-variant-block atribut_selects"
+                            v-for="(atribut, index) in atributes"
                           >
-                            <el-option
-                              v-for="optionElement in atribut.options"
-                              :key="optionElement.id"
-                              :label="optionElement.name.ru"
-                              :value="optionElement.id"
+                            <div>
+                              <label>{{ atribut.name.ru }}</label>
+                            </div>
+                            <el-form-item
+                              :prop="`at_${atribut.id}`"
+                              class="mb-0"
                             >
-                            </el-option>
-                          </el-select>
-                        </div>
+                              <el-select
+                                v-model="item.optionName[`at_${atribut.id}`]"
+                                class="w-100"
+                                default-first-option
+                                placeholder="265 gb"
+                                @change="
+                                  atributOptions({
+                                    productId: element.id,
+                                    variantId: item.id,
+                                    index: index,
+                                    name: atribut.name.ru,
+                                    id: atribut.id,
+                                  })
+                                "
+                              >
+                                <el-option
+                                  v-for="optionElement in atribut.options"
+                                  :key="optionElement.id"
+                                  :label="optionElement.name.ru"
+                                  :value="optionElement.id"
+                                >
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </div>
+                        </el-form>
+
                         <div class="form-variant-block">
                           <div><label>Popular</label></div>
                           <el-select
@@ -616,6 +633,7 @@
                           ></el-input>
                         </div>
                       </div>
+
                       <div class="variant_btns mb-1">
                         <div
                           class="variant-btn variant-btn-delete mx-2"
@@ -648,7 +666,10 @@
                   </div>
                   <!-- Validations -->
                 </div>
-                <div class="d-flex justify-content-start">
+                <div
+                  class="d-flex justify-content-start"
+                  v-if="atributes.length > 0"
+                >
                   <div
                     class="create-inner-variant"
                     @click="addInnerVariant(element.id)"
@@ -907,7 +928,10 @@
       height="100%"
       :clickToClose="false"
     >
-      <div class="add_modal-container" ref="ruleForm1">
+      <div
+        class="add_modal-container padding_characteristic_modal"
+        ref="ruleForm1"
+      >
         <div class="character_modal-header">
           <div class="character_modal-header_btn">
             <div
@@ -972,7 +996,6 @@
                   @click="characterValueCopy"
                 >
                   <span v-html="copyIcon"> </span> Коп. характеристику
-                  {{ characterGroupIndex }}
                 </div>
               </div>
               <div
@@ -1261,11 +1284,11 @@ export default {
         ],
       },
       rulesCharacter: {},
+      rulesAtributes: {},
       brands: [],
       oldLength: 0,
       uploadLoading: false,
       character_group: [],
-      productScrollState: true,
       valueCharacter: "",
     };
   },
@@ -1311,24 +1334,37 @@ export default {
           newData.category_id = this.categoryChild.child2.id;
         }
       }
+      let artibutReqiured = [];
+      if (this.$refs.ruleFormAtributes) {
+        this.$refs["ruleFormAtributes"].forEach((item) => {
+          item.validate((valid) => {
+            valid ? artibutReqiured.push(valid) : false;
+          });
+        });
+      }
 
       this.$refs[ruleForm].validate((valid) => {
-        console.log("valid", valid);
-        if (valid) {
-          console.log(newData);
-          this.__POST_PRODUCTS(newData);
+        const atr = this.$refs.ruleFormAtributes
+          ? this.$refs.ruleFormAtributes.length
+          : 0;
+        const atributValid = artibutReqiured.length == atr;
+        if (valid && atributValid) {
+          console.log("submit working");
+          // this.__POST_PRODUCTS(newData);
         } else {
           return false;
         }
       });
     },
     submitFormCharacter(ruleForm) {
-      console.log(this.$refs);
+      const trueData = [];
       this.$refs[ruleForm].forEach((item) => {
         item.validate((valid) => {
-          console.log("valid", valid);
           if (valid) {
-            this.hide("characteristic_modal");
+            trueData.push(valid);
+            if (trueData.length == this.$refs[ruleForm].length) {
+              this.hide("characteristic_modal");
+            }
           } else {
             return false;
           }
@@ -1361,7 +1397,43 @@ export default {
       });
       this.$refs.characterScroll.scrollLeft = this.$refs.productScroll.scrollLeft;
     },
-
+    changeCategory(e) {
+      let child1 = this.categories.find((item) => item.id == e);
+      if (!child1) {
+        child1 = this.categoryChild.child1.arr.find((item) => item.id == e);
+        if (child1.children.length > 0) {
+          this.categoryChild.child2.arr = child1.children;
+        }
+        if (!child1) {
+          child1 = this.categoryChild.child2.arr.find((item) => item.id == e);
+        }
+      }
+      this.atributes = child1.attributes;
+      this.character_group = child1.characteristic_groups;
+      child1.characteristic_groups.forEach((item) => {
+        item.characteristics.forEach((elem) => {
+          this.rulesCharacter[`char_${elem.id}`] = [
+            {
+              required: true,
+              message: "Brand name is required",
+              trigger: "change",
+            },
+          ];
+        });
+      });
+      if (!child1.parent_id) {
+        if (child1.children.length > 0) {
+          this.categoryChild.child1.id = "";
+          this.categoryChild.child2.id = "";
+          this.categoryChild.child1.arr = child1.children;
+        } else {
+          this.categoryChild.child1.arr = [];
+          this.categoryChild.child1.id = "";
+          this.categoryChild.child2.arr = [];
+          this.categoryChild.child2.id = "";
+        }
+      }
+    },
     handleChangeVatiant({ fileList }, id) {
       this.variantId = id;
       this.fileList = fileList;
@@ -1401,17 +1473,7 @@ export default {
         valid ? this.__POST_BRAND() : false
       );
     },
-    selectCharacters(e, obj) {
-      const product = this.ruleForm.products.find(
-        (item) => item.id == obj.productId
-      );
-      console.log(obj, product);
-      const validat = product.variations.find(
-        (elem) => elem.id == obj.variationId
-      );
-      validat.characteristics.push(e);
-      // console.log(e, arr)
-    },
+
     show(name) {
       this.$modal.show(name);
       document.body.style.overflowY = "hidden";
@@ -1584,48 +1646,24 @@ export default {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = data.categories?.data;
     },
-    characterValueCopy() {
-      var copyCharacter = {};
-      this.ruleForm.products.forEach((item, itemIndex) => {
-        item.variations.forEach((elem, elemIndex) => {
-          if (itemIndex == 0 && elemIndex == 0) {
-            copyCharacter = { ...elem.characteristicsValues };
-          } else {
-            elem.characteristicsValues = { ...copyCharacter };
-          }
-        });
+    async __GET_CATEGORY_BY_ID(id) {
+      const data = await this.$store.dispatch(
+        "fetchCategories/getCategoriesById",
+        id
+      );
+      const category = data.category;
+      this.atributes = category.attributes;
+      this.character_group = category.characteristic_groups;
+      this.atributes.forEach((element) => {
+        this.rulesAtributes[`at_${element.id}`] = [
+          {
+            required: true,
+            message: "Atribut is required",
+            trigger: "change",
+          },
+        ];
       });
-      console.log(this.ruleForm);
-      copyCharacter = {};
-    },
-  },
-  computed: {
-    productScroll() {
-      if (this.$refs.productScroll) {
-        return this.$refs.productScroll.scrollLeft;
-      }
-    },
-    characterScroll() {
-      if (this.$refs.productScroll) {
-        return this.$refs.productScroll.scrollLeft;
-      }
-    },
-  },
-  watch: {
-    "ruleForm.category_id"(val) {
-      const child1 = this.categories.find((item) => item.id == val);
-      this.atributes = child1.attributes;
-      console.log(child1.characteristic_groups);
-
-      this.character_group = child1.characteristic_groups;
-      this.ruleForm.products.map((item) => {
-        item.variations.map((item2) => {
-          this.atributes.forEach((elem) => {
-            return (item2.optionName[elem.name.ru] = "");
-          });
-        });
-      });
-      child1.characteristic_groups.forEach((item) => {
+      category.characteristic_groups.forEach((item) => {
         item.characteristics.forEach((elem) => {
           this.rulesCharacter[`char_${elem.id}`] = [
             {
@@ -1636,9 +1674,27 @@ export default {
           ];
         });
       });
-      // rulesCharacter
-      console.log(this.rulesCharacter);
-      console.log(this.rules);
+    },
+    characterValueCopy() {
+      var copyCharacter = {};
+      this.ruleForm.products.forEach((item, itemIndex) => {
+        item.variations.forEach((elem, elemIndex) => {
+          console.log(elem.characteristicsValues);
+          if (itemIndex == 0 && elemIndex == 0) {
+            copyCharacter = { ...elem.characteristicsValues };
+          } else {
+            elem.characteristicsValues = { ...copyCharacter };
+          }
+        });
+      });
+      copyCharacter = {};
+    },
+  },
+
+  watch: {
+    "ruleForm.category_id"(val) {
+      const child1 = this.categories.find((item) => item.id == val);
+      this.__GET_CATEGORY_BY_ID(val);
       if (child1.children.length > 0) {
         this.categoryChild.child1.id = "";
         this.categoryChild.child2.id = "";
@@ -1651,20 +1707,13 @@ export default {
       }
     },
     "categoryChild.child1.id"(val) {
+      console.log(val);
       if (val) {
         const child2 = this.categoryChild.child1.arr.find(
           (item) => item.id == val
         );
-        if (child2.attributes) {
-          this.atributes = child2.attributes;
-          this.ruleForm.products.map((item) => {
-            item.variations.map((item2) => {
-              this.atributes.forEach((elem) => {
-                return (item2.optionName[elem.name.ru] = "");
-              });
-            });
-          });
-        }
+        this.__GET_CATEGORY_BY_ID(val);
+
         if (child2.children.length > 0) {
           this.categoryChild.child2.arr = child2.children;
         } else {
@@ -1672,6 +1721,9 @@ export default {
           this.categoryChild.child2.id = "";
         }
       }
+    },
+    "categoryChild.child2.id"(val) {
+      this.__GET_CATEGORY_BY_ID(val);
     },
     fileList(val) {
       this.ruleForm.products.find(
@@ -1685,14 +1737,6 @@ export default {
       });
       this.uploadLoading = true;
       this.__UPLOAD_FILE_VARIANT(newImages, this.variantId);
-    },
-    productScrollState() {
-      console.log(this.$refs.characterScroll.scrollLeft);
-    },
-    "$refs.productScroll.scrollLeft"(val, val2) {
-      if (val != val2) {
-        console.log(this.$refs.productScroll.scrollLeft);
-      }
     },
   },
   components: {
@@ -1804,6 +1848,11 @@ export default {
   width: 100%;
   display: flex;
   &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.atribut_selects {
+  .el-form-item__error {
     display: none;
   }
 }

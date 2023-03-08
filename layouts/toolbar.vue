@@ -245,6 +245,12 @@ export default {
             to: "/catalog/brands",
             disabled: false,
           },
+          {
+            name: "Группа характеристика",
+            index: "16",
+            to: "/catalog/characteristic_groups",
+            disabled: false,
+          },
         ],
         orders: [
           {
