@@ -140,8 +140,8 @@
                       <el-option
                         v-for="item in atributes"
                         :key="item.id"
-                        :label="item.name.ru"
-                        :value="item.name.ru"
+                        :label="item.name"
+                        :value="item.id"
                       >
                       </el-option>
                     </el-select>
@@ -163,7 +163,7 @@
                         v-for="item in groups"
                         :key="item.id"
                         :label="item.name.ru"
-                        :value="item.name.ru"
+                        :value="item.id"
                       >
                       </el-option>
                     </el-select>
@@ -361,6 +361,7 @@ export default {
     return {
       activeName: "Русский",
       atributes: [],
+    
       categories: [],
       groups: [],
       lang: [
@@ -515,13 +516,14 @@ export default {
       delete data["name_ru"];
       delete data["name_uz"];
       delete data["name_en"];
-      data.attributes = this.atributes.map((item) => {
-        if (data.attributes.includes(item.name.ru)) return item.id;
+      data.attributes = data.attributes.map((item) => {
+        if (typeof item != "number") return item.id;
+        else return item;
       });
       data.group_characteristics = this.groups.map((item) => {
         if (data.group_characteristics.includes(item.name.ru)) return item.id;
       });
-      data.attributes = data.attributes.filter((elem) => elem);
+      // data.attributes = data.attributes.filter((elem) => elem);
       data.group_characteristics = data.group_characteristics.filter(
         (elem) => elem
       );
@@ -538,7 +540,8 @@ export default {
       }
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          this.__EDIT_CATEGORIES(data);
+          console.log(data);
+          // this.__EDIT_CATEGORIES(data);
         } else {
           return false;
         }
@@ -614,8 +617,11 @@ export default {
     toBack() {
       this.$router.push("/catalog/categories");
     },
-
+    
     async __GET_CATEGORY_BY_ID() {
+      const dataAtr = await this.$store.dispatch("fetchAtributes/getAtributes");
+      this.atributes = dataAtr.attributes?.data;
+      console.log(this.atributes);
       const data = await this.$store.dispatch(
         "fetchCategories/getCategoriesById",
         this.$route.params.index
@@ -638,7 +644,6 @@ export default {
           (item) =>
             !data.category.children.find((childId) => childId.id == item.id)
         );
-      console.log();
       this.ruleForm.name_ru = data.category.name.ru;
       this.ruleForm.name_uz = data.category.name.uz;
       this.ruleForm.name_en = data.category.name.en;
@@ -646,8 +651,9 @@ export default {
       this.ruleForm.desc.uz = data.category.desc.uz;
       this.ruleForm.desc.en = data.category.desc.en;
       this.ruleForm.attributes = data.category.attributes.map(
-        (item) => item.name.ru
+        (item) => item.id
       );
+      console.log(this.ruleForm.attributes);
       this.ruleForm.group_characteristics = data.category.characteristic_groups.map(
         (item) => item.name.ru
       );
@@ -657,7 +663,7 @@ export default {
           name: "image.png",
           status: "done",
           oldImg: true,
-          url: data.category.md_img,
+          url: data.category.lg_img,
         },
       ];
       this.fileList1 = [
@@ -666,7 +672,7 @@ export default {
           name: "image.png",
           status: "done",
           oldImg: true,
-          url: data.category.md_icon,
+          url: data.category.lg_icon,
         },
       ];
       this.ruleForm.is_popular = data.category.is_popular;
@@ -724,7 +730,7 @@ export default {
     },
   },
   mounted() {
-    this.__GET_ATRIBUTES();
+    // this.__GET_ATRIBUTES();
     this.__GET_GROUPS();
     this.__GET_CATEGORY_BY_ID();
   },

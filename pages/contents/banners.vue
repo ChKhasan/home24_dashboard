@@ -315,8 +315,8 @@ export default {
         },
         {
           title: "Image",
-          dataIndex: "md_img",
-          key: "md_img",
+          dataIndex: "lg_img",
+          key: "lg_img",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
@@ -428,7 +428,7 @@ export default {
       this.editId = id;
       const data = this.banners.find((item) => item.id == id);
       this.ruleForm = {
-        img: data.md_img,
+        img: data.lg_img,
         link_ru: data.link.ru,
         link_uz: data.link.uz,
         link_en: data.link.en,

@@ -211,7 +211,7 @@ export default {
           dataIndex: "editId",
           scopedSlots: { customRender: "editId" },
           className: "column-btns",
-          //   width: "10%",
+            width: "100px",
           align: "right",
         },
       ],

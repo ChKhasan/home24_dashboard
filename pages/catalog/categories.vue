@@ -58,7 +58,7 @@
               <h6>{{ text?.name?.ru ? text?.name?.ru : "----" }}</h6>
             </div>
             <div
-              slot="md_icon"
+              slot="lg_icon"
               slot-scope="text"
               align="center"
               class="table_product_row select-table-child"
@@ -137,10 +137,10 @@ const columns = [
   },
   {
     title: "Икона",
-    dataIndex: "md_icon",
+    dataIndex: "lg_icon",
     slots: { title: "customTitle" },
-    scopedSlots: { customRender: "md_icon" },
-    key: "md_icon",
+    scopedSlots: { customRender: "lg_icon" },
+    key: "lg_icon",
     width: "12%",
     align: "right",
   },
@@ -270,7 +270,7 @@ export default {
                   key: (index + 1) * 100 + (index1 + 1) * 10 + index2 + 1,
                   dataName: {
                     name: lastChild.name,
-                    img: lastChild.md_img,
+                    img: lastChild.lg_img,
                   },
                 };
               });
@@ -280,7 +280,7 @@ export default {
               ...childItem,
               dataName: {
                 name: childItem.name,
-                img: childItem.md_img,
+                img: childItem.lg_img,
               },
               children: newChild2,
             };
@@ -290,7 +290,7 @@ export default {
             ...item,
             dataName: {
               name: item.name,
-              img: item.md_img,
+              img: item.lg_img,
             },
             children: newChild,
           };

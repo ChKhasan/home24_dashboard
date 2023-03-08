@@ -75,46 +75,15 @@
               <div class="form-container form-container-ltr">
                 <FormTitle title="Атрибут" />
                 <div class="form-block required">
-                  <div><label for="">Группа</label></div>
-                  <div class="group-grid">
-                    <el-form-item prop="group_id">
-                      <el-select
-                        class="w-100"
-                        v-model="ruleForm.group_id"
-                        filterable
-                        allow-create
-                        placeholder="Choose tags for your article"
-                      >
-                        <el-option
-                          v-for="item in groups"
-                          :key="item.id"
-                          :label="item.name.ru"
-                          :value="item.id"
-                        >
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                    <div
-                      class="outline-btn outline-light-blue-btn mt-2"
-                      @click="show('add_atribute_group')"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 6V18M18 12L6 12"
-                          stroke="#5899FF"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
-                  </div>
+                  <div><label for="">Keywords</label></div>
+
+                  <el-form-item prop="keywords">
+                    <el-input
+                      type="text"
+                      v-model="ruleForm.keywords"
+                      placeholder="Keywords"
+                    ></el-input>
+                  </el-form-item>
                 </div>
                 <div class="atribut-input-grid">
                   <div class="form-block required">
@@ -137,7 +106,7 @@
                     <div><label>Имя опции</label></div>
                     <el-form-item label-position="top" prop="options">
                       <el-select
-                        class="w-100"
+                        class="w-100 multi_select"
                         v-model="ruleForm.options"
                         filterable
                         multiple
@@ -179,48 +148,6 @@
         </div>
       </div>
     </el-form>
-    <AddModal
-      title="New group"
-      name="add_atribute_group"
-      btnText="Add Group"
-      :callback="getData"
-      :closeModal="closeModal"
-    >
-      <el-form
-        label-position="top"
-        :model="atributGroup"
-        :rules="rulesModal"
-        ref="atributGroup"
-        label-width="120px"
-        class="demo-ruleForm"
-        action=""
-      >
-        <div class="modal_tab mb-4">
-          <span
-            v-for="(item, index) in modalTabData"
-            :key="index"
-            @click="modalTab = item.index"
-            :class="{ 'avtive-modalTab': modalTab == item.index }"
-          >
-            {{ item.label }}
-          </span>
-        </div>
-        <div
-          class="form-block required"
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          v-if="modalTab == item.index"
-        >
-          <div><label for="">Group </label></div>
-          <el-form-item prop="character_name">
-            <el-input
-              placeholder="Product model"
-              v-model="atributGroup.name[item.index]"
-            ></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-    </AddModal>
   </div>
 </template>
 <script>
@@ -294,7 +221,7 @@ export default {
         ],
       },
       rulesModal: {
-        group_id: [
+        keywords: [
           {
             required: true,
             message: "Atribut group is required",
@@ -303,13 +230,12 @@ export default {
         ],
       },
       ruleForm: {
-        group_id: null,
+        keywords: "",
         name_ru: "",
         name_uz: "",
         name_en: "",
         options: [],
       },
-      group_id: null,
       atributGroup: {
         name: {
           ru: "",
@@ -376,8 +302,7 @@ export default {
       this.ruleForm.name_ru = data.attribute.name.ru;
       this.ruleForm.name_uz = data.attribute.name.uz;
       this.ruleForm.name_en = data.attribute.name.en;
-      this.ruleForm.group_id = data.attribute.group.id;
-      this.group_id = data.attribute.group.id;
+      this.ruleForm.keywords = data.attribute.keywords;
       this.atribut_id = data.attribute.id;
       this.options = data.attribute.options;
       this.ruleForm.options = data.attribute.options.map(
@@ -407,10 +332,7 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    async __GET_GROUPS() {
-      const data = await this.$store.dispatch("fetchAtributes/getGroups");
-      this.groups = data?.groups;
-    },
+
     statusFunc(res) {
       switch (res.status) {
         case 422:
@@ -433,22 +355,7 @@ export default {
           break;
       }
     },
-    closeModal() {
-      this.hide("add_atribute_group");
-    },
-    async __POST_GROUPS() {
-      try {
-        await this.$store.dispatch(
-          "fetchAtributes/postGroups",
-          this.atributGroup
-        );
-        this.successNotify("Группа успешно добавлен");
-        this.__GET_GROUPS();
-        this.hide("add_atribute_group");
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
+
     successNotify(message) {
       this.$notify({
         title: "Success",
@@ -458,7 +365,6 @@ export default {
     },
   },
   mounted() {
-    this.__GET_GROUPS();
     this.__GET_ATRIBUT_BY_ID();
   },
   components: {

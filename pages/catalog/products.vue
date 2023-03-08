@@ -196,12 +196,10 @@ export default {
           scopedSlots: { customRender: "status" },
           className: "column-tags",
           filters: [
-            { text: "progress", value: "in progress" },
-            { text: "Success", value: "Success" },
-            { text: "rejected", value: "rejected" },
-            { text: "Approved", value: "Approved" },
+            { text: "Active", value: "active" },
+            { text: "Inactive", value: "inactive" },
           ],
-          onFilter: (value, record) => record.tags.indexOf(value) === 0,
+          onFilter: (value, record) => record.status.indexOf(value) === 0,
           width: "16%",
         },
         {
@@ -234,20 +232,7 @@ export default {
       ],
       value: "",
       products: [],
-      data: [
-        {
-          key: "1",
-          name: "sfsdfds",
-          subtitle: "subtitle",
-          code: "02887003",
-          qty: "25",
-          price: "6 700 000 sum",
-          tags: "in progress",
-          img: "Published",
-
-          btns: "id",
-        },
-      ],
+      data: [],
     };
   },
   computed: {
@@ -274,6 +259,7 @@ export default {
         if (item.products[0].images.length > 0) {
           return {
             ...item,
+            key: item.id,
             price: item.products[0].price,
             model: item.products[0].model,
             img: item.products[0].images[0].lg_img
@@ -284,6 +270,7 @@ export default {
         } else {
           return {
             ...item,
+            key: item.id,
             price: item.products[0].price,
             model: item.products[0].model,
             img: null,

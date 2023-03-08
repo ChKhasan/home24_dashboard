@@ -274,7 +274,7 @@ export default {
           dataIndex: "id",
           scopedSlots: { customRender: "id" },
           className: "column-btns",
-          //   width: "10%",
+            width: "100px",
           align: "right",
         },
       ],

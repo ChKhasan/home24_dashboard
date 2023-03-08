@@ -154,6 +154,13 @@
     color: #a1a5bf;
   }
 }
+.multi_select {
+  .el-input__inner {
+    height: 90px !important;
+   min-height: 40px !important;
+}
+}
+
 @media (max-width: 1440px) {
   .form-block {
     display: flex;

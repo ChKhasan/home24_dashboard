@@ -323,8 +323,8 @@ export default {
         },
         {
           title: "Зоговолок",
-          dataIndex: "md_img",
-          key: "md_img",
+          dataIndex: "lg_img",
+          key: "lg_img",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
@@ -473,7 +473,7 @@ export default {
           name: "image.png",
           status: "done",
           oldImg: true,
-          url: this.ruleForm.md_img,
+          url: this.ruleForm.lg_img,
         },
       ];
       this.show("add_blog");

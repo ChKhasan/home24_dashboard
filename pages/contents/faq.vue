@@ -75,7 +75,7 @@
             </span>
             <div slot="answer" slot-scope="text" v-html="text?.ru"></div>
             <span slot="numberId" slot-scope="text">#{{ text }}</span>
-            <a slot="category" slot-scope="text">{{ text.title.ru }}</a>
+            <a slot="category" slot-scope="text">{{ text?.title ? text.title.ru: '-----' }}</a>
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
@@ -314,7 +314,7 @@ export default {
           dataIndex: "id",
           scopedSlots: { customRender: "id" },
           className: "column-btns",
-          //   width: "10%",
+            width: "90px",
           align: "right",
         },
       ],

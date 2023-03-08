@@ -126,7 +126,7 @@
                     <div><label>Категория</label></div>
                     <el-select
                       v-model="ruleForm.category_id"
-                      allow-create
+                      filterable
                       default-first-option
                       placeholder="Select category"
                     >
@@ -144,7 +144,7 @@
                     <div><label>Дочерняя категория</label></div>
                     <el-select
                       v-model="categoryChild.child1.id"
-                      allow-create
+                      filterable
                       default-first-option
                       :disabled="categoryChild.child1.arr.length < 1"
                       placeholder="Select post category"
@@ -163,7 +163,7 @@
                     <div><label>Последняя категория</label></div>
                     <el-select
                       v-model="categoryChild.child2.id"
-                      allow-create
+                      filterable
                       :disabled="categoryChild.child2.arr.length < 1"
                       default-first-option
                       placeholder="Select last category"

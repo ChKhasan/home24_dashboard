@@ -138,7 +138,7 @@
                     <div><label>Имя опции</label></div>
                     <el-form-item label-position="top" prop="options">
                       <el-select
-                        class="w-100"
+                        class="w-100 multi_select"
                         v-model="ruleForm.options"
                         filterable
                         multiple

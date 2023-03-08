@@ -2,7 +2,11 @@ export const actions = {
   async getAtributes() {
     try {
       const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/attributes`
+        `https://test.loftcity.uz/api/admin/attributes`,{
+          params: {
+            
+          }
+        }
       );
       return res;
     } catch (e) {
