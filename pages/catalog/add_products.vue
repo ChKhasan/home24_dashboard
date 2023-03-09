@@ -71,7 +71,7 @@
                           ></el-input>
                         </el-form-item>
                       </div>
-                      <div class="form-block">
+                      <!-- <div class="form-block">
                         <div><label for="">Имя</label></div>
                         <el-form-item prop="nbm">
                           <el-input
@@ -88,7 +88,7 @@
                             placeholder="162 111 415 515 118"
                           ></el-input>
                         </el-form-item>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </el-tab-pane>
@@ -294,19 +294,22 @@
                       ></el-tab-pane>
                       <el-tab-pane label="Характеристика" name="Character">
                         <div>
-                          <h5 class="variant-img-title mb-4 mt-2">Добавить характеристику</h5>
-                <a-button type="primary" @click="show('characteristic_modal')"
-                  >Редактировать характеристику
-                </a-button>
-              </div>
-                        
+                          <h5 class="variant-img-title mb-4 mt-2">
+                            Добавить характеристику
+                          </h5>
+                          <a-button
+                            type="primary"
+                            @click="show('characteristic_modal')"
+                            >Редактировать характеристику
+                          </a-button>
+                        </div>
                       </el-tab-pane>
                     </el-tabs>
                   </div>
                 </el-tab-pane>
               </el-tabs>
               <!-- Product Variants -->
-            
+
               <div class="form-container" v-for="element in ruleForm.products">
                 <div class="d-flex justify-content-between variant-header">
                   <h4 class="variant-title">Вариация №{{ element.id }}</h4>
@@ -734,11 +737,13 @@
       >
         <div class="character_modal-header">
           <div class="character_modal-header_btn">
-  
-          <div class="character-save-btn"  @click="submitFormCharacter('ruleFormCharacter')" >
-            <span class="svg-icon" v-html="addIcon"></span>
-            сохранять
-          </div>
+            <div
+              class="character-save-btn"
+              @click="submitFormCharacter('ruleFormCharacter')"
+            >
+              <span class="svg-icon" v-html="addIcon"></span>
+              сохранять
+            </div>
             <div
               class="character-close-btn"
               @click="hide('characteristic_modal')"
@@ -1024,7 +1029,7 @@ export default {
       brands: [],
       uploadLoading: false,
       character_group: [],
-      characterNames: []
+      characterNames: [],
     };
   },
   mounted() {
@@ -1063,7 +1068,7 @@ export default {
       delete newData["name_ru"];
       delete newData["name_uz"];
       delete newData["name_en"];
-      if (this.categoryChild.child1.id)  {
+      if (this.categoryChild.child1.id) {
         newData.category_id = this.categoryChild.child1.id;
         if (this.categoryChild.child2.id) {
           newData.category_id = this.categoryChild.child2.id;
@@ -1092,6 +1097,7 @@ export default {
       });
     },
     submitFormCharacter(ruleForm) {
+      console.log(this.ruleForm.products);
       const trueData = [];
       this.$refs[ruleForm].forEach((item) => {
         item.validate((valid) => {
@@ -1340,7 +1346,6 @@ export default {
       this.atributes = category.attributes;
       this.character_group = category.characteristic_groups;
       this.atributes.forEach((element) => {
-        this.characterNames.push(`at_${element.id}`);
         this.rulesAtributes[`at_${element.id}`] = [
           {
             required: true,
@@ -1352,6 +1357,7 @@ export default {
 
       category.characteristic_groups.forEach((item) => {
         item.characteristics.forEach((elem) => {
+          this.characterNames.push(`char_${elem.id}`);
           this.rulesCharacter[`char_${elem.id}`] = [
             {
               required: true,
@@ -1366,15 +1372,16 @@ export default {
       var copyCharacter = {};
       this.ruleForm.products.forEach((item, itemIndex) => {
         item.variations.forEach((elem, elemIndex) => {
-          console.log(elem.characteristicsValues);
           if (itemIndex == 0 && elemIndex == 0) {
             copyCharacter = { ...elem.characteristicsValues };
+            console.log(elem.characteristicsValues);
           } else {
-            if(elem.characteristicsValues) {
-              elem.characteristicsValues = { ...copyCharacter };
-            } else {
-              elem.characteristicsValues = elem.characteristicsValues
-            }
+            Object.keys(copyCharacter).forEach((charElem) => {
+              if (!Object.keys(elem.characteristicsValues).includes(charElem)) {
+                elem.characteristicsValues[charElem] = copyCharacter[charElem];
+                elem.characteristicsValues = { ...elem.characteristicsValues };
+              }
+            });
           }
         });
       });
