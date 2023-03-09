@@ -63,9 +63,9 @@
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <!-- <span class="action-btn" @click="editPost(text)">
                 <img :src="editIcon" alt="" />
-              </span>
+              </span> -->
               <!-- <a-popconfirm
                 title="Are you sure delete this group?"
                 ok-text="Yes"

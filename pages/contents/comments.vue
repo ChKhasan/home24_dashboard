@@ -53,7 +53,7 @@
               {{ tags }}
             </span>
             <span slot="editId" slot-scope="text">
-              <span class="action-btn" @click="commnetAnswer(text)">
+              <!-- <span class="action-btn" @click="commnetAnswer(text)">
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
@@ -66,7 +66,7 @@
                 <span class="action-btn">
                   <img :src="deleteIcon" alt="" />
                 </span>
-              </a-popconfirm>
+              </a-popconfirm> -->
             </span>
           </a-table>
         </div>
@@ -205,15 +205,15 @@ export default {
           //   width: "10%",
         },
 
-        {
-          title: "действия",
-          key: "editId",
-          dataIndex: "editId",
-          scopedSlots: { customRender: "editId" },
-          className: "column-btns",
-            width: "100px",
-          align: "right",
-        },
+        // {
+        //   title: "действия",
+        //   key: "editId",
+        //   dataIndex: "editId",
+        //   scopedSlots: { customRender: "editId" },
+        //   className: "column-btns",
+        //     width: "100px",
+        //   align: "right",
+        // },
       ],
       options: [
         {
