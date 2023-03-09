@@ -207,8 +207,8 @@
               <div class="form-block">
                 <div><label>Порядок</label></div>
                 <el-input
-                  v-model="ruleForm.order"
-                  placeholder="Order"
+                  v-model="ruleForm.position"
+                  placeholder="Position"
                 ></el-input>
               </div>
               <div
@@ -361,7 +361,7 @@ export default {
     return {
       activeName: "Русский",
       atributes: [],
-    
+
       categories: [],
       groups: [],
       lang: [
@@ -435,7 +435,7 @@ export default {
           uz: "",
           en: "",
         },
-
+        status: "",
         name_ru: "",
         name_uz: "",
         name_en: "",
@@ -617,7 +617,7 @@ export default {
     toBack() {
       this.$router.push("/catalog/categories");
     },
-    
+
     async __GET_CATEGORY_BY_ID() {
       const dataAtr = await this.$store.dispatch("fetchAtributes/getAtributes");
       this.atributes = dataAtr.attributes?.data;

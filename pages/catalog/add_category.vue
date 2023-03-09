@@ -129,7 +129,7 @@
               <div class="form-container">
                 <div class="form-block required">
                   <div><label>Атрибуты группы</label></div>
-                  <el-form-item prop="group_atribut">
+                  <el-form-item prop="attributes">
                     <el-select
                       v-model="ruleForm.attributes"
                       multiple
@@ -152,7 +152,7 @@
                 </div>
                 <div class="form-block required">
                   <div><label>Групповая характеристика</label></div>
-                  <el-form-item prop="group_characters">
+                  <el-form-item prop="group_characteristics">
                     <el-select
                       v-model="ruleForm.group_characteristics"
                       class="w-100"
@@ -211,8 +211,9 @@
               <div class="form-block">
                 <div><label>Порядок</label></div>
                 <el-input
-                  v-model="ruleForm.order"
-                  placeholder="Order"
+                  v-model="ruleForm.position"
+                  placeholder="Position"
+                  type="number"
                 ></el-input>
               </div>
               <div
@@ -376,20 +377,7 @@ export default {
           label: "English",
         },
       ],
-      options: [
-        {
-          value: "HTML",
-          label: "HTML",
-        },
-        {
-          value: "CSS",
-          label: "CSS",
-        },
-        {
-          value: "JavaScript",
-          label: "JavaScript",
-        },
-      ],
+
       status: [
         {
           value: "active",
@@ -406,27 +394,28 @@ export default {
           {
             required: true,
             message: "Category name is required",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         attributes: [
           {
             required: true,
             message: "Atribut is required",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
         group_characteristics: [
           {
             required: true,
             message: "Group characters is required",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
       },
       ruleForm: {
         parent_id: null,
         is_popular: 0,
+        status: "active",
         desc: {
           ru: "",
           uz: "",
