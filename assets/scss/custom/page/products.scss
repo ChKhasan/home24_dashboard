@@ -126,13 +126,13 @@
 .variant-img-container {
   padding-top: 24px;
   margin-bottom: 16px;
-  .variant-img-title {
-    @include fontTTinterface(16px, 500);
-    line-height: 20px;
-    display: flex;
-    align-items: center;
-    color: #494949;
-  }
+}
+.variant-img-title {
+  @include fontTTinterface(16px, 500);
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  color: #494949;
 }
 .variant-img {
   padding-top: 16px;

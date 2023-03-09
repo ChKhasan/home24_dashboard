@@ -6,11 +6,6 @@
       lastLink="Продукты"
     >
       <div class="d-flex">
-        <!-- <div
-          class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-        >
-          Cancel
-        </div> -->
         <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
           <span class="svg-icon"
             ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
@@ -45,7 +40,6 @@
         <div
           class="d-flex justify-content-between align-items-center card_header"
         >
-          <!-- <Title title="Products panel" /> -->
           <div class="d-flex justify-content-between w-100">
             <SearchInput placeholder="Поиск продукта" />
             <div class="d-flex align-items-center">
@@ -65,7 +59,7 @@
             align: 'right',
           }"
         >
-          <a slot="img" slot-scope="text">
+          <span slot="img" slot-scope="text">
             <img v-if="text" class="table-image" :src="text" alt="" />
             <img
               v-else
@@ -73,15 +67,15 @@
               src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
               alt=""
             />
-          </a>
-          <a
+          </span>
+          <div
             slot="name"
             slot-scope="text"
             align="center"
             class="table_product_row"
           >
             <h6>{{ text.ru }}</h6>
-          </a>
+          </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
           <a slot="price" slot-scope="text">{{
@@ -123,11 +117,7 @@
 </template>
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
-import FilterBtn from "../../components/form/Filter-btn.vue";
 import SearchInput from "../../components/form/Search-input.vue";
-import SearchBlock from "../../components/form/Search-block.vue";
-import AntdTable from "../../components/products/Antd-table.vue";
-import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 
 export default {
@@ -139,7 +129,6 @@ export default {
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
-      loading: false,
       columns: [
         {
           title: "ПРОДУКТ",
@@ -212,45 +201,14 @@ export default {
           align: "right",
         },
       ],
-      options: [
-        {
-          value: "All",
-          label: "All",
-        },
-        {
-          value: "Published",
-          label: "Published",
-        },
-        {
-          value: "Scheduled",
-          label: "Scheduled",
-        },
-        {
-          value: "Inactive",
-          label: "Inactive",
-        },
-      ],
-      value: "",
+
       products: [],
       data: [],
     };
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
-
-    classObject(tag) {
-      return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
-      };
-    },
-  },
   methods: {
     toAddProduct() {
       this.$router.push("/catalog/add_products");
-      console.log("errors");
     },
     async __GET_PRODUCTS() {
       this.products = await this.$store.dispatch("fetchProducts/getProducts");
@@ -290,43 +248,22 @@ export default {
     editProduct(id) {
       this.$router.push(`/catalog/edit_products/${id}`);
     },
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
+
     cancel(e) {
-      console.log(e);
       this.$message.error("Click on No");
     },
-    tableActions(id) {
-      console.log(id);
-    },
+
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
-    },
+
     deletePoduct(id) {
-      console.log(id);
       this.__DELETE_PRODUCTS(id);
     },
     async __DELETE_PRODUCTS(id) {
       try {
-        const data = await this.$store.dispatch(
-          "fetchProducts/deleteProducts",
-          id
-        );
+        await this.$store.dispatch("fetchProducts/deleteProducts", id);
         await this.$notify({
           title: "Success",
           message: "Продукт был успешно удален",
@@ -365,11 +302,7 @@ export default {
   },
   components: {
     AddBtn,
-    FilterBtn,
     SearchInput,
-    SearchBlock,
-    AntdTable,
-    Title,
     TitleBlock,
   },
   layout: "toolbar",

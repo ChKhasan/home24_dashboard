@@ -66,7 +66,7 @@
               <span class="action-btn" @click="editPost(text)">
                 <img :src="editIcon" alt="" />
               </span>
-              <a-popconfirm
+              <!-- <a-popconfirm
                 title="Are you sure delete this group?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -76,7 +76,7 @@
                 <span class="action-btn">
                   <img :src="deleteIcon" alt="" />
                 </span>
-              </a-popconfirm>
+              </a-popconfirm> -->
             </span>
           </a-table>
         </div>

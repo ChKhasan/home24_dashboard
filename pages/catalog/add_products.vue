@@ -17,29 +17,7 @@
           @click="submitForm('ruleForm')"
           :loading="uploadLoading"
         >
-          <span class="svg-icon" v-if="!uploadLoading"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              version="1.1"
-            >
-              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                <path
-                  d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                  fill="#000000"
-                  fill-rule="nonzero"
-                  opacity="0.3"
-                ></path>
-                <path
-                  d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                  fill="#000000"
-                ></path>
-              </g></svg
-          ></span>
+          <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"> </span>
           Add Product
         </a-button>
       </div>
@@ -53,7 +31,6 @@
           ref="ruleForm"
           label-width="120px"
           class="demo-ruleForm"
-          action=""
         >
           <div
             class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
@@ -80,7 +57,7 @@
                       <el-form-item :prop="`name_ru`">
                         <el-input
                           v-model="ruleForm[`name_${item.key}`]"
-                          placeholder="Product model"
+                          placeholder="Product name"
                         ></el-input>
                       </el-form-item>
                     </div>
@@ -196,57 +173,16 @@
                     <div
                       class="outline-btn outline-light-green-btn"
                       @click="searchBlock = true"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
-                          stroke="#181C32"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <div class="outline-btn outline-light-green-btn">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
-                          stroke="#181C32"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <div class="outline-btn outline-light-blue-btn">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 6V18M18 12L6 12"
-                          stroke="#5899FF"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
+                      v-html="searchIcon"
+                    ></div>
+                    <div
+                      class="outline-btn outline-light-green-btn"
+                      v-html="reloadIcon"
+                    ></div>
+                    <div
+                      class="outline-btn outline-light-blue-btn"
+                      v-html="plusCategoryIcon"
+                    ></div>
                   </div>
                 </div>
                 <div class="d-flex" v-if="searchBlock">
@@ -316,40 +252,14 @@
                     </div>
                   </div>
                   <div class="d-flex search-container-btns">
-                    <div class="outline-btn outline-light-gray-btn mx-3">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
-                          stroke="#181C32"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
-                    <div class="outline-btn outline-blue-btn">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 6V18M18 12L6 12"
-                          stroke="#5899FF"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
+                    <div
+                      class="outline-btn outline-light-green-btn mx-3"
+                      v-html="reloadIcon"
+                    ></div>
+                    <div
+                      class="outline-btn outline-light-blue-btn"
+                      v-html="plusCategoryIcon"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -383,59 +293,20 @@
                           /></div
                       ></el-tab-pane>
                       <el-tab-pane label="Характеристика" name="Character">
-                        <ProductCharacterList />
-                        <div
-                          class="character-products-container d-flex"
-                          ref="productScroll"
-                        >
-                          <span
-                            v-for="product in ruleForm.products"
-                            class="d-flex"
-                          >
-                            <div
-                              class="character-product-card"
-                              v-for="variations in product.variations"
-                            >
-                              <div class="ch-product-img">
-                                <img
-                                  v-if="product.images.length > 0"
-                                  :src="product.images[0]"
-                                  alt=""
-                                />
-                                <img
-                                  v-else
-                                  src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
-                                  alt=""
-                                />
-                              </div>
-                              <div class="ch-product-body">
-                                <span class="ch-product-info">
-                                  Пурпурные
-                                </span>
-                                <span class="ch-product-info">
-                                  dual SIM 265 gb
-                                </span>
-                                <span class="ch-product-info">
-                                  17 100 000 сум LL A
-                                </span>
-                              </div>
-                            </div>
-                          </span>
-                        </div>
+                        <div>
+                          <h5 class="variant-img-title mb-4 mt-2">Добавить характеристику</h5>
+                <a-button type="primary" @click="show('characteristic_modal')"
+                  >Редактировать характеристику
+                </a-button>
+              </div>
+                        
                       </el-tab-pane>
                     </el-tabs>
                   </div>
                 </el-tab-pane>
               </el-tabs>
               <!-- Product Variants -->
-              <div>
-              
-                    <a-button
-                      type="primary"
-                      @click="show('characteristic_modal')"
-                      >Редактировать характеристику </a-button
-                    >
-              </div>
+            
               <div class="form-container" v-for="element in ruleForm.products">
                 <div class="d-flex justify-content-between variant-header">
                   <h4 class="variant-title">Вариация №{{ element.id }}</h4>
@@ -474,34 +345,7 @@
                       "
                     >
                       <div v-if="element.imagesData.length < 50">
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M15.2765 17.7765H4.72315C3.34231 17.7765 2.22314 16.6573 2.22314 15.2765V4.72315C2.22314 3.34231 3.34231 2.22314 4.72315 2.22314H15.2765C16.6573 2.22314 17.7765 3.34231 17.7765 4.72315V15.2765C17.7765 16.6573 16.6573 17.7765 15.2765 17.7765Z"
-                            fill="#3699FF"
-                          />
-                          <path
-                            d="M2.22314 11.4292C3.44814 11.1117 4.73231 10.9434 6.05648 10.9434C10.6106 10.9434 14.6981 12.94 17.4915 16.105"
-                            fill="#3699FF"
-                          />
-                          <path
-                            d="M2.22314 11.4292C3.44814 11.1117 4.73231 10.9434 6.05648 10.9434C10.6106 10.9434 14.6981 12.94 17.4915 16.105"
-                            stroke="white"
-                            stroke-width="1.5"
-                            stroke-miterlimit="10"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                          <path
-                            d="M12.8753 9.48016C14.1028 9.48016 15.0978 8.48511 15.0978 7.25766C15.0978 6.0302 14.1028 5.03516 12.8753 5.03516C11.6479 5.03516 10.6528 6.0302 10.6528 7.25766C10.6528 8.48511 11.6479 9.48016 12.8753 9.48016Z"
-                            fill="white"
-                          />
-                        </svg>
+                        <span v-html="addImgIcon"></span>
                         <div class="ant-upload-text">
                           Добавить изображение
                         </div>
@@ -674,28 +518,7 @@
                     class="create-inner-variant"
                     @click="addInnerVariant(element.id)"
                   >
-                    <svg
-                      width="17"
-                      height="16"
-                      viewBox="0 0 17 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M3 8H14"
-                        stroke="#3699FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                      <path
-                        d="M8.5 2.5V13.5"
-                        stroke="#3699FF"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
+                    <span v-html="addInnerValidatIcon"></span>
                     Добавит внутренний варизаци
                   </div>
                 </div>
@@ -707,28 +530,7 @@
                   class="add-variant create-inner-variant mt-0"
                   @click="addVariant"
                 >
-                  <svg
-                    width="17"
-                    height="16"
-                    viewBox="0 0 17 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M3 8H14"
-                      stroke="#3699FF"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M8.5 2.5V13.5"
-                      stroke="#3699FF"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
+                  <span v-html="addInnerValidatIcon"></span>
                   Добавит варизаци
                 </div>
               </div>
@@ -774,7 +576,6 @@
                           class="w-100"
                           v-model="ruleForm.brand_id"
                           allow-create
-                          default-first-option
                           :loading="brands.length < 1"
                           loading-text="Loading..."
                           placeholder="Бренд"
@@ -865,7 +666,6 @@
         ref="brandData"
         label-width="120px"
         class="demo-ruleForm"
-        action=""
       >
         <div class="form-block required">
           <div><label for="">Brand </label></div>
@@ -924,7 +724,7 @@
     <modal
       :adaptive="true"
       name="characteristic_modal"
-      width="95%"
+      width="100%"
       height="100%"
       :clickToClose="false"
     >
@@ -934,6 +734,11 @@
       >
         <div class="character_modal-header">
           <div class="character_modal-header_btn">
+  
+          <div class="character-save-btn"  @click="submitFormCharacter('ruleFormCharacter')" >
+            <span class="svg-icon" v-html="addIcon"></span>
+            сохранять
+          </div>
             <div
               class="character-close-btn"
               @click="hide('characteristic_modal')"
@@ -1028,6 +833,7 @@
                               ]
                             "
                             filterable
+                            allow-create
                             default-first-option
                             placeholder="Select category"
                             no-data-text="no-category"
@@ -1050,62 +856,20 @@
           </div>
           <div></div>
         </div>
-
-        <div class="character_modal-footer d-flex justify-content-end mt-4">
-          <a-button
-            @click="submitFormCharacter('ruleFormCharacter')"
-            class="character_save-btn btn-primary d-flex align-items-center"
-            type="primary"
-          >
-            <span class="svg-icon"
-              ><svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                version="1.1"
-              >
-                <g
-                  stroke="none"
-                  stroke-width="1"
-                  fill="none"
-                  fill-rule="evenodd"
-                >
-                  <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                  <path
-                    d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                    fill="#000000"
-                    fill-rule="nonzero"
-                    opacity="0.3"
-                  ></path>
-                  <path
-                    d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                    fill="#000000"
-                  ></path>
-                </g></svg
-            ></span>
-            Add Product
-          </a-button>
-        </div>
       </div>
     </modal>
   </div>
 </template>
 <script>
-import AddBtn from "../../components/form/Add-btn.vue";
-import FilterBtn from "../../components/form/Filter-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
-import Title from "../../components/Title.vue";
 import ProductsStatistic from "../../components/products/Products-statistic.vue";
 import ProductCharacterList from "../../components/products/Product-character-list.vue";
 import CommentCard from "../../components/products/CommentCard.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-
-import { quillEditor } from "vue-quill-editor";
 import AddModal from "../../components/modals/Add-modal.vue";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1121,21 +885,14 @@ export default {
     return {
       closeIcon: require("../../assets/svg/components/remove.svg?raw"),
       copyIcon: require("../../assets/svg/components/copy.svg?raw"),
+      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+      searchIcon: require("../../assets/svg/components/search-icon.svg?raw"),
+      reloadIcon: require("../../assets/svg/components/reload-icon.svg?raw"),
+      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
+      addInnerValidatIcon: require("../../assets/svg/components/add-inner-validat-icon.svg?raw"),
+      plusCategoryIcon: require("../../assets/svg/components/add-category-icon.svg?raw"),
       title: "Quill Editor",
-      items: [
-        {
-          text: "Minton",
-          href: "/",
-        },
-        {
-          text: "Forms",
-          href: "/",
-        },
-        {
-          text: "Quill Editor",
-          active: true,
-        },
-      ],
+
       editorOption: {
         theme: "snow",
         modules: {
@@ -1152,24 +909,7 @@ export default {
           ],
         },
       },
-      option: {
-        theme: "bubble",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "link"],
-            [
-              {
-                header: 1,
-              },
-              {
-                header: 2,
-              },
-              "blockquote",
-            ],
-          ],
-        },
-      },
-      varinatOptions: {},
+
       atributes: [],
       variantId: "12",
       loadingBrand: false,
@@ -1200,7 +940,6 @@ export default {
           label: "Inactive",
         },
       ],
-      value: "",
       rules: {
         name_ru: [
           {
@@ -1228,7 +967,6 @@ export default {
           arr: [],
         },
       },
-
       ruleForm: {
         name_ru: "",
         name_uz: "",
@@ -1264,10 +1002,8 @@ export default {
         ],
       },
 
-      atributVariants: [],
       previewVisible: false,
       previewImage: "",
-      variantImages: [{}],
       fileListBrand: [],
       fileList: [],
       brandData: {
@@ -1286,10 +1022,9 @@ export default {
       rulesCharacter: {},
       rulesAtributes: {},
       brands: [],
-      oldLength: 0,
       uploadLoading: false,
       character_group: [],
-      valueCharacter: "",
+      characterNames: []
     };
   },
   mounted() {
@@ -1328,7 +1063,7 @@ export default {
       delete newData["name_ru"];
       delete newData["name_uz"];
       delete newData["name_en"];
-      if (this.categoryChild.child1.id) {
+      if (this.categoryChild.child1.id)  {
         newData.category_id = this.categoryChild.child1.id;
         if (this.categoryChild.child2.id) {
           newData.category_id = this.categoryChild.child2.id;
@@ -1350,7 +1085,7 @@ export default {
         const atributValid = artibutReqiured.length == atr;
         if (valid && atributValid) {
           console.log("submit working");
-          // this.__POST_PRODUCTS(newData);
+          this.__POST_PRODUCTS(newData);
         } else {
           return false;
         }
@@ -1387,58 +1122,16 @@ export default {
         this.statusFunc(e.response);
       }
     },
-
-    saveCharacters() {
-      console.log(this.ruleForm);
-    },
     handleScroll(event) {
       this.$refs.characterScrollItems.forEach((item) => {
         item.scrollLeft = this.$refs.productScroll.scrollLeft;
       });
       this.$refs.characterScroll.scrollLeft = this.$refs.productScroll.scrollLeft;
     },
-    changeCategory(e) {
-      let child1 = this.categories.find((item) => item.id == e);
-      if (!child1) {
-        child1 = this.categoryChild.child1.arr.find((item) => item.id == e);
-        if (child1.children.length > 0) {
-          this.categoryChild.child2.arr = child1.children;
-        }
-        if (!child1) {
-          child1 = this.categoryChild.child2.arr.find((item) => item.id == e);
-        }
-      }
-      this.atributes = child1.attributes;
-      this.character_group = child1.characteristic_groups;
-      child1.characteristic_groups.forEach((item) => {
-        item.characteristics.forEach((elem) => {
-          this.rulesCharacter[`char_${elem.id}`] = [
-            {
-              required: true,
-              message: "Brand name is required",
-              trigger: "change",
-            },
-          ];
-        });
-      });
-      if (!child1.parent_id) {
-        if (child1.children.length > 0) {
-          this.categoryChild.child1.id = "";
-          this.categoryChild.child2.id = "";
-          this.categoryChild.child1.arr = child1.children;
-        } else {
-          this.categoryChild.child1.arr = [];
-          this.categoryChild.child1.id = "";
-          this.categoryChild.child2.arr = [];
-          this.categoryChild.child2.id = "";
-        }
-      }
-    },
     handleChangeVatiant({ fileList }, id) {
       this.variantId = id;
       this.fileList = fileList;
     },
-
     __UPLOAD_FILE_VARIANT(newImages, id) {
       const currentProduct = this.ruleForm.products.find(
         (item) => item.id == id
@@ -1467,13 +1160,11 @@ export default {
         (varId) => varId.id == obj.variantId
       ).optionName[`at_${obj.id}`];
     },
-
     getData() {
       this.$refs["brandData"].validate((valid) =>
         valid ? this.__POST_BRAND() : false
       );
     },
-
     show(name) {
       this.$modal.show(name);
       document.body.style.overflowY = "hidden";
@@ -1495,7 +1186,6 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-
     //variant
     addInnerVariant(variantId) {
       const addVar = this.findVarintWithId(variantId);
@@ -1558,9 +1248,7 @@ export default {
         variations: newInnerVar,
       });
     },
-
     // variant
-
     handleChangeBrand({ fileList }) {
       this.loadingBrand = true;
       this.fileListBrand = fileList;
@@ -1583,9 +1271,7 @@ export default {
         this.statusFunc(e.response);
       }
     },
-
     handleClick(tab, event) {
-      console.log("handlchange", tab, event);
       this.formVal = "";
     },
     onChangeVariants(elementId, varId) {
@@ -1600,7 +1286,6 @@ export default {
           item.is_default = 0;
         });
     },
-
     async __POST_BRAND() {
       try {
         await this.$store.dispatch("fetchBrands/postBrands", this.brandData);
@@ -1655,6 +1340,7 @@ export default {
       this.atributes = category.attributes;
       this.character_group = category.characteristic_groups;
       this.atributes.forEach((element) => {
+        this.characterNames.push(`at_${element.id}`);
         this.rulesAtributes[`at_${element.id}`] = [
           {
             required: true,
@@ -1663,6 +1349,7 @@ export default {
           },
         ];
       });
+
       category.characteristic_groups.forEach((item) => {
         item.characteristics.forEach((elem) => {
           this.rulesCharacter[`char_${elem.id}`] = [
@@ -1683,31 +1370,31 @@ export default {
           if (itemIndex == 0 && elemIndex == 0) {
             copyCharacter = { ...elem.characteristicsValues };
           } else {
-            elem.characteristicsValues = { ...copyCharacter };
+            if(elem.characteristicsValues) {
+              elem.characteristicsValues = { ...copyCharacter };
+            } else {
+              elem.characteristicsValues = elem.characteristicsValues
+            }
           }
         });
       });
       copyCharacter = {};
     },
   },
-
   watch: {
     "ruleForm.category_id"(val) {
       const child1 = this.categories.find((item) => item.id == val);
       this.__GET_CATEGORY_BY_ID(val);
       if (child1.children.length > 0) {
-        this.categoryChild.child1.id = "";
-        this.categoryChild.child2.id = "";
         this.categoryChild.child1.arr = child1.children;
       } else {
         this.categoryChild.child1.arr = [];
-        this.categoryChild.child1.id = "";
         this.categoryChild.child2.arr = [];
-        this.categoryChild.child2.id = "";
       }
+      this.categoryChild.child1.id = "";
+      this.categoryChild.child2.id = "";
     },
     "categoryChild.child1.id"(val) {
-      console.log(val);
       if (val) {
         const child2 = this.categoryChild.child1.arr.find(
           (item) => item.id == val
@@ -1740,120 +1427,11 @@ export default {
     },
   },
   components: {
-    FilterBtn,
-    Title,
-    AddBtn,
     ProductsStatistic,
     ProductCharacterList,
     CommentCard,
     TitleBlock,
-    quillEditor,
     AddModal,
   },
 };
 </script>
-<style lang="scss">
-.add-product {
-  display: grid;
-  grid-template-columns: 670px auto;
-  grid-gap: 13px;
-}
-.checkbox-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 4rem;
-}
-.variant_form_grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
-}
-.ant-upload-select-picture-card i {
-  font-size: 32px;
-  color: #999;
-}
-
-.ant-upload-select-picture-card .ant-upload-text {
-  margin-top: 8px;
-  color: #666;
-}
-.variant-img {
-  .ant-upload-text {
-    font-family: "TT Interfaces";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 15px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #3699ff;
-  }
-  .ant-upload-list-picture-card .ant-upload-list-item-info::before {
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-  .ant-upload.ant-upload-select-picture-card {
-    background: #f3f6f9;
-  }
-  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-eye-o,
-  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-download,
-  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-delete {
-    color: #000;
-  }
-  // .anticon {
-  //   width: 20px;
-  //   height: 20px;
-  //   border-radius: 50%;
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  //   background: rgba(#fff, 0.4);
-  //   color: #000;
-  //   svg {
-  //     width: 16px;
-  //     height: 16px;
-  //   }
-  // }
-  // .ant-upload-list-item-actions {
-  //   a {
-  //     display: none;
-  //   }
-  //   opacity: 1;
-  //   left: auto;
-  //   top: 0;
-  //   right: -20px;
-  //   background: red;
-  //   border-radius: 50%;
-  //   i {
-  //     svg {
-  //       display: none;
-  //     }
-  //     position: relative;
-  //     display: flex;
-  //     align-items: center;
-  //     width: 20px !important;
-  //     height: 20px;
-  //     margin: 0 !important;
-  //     justify-content: center;
-  //     &:after {
-  //       content: "x";
-  //       position: absolute;
-  //       top: 8px;
-  //     }
-  //   }
-  // }
-}
-.character_scroll_span {
-  overflow-x: scroll;
-  width: 100%;
-  display: flex;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-.atribut_selects {
-  .el-form-item__error {
-    display: none;
-  }
-}
-</style>

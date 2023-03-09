@@ -85,20 +85,39 @@
     margin-right: 6px;
   }
 }
-.character-close-btn {
-  border: 1px solid #ff0000;
-  border-radius: 4px;
-  padding: 10px 23px 10px 20px;
+.character-close-btn,
+.character-save-btn {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  
   @include fontTTinterface(14px, 600);
   line-height: 18px;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   transition: 0.3s ease-in-out;
-  color: #ff0000;
+  border-radius: 4px;
   cursor: pointer;
+}
+.character-close-btn {
+  border: 1px solid #ff0000;
+
+  color: #ff0000;
   &:hover {
     border-color: rgba(255, 0, 0, 0.5);
     color: rgba(255, 0, 0, 0.5);
+  }
+}
+.character-save-btn {
+  background-color: #1890ff;
+  color: #fff;
+  svg {
+    path {
+      fill: #fff;
+    }
+  }
+  &:hover {
+    background-color: rgba(24, 144, 255, 0.7);
   }
 }
 .character-product-card {
@@ -130,8 +149,12 @@
 }
 .character_modal-header_btn {
   width: 280px;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
   align-items: center;
+  grid-gap: 10px;
+  padding-right: 10px;
+
 }
 .character_modal-header {
   display: inline-flex;
@@ -221,5 +244,66 @@
         border-width: 0.5px !important;
       }
     }
+  }
+}
+.add-product {
+  display: grid;
+  grid-template-columns: 670px auto;
+  grid-gap: 13px;
+}
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 4rem;
+}
+.variant_form_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+.ant-upload-select-picture-card i {
+  font-size: 32px;
+  color: #999;
+}
+
+.ant-upload-select-picture-card .ant-upload-text {
+  margin-top: 8px;
+  color: #666;
+}
+.variant-img {
+  .ant-upload-text {
+    font-family: "TT Interfaces";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #3699ff;
+  }
+  .ant-upload-list-picture-card .ant-upload-list-item-info::before {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  .ant-upload.ant-upload-select-picture-card {
+    background: #f3f6f9;
+  }
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-eye-o,
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-download,
+  .ant-upload-list-picture-card .ant-upload-list-item-actions .anticon-delete {
+    color: #000;
+  }
+}
+.character_scroll_span {
+  overflow-x: scroll;
+  width: 100%;
+  display: flex;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.atribut_selects {
+  .el-form-item__error {
+    display: none;
   }
 }
