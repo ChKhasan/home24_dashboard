@@ -1,8 +1,9 @@
 export const actions = {
-  async getCategories() {
+  async getCategories({},payload) {
     try {
       const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/categories`
+        `https://test.loftcity.uz/api/admin/categories`,{ params: payload }
+        
       );
       return res;
     } catch (e) {

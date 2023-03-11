@@ -9,23 +9,23 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
-          <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Комментарии" />
-          </div>
+          <FormTitle title="Комментарии" />
         </div>
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
             :data-source="comments"
-            :pagination="false"
-            align="center"
+            :pagination="pagination"
+            :loading="loading"
+            @change="handleTableChange"
           >
-            <a slot="img" slot-scope="text"
-              ><img
+            <div slot="img" slot-scope="text">
+              <img
                 class="table-image"
                 src="../../assets/images/image.png"
                 alt=""
-            /></a>
+              />
+            </div>
             <span
               @click="$router.push('/home/customer-info/123')"
               slot="name"
@@ -35,121 +35,31 @@
             >
               <h6>{{ text }}</h6>
             </span>
-            <h4 slot="number" slot-scope="text">{{ text }}</h4>
-            <a slot="price" slot-scope="text">${{ text }}</a>
             <span slot="customTitle"></span>
-
-            <span
-              slot="tags"
-              slot-scope="tags"
-              class="tags-style"
-              :class="{
-                tag_success: tags == 'Success',
-                tag_inProgress: tags == 'in progress',
-                tag_approved: tags == 'Approved',
-                tag_rejected: tags == 'rejected',
-              }"
-            >
-              {{ tags }}
-            </span>
-            <span slot="editId" slot-scope="text">
-              <!-- <span class="action-btn" @click="commnetAnswer(text)">
-                <img :src="editIcon" alt="" />
-              </span>
-              <a-popconfirm
-                title="Are you sure delete this comment?"
-                ok-text="Yes"
-                cancel-text="No"
-                @confirm="deleteComment(text)"
-                @cancel="cancel"
-              >
-                <span class="action-btn">
-                  <img :src="deleteIcon" alt="" />
-                </span>
-              </a-popconfirm> -->
-            </span>
           </a-table>
         </div>
       </div>
     </div>
-    <AddModal
-      title="Ответ к комментарию"
-      name="edit_comment"
-      btnText="Save"
-      :callback="getData"
-      :closeModal="closeModal"
-    >
-      <el-form
-        label-position="top"
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="120px"
-        class="demo-ruleForm"
-        action=""
-      >
-        <div class="form-block">
-          <div><label for="">Комментарию </label></div>
-          <el-form-item>
-            <el-input
-              type="textarea"
-              disabled
-              rows="6"
-              placeholder="Зоговолок"
-              v-model="ruleForm.comment"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div class="form-block">
-          <div><label for="">Ответ </label></div>
-          <el-form-item>
-            <el-input
-              type="textarea"
-              rows="6"
-              placeholder="Зоговолок"
-              v-model="ruleForm.answer"
-            ></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-    </AddModal>
   </div>
 </template>
 <script>
-import Editor from "../../components/form/editor.vue";
-
-import AddBtn from "../../components/form/Add-btn.vue";
-import FilterBtn from "../../components/form/Filter-btn.vue";
-import SearchInput from "../../components/form/Search-input.vue";
-import SearchBlock from "../../components/form/Search-block.vue";
-import AntdTable from "../../components/products/Antd-table.vue";
-import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
-import AddModal from "../../components/modals/Add-modal.vue";
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
 export default {
   middleware: "auth",
   data() {
     return {
       pageSize: 10,
+      page: 1,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      tableData: [],
-      selectedRowKeys: [], // Check here to configure the default column
-      loading: false,
-      ruleForm: {
-        product_id: null,
-        comment: "desc",
-        answer: "",
-      },
       columns: [
         {
           title: "ID",
@@ -215,54 +125,8 @@ export default {
         //   align: "right",
         // },
       ],
-      options: [
-        {
-          value: "All",
-          label: "All",
-        },
-        {
-          value: "Published",
-          label: "Published",
-        },
-        {
-          value: "Scheduled",
-          label: "Scheduled",
-        },
-        {
-          value: "Inactive",
-          label: "Inactive",
-        },
-      ],
-      value: "",
-      data: [],
       previewVisible: false,
-      previewImage: "",
-      fileList: [],
       comments: [],
-      rules: {
-        group_id: [
-          {
-            required: true,
-            message: "Characteristic group is required",
-            trigger: "change",
-          },
-        ],
-
-        name_ru: [
-          {
-            required: true,
-            message: "Characteristic name is required",
-            trigger: "change",
-          },
-        ],
-        options: [
-          {
-            required: true,
-            message: "Characteristic name is required",
-            trigger: "change",
-          },
-        ],
-      },
     };
   },
   methods: {
@@ -272,68 +136,30 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-      console.log("errors");
-    },
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/contents/comments`,
+          query: {
+            page: pagination.current,
+          },
         });
-      });
-      console.log(this.tableData);
-    },
-    getData() {
-      console.log("dadasdaadas");
-    },
-    closeModal() {
-      this.hide("edit_comment");
-    },
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
-    commnetAnswer(id) {
-      this.show("edit_comment");
-      console.log(this.ruleForm);
-    },
-    tableActions(id) {
-      console.log(id);
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
-    },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
       }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
-    },
-    handleChange({ fileList }) {
-      this.fileList = fileList;
-    },
-    handleCancel() {
-      this.previewVisible = false;
+      this.loading = true;
+      this.__GET_COMMENTS();
     },
     async __GET_COMMENTS() {
-      const data = await this.$store.dispatch("fetchComments/getComments");
+      const data = await this.$store.dispatch("fetchComments/getComments", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = data.comments?.total;
       this.comments = data.comments?.data.map((item) => {
         return {
           ...item,
@@ -346,10 +172,7 @@ export default {
     },
     async __DELETE_COMMENT(id) {
       try {
-        const data = await this.$store.dispatch(
-          "fetchComments/deleteComments",
-          id
-        );
+        await this.$store.dispatch("fetchComments/deleteComments", id);
         await this.$notify({
           title: "Success",
           message: "Пост был успешно удален",
@@ -383,35 +206,25 @@ export default {
       }
     },
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
-
-    classObject(tag) {
-      return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
-      };
-    },
-  },
-  mounted() {
-    this.__GET_COMMENTS();
-    if (this.data) {
-      this.tableData = this.data;
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/contents/comments`,
+        query: { page: this.params.page },
+      });
     }
+    this.pagination.current = this.$route.query.page * 1;
+    this.__GET_COMMENTS();
+  },
+  watch: {
+    "pagination.current"() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
   },
   components: {
-    AddBtn,
-    FilterBtn,
-    SearchInput,
-    SearchBlock,
-    AntdTable,
-    Title,
     TitleBlock,
     FormTitle,
-    AddModal,
-    Editor,
   },
   layout: "toolbar",
 };

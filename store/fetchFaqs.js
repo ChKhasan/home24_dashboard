@@ -1,7 +1,7 @@
 export const actions = {
-  async getFaqs() {
+  async getFaqs({},payload) {
     try {
-      const res = this.$axios.$get(`https://test.loftcity.uz/api/admin/faqs`);
+      const res = this.$axios.$get(`https://test.loftcity.uz/api/admin/faqs`,{params: payload});
       return res;
     } catch (e) {
       return e.response;

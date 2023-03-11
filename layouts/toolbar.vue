@@ -219,36 +219,44 @@ export default {
             name: "Продукты",
             index: "11",
             to: "/catalog/products",
+            path: "catalog-products",
             disabled: false,
           },
           {
             name: "Категории",
             index: "12",
             to: "/catalog/categories",
+            path: "catalog-categories",
             disabled: false,
           },
           {
             name: "Атрибуты",
             index: "13",
             to: "/catalog/atributs",
+            path: "catalog-atributs",
+
             disabled: false,
           },
           {
             name: "Характеристика",
             index: "14",
             to: "/catalog/characteristic",
+            path: "catalog-characteristic",
             disabled: false,
           },
           {
             name: "Бренды",
             index: "15",
             to: "/catalog/brands",
+            path: "catalog-brands",
+
             disabled: false,
           },
           {
             name: "Группа характеристика",
             index: "16",
             to: "/catalog/characteristic_groups",
+            path: "catalog-characteristic_groups",
             disabled: false,
           },
         ],
@@ -257,48 +265,63 @@ export default {
             name: "Все заказы (0)",
             index: "21",
             to: "/orders/all-orders",
+            path: "orders-all-orders",
+
             disabled: false,
           },
           {
             name: "Новые заказы (0)",
             index: "22",
             to: "/orders/new-orders",
+            path: "orders-new-orders",
+
             disabled: false,
           },
           {
             name: "Принятые заказы (0)",
             index: "23",
             to: "/orders/accepted-orders",
+            path: "orders-accepted-orders",
+
             disabled: false,
           },
           {
             name: "Готовые в отправке (0)",
             index: "24",
             to: "/orders/ready-orders",
+            path: "orders-ready-orders",
+
             disabled: false,
           },
           {
             name: "В доставке (0)",
             index: "25",
             to: "/orders/delivery-orders",
+            path: "orders-delivery-orders",
+
             disabled: false,
           },
           {
             name: "Возврат (0)",
             index: "26",
             to: "/orders/return-orders",
+            path: "orders-return-orders",
+
             disabled: false,
           },
           {
             name: "Доставленные (0)",
             index: "27",
             to: "/orders/delivered-orders",
+            path: "orders-delivered-orders",
+
             disabled: false,
           },
           {
             name: "Отмененные (0)",
             index: "28",
             to: "/orders/canceled-orders",
+            path: "orders-canceled-orders",
             disabled: false,
           },
         ],
@@ -307,18 +330,23 @@ export default {
             name: "Скидки",
             index: "31",
             to: "/inbox/sms",
+            path: "inbox-sms",
             disabled: true,
           },
           {
             name: "По Email",
             index: "32",
             to: "/inbox/email",
+            path: "inbox-email",
+
             disabled: false,
           },
           {
             name: "По SMS",
             index: "33",
             to: "/inbox/sms",
+            path: "inbox-sms",
+
             disabled: false,
           },
         ],
@@ -327,12 +355,15 @@ export default {
             name: "Блог",
             index: "51",
             to: "/contents/blog",
+            path: "contents-blog",
             disabled: false,
           },
           {
             name: "Баннеры",
             index: "52",
             to: "/contents/banners",
+            path: "contents-banners",
+
             disabled: false,
           },
           {
@@ -344,19 +375,25 @@ export default {
           {
             name: "Отзывы",
             index: "54",
-            to: "/contents/banners",
+            to: "/contents/banners2",
+            path: "contents-banners2",
+
             disabled: true,
           },
           {
             name: "Вопрос и ответы",
             index: "55",
             to: "/contents/faq",
+            path: "contents-faq",
+
             disabled: false,
           },
           {
             name: "Категории (Faqs)",
             index: "56",
             to: "/contents/faq_categories",
+            path: "contents-faq_categories",
+
             disabled: false,
           },
         ],
@@ -364,25 +401,31 @@ export default {
           {
             name: "Переводы",
             index: "61",
-            to: "/contents/blog",
+            to: "/contents/blog2",
+            path: "contents-blog2",
             disabled: true,
           },
           {
             name: "Справочник",
             index: "62",
-            to: "/contents/banners",
+            to: "/contents/banners2",
+            path: "contents-banners2",
+
             disabled: true,
           },
           {
             name: "Общие данные",
             index: "63",
-            to: "/contents/comments",
+            to: "/contents/comments2",
+            path: "contents-comments2",
+
             disabled: true,
           },
           {
             name: "Пользователи",
             index: "64",
-            to: "/contents/banners",
+            to: "/contents/banners2",
+            path: "contents-banners2",
             disabled: true,
           },
         ],
@@ -400,6 +443,7 @@ export default {
     this.handleClose();
     this.activeOpens();
     this.checkToolbar(this.$route.name);
+
   },
 
   methods: {
@@ -439,44 +483,16 @@ export default {
       this.collapsed = !this.collapsed;
     },
     checkToolbar(newVal) {
-      switch (newVal) {
-        case "catalog-products":
-          this.activeRouterName = "11";
-          break;
-        case "catalog-categories":
-          this.activeRouterName = "12";
-          break;
-        case "catalog-atributs":
-          this.activeRouterName = "13";
-          break;
-        case "catalog-characteristic":
-          this.activeRouterName = "14";
-          break;
-        case "orders-all-orders":
-          this.activeRouterName = "21";
-          break;
-        case "orders-new-orders":
-          this.activeRouterName = "22";
-          break;
-        case "orders-accepted-orders":
-          this.activeRouterName = "23";
-          break;
-        case "orders-ready-orders":
-          this.activeRouterName = "24";
-          break;
-        case "orders-delivery-orders":
-          this.activeRouterName = "25";
-          break;
-        case "orders-return-orders":
-          this.activeRouterName = "26";
-          break;
-        case "orders-delivered-orders":
-          this.activeRouterName = "27";
-          break;
-        case "orders-canceled-orders":
-          this.activeRouterName = "28";
-          break;
-      }
+      const toolBarNames = Object.keys(this.toolbarMenu);
+      toolBarNames.forEach((elem) => {
+        this.toolbarMenu[elem].forEach((item) => {
+          switch (newVal) {
+            case item.path:
+              this.activeRouterName = item.index;
+              break;
+          }
+        });
+      });
     },
   },
   watch: {

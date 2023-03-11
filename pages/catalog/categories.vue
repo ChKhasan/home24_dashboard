@@ -34,7 +34,10 @@
             :columns="columns"
             :data-source="categories"
             :expanded-row-keys.sync="expandedRowKeys"
-            :pagination="false"
+            :pagination="pagination"
+            :current="2"
+            :loading="loading"
+            @change="handleTableChange"
           >
             <div
               slot="dataName"
@@ -72,17 +75,17 @@
               <p v-else>-----</p>
             </div>
             <span
-              slot="tags"
-              slot-scope="tags"
+              slot="is_active"
+              slot-scope="is_active"
               class="tags-style"
               :class="{
-                tag_success: tags == 'Success',
-                tag_inProgress: tags == 'in progress',
-                tag_approved: tags == 'Approved',
-                tag_rejected: tags == 'rejected',
+                tag_success: is_active == 1,
+                tag_inProgress: is_active == 'in progress',
+                tag_approved: is_active == 'Approved',
+                tag_rejected: is_active == 0,
               }"
             >
-              {{ tags }}
+              {{ is_active ? 'Active':"Inactive" }}
             </span>
 
             <span slot="id" slot-scope="text">
@@ -145,6 +148,14 @@ const columns = [
     align: "right",
   },
   {
+    title: "Key",
+    dataIndex: "key",
+    slots: { title: "customTitle" },
+    scopedSlots: { customRender: "key" },
+    key: "key",
+    align: "right",
+  },
+  {
     title: "ПОПУЛЯРНЫЙ",
     dataIndex: "is_popular",
     key: "is_popular",
@@ -154,9 +165,9 @@ const columns = [
   },
   {
     title: "Статус",
-    key: "tags",
-    dataIndex: "tags",
-    scopedSlots: { customRender: "tags" },
+    key: "is_active",
+    dataIndex: "is_active",
+    scopedSlots: { customRender: "is_active" },
     className: "column-tags",
     width: "16%",
   },
@@ -190,6 +201,14 @@ export default {
   middleware: "auth",
   data() {
     return {
+      page: 1,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       categories: [],
       options: [
         {
@@ -255,8 +274,32 @@ export default {
       console.log(e);
       this.$message.error("Click on No");
     },
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/catalog/categories`,
+          query: {
+            page: pagination.current,
+          },
+        });
+      }
+      this.loading = true;
+      this.__GET_CATEGORIES();
+    },
     async __GET_CATEGORIES() {
-      const data = await this.$store.dispatch("fetchCategories/getCategories");
+      this.categories = await [];
+      const data = await this.$store.dispatch("fetchCategories/getCategories", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = data.categories?.total;
 
       this.categories = data.categories?.data.map((item, index) => {
         let newChild = [];
@@ -267,36 +310,56 @@ export default {
               newChild2 = childItem.children.map((lastChild, index2) => {
                 return {
                   ...lastChild,
-                  key: (index + 1) * 100 + (index1 + 1) * 10 + index2 + 1,
+                  key: (index + 1) * 100 + (index1 + 1) * 10 + (index2 + 1),
                   dataName: {
                     name: lastChild.name,
                     img: lastChild.lg_img,
                   },
                 };
               });
+              return {
+                key: (index1 + 1) * 1 + (index + 1) * 10,
+                ...childItem,
+                dataName: {
+                  name: childItem.name,
+                  img: childItem.lg_img,
+                },
+                children: [...newChild2],
+              };
+            } else {
+              newChild2 = [];
+              return {
+                key: (index1 + 1) * 1 + (index + 1) * 10,
+                ...childItem,
+                dataName: {
+                  name: childItem.name,
+                  img: childItem.lg_img,
+                },
+              };
             }
-            return {
-              key: (index1 + 1) * 1 + (index + 1) * 10,
-              ...childItem,
-              dataName: {
-                name: childItem.name,
-                img: childItem.lg_img,
-              },
-              children: newChild2,
-            };
           });
           return {
-            key: index + 1,
+            key: index * 1 + 1,
             ...item,
             dataName: {
               name: item.name,
               img: item.lg_img,
             },
-            children: newChild,
+            children: [...newChild],
+          };
+        } else {
+          newChild = [];
+          return {
+            key: index * 1 + 1,
+            ...item,
+            dataName: {
+              name: item.name,
+              img: item.lg_img,
+            },
           };
         }
       });
-      console.log(this.categories);
+
     },
     deleteCategory(id) {
       this.__DELETE_CATEGORY(id);
@@ -385,8 +448,21 @@ export default {
       console.log(this.allCheckbox);
     },
   },
-  mounted() {
-    this.__GET_CATEGORIES();
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/catalog/categories`,
+        query: { page: this.params.page },
+      });
+    }
+    this.pagination.current = this.$route.query.page * 1;
+    await this.__GET_CATEGORIES();
+  },
+  watch: {
+    "pagination.current"() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
   },
 };
 </script>

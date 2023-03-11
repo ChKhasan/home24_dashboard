@@ -1,8 +1,8 @@
 export const actions = {
-    async getBrands() {
+    async getBrands({},payload) {
       try {
         const res = this.$axios.$get(
-          `https://test.loftcity.uz/api/admin/brands`
+          `https://test.loftcity.uz/api/admin/brands`,{params: payload}
         );
         return res;
       } catch (e) {

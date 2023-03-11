@@ -209,6 +209,7 @@
                 <el-input
                   v-model="ruleForm.position"
                   placeholder="Position"
+                  type="number"
                 ></el-input>
               </div>
               <div

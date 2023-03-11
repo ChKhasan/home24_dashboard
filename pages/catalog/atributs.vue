@@ -61,8 +61,10 @@
           <a-table
             :columns="columns"
             :data-source="atributes"
-            :pagination="false"
+            :pagination="pagination"
+            :loading="loading"
             align="center"
+            @change="handleTableChange"
             :row-selection="{
               selectedRowKeys: selectedRowKeys,
               onChange: onSelectChange,
@@ -133,6 +135,14 @@ export default {
   layout: "toolbar",
   data() {
     return {
+      page: 1,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       pageSize: 10,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
@@ -170,7 +180,14 @@ export default {
       data: [],
     };
   },
-  mounted() {
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/catalog/atributs`,
+        query: { page: this.params.page },
+      });
+    }
+    this.pagination.current = this.$route.query.page * 1;
     this.__GET_ATRIBUTES();
   },
   methods: {
@@ -188,6 +205,22 @@ export default {
     },
     tableActions(id) {
       console.log(id);
+    },
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/catalog/atributs`,
+          query: {
+            page: pagination.current,
+          },
+        });
+      }
+      this.loading = true;
+      this.__GET_ATRIBUTES();
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
@@ -248,8 +281,20 @@ export default {
       }
     },
     async __GET_ATRIBUTES() {
-      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
+      const data = await this.$store.dispatch("fetchAtributes/getAtributes", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = data.attributes?.total;
       this.atributes = data.attributes?.data;
+    },
+  },
+  watch: {
+    "pagination.current"() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
   },
   components: {

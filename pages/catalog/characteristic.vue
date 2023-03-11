@@ -55,8 +55,10 @@
           <a-table
             :columns="columns"
             :data-source="atributes"
-            :pagination="false"
+            :pagination="pagination"
             align="center"
+            :loading="loading"
+            @change="handleTableChange"
             :row-selection="{
               selectedRowKeys: selectedRowKeys,
               onChange: onSelectChange,
@@ -124,6 +126,14 @@ export default {
   data() {
     return {
       pageSize: 10,
+      page: 1,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       selectedRowKeys: [], // Check here to configure the default column
@@ -160,10 +170,33 @@ export default {
       data: [],
     };
   },
-  mounted() {
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/catalog/characteristic`,
+        query: { page: this.params.page },
+      });
+    }
+    this.pagination.current = this.$route.query.page * 1;
     this.__GET_CHARACTERISTIC();
   },
   methods: {
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/catalog/characteristic`,
+          query: {
+            page: pagination.current,
+          },
+        });
+      }
+      this.loading = true;
+      this.__GET_CHARACTERISTIC();
+    },
     toAddProduct() {
       this.$router.push("/catalog/add_characteristic");
       console.log("errors");
@@ -239,9 +272,22 @@ export default {
     },
     async __GET_CHARACTERISTIC() {
       const data = await this.$store.dispatch(
-        "fetchCharacters/getCharacteristics"
+        "fetchCharacters/getCharacteristics",
+        {
+          ...this.$route.query,
+        }
       );
+      this.loading = false;
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = data.characteristics?.total;
       this.atributes = data.characteristics?.data;
+    },
+  },
+  watch: {
+    "pagination.current"() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
   },
   components: { SelectAntTable, AddBtn, Title, TitleBlock, SearchInput },

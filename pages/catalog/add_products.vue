@@ -556,7 +556,7 @@
                       <el-select
                         id="status"
                         class="w-100"
-                        v-model="ruleForm.status"
+                        v-model="ruleForm.is_active"
                         default-first-option
                         placeholder="Статус"
                       >
@@ -937,11 +937,11 @@ export default {
       ],
       options: [
         {
-          value: "active",
+          value: 1,
           label: "Active",
         },
         {
-          value: "inactive",
+          value: 0,
           label: "Inactive",
         },
       ],
@@ -983,7 +983,7 @@ export default {
           en: "",
         },
         brand_id: "",
-        status: "active",
+        is_active: 1,
         category_id: "",
         products: [
           {
@@ -1040,6 +1040,8 @@ export default {
   methods: {
     // products
     submitForm(ruleForm) {
+      console.log(this.ruleForm);
+
       const newData = {
         ...this.ruleForm,
         name: {
@@ -1089,7 +1091,7 @@ export default {
           : 0;
         const atributValid = artibutReqiured.length == atr;
         if (valid && atributValid) {
-          console.log("submit working");
+          console.log(this.ruleForm);
           this.__POST_PRODUCTS(newData);
         } else {
           return false;

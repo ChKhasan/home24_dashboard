@@ -1,8 +1,8 @@
 export const actions = {
-    async getPosts() {
+    async getPosts({},payload) {
       try {
         const res = this.$axios.$get(
-          `https://test.loftcity.uz/api/admin/posts`
+          `https://test.loftcity.uz/api/admin/posts`,{params: payload}
         );
         return res;
       } catch (e) {

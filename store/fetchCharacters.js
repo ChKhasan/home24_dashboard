@@ -1,8 +1,9 @@
 export const actions = {
-  async getCharacteristics() {
+  async getCharacteristics({}, payload) {
     try {
       const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/characteristics`
+        `https://test.loftcity.uz/api/admin/characteristics`,
+        { params: payload }
       );
       return res;
     } catch (e) {
@@ -58,13 +59,14 @@ export const actions = {
     );
     return res;
   },
-  async getGroups() {
+  async getGroups({}, payload) {
     const res = this.$axios.$get(
-      `https://test.loftcity.uz/api/admin/characteristics_groups/all`
+      `https://test.loftcity.uz/api/admin/characteristics_groups/all`,
+      { params: payload }
     );
     return res;
   },
-  async deleteGroups({},id) {
+  async deleteGroups({}, id) {
     const res = this.$axios.$delete(
       `https://test.loftcity.uz/api/admin/characteristics/${id}`
     );

@@ -50,8 +50,10 @@
         <a-table
           :columns="columns"
           :data-source="data"
-          :pagination="false"
+          :pagination="pagination"
+          :loading="loading"
           align="center"
+          @change="handleTableChange"
           :row-selection="{
             selectedRowKeys: selectedRowKeys,
             onChange: onSelectChange,
@@ -125,6 +127,14 @@ export default {
   data() {
     return {
       pageSize: 10,
+      page: 1,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
@@ -211,7 +221,13 @@ export default {
       this.$router.push("/catalog/add_products");
     },
     async __GET_PRODUCTS() {
-      this.products = await this.$store.dispatch("fetchProducts/getProducts");
+      this.products = await this.$store.dispatch("fetchProducts/getProducts", {
+        ...this.$route.query,
+      });
+      this.loading = false
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = this.products.products?.total;
       this.data = this.products.products.data.map((item) => {
         console.log(item.products);
         if (item.products[0].images.length > 0) {
@@ -236,14 +252,22 @@ export default {
         }
       });
     },
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      console.log(pagination.current);
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/catalog/products`,
+          query: {
+            page: pagination.current,
+          },
         });
-      });
+      }
+      this.loading = true;
+      this.__GET_PRODUCTS();
     },
     editProduct(id) {
       this.$router.push(`/catalog/edit_products/${id}`);
@@ -297,8 +321,21 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/catalog/products`,
+        query: { page: this.params.page },
+      });
+    }
+    this.pagination.current = this.$route.query.page * 1;
     this.__GET_PRODUCTS();
+  },
+  watch: {
+    "pagination.current"() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
   },
   components: {
     AddBtn,

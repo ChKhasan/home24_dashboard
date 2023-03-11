@@ -46,8 +46,10 @@
           <a-table
             :columns="columns"
             :data-source="groups"
-            :pagination="false"
+            :pagination="pagination"
             align="center"
+            :loading="loading"
+            @change="handleTableChange"
           >
             <span
               @click="$router.push('/home/customer-info/123')"
@@ -142,6 +144,14 @@ export default {
   data() {
     return {
       modalTab: "ru",
+      page: 1,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
@@ -222,14 +232,21 @@ export default {
       this.$router.push("/catalog/add_products");
       console.log("errors");
     },
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/catalog/characteristic_groups`,
+          query: {
+            page: pagination.current,
+          },
         });
-      });
+      }
+      this.loading = true;
+      this.__GET_GROUPS();
     },
     getData() {
       const newData = {
@@ -339,7 +356,13 @@ export default {
       }
     },
     async __GET_GROUPS() {
-      const data = await this.$store.dispatch("fetchCharacters/getGroups");
+      const data = await this.$store.dispatch("fetchCharacters/getGroups", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = data.groups?.total;
       this.groups = data?.groups.map((item) => {
         return {
           ...item,
@@ -350,7 +373,14 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/catalog/characteristic_groups`,
+        query: { page: this.params.page },
+      });
+    }
+    this.pagination.current = this.$route.query.page * 1;
     this.__GET_GROUPS();
   },
   components: {

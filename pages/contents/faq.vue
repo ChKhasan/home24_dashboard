@@ -9,48 +9,24 @@
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
-        <span class="svg-icon"
-          ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            version="1.1"
-          >
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <polygon points="0 0 24 0 24 24 0 24"></polygon>
-              <path
-                d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                fill="#000000"
-                fill-rule="nonzero"
-                opacity="0.3"
-              ></path>
-              <path
-                d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                fill="#000000"
-              ></path>
-            </g></svg
-          ><!--end::Svg Icon--></span
-        >
+        <span class="svg-icon" v-html="addIcon"></span>
         Добавить
       </div>
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
-          <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Вопрос и ответы" />
-          </div>
+          <FormTitle title="Вопрос и ответы" />
         </div>
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
             :data-source="faqs"
-            :pagination="false"
-            align="center"
+            :pagination="pagination"
+            :loading="loading"
+            @change="handleTableChange"
           >
-            <a slot="img" slot-scope="text">
+            <div slot="img" slot-scope="text">
               <img
                 v-if="typeof text == 'string'"
                 class="table-image"
@@ -63,7 +39,7 @@
                 src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
                 alt=""
               />
-            </a>
+            </div>
             <span
               @click="$router.push('/home/customer-info/123')"
               slot="question"
@@ -75,7 +51,9 @@
             </span>
             <div slot="answer" slot-scope="text" v-html="text?.ru"></div>
             <span slot="numberId" slot-scope="text">#{{ text }}</span>
-            <a slot="category" slot-scope="text">{{ text?.title ? text.title.ru: '-----' }}</a>
+            <a slot="category" slot-scope="text">{{
+              text?.title ? text.title.ru : "-----"
+            }}</a>
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
@@ -133,10 +111,11 @@
         >
           <div class="form-block required">
             <div>
-              <label for="">Categories</label>
+              <label for="fad_category_select">Categories</label>
             </div>
             <el-form-item prop="category_id">
               <el-select
+                id="fad_category_select"
                 class="w-100"
                 v-model="ruleForm.category_id"
                 placeholder="faq category"
@@ -154,10 +133,11 @@
           </div>
           <div class="form-block required">
             <div>
-              <label for="">Question</label>
+              <label for="faq_question">Question</label>
             </div>
             <el-form-item prop="question_ru">
               <el-input
+                id="faq_question"
                 type="text"
                 placeholder="Зоговолок"
                 v-model="ruleForm[`question_${item.index}`]"
@@ -166,10 +146,11 @@
           </div>
           <div class="form-block required">
             <div>
-              <label for="">Answer</label>
+              <label for="faq_answar">Answer</label>
             </div>
             <el-form-item prop="answer_ru">
               <el-input
+                id="faq_answar"
                 type="text"
                 placeholder="Answer"
                 v-model="ruleForm[`answer_${item.index}`]"
@@ -182,70 +163,27 @@
   </div>
 </template>
 <script>
-import Editor from "../../components/form/editor.vue";
-
-import AddBtn from "../../components/form/Add-btn.vue";
-import FilterBtn from "../../components/form/Filter-btn.vue";
-import SearchInput from "../../components/form/Search-input.vue";
-import SearchBlock from "../../components/form/Search-block.vue";
-import AntdTable from "../../components/products/Antd-table.vue";
-import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
 export default {
   middleware: "auth",
   data() {
     return {
-      pageSize: 10,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      tableData: [],
-      selectedRowKeys: [], // Check here to configure the default column
-      loading: false,
+      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       loadingBtn: false,
-      editorOption: {
-        theme: "snow",
-        modules: {
-          toolbar: [
-            [
-              {
-                size: [],
-              },
-            ],
-            ["bold", "italic", "underline", "strike"],
 
-            ["image"],
-            ["code-block"],
-          ],
-        },
-      },
-      option: {
-        theme: "bubble",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "link"],
-            [
-              {
-                header: 1,
-              },
-              {
-                header: 2,
-              },
-              "blockquote",
-            ],
-          ],
-        },
-      },
       modalTabData: [
         {
           label: "Русский",
@@ -314,16 +252,12 @@ export default {
           dataIndex: "id",
           scopedSlots: { customRender: "id" },
           className: "column-btns",
-            width: "90px",
+          width: "90px",
           align: "right",
         },
       ],
 
-      value: "",
       editId: "",
-      previewVisible: false,
-      previewImage: "",
-      fileList: [],
       faqs: [],
       categories: [],
       rules: {
@@ -359,19 +293,22 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-      console.log("errors");
-    },
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
+
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/contents/faq`,
+          query: {
+            page: pagination.current,
+          },
         });
-      });
-      console.log(this.tableData);
+      }
+      this.loading = true;
+      this.__GET_FAQS();
     },
     getData() {
       const newData = {
@@ -398,7 +335,6 @@ export default {
       });
     },
     cancel(e) {
-      console.log(e);
       this.$message.error("Click on No");
     },
 
@@ -424,6 +360,11 @@ export default {
     },
     closeModal() {
       this.hide("add_faqs");
+      this.ruleFormEmpty();
+      this.editId = "";
+      this.__GET_FAQS();
+    },
+    ruleFormEmpty() {
       this.ruleForm.question_ru = "";
       this.ruleForm.question_uz = "";
       this.ruleForm.question_en = "";
@@ -431,18 +372,16 @@ export default {
       this.ruleForm.answer_uz = "";
       this.ruleForm.answer_en = "";
       this.ruleForm.category_id = "";
-      this.editId = "";
-      this.__GET_FAQS();
     },
     deletePost(id) {
       this.__DELETE_FAQS(id);
     },
     async __DELETE_FAQS(id) {
       try {
-        const data = await this.$store.dispatch("fetchFaqs/deleteFaqs", id);
+        await this.$store.dispatch("fetchFaqs/deleteFaqs", id);
         await this.$notify({
           title: "Success",
-          message: "Пост был успешно удален",
+          message: "Успешно удален",
           type: "success",
         });
         this.__GET_FAQS();
@@ -450,64 +389,14 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
-    tableActions(id) {
-      console.log(id);
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
-    },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
-    },
-    handleChange({ fileList }) {
-      this.loadingBtn = true;
-
-      this.fileList = fileList;
-      let formData = new FormData();
-      const newImg = fileList;
-      if (newImg.length > 0) {
-        formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE(formData);
-      }
-    },
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        this.ruleForm.img = data.path;
-        this.loadingBtn = false;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    handleCancel() {
-      this.previewVisible = false;
-    },
     async __GET_FAQS() {
-      const data = await this.$store.dispatch("fetchFaqs/getFaqs");
+      const data = await this.$store.dispatch("fetchFaqs/getFaqs", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = data.faqs?.total;
       this.faqs = data.faqs?.data;
       this.faqs = this.faqs.map((item) => {
         return {
@@ -533,18 +422,12 @@ export default {
         await this.$store.dispatch("fetchFaqs/postFaqs", res);
         await this.$notify({
           title: "Success",
-          message: "Атрибут успешно добавлен",
+          message: "Успешно добавлен",
           type: "success",
         });
         this.hide("add_faqs");
         this.__GET_FAQS();
-        this.ruleForm.question_ru = "";
-        this.ruleForm.question_uz = "";
-        this.ruleForm.question_en = "";
-        this.ruleForm.answer_ru = "";
-        this.ruleForm.answer_uz = "";
-        this.ruleForm.answer_en = "";
-        this.ruleForm.category_id = "";
+        this.ruleFormEmpty();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -573,62 +456,45 @@ export default {
     },
     async __EDIT_FAQS(res) {
       try {
-        const data = await this.$store.dispatch("fetchFaqs/editFaqs", {
+        await this.$store.dispatch("fetchFaqs/editFaqs", {
           id: this.editId,
           data: res,
         });
         this.$notify({
           title: "Success",
-          message: "Пост успешно добавлен",
+          message: "Успешно добавлен",
           type: "success",
         });
         this.hide("add_faqs");
         this.__GET_FAQS();
-        this.ruleForm.title_ru = "";
-        this.ruleForm.title_uz = "";
-        this.ruleForm.title_en = "";
-        this.ruleForm.desc_ru = "";
-        this.ruleForm.desc_uz = "";
-        this.ruleForm.desc_en = "";
+        this.ruleFormEmpty();
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    async __GET_FAQS_BY_ID(id) {
-      const data = await this.$store.dispatch("fetchFaqs/getFaqsById", id);
-      console.log(data);
-    },
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
 
-    classObject(tag) {
-      return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
-      };
-    },
-  },
-  mounted() {
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/contents/faq`,
+        query: { page: this.params.page },
+      });
+    }
+    this.pagination.current = this.$route.query.page * 1;
     this.__GET_FAQS();
     this.__GET_FAQ_CATEGORIES();
-    if (this.data) {
-      this.tableData = this.data;
-    }
+  },
+  watch: {
+    "pagination.current"() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
   },
   components: {
-    AddBtn,
-    FilterBtn,
-    SearchInput,
-    SearchBlock,
-    AntdTable,
-    Title,
     TitleBlock,
     FormTitle,
     AddModal,
-    Editor,
   },
   layout: "toolbar",
 };

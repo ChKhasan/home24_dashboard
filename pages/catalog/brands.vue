@@ -47,8 +47,10 @@
           <a-table
             :columns="columns"
             :data-source="brands"
-            :pagination="false"
+            :pagination="pagination"
             align="center"
+            :loading="loading"
+            @change="handleTableChange"
           >
             <a slot="img" slot-scope="text">
               <img v-if="text" class="table-image" :src="text" alt="" />
@@ -218,6 +220,14 @@ export default {
   data() {
     return {
       pageSize: 10,
+      page: 1,
+      params: {
+        page: 1,
+      },
+      pagination: {
+        pageSize: 16,
+      },
+      loading: false,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
@@ -356,15 +366,21 @@ export default {
       this.$router.push("/catalog/add_products");
       console.log("errors");
     },
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
+    async handleTableChange(pagination, filters, sorter) {
+      this.params.page = pagination.current;
+      const pager = { ...this.pagination };
+      pager.current = pagination.current;
+      this.pagination = pager;
+      if (this.$route.query.page != pagination.current) {
+        await this.$router.replace({
+          path: `/catalog/brands`,
+          query: {
+            page: pagination.current,
+          },
         });
-      });
-      console.log(this.tableData);
+      }
+      this.loading = true;
+      this.__GET_BRANDS();
     },
     getData() {
       console.log(this.fileList);
@@ -499,7 +515,13 @@ export default {
       this.previewVisible = false;
     },
     async __GET_BRANDS() {
-      const data = await this.$store.dispatch("fetchBrands/getBrands");
+      const data = await this.$store.dispatch("fetchBrands/getBrands", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pagination = { ...this.pagination };
+      this.pagination = pagination;
+      pagination.total = data.brands?.total;
       this.brands = data.brands?.data;
       this.brands = this.brands.map((item) => {
         return {
@@ -582,11 +604,24 @@ export default {
       };
     },
   },
-  mounted() {
+  async mounted() {
+    if (!Object.keys(this.$route.query).includes("page")) {
+      await this.$router.replace({
+        path: `/catalog/brands`,
+        query: { page: this.params.page },
+      });
+    }
+    this.pagination.current = this.$route.query.page * 1;
     this.__GET_BRANDS();
     if (this.data) {
       this.tableData = this.data;
     }
+  },
+  watch: {
+    "pagination.current"() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
   },
   components: {
     AddBtn,
