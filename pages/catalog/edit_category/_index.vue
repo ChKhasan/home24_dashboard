@@ -193,7 +193,7 @@
                   class="w-100"
                   placeholder="Status"
                   default-first-option
-                  v-model="ruleForm.status"
+                  v-model="ruleForm.is_active"
                 >
                   <el-option
                     v-for="item in status"
@@ -395,11 +395,11 @@ export default {
       ],
       status: [
         {
-          value: "active",
+          value: 1,
           label: "Active",
         },
         {
-          value: "disactive",
+          value: 0,
           label: "Disactive",
         },
       ],
@@ -436,7 +436,7 @@ export default {
           uz: "",
           en: "",
         },
-        status: "",
+        is_active: 1,
         name_ru: "",
         name_uz: "",
         name_en: "",
@@ -651,6 +651,7 @@ export default {
       this.ruleForm.desc.ru = data.category.desc.ru;
       this.ruleForm.desc.uz = data.category.desc.uz;
       this.ruleForm.desc.en = data.category.desc.en;
+      this.ruleForm.is_active = data.category.is_active;
       this.ruleForm.attributes = data.category.attributes.map(
         (item) => item.id
       );

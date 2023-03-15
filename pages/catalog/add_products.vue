@@ -177,91 +177,95 @@
                     ></div>
                     <div
                       class="outline-btn outline-light-green-btn"
+                      @click="reloadCategories"
                       v-html="reloadIcon"
                     ></div>
                     <div
                       class="outline-btn outline-light-blue-btn"
+                      @click="show('add_category_modal')"
                       v-html="plusCategoryIcon"
                     ></div>
                   </div>
                 </div>
-                <div class="d-flex" v-if="searchBlock">
-                  <div class="search-container">
-                    <div class="search-input-block">
-                      <div class="form-block w-100 mb-0">
-                        <div class="position-relative search-input-icon">
-                          <el-input
-                            class="w-100"
-                            v-model="ruleForm.nbm"
-                            placeholder="Product model"
-                          ></el-input>
-                          <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
-                              stroke="#A1A5BF"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
+                <Transition name="search-block">
+                  <div class="d-flex" v-if="searchBlock">
+                    <div class="search-container">
+                      <div class="search-input-block">
+                        <div class="form-block w-100 mb-0">
+                          <div class="position-relative search-input-icon">
+                            <el-input
+                              class="w-100"
+                              v-model="ruleForm.nbm"
+                              placeholder="Product model"
+                            ></el-input>
+                            <svg
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
+                                stroke="#A1A5BF"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
+                          <div class="search-resoults">
+                            <div class="search-clear">
+                              <p>Вы недавно искали</p>
+                              <span>Очистить</span>
+                            </div>
+                            <div class="search-resoult-items">
+                              <p>Строймате</p>
+                            </div>
+                            <div class="search-resoult-items">
+                              <p>Строймате</p>
+                            </div>
+                            <div class="search-resoult-items">
+                              <p>Строймате</p>
+                            </div>
+                          </div>
                         </div>
-                        <div class="search-resoults">
-                          <div class="search-clear">
-                            <p>Вы недавно искали</p>
-                            <span>Очистить</span>
-                          </div>
-                          <div class="search-resoult-items">
-                            <p>Строймате</p>
-                          </div>
-                          <div class="search-resoult-items">
-                            <p>Строймате</p>
-                          </div>
-                          <div class="search-resoult-items">
-                            <p>Строймате</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <div
-                          class="outline-btn outline-white-btn"
-                          @click="searchBlock = false"
-                        >
-                          <svg
-                            width="30"
-                            height="30"
-                            viewBox="0 0 30 30"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                        <div>
+                          <div
+                            class="outline-btn outline-white-btn"
+                            @click="searchBlock = false"
                           >
-                            <path
-                              d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                              stroke="#28303F"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
+                            <svg
+                              width="30"
+                              height="30"
+                              viewBox="0 0 30 30"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                stroke="#28303F"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div class="d-flex search-container-btns">
+                      <div
+                        class="outline-btn outline-light-green-btn mx-3"
+                        v-html="reloadIcon"
+                      ></div>
+                      <div
+                        class="outline-btn outline-light-blue-btn"
+                        v-html="plusCategoryIcon"
+                      ></div>
+                    </div>
                   </div>
-                  <div class="d-flex search-container-btns">
-                    <div
-                      class="outline-btn outline-light-green-btn mx-3"
-                      v-html="reloadIcon"
-                    ></div>
-                    <div
-                      class="outline-btn outline-light-blue-btn"
-                      v-html="plusCategoryIcon"
-                    ></div>
-                  </div>
-                </div>
+                </Transition>
               </div>
               <el-tabs
                 class="form_tabs"
@@ -309,225 +313,253 @@
                 </el-tab-pane>
               </el-tabs>
               <!-- Product Variants -->
-
-              <div class="form-container" v-for="element in ruleForm.products">
-                <div class="d-flex justify-content-between variant-header">
-                  <h4 class="variant-title">Вариация №{{ element.id }}</h4>
-                  <div
-                    class="variant-btn variant-btn-delete"
-                    @click="deleteVariant(element.id)"
-                  >
-                    <svg
-                      width="30"
-                      height="30"
-                      viewBox="0 0 30 30"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                        stroke="#F65160"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div class="variant-img-container">
-                  <h5 class="variant-img-title">Изображение товара</h5>
-
-                  <div class="variant-img">
-                    <a-upload
-                      list-type="picture-card"
-                      :file-list="element.imagesData"
-                      :multiple="true"
-                      @preview="handlePreview"
-                      @change="
-                        ($event) => handleChangeVatiant($event, element.id)
-                      "
-                    >
-                      <div v-if="element.imagesData.length < 50">
-                        <span v-html="addImgIcon"></span>
-                        <div class="ant-upload-text">
-                          Добавить изображение
-                        </div>
-                      </div>
-                    </a-upload>
-                    <a-modal
-                      :visible="previewVisible"
-                      :footer="null"
-                      @cancel="handleCancel"
-                    >
-                      <img
-                        alt="example"
-                        style="width: 100%;"
-                        :src="previewImage"
-                      />
-                    </a-modal>
-                  </div>
-                  <p class="variant-img-text">
-                    Изображение товар
-                    <span>Первое изображение товара является главной.</span>
-                  </p>
-                </div>
-                <div>
-                  <!-- Validations -->
-                  <div
-                    class="product-variant"
-                    v-for="item in element.variations"
-                  >
+              <transition-group name="list" tag="ul">
+                <div
+                  class="form-container product_list"
+                  v-for="element in ruleForm.products"
+                  :key="element.id"
+                >
+                  <div class="d-flex justify-content-between variant-header">
+                    <h4 class="variant-title">Вариация №{{ element.id }}</h4>
                     <div
-                      class="product_variant_block"
-                      v-if="atributes.length > 0"
+                      class="variant-btn variant-btn-delete"
+                      @click="deleteVariant(element.id)"
                     >
-                      <div class="variant-grid-4 w-100">
-                        <el-form
-                          label-position="top"
-                          :model="item.optionName"
-                          :rules="rulesAtributes"
-                          ref="ruleFormAtributes"
-                          label-width="120px"
-                          class="demo-ruleForm d-flex"
-                          action=""
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                          stroke="#F65160"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="variant-img-container">
+                    <h5 class="variant-img-title">Изображение товара</h5>
+
+                    <div class="variant-img">
+                      <a-upload
+                        list-type="picture-card"
+                        :file-list="element.imagesData"
+                        :multiple="true"
+                        @preview="handlePreview"
+                        @change="
+                          ($event) => handleChangeVatiant($event, element.id)
+                        "
+                      >
+                        <div v-if="element.imagesData.length < 50">
+                          <span v-html="addImgIcon"></span>
+                          <div class="ant-upload-text">
+                            Добавить изображение
+                          </div>
+                        </div>
+                      </a-upload>
+                      <a-modal
+                        :visible="previewVisible"
+                        :footer="null"
+                        @cancel="handleCancel"
+                      >
+                        <img
+                          alt="example"
+                          style="width: 100%;"
+                          :src="previewImage"
+                        />
+                      </a-modal>
+                    </div>
+                    <p class="variant-img-text">
+                      Изображение товар
+                      <span>Первое изображение товара является главной.</span>
+                    </p>
+                  </div>
+                  <div>
+                    <!-- Validations -->
+                    <transition-group name="list" tag="ul">
+                      <div
+                        class="product-variant"
+                        v-for="item in element.variations"
+                        :key="item.id"
+                      >
+                        <div
+                          class="product_variant_block"
+                          v-if="atributes.length > 0"
                         >
-                          <div
-                            class="form-variant-block atribut_selects"
-                            v-for="(atribut, index) in atributes"
-                          >
-                            <div>
-                              <label>{{ atribut.name.ru }}</label>
-                            </div>
-                            <el-form-item
-                              :prop="`at_${atribut.id}`"
-                              class="mb-0"
+                          <div class="variant-grid-4 w-100">
+                            <el-form
+                              label-position="top"
+                              :model="item.optionName"
+                              :rules="rulesAtributes"
+                              ref="ruleFormAtributes"
+                              label-width="120px"
+                              class="demo-ruleForm d-flex"
+                              action=""
                             >
+                              <div
+                                class="form-variant-block atribut_selects"
+                                v-for="(atribut, index) in atributes"
+                              >
+                                <div>
+                                  <label>{{ atribut.name.ru }}</label>
+                                </div>
+                                <el-form-item
+                                  :prop="`at_${atribut.id}`"
+                                  class="mb-0"
+                                >
+                                  <el-select
+                                    v-model="
+                                      item.optionName[`at_${atribut.id}`]
+                                    "
+                                    class="w-100"
+                                    default-first-option
+                                    placeholder="265 gb"
+                                    @change="
+                                      atributOptions({
+                                        productId: element.id,
+                                        variantId: item.id,
+                                        index: index,
+                                        name: atribut.name.ru,
+                                        id: atribut.id,
+                                      })
+                                    "
+                                  >
+                                    <el-option
+                                      v-for="optionElement in atribut.options"
+                                      :key="optionElement.id"
+                                      :label="optionElement.name.ru"
+                                      :value="optionElement.id"
+                                    >
+                                    </el-option>
+                                  </el-select>
+                                </el-form-item>
+                              </div>
+                            </el-form>
+
+                            <div class="form-variant-block">
+                              <div><label>Popular</label></div>
                               <el-select
-                                v-model="item.optionName[`at_${atribut.id}`]"
+                                v-model="item.is_popular"
+                                allow-create
                                 class="w-100"
                                 default-first-option
                                 placeholder="265 gb"
-                                @change="
-                                  atributOptions({
-                                    productId: element.id,
-                                    variantId: item.id,
-                                    index: index,
-                                    name: atribut.name.ru,
-                                    id: atribut.id,
-                                  })
-                                "
                               >
                                 <el-option
-                                  v-for="optionElement in atribut.options"
-                                  :key="optionElement.id"
-                                  :label="optionElement.name.ru"
-                                  :value="optionElement.id"
+                                  v-for="item in [
+                                    { label: `Да`, id: 1 },
+                                    { label: `Нет`, id: 0 },
+                                  ]"
+                                  :key="item.id"
+                                  :label="item.label"
+                                  :value="item.id"
                                 >
                                 </el-option>
                               </el-select>
-                            </el-form-item>
+                            </div>
+                            <div class="form-variant-block">
+                              <div><label>Product of day</label></div>
+                              <el-select
+                                v-model="item.product_of_the_day"
+                                allow-create
+                                class="w-100"
+                                default-first-option
+                                placeholder="265 gb"
+                              >
+                                <el-option
+                                  v-for="item in [
+                                    { label: `Да`, id: 1 },
+                                    { label: `Нет`, id: 0 },
+                                  ]"
+                                  :key="item.id"
+                                  :label="item.label"
+                                  :value="item.id"
+                                >
+                                </el-option>
+                              </el-select>
+                            </div>
+                            <div class="form-variant-block">
+                              <div><label>Status</label></div>
+                              <el-select
+                                v-model="item.status"
+                                allow-create
+                                class="w-100"
+                                default-first-option
+                                placeholder="265 gb"
+                              >
+                                <el-option
+                                  v-for="item in validateStatus"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value"
+                                >
+                                </el-option>
+                              </el-select>
+                            </div>
+                            <div class="form-variant-block">
+                              <div><label>Price</label></div>
+                              <el-input
+                                v-model="item.price"
+                                placeholder="Price"
+                                type="number"
+                              ></el-input>
+                            </div>
                           </div>
-                        </el-form>
 
-                        <div class="form-variant-block">
-                          <div><label>Popular</label></div>
-                          <el-select
-                            v-model="item.is_popular"
-                            allow-create
-                            class="w-100"
-                            default-first-option
-                            placeholder="265 gb"
-                          >
-                            <el-option
-                              v-for="item in [
-                                { label: `Да`, id: 1 },
-                                { label: `Нет`, id: 0 },
-                              ]"
-                              :key="item.id"
-                              :label="item.label"
-                              :value="item.id"
+                          <div class="variant_btns mb-1">
+                            <div
+                              class="variant-btn variant-btn-delete mx-2"
+                              @click="deleteInnerVariant(element.id, item.id)"
                             >
-                            </el-option>
-                          </el-select>
-                        </div>
-                        <div class="form-variant-block">
-                          <div><label>day</label></div>
-                          <el-select
-                            v-model="item.product_of_the_day"
-                            allow-create
-                            class="w-100"
-                            default-first-option
-                            placeholder="265 gb"
-                          >
-                            <el-option
-                              v-for="item in [
-                                { label: `Да`, id: 1 },
-                                { label: `Нет`, id: 0 },
-                              ]"
-                              :key="item.id"
-                              :label="item.label"
-                              :value="item.id"
+                              <svg
+                                width="30"
+                                height="30"
+                                viewBox="0 0 30 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                  stroke="#F65160"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div
+                              class="variant-btn variant-btn-check"
+                              @click="onChangeVariants(element.id, item.id)"
                             >
-                            </el-option>
-                          </el-select>
-                        </div>
-                        <div class="form-variant-block">
-                          <div><label>Price</label></div>
-                          <el-input
-                            v-model="item.price"
-                            placeholder="Price"
-                            type="number"
-                          ></el-input>
+                              <a-radio
+                                :checked="item.is_default == 1"
+                              ></a-radio>
+                            </div>
+                          </div>
                         </div>
                       </div>
-
-                      <div class="variant_btns mb-1">
-                        <div
-                          class="variant-btn variant-btn-delete mx-2"
-                          @click="deleteInnerVariant(element.id, item.id)"
-                        >
-                          <svg
-                            width="30"
-                            height="30"
-                            viewBox="0 0 30 30"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                              stroke="#F65160"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </div>
-                        <div
-                          class="variant-btn variant-btn-check"
-                          @click="onChangeVariants(element.id, item.id)"
-                        >
-                          <a-radio :checked="item.is_default == 1"></a-radio>
-                        </div>
-                      </div>
+                    </transition-group>
+                    <!-- Validations -->
+                  </div>
+                  <div
+                    class="d-flex justify-content-start"
+                    v-if="atributes.length > 0"
+                  >
+                    <div
+                      class="create-inner-variant"
+                      @click="addValidation(element.id)"
+                    >
+                      <span v-html="addInnerValidatIcon"></span>
+                      Добавит внутренний варизаци
                     </div>
                   </div>
-                  <!-- Validations -->
                 </div>
-                <div
-                  class="d-flex justify-content-start"
-                  v-if="atributes.length > 0"
-                >
-                  <div
-                    class="create-inner-variant"
-                    @click="addInnerVariant(element.id)"
-                  >
-                    <span v-html="addInnerValidatIcon"></span>
-                    Добавит внутренний варизаци
-                  </div>
-                </div>
-              </div>
-              <!-- Product Variants -->
-
+              </transition-group>
               <div>
                 <div
                   class="add-variant create-inner-variant mt-0"
@@ -537,6 +569,7 @@
                   Добавит варизаци
                 </div>
               </div>
+              <!-- Product Variants -->
             </div>
             <!-- Product right details -->
             <div class="products-img-grid">
@@ -620,34 +653,6 @@
               <div class="form-container">
                 <ProductsStatistic />
               </div>
-              <div class="form-container">
-                <div class="form-block mb-0">
-                  <label for="">Комментарий</label>
-                </div>
-                <CommentCard />
-                <CommentCard />
-                <CommentCard />
-                <CommentCard />
-                <div class="show-mode">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C15.3313 3 18.2398 4.80989 19.796 7.5M19.796 7.5V3M19.796 7.5H15.375"
-                      stroke="#3699FF"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-
-                  Показать ещё
-                </div>
-              </div>
             </div>
             <!-- Product right details -->
           </div>
@@ -679,7 +684,7 @@
             ></el-input>
           </el-form-item>
         </div>
-        <div class="clearfix">
+        <div class="clearfix variant-img">
           <a-upload
             list-type="picture-card"
             :file-list="fileListBrand"
@@ -687,30 +692,9 @@
             @change="handleChangeBrand"
           >
             <div v-if="fileListBrand.length < 1">
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 40 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
-                  stroke="#3699FF"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
-                  stroke="#3699FF"
-                  stroke-width="3"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+              <span v-html="addImgIcon"></span>
               <div class="ant-upload-text">
-                Upload image
+                Добавить изображение
               </div>
             </div>
           </a-upload>
@@ -721,6 +705,157 @@
           >
             <img alt="example" style="width: 100%;" :src="previewImage" />
           </a-modal>
+        </div>
+      </el-form>
+    </AddModal>
+    <AddModal
+      title="Новая категория"
+      name="add_category_modal"
+      btnText="Add Group"
+      :callback="categoryPost"
+      :loadingBtn="loadingCategory"
+      :closeModal="closeModal"
+    >
+      <el-form
+        label-position="top"
+        :model="ruleFormCategory"
+        :rules="rulesCategory"
+        ref="categoryData"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <div class="form-block required">
+          <div><label for="">Название категории </label></div>
+          <el-form-item prop="name_ru">
+            <el-input
+              placeholder="Название категории "
+              v-model="ruleFormCategory.name_ru"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="form-block">
+          <div><label for="">Выберите категорию</label></div>
+          <el-form-item>
+            <el-select
+              class="w-100"
+              v-model="ruleFormCategory.parent_id"
+              filterable
+              :loading="brands.length < 1"
+              loading-text="Loading..."
+              no-data-text="No data"
+              no-match-text="No data"
+              placeholder="Выберите категорию"
+            >
+              <el-option
+                v-for="item in categories"
+                :key="item?.id"
+                :label="item?.name?.ru"
+                :value="item?.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-block required">
+          <div><label for="">Информация о категории </label></div>
+          <el-form-item prop="desc_ru">
+            <el-input
+              type="textarea"
+              rows="5"
+              placeholder="Description"
+              v-model="ruleFormCategory.desc_ru"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="d-flex">
+          <div class="form-block">
+            <div><label for="">Популярный </label></div>
+            <div>
+              <a-switch
+                @change="switchPopular"
+                :checked="ruleFormCategory.is_popular == 1"
+              />
+            </div>
+          </div>
+          <div class="form-block mx-5">
+            <div><label for="">Статус </label></div>
+            <a-switch @change="switchActive" />
+          </div>
+        </div>
+
+        <div class="form-block">
+          <div><label for="">Атрибуты</label></div>
+          <el-form-item prop="attributes">
+            <el-select
+              class="w-100"
+              v-model="ruleFormCategory.attributes"
+              allow-create
+              :loading="brands.length < 1"
+              loading-text="Loading..."
+              no-data-text="No data"
+              no-match-text="No data"
+              multiple
+              placeholder="Atibut"
+              @focus="__GET_ATRIBUTES"
+            >
+              <el-option
+                v-for="item in allAtributes"
+                :key="item?.id"
+                :label="item?.name?.ru"
+                :value="item?.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-block">
+          <div><label for="">Характеристическая группа</label></div>
+          <el-form-item prop="group_characteristics">
+            <el-select
+              class="w-100"
+              v-model="ruleFormCategory.group_characteristics"
+              allow-create
+              :loading="brands.length < 1"
+              loading-text="Loading..."
+              multiple
+              no-data-text="No data"
+              no-match-text="No data"
+              placeholder="Group"
+              @focus="__GET_GROUPS"
+            >
+              <el-option
+                v-for="item in allGroups"
+                :key="item?.id"
+                :label="item?.name?.ru"
+                :value="item?.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-block mb-0"><div><label for="">Изображение</label></div>
+        <div class="clearfix variant-img pt-0">
+          <a-upload
+            list-type="picture-card"
+            :file-list="fileListCategory"
+            @preview="handlePreview"
+            @change="handleChangeCategory"
+          >
+            <div v-if="fileListCategory.length < 1">
+              <span v-html="addImgIcon"></span>
+              <div class="ant-upload-text">
+                Добавить изображение
+              </div>
+            </div>
+          </a-upload>
+          <a-modal
+            :visible="previewVisible"
+            :footer="null"
+            @cancel="handleCancel"
+          >
+            <img alt="example" style="width: 100%;" :src="previewImage" />
+          </a-modal>
+        </div>
         </div>
       </el-form>
     </AddModal>
@@ -897,7 +1032,8 @@ export default {
       addInnerValidatIcon: require("../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       plusCategoryIcon: require("../../assets/svg/components/add-category-icon.svg?raw"),
       title: "Quill Editor",
-
+      loadingCategory: false,
+      items: [1, 2],
       editorOption: {
         theme: "snow",
         modules: {
@@ -916,8 +1052,9 @@ export default {
       },
 
       atributes: [],
-      variantId: "12",
+      variantId: null,
       loadingBrand: false,
+      loadingCategory: false,
       activeName: "Русский",
       activeDesc: "Description",
       searchBlock: false,
@@ -957,6 +1094,45 @@ export default {
           {
             required: true,
             message: "Product name is required",
+            trigger: "change",
+          },
+        ],
+      },
+      rulesCategory: {
+        desc_ru: [
+          {
+            required: true,
+            message: "Description is required",
+            trigger: "change",
+          },
+        ],
+        name_ru: [
+          {
+            required: true,
+            message: "Category name is required",
+            trigger: "change",
+          },
+        ],
+        attributes: [
+          {
+            required: true,
+            message: "attributes name is required",
+            trigger: "change",
+          },
+        ],
+        group_characteristics: [
+          {
+            required: true,
+            message: "attributes name is required",
+            trigger: "change",
+          },
+        ],
+      },
+      rulesModal: {
+        name: [
+          {
+            required: true,
+            message: "Brand name is required",
             trigger: "change",
           },
         ],
@@ -1001,35 +1177,51 @@ export default {
                 is_default: 1,
                 is_popular: 0,
                 product_of_the_day: 0,
+                status: "active",
               },
             ],
           },
         ],
       },
-
+      ruleFormCategory: {
+        name_ru: "",
+        img: null,
+        parent_id: "",
+        attributes: [],
+        group_characteristics: [],
+        is_popular: 0,
+        is_active: 0,
+        desc_ru: "",
+      },
+      validateStatus: [
+        {
+          label: "Active",
+          value: "active",
+        },
+        {
+          label: "Inactive",
+          value: "inactive",
+        },
+      ],
       previewVisible: false,
       previewImage: "",
       fileListBrand: [],
+      fileListCategory: [],
       fileList: [],
       brandData: {
         name: "",
         logo: "",
       },
-      rulesModal: {
-        name: [
-          {
-            required: true,
-            message: "Brand name is required",
-            trigger: "change",
-          },
-        ],
-      },
+
       rulesCharacter: {},
       rulesAtributes: {},
       brands: [],
       uploadLoading: false,
       character_group: [],
       characterNames: [],
+      characterRequired: false,
+      allAtributes: [],
+      allGroups: [],
     };
   },
   mounted() {
@@ -1040,8 +1232,67 @@ export default {
   methods: {
     // products
     submitForm(ruleForm) {
-      console.log(this.ruleForm);
-
+      const newData = this.transformData();
+      let artibutReqiured = [];
+      if (this.$refs.ruleFormAtributes) {
+        this.$refs["ruleFormAtributes"].forEach((item) => {
+          item.validate((valid) => {
+            valid ? artibutReqiured.push(valid) : false;
+          });
+        });
+      }
+      this.$refs[ruleForm].validate((valid) => {
+        const atr = this.$refs.ruleFormAtributes
+          ? this.$refs.ruleFormAtributes.length
+          : 0;
+        const atributValid = artibutReqiured.length == atr;
+        if (valid && atributValid) {
+          this.characterRequired
+            ? this.__POST_PRODUCTS(newData)
+            : this.notification(
+                "Success",
+                "Вы не добавили характеристику",
+                "error"
+              );
+        } else {
+          return false;
+        }
+      });
+    },
+    categoryPost() {
+      const newData = {
+        ...this.ruleFormCategory,
+        name: {
+          ru: this.ruleFormCategory.name_ru,
+        },
+        desc: {
+          ru: this.ruleFormCategory.desc_ru,
+        },
+      };
+      delete newData["name_ru"];
+      delete newData["desc_ru"];
+      this.$refs["categoryData"].validate((valid) =>
+        valid ? this.__POST_CATEGORY(newData) : false
+      );
+    },
+    submitFormCharacter(ruleForm) {
+      this.characterRequired = false;
+      const trueData = [];
+      this.$refs[ruleForm].forEach((item) => {
+        item.validate((valid) => {
+          if (valid) {
+            trueData.push(valid);
+            if (trueData.length == this.$refs[ruleForm].length) {
+              (this.characterRequired = true),
+                this.hide("characteristic_modal");
+            }
+          } else {
+            return false;
+          }
+        });
+      });
+    },
+    transformData() {
       const newData = {
         ...this.ruleForm,
         name: {
@@ -1053,18 +1304,18 @@ export default {
           const newVariation = item.variations.map((elem) => {
             return {
               options: elem.options,
-              price: Number(elem.price),
+              price: Number.parseFloat(elem.price).toFixed(2) * 1,
               is_default: elem.is_default,
               is_popular: elem.is_popular,
               product_of_the_day: elem.product_of_the_day,
               characteristics: [...Object.values(elem.characteristicsValues)],
+              status: elem.status,
             };
           });
-          const newItem = {
+          return {
             variations: newVariation,
             images: item.images,
           };
-          return newItem;
         }),
       };
       delete newData["name_ru"];
@@ -1076,59 +1327,33 @@ export default {
           newData.category_id = this.categoryChild.child2.id;
         }
       }
-      let artibutReqiured = [];
-      if (this.$refs.ruleFormAtributes) {
-        this.$refs["ruleFormAtributes"].forEach((item) => {
-          item.validate((valid) => {
-            valid ? artibutReqiured.push(valid) : false;
-          });
-        });
-      }
-
-      this.$refs[ruleForm].validate((valid) => {
-        const atr = this.$refs.ruleFormAtributes
-          ? this.$refs.ruleFormAtributes.length
-          : 0;
-        const atributValid = artibutReqiured.length == atr;
-        if (valid && atributValid) {
-          console.log(this.ruleForm);
-          this.__POST_PRODUCTS(newData);
-        } else {
-          return false;
-        }
+      return newData;
+    },
+    notification(title, message, type) {
+      this.$notify({
+        title: title,
+        message: message,
+        type: type,
       });
     },
-    submitFormCharacter(ruleForm) {
-      console.log(this.ruleForm.products);
-      const trueData = [];
-      this.$refs[ruleForm].forEach((item) => {
-        item.validate((valid) => {
-          if (valid) {
-            trueData.push(valid);
-            if (trueData.length == this.$refs[ruleForm].length) {
-              this.hide("characteristic_modal");
-            }
-          } else {
-            return false;
-          }
-        });
-      });
+    switchPopular(checked) {
+      checked
+        ? (this.ruleFormCategory.is_popular = 1)
+        : (this.ruleFormCategory.is_popular = 0);
     },
-    closeModal() {
+    switchActive(checked) {
+      checked
+        ? (this.ruleFormCategory.is_active = 1)
+        : (this.ruleFormCategory.is_active = 0);
+    },
+    reloadCategories() {
+      this.ruleForm.category_id = "";
+    },
+    closeModal(name) {
+      // console.log(name);
+      // this.hide(name);
+      this.hide("add_category_modal");
       this.hide("add_brand_modal");
-    },
-    async __POST_PRODUCTS(data) {
-      try {
-        await this.$store.dispatch("fetchProducts/postProducts", data);
-        this.$router.push("/catalog/products");
-        this.$notify({
-          title: "Success",
-          message: "Продукт успешно добавлен",
-          type: "success",
-        });
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
     },
     handleScroll(event) {
       this.$refs.characterScrollItems.forEach((item) => {
@@ -1140,28 +1365,9 @@ export default {
       this.variantId = id;
       this.fileList = fileList;
     },
-    __UPLOAD_FILE_VARIANT(newImages, id) {
-      const currentProduct = this.ruleForm.products.find(
-        (item) => item.id == id
-      );
-      newImages.forEach(async (element, index) => {
-        try {
-          const data = await this.$store.dispatch(
-            "uploadFile/uploadFile",
-            element
-          );
-          currentProduct.images[index] = data.path;
-          this.uploadLoading = false;
-        } catch (e) {
-          this.statusFunc(e.response);
-        }
-      });
-      this.loadingBrand = false;
-    },
+
     atributOptions(obj) {
-      const product = this.ruleForm.products.find(
-        (productId) => productId.id == obj.productId
-      );
+      const product = this.findProductWithId(obj.productId);
       product.variations.find((varId) => varId.id == obj.variantId).options[
         obj.index
       ] = product.variations.find(
@@ -1186,7 +1392,6 @@ export default {
     handleCancel() {
       this.previewVisible = false;
     },
-
     async handlePreview(file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
@@ -1195,14 +1400,18 @@ export default {
       this.previewVisible = true;
     },
     //variant
-    addInnerVariant(variantId) {
-      const addVar = this.findVarintWithId(variantId);
+    atributNames() {
       const options = {};
       this.atributes.forEach((elem) => {
         return (options[elem.name] = "");
       });
-      addVar.variations.push({
-        id: addVar.variations.at(-1).id + 1,
+      return options;
+    },
+    addValidation(variantId) {
+      const product = this.findProductWithId(variantId);
+      const options = { ...this.atributNames };
+      product.variations.push({
+        id: product.variations.at(-1).id + 1,
         options: [1],
         price: 0,
         is_default: 0,
@@ -1221,22 +1430,19 @@ export default {
       }
     },
     deleteInnerVariant(variantId, innerVarId) {
-      const addVar = this.findVarintWithId(variantId);
-      if (addVar.variations.length > 1) {
-        addVar.variations = addVar.variations.filter(
+      const product = this.findProductWithId(variantId);
+      if (product.variations.length > 1) {
+        product.variations = product.variations.filter(
           (item) => item.id != innerVarId
         );
       }
     },
-    findVarintWithId(variantId) {
+    findProductWithId(variantId) {
       return this.ruleForm.products.find((element) => element.id == variantId);
     },
     addVariant() {
-      const options = {};
-      this.atributes.forEach((elem) => {
-        return (options[elem.name] = "");
-      });
-      const newInnerVar = [
+      const options = { ...this.atributNames };
+      const newVariations = [
         {
           id: 1,
           options: [1],
@@ -1253,18 +1459,43 @@ export default {
         id: this.ruleForm.products.at(-1).id + 1,
         images: [],
         imagesData: [],
-        variations: newInnerVar,
+        variations: newVariations,
       });
     },
     // variant
     handleChangeBrand({ fileList }) {
-      this.loadingBrand = true;
       this.fileListBrand = fileList;
-      let formData = new FormData();
-      const newImg = fileList;
-      if (newImg.length > 0) {
-        formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE("brandData", formData);
+    },
+    handleChangeCategory({ fileList }) {
+      console.log(fileList);
+      this.fileListCategory = fileList;
+    },
+    __UPLOAD_FILE_VARIANT(newImages, id) {
+      const currentProduct = this.findProductWithId(id);
+      newImages.forEach(async (element, index) => {
+        try {
+          const data = await this.$store.dispatch(
+            "uploadFile/uploadFile",
+            element
+          );
+          currentProduct.images[index] = data.path;
+          this.uploadLoading = false;
+        } catch (e) {
+          this.statusFunc(e.response);
+        }
+      });
+      this.loadingBrand = false;
+    },
+    async __UPLOAD_FILE_CATEGORY(item, formData) {
+      try {
+        const data = await this.$store.dispatch(
+          "uploadFile/uploadFile",
+          formData
+        );
+        this[item].img = data.path;
+        this.loadingCategory = false;
+      } catch (e) {
+        this.statusFunc(e.response);
       }
     },
     async __UPLOAD_FILE(item, formData) {
@@ -1294,14 +1525,19 @@ export default {
           item.is_default = 0;
         });
     },
+    async __POST_PRODUCTS(data) {
+      try {
+        await this.$store.dispatch("fetchProducts/postProducts", data);
+        this.$router.push("/catalog/products");
+        this.notification("Success", "Продукт успешно добавлен", "success");
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
     async __POST_BRAND() {
       try {
         await this.$store.dispatch("fetchBrands/postBrands", this.brandData);
-        this.$notify({
-          title: "Success",
-          message: "Бранд успешно добавлен",
-          type: "success",
-        });
+        this.notification("Success", "Бранд успешно добавлен", "success");
         this.hide("add_brand_modal");
         this.__GET_BRANDS();
         this.brandData.name = "";
@@ -1309,9 +1545,20 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    async __GET_BRANDS() {
-      const data = await this.$store.dispatch("fetchBrands/getBrands");
-      this.brands = data?.brands.data;
+    async __POST_CATEGORY(res) {
+      try {
+        await this.$store.dispatch("fetchCategories/postCategories", res);
+        this.notification("Success", "Категория успешно добавлен", "success");
+        this.hide("add_category_modal");
+        this.__GET_CATEGORIES();
+        this.ruleFormCategory.name_ru = "";
+        this.ruleFormCategory.desc_ru = "";
+        this.ruleFormCategory.is_active = 0;
+        this.ruleFormCategory.is_popular = 0;
+        this.ruleFormCategory.parent_id = null;
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
     },
     statusFunc(res) {
       switch (res.status) {
@@ -1335,9 +1582,22 @@ export default {
           break;
       }
     },
+    async __GET_BRANDS() {
+      const data = await this.$store.dispatch("fetchBrands/getBrands");
+      this.brands = data?.brands.data;
+    },
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = data.categories?.data;
+    },
+    async __GET_GROUPS() {
+      const data = await this.$store.dispatch("fetchCharacters/getGroups");
+
+      this.allGroups = data?.groups;
+    },
+    async __GET_ATRIBUTES() {
+      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
+      this.allAtributes = data.attributes?.data;
     },
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch(
@@ -1392,13 +1652,19 @@ export default {
   },
   watch: {
     "ruleForm.category_id"(val) {
-      const child1 = this.categories.find((item) => item.id == val);
-      this.__GET_CATEGORY_BY_ID(val);
-      if (child1.children.length > 0) {
-        this.categoryChild.child1.arr = child1.children;
+      if (val) {
+        const child1 = this.categories.find((item) => item.id == val);
+        this.__GET_CATEGORY_BY_ID(val);
+        if (child1.children.length > 0) {
+          this.categoryChild.child1.arr = child1.children;
+        } else {
+          this.categoryChild.child1.arr = [];
+          this.categoryChild.child2.arr = [];
+        }
       } else {
         this.categoryChild.child1.arr = [];
         this.categoryChild.child2.arr = [];
+        this.atributes = [];
       }
       this.categoryChild.child1.id = "";
       this.categoryChild.child2.id = "";
@@ -1421,10 +1687,9 @@ export default {
     "categoryChild.child2.id"(val) {
       this.__GET_CATEGORY_BY_ID(val);
     },
-    fileList(val) {
-      this.ruleForm.products.find(
-        (item) => item.id == this.variantId
-      ).imagesData = this.fileList;
+    fileList() {
+      const currentProduct = this.findProductWithId(this.variantId);
+      currentProduct.imagesData = this.fileList;
       const newImages = [];
       this.fileList.forEach((element, index) => {
         let formData = new FormData();
@@ -1433,6 +1698,24 @@ export default {
       });
       this.uploadLoading = true;
       this.__UPLOAD_FILE_VARIANT(newImages, this.variantId);
+    },
+    fileListCategory() {
+      this.loadingCategory = true;
+      let formData = new FormData();
+      const newImg = this.fileListCategory;
+      if (newImg.length > 0) {
+        formData.append("file", newImg[0].originFileObj);
+        this.__UPLOAD_FILE_CATEGORY("ruleFormCategory", formData);
+      }
+    },
+    fileListBrand() {
+      this.loadingBrand = true;
+      let formData = new FormData();
+      const newImg = this.fileListBrand;
+      if (newImg.length > 0) {
+        formData.append("file", newImg[0].originFileObj);
+        this.__UPLOAD_FILE("brandData", formData);
+      }
     },
   },
   components: {
@@ -1444,3 +1727,57 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.4s ease;
+}
+
+.list {
+  transition: all 0.4s;
+  display: grid;
+  grid-gap: 24px;
+}
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.list-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+.list-move {
+  opacity: 1;
+  transition: all 0.4s;
+}
+.product_list {
+  margin-bottom: 24px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.search-block-enter,
+.search-block-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.search-block-enter-form,
+.search-block-leave-to {
+  transform: translateX(30px);
+  opacity: 0;
+}
+.search-block {
+  transition: all 0.4s;
+}
+.search-block-enter-to,
+.search-block-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+.search-block-enter-active,
+.search-block-leave-active {
+  transition: all 0.4s;
+}
+</style>

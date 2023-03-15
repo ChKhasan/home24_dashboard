@@ -1,7 +1,7 @@
 export const actions = {
   async getFaqs({},payload) {
     try {
-      const res = this.$axios.$get(`https://test.loftcity.uz/api/admin/faqs`,{params: payload});
+      const res = await this.$axios.$get(`https://test.loftcity.uz/api/admin/faqs`,{params: payload});
       return res;
     } catch (e) {
       return e.response;
@@ -9,7 +9,7 @@ export const actions = {
   },
   async getFaqsById({}, id) {
     try {
-      const res = this.$axios.$get(
+      const res = await this.$axios.$get(
         `https://test.loftcity.uz/api/admin/faqs/${id}`
       );
       return res;
@@ -19,7 +19,7 @@ export const actions = {
   },
   async postFaqs({}, data) {
     try {
-      const res = this.$axios.$post(
+      const res = await this.$axios.$post(
         `https://test.loftcity.uz/api/admin/faqs`,
         data
       );
@@ -30,7 +30,7 @@ export const actions = {
   },
   async editFaqs({}, payload) {
     try {
-      const res = this.$axios.$put(
+      const res = await this.$axios.$put(
         `https://test.loftcity.uz/api/admin/faqs/${payload.id}`,
         payload.data
       );
@@ -41,7 +41,7 @@ export const actions = {
   },
   async deleteFaqs({}, id) {
     try {
-      const res = this.$axios.$delete(
+      const res = await this.$axios.$delete(
         `https://test.loftcity.uz/api/admin/faqs/${id}`
       );
       return res;
@@ -50,14 +50,14 @@ export const actions = {
     }
   },
   async postGroups({}, data) {
-    const res = this.$axios.$post(
+    const res = await this.$axios.$post(
       `https://test.loftcity.uz/api/admin/faqs_groups`,
       data
     );
     return res;
   },
   async getGroups() {
-    const res = this.$axios.$get(
+    const res = await this.$axios.$get(
       `https://test.loftcity.uz/api/admin/faqs_groups/all`
     );
     return res;

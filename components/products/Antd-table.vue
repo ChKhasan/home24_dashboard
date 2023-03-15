@@ -107,14 +107,12 @@ export default {
   },
   methods: {
     handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
       this.tableData = this.data.map((item) => {
         filters.tags.forEach((element) => {
           if (item.tags == element);
           return item;
         });
       });
-      console.log(this.tableData);
     },
 
     start() {
@@ -125,7 +123,6 @@ export default {
       }, 1000);
     },
     tableActions(id) {
-      console.log(id);
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);

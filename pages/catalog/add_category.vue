@@ -103,7 +103,7 @@
               </el-tabs>
               <div class="form-container">
                 <div class="form-block required">
-                  <div><label>Атрибуты группы</label></div>
+                  <div><label>Атрибуты</label></div>
                   <el-form-item prop="attributes">
                     <el-select
                       v-model="ruleForm.attributes"
@@ -126,7 +126,7 @@
                   </el-form-item>
                 </div>
                 <div class="form-block required">
-                  <div><label>Групповая характеристика</label></div>
+                  <div><label>Характеристическая группа</label></div>
                   <el-form-item prop="group_characteristics">
                     <el-select
                       v-model="ruleForm.group_characteristics"
@@ -361,7 +361,7 @@ export default {
         attributes: [],
         group_characteristics: [],
         position: null,
-        is_active: "",
+        is_active: 1,
         icon_svg: ""
       },
       previewVisible: false,

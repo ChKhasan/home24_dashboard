@@ -1,7 +1,7 @@
 export const actions = {
     async getPosts({},payload) {
       try {
-        const res = this.$axios.$get(
+        const res = await this.$axios.$get(
           `https://test.loftcity.uz/api/admin/posts`,{params: payload}
         );
         return res;
@@ -11,7 +11,7 @@ export const actions = {
     },
     async getPostsById({}, id) {
       try {
-        const res = this.$axios.$get(
+        const res = await this.$axios.$get(
           `https://test.loftcity.uz/api/admin/posts/${id}`
         );
         return res;
@@ -21,7 +21,7 @@ export const actions = {
     },
     async postPosts({}, data) {
       try {
-        const res = this.$axios.$post(
+        const res = await this.$axios.$post(
           `https://test.loftcity.uz/api/admin/posts`,
           data
         );
@@ -32,7 +32,7 @@ export const actions = {
     },
     async editPosts({}, payload) {
       try {
-        const res = this.$axios.$put(
+        const res = await this.$axios.$put(
           `https://test.loftcity.uz/api/admin/posts/${payload.id}`,payload.data
         );
         return res;
@@ -42,7 +42,7 @@ export const actions = {
     },
     async deletePosts({}, id) {
       try {
-        const res = this.$axios.$delete(
+        const res = await this.$axios.$delete(
           `https://test.loftcity.uz/api/admin/posts/${id}`
         );
         return res;
@@ -51,14 +51,14 @@ export const actions = {
       }
     },
     async postGroups({}, data) {
-      const res = this.$axios.$post(
+      const res = await this.$axios.$post(
         `https://test.loftcity.uz/api/admin/posts_groups`,
         data
       );
       return res;
     },
     async getGroups() {
-      const res = this.$axios.$get(
+      const res = await this.$axios.$get(
         `https://test.loftcity.uz/api/admin/posts_groups/all`
       );
       return res;

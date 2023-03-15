@@ -1,7 +1,7 @@
 export const actions = {
   async getCharacteristics({}, payload) {
     try {
-      const res = this.$axios.$get(
+      const res = await this.$axios.$get(
         `https://test.loftcity.uz/api/admin/characteristics`,
         { params: payload }
       );
@@ -12,7 +12,7 @@ export const actions = {
   },
   async getCharacteristicsById({}, id) {
     try {
-      const res = this.$axios.$get(
+      const res = await this.$axios.$get(
         `https://test.loftcity.uz/api/admin/characteristics/${id}`
       );
       return res;
@@ -22,7 +22,7 @@ export const actions = {
   },
   async postCharacteristics({}, data) {
     try {
-      const res = this.$axios.$post(
+      const res = await this.$axios.$post(
         `https://test.loftcity.uz/api/admin/characteristics`,
         data
       );
@@ -33,7 +33,7 @@ export const actions = {
   },
   async editCharacteristics({}, payload) {
     try {
-      const res = this.$axios.$put(
+      const res = await this.$axios.$put(
         `https://test.loftcity.uz/api/admin/characteristics/${payload.id}`,
         payload.data
       );
@@ -44,7 +44,7 @@ export const actions = {
   },
   async deleteCharacteristics({}, id) {
     try {
-      const res = this.$axios.$delete(
+      const res = await this.$axios.$delete(
         `https://test.loftcity.uz/api/admin/characteristics/${id}`
       );
       return res;
@@ -53,21 +53,21 @@ export const actions = {
     }
   },
   async postGroups({}, data) {
-    const res = this.$axios.$post(
+    const res = await this.$axios.$post(
       `https://test.loftcity.uz/api/admin/characteristics_groups`,
       data
     );
     return res;
   },
   async getGroups({}, payload) {
-    const res = this.$axios.$get(
+    const res = await this.$axios.$get(
       `https://test.loftcity.uz/api/admin/characteristics_groups/all`,
       { params: payload }
     );
     return res;
   },
   async deleteGroups({}, id) {
-    const res = this.$axios.$delete(
+    const res = await this.$axios.$delete(
       `https://test.loftcity.uz/api/admin/characteristics/${id}`
     );
     return res;

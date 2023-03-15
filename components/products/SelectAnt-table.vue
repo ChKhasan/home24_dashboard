@@ -71,17 +71,13 @@ export default {
       }, 1000);
     },
     tableActions(id) {
-      console.log(id);
     },
     onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
     handleSizeChange(val) {
-      console.log(`${val} items per page`);
     },
     handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
     },
     handleCommand(command) {
       this.pageSize = command;

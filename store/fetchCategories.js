@@ -1,9 +1,9 @@
 export const actions = {
-  async getCategories({},payload) {
+  async getCategories({}, payload) {
     try {
-      const res = this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/categories`,{ params: payload }
-        
+      const res = await this.$axios.$get(
+        `https://test.loftcity.uz/api/admin/categories`,
+        { params: payload }
       );
       return res;
     } catch (e) {
@@ -12,7 +12,7 @@ export const actions = {
   },
   async postCategories({}, data) {
     try {
-      const res = this.$axios.$post(
+      const res = await this.$axios.$post(
         `https://test.loftcity.uz/api/admin/categories`,
         data
       );
@@ -23,7 +23,7 @@ export const actions = {
   },
   async getCategoriesById({}, id) {
     try {
-      const res = this.$axios.$get(
+      const res = await this.$axios.$get(
         `https://test.loftcity.uz/api/admin/categories/${id}`
       );
       return res;
@@ -31,10 +31,11 @@ export const actions = {
       return e.response;
     }
   },
-  async editCategories({},payload) {
+  async editCategories({}, payload) {
     try {
-      const res = this.$axios.$put(
-        `https://test.loftcity.uz/api/admin/categories/${payload.id}`,payload.data
+      const res = await this.$axios.$put(
+        `https://test.loftcity.uz/api/admin/categories/${payload.id}`,
+        payload.data
       );
       return res;
     } catch (e) {
@@ -43,7 +44,7 @@ export const actions = {
   },
   async deleteCategories({}, id) {
     try {
-      const res = this.$axios.$delete(
+      const res = await this.$axios.$delete(
         `https://test.loftcity.uz/api/admin/categories/${id}`
       );
       return res;
@@ -52,7 +53,7 @@ export const actions = {
     }
   },
   async postGroups({}, data) {
-    const res = this.$axios.$post(
+    const res = await this.$axios.$post(
       `https://test.loftcity.uz/api/admin/categories_groups`,
       data
     );

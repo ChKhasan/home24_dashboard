@@ -1,7 +1,7 @@
 export const actions = {
   async getBanners() {
     try {
-      const res = this.$axios.$get(
+      const res = await this.$axios.$get(
         `https://test.loftcity.uz/api/admin/banners`
       );
       return res;
@@ -11,7 +11,7 @@ export const actions = {
   },
   async getBannersById({}, id) {
     try {
-      const res = this.$axios.$get(
+      const res = await this.$axios.$get(
         `https://test.loftcity.uz/api/admin/banners/${id}`
       );
       return res;
@@ -21,7 +21,7 @@ export const actions = {
   },
   async postBanners({}, data) {
     try {
-      const res = this.$axios.$post(
+      const res = await this.$axios.$post(
         `https://test.loftcity.uz/api/admin/banners`,
         data
       );
@@ -32,7 +32,7 @@ export const actions = {
   },
   async editBanners({}, payload) {
     try {
-      const res = this.$axios.$put(
+      const res = await this.$axios.$put(
         `https://test.loftcity.uz/api/admin/banners/${payload.id}`,
         payload.data
       );
@@ -43,7 +43,7 @@ export const actions = {
   },
   async deleteBanners({}, id) {
     try {
-      const res = this.$axios.$delete(
+      const res = await this.$axios.$delete(
         `https://test.loftcity.uz/api/admin/banners/${id}`
       );
       return res;
@@ -52,14 +52,14 @@ export const actions = {
     }
   },
   async postGroups({}, data) {
-    const res = this.$axios.$post(
+    const res = await this.$axios.$post(
       `https://test.loftcity.uz/api/admin/banners_groups`,
       data
     );
     return res;
   },
   async getGroups() {
-    const res = this.$axios.$get(
+    const res = await this.$axios.$get(
       `https://test.loftcity.uz/api/admin/banners_groups/all`
     );
     return res;

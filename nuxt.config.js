@@ -30,7 +30,6 @@ export default {
     { src: "~plugins/vue-js-modal.js", ssr: false },
     { src: "~plugins/quill-editor.js", ssr: false },
     { src: "~plugins/antd-ui.js", ssr: false },
-    { src: "~plugins/vue-toast-notification.js", ssr: false },
   ],
   axios: {
     credentials: true,
@@ -43,7 +42,7 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ["@nuxtjs/svg"],
+  buildModules: ["@nuxtjs/svg", "@nuxt/postcss8"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
