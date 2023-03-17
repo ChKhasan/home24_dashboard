@@ -199,7 +199,7 @@
               </div>
               <div class="form-block">
                 <div><label for="">Добавить изображения категории</label></div>
-                <div class="clearfix">
+                <div class="clearfix ">
                   <a-upload
                     list-type="picture-card"
                     :file-list="fileList"

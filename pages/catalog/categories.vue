@@ -45,18 +45,20 @@
               align="center"
               class="table_product_row select-table-child"
             >
-              <img
-                class="table-image select-img"
-                v-if="text?.img"
-                :src="text?.img"
-                alt=""
-              />
-              <img
-                class="table-image select-img"
-                v-else
-                src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
-                alt=""
-              />
+              <div>
+                <img
+                  class="table-image select-img"
+                  v-if="text?.img"
+                  :src="text?.img"
+                  alt=""
+                />
+                <img
+                  class="table-image select-img"
+                  v-else
+                  src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                  alt=""
+                />
+              </div>
 
               <h6>{{ text?.name?.ru ? text?.name?.ru : "----" }}</h6>
             </div>
@@ -373,7 +375,6 @@ export default {
         });
         this.__GET_CATEGORIES();
       } catch (e) {
-        console.log(e.response);
         this.statusFunc(e.response);
       }
     },
@@ -418,28 +419,6 @@ export default {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
-    // deleteCategory(id) {
-    //   this.__DELETE_CATEGORY(id);
-    // },
-    // async __DELETE_CATEGORY(id) {
-    //   try {
-    //     const data = await this.$store.dispatch(
-    //       "fetchCategories/deleteCategories",
-    //       id
-    //     );
-    //     await this.$notify({
-    //       title: "Success",
-    //       message: "Категория был успешно удален",
-    //       type: "success",
-    //     });
-    //     console.log(data);
-    //     this.__GET_CATEGORIES();
-    //   } catch (e) {
-    //     console.log(e.response);
-
-    //     this.statusFunc(e.response);
-    //   }
-    // },
     onChangeCheckbox(id) {
       this.allCheckbox.includes(id)
         ? (this.allCheckbox = this.allCheckbox.filter((item) => item != id))

@@ -101,7 +101,6 @@
                   <div class="products-input-grid-3 w-100">
                     <div class="form-block mb-0 required">
                       <div><label>Категория</label></div>
-              
                       <el-form-item prop="category_id">
                         <el-select
                           v-model="ruleForm.category_id"
@@ -973,9 +972,8 @@ export default {
   mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
-    console.log("dot", process.env.BASE_URL);
+    console.log(process.env);
   },
-
   methods: {
     // products
     submitForm(ruleForm) {

@@ -1,4 +1,3 @@
-require('dotenv').config()
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
@@ -43,7 +42,7 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ["@nuxtjs/svg", "@nuxt/postcss8"],
+  buildModules: ["@nuxtjs/svg", "@nuxt/postcss8", "@nuxtjs/dotenv"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -51,7 +50,7 @@ export default {
     "bootstrap-vue/nuxt",
     "@nuxtjs/axios",
     "@nuxtjs/auth",
-    '@nuxtjs/dotenv',
+    "@nuxtjs/dotenv",
   ],
   mode: "spa",
   // Build Configuration: https://go.nuxtjs.dev/config-build
