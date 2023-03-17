@@ -227,11 +227,11 @@
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
-                    :file-list="fileList"
+                    :file-list="fileList.img"
                     @preview="handlePreview"
-                    @change="($event) => handleChange($event, fileList)"
+                    @change="($event) => handleChange($event, 'img')"
                   >
-                    <div v-if="fileList.length < 1">
+                    <div v-if="fileList.img.length < 1">
                       <svg
                         width="40"
                         height="40"
@@ -283,11 +283,11 @@
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
-                    :file-list="fileList1"
+                    :file-list="fileList.icon"
                     @preview="handlePreview"
-                    @change="handleChange1"
+                    @change="($event) => handleChange($event, 'icon')"
                   >
-                    <div v-if="fileList1.length < 1">
+                    <div v-if="fileList.icon.length < 1">
                       <svg
                         width="40"
                         height="40"
@@ -400,7 +400,7 @@ export default {
         },
         {
           value: 0,
-          label: "Disactive",
+          label: "Inactive",
         },
       ],
       value: [],
@@ -448,8 +448,10 @@ export default {
       },
       previewVisible: false,
       previewImage: "",
-      fileList: [],
-      fileList1: [],
+      fileList: {
+        img: [],
+        icon: [],
+      },
       editorOption: {
         theme: "snow",
         modules: {
@@ -504,8 +506,6 @@ export default {
   },
   methods: {
     submitForm(ruleForm) {
-      console.log(this.fileList, this.fileList1);
-
       const data = {
         ...this.ruleForm,
         name: {
@@ -524,7 +524,6 @@ export default {
       data.group_characteristics = this.groups.map((item) => {
         if (data.group_characteristics.includes(item.name.ru)) return item.id;
       });
-      // data.attributes = data.attributes.filter((elem) => elem);
       data.group_characteristics = data.group_characteristics.filter(
         (elem) => elem
       );
@@ -533,24 +532,19 @@ export default {
           (item) => item.name.ru == data.parent_id
         )[0].id;
       }
-      if (this.fileList[0].oldImg) {
-        data.img = this.fileList[0].url;
+      if (this.fileList.img[0].oldImg) {
+        data.img = this.fileList.img[0].url;
       }
-      if (this.fileList1[0].oldImg) {
-        data.icon = this.fileList1[0].url;
+      if (this.fileList.icon[0].oldImg) {
+        data.icon = this.fileList.icon[0].url;
       }
       this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-          console.log(data);
-          this.__EDIT_CATEGORIES(data);
-        } else {
-          return false;
-        }
+        if (!valid) return false;
+        this.__EDIT_CATEGORIES(data);
       });
     },
     toAddProduct() {
       this.$router.push("/catalog/add_products");
-      console.log("errors");
     },
     handleCancel() {
       this.previewVisible = false;
@@ -562,57 +556,32 @@ export default {
     deleteIcon() {
       this.ruleForm.oldIcon = "";
       this.ruleForm = this.ruleForm;
-      console.log("asdsad", this.ruleForm);
     },
     async handlePreview(file) {
-      console.log("delete1", file);
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
       }
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    handleChange({ fileList }, img) {
-      this.fileList = fileList;
-      let formData = new FormData();
-      if (this.fileList.length > 0) {
-        formData.append("file", fileList[0].originFileObj);
-        this.uploadLoading = true;
-        this.__UPLOAD_FILE("img", formData);
-      } else {
-        this.ruleForm["img"] = null;
-      }
+    async handleChange({ fileList }, type) {
+      this.fileList[type] = fileList;
     },
-    handleChange1({ fileList }) {
-      this.fileList1 = fileList;
-      let formData = new FormData();
-      if (this.fileList1.length > 0) {
-        formData.append("file", fileList[0].originFileObj);
-        this.uploadLoading = true;
-        this.__UPLOAD_FILE("icon", formData);
-      } else {
-        this.ruleForm["icon"] = null;
-      }
-    },
-
-    async __UPLOAD_FILE(item, formData) {
+    async __UPLOAD_FILE(formData) {
       try {
         const data = await this.$store.dispatch(
           "uploadFile/uploadFile",
           formData
         );
-        this.ruleForm[item] = data.path;
-        this.uploadLoading = false;
+        return data.path;
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
     handleClick(tab, event) {
-      console.log("handlchange", tab, event);
       this.formVal = "";
     },
     onChange(checked) {
-      console.log(`a-switch to ${checked}`);
       checked ? (this.ruleForm.is_popular = 1) : (this.ruleForm.is_popular = 0);
     },
     toBack() {
@@ -622,7 +591,6 @@ export default {
     async __GET_CATEGORY_BY_ID() {
       const dataAtr = await this.$store.dispatch("fetchAtributes/getAtributes");
       this.atributes = dataAtr.attributes?.data;
-      console.log(this.atributes);
       const data = await this.$store.dispatch(
         "fetchCategories/getCategoriesById",
         this.$route.params.index
@@ -655,11 +623,10 @@ export default {
       this.ruleForm.attributes = data.category.attributes.map(
         (item) => item.id
       );
-      console.log(this.ruleForm.attributes);
       this.ruleForm.group_characteristics = data.category.characteristic_groups.map(
         (item) => item.name.ru
       );
-      this.fileList = [
+      this.fileList.img = [
         {
           uid: "-1",
           name: "image.png",
@@ -668,7 +635,7 @@ export default {
           url: data.category.lg_img,
         },
       ];
-      this.fileList1 = [
+      this.fileList.icon = [
         {
           uid: "-1",
           name: "image.png",
@@ -716,10 +683,10 @@ export default {
     },
     async __EDIT_CATEGORIES(res) {
       try {
-        const data = await this.$store.dispatch(
-          "fetchCategories/editCategories",
-          { id: this.$route.params.index, data: { ...res, slug: this.slug } }
-        );
+        await this.$store.dispatch("fetchCategories/editCategories", {
+          id: this.$route.params.index,
+          data: { ...res, slug: this.slug },
+        });
         this.$notify({
           title: "Success",
           message: "Категория успешно добавлен",
@@ -735,6 +702,31 @@ export default {
     // this.__GET_ATRIBUTES();
     this.__GET_GROUPS();
     this.__GET_CATEGORY_BY_ID();
+  },
+  watch: {
+    async "fileList.img"() {
+      let formData = new FormData();
+      console.log(this.fileList.img);
+      if (this.fileList.img.length > 0 && !this.fileList.img[0].oldImg) {
+        formData.append("file", this.fileList.img[0].originFileObj);
+        this.uploadLoading = true;
+        this.ruleForm.img = await this.__UPLOAD_FILE(formData);
+        this.uploadLoading = false;
+      } else {
+        this.ruleForm.img = null;
+      }
+    },
+    async "fileList.icon"() {
+      let formData = new FormData();
+      if (this.fileList.icon.length > 0 && !this.fileList.icon[0].oldImg) {
+        formData.append("file", this.fileList.icon[0].originFileObj);
+        this.uploadLoading = true;
+        this.ruleForm.icon = await this.__UPLOAD_FILE(formData);
+        this.uploadLoading = false;
+      } else {
+        this.ruleForm.icon = null;
+      }
+    },
   },
   components: {
     AddBtn,

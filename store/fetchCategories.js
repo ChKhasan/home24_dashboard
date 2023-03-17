@@ -11,15 +11,11 @@ export const actions = {
     }
   },
   async postCategories({}, data) {
-    try {
-      const res = await this.$axios.$post(
-        `https://test.loftcity.uz/api/admin/categories`,
-        data
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$post(
+      `https://test.loftcity.uz/api/admin/categories`,
+      data
+    );
+    return res;
   },
   async getCategoriesById({}, id) {
     try {
@@ -32,15 +28,11 @@ export const actions = {
     }
   },
   async editCategories({}, payload) {
-    try {
-      const res = await this.$axios.$put(
-        `https://test.loftcity.uz/api/admin/categories/${payload.id}`,
-        payload.data
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$put(
+      `https://test.loftcity.uz/api/admin/categories/${payload.id}`,
+      payload.data
+    );
+    return res;
   },
   async deleteCategories({}, id) {
     const res = await this.$axios.$delete(

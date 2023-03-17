@@ -199,14 +199,14 @@
               </div>
               <div class="form-block">
                 <div><label for="">Добавить изображения категории</label></div>
-                <div class="clearfix ">
+                <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
-                    :file-list="fileList"
+                    :file-list="fileList.img"
                     @preview="handlePreview"
-                    @change="($event) => handleChange($event, true)"
+                    @change="($event) => handleChange($event, 'img')"
                   >
-                    <div v-if="fileList.length < 1">
+                    <div v-if="fileList.img.length < 1">
                       <span v-html="addImgIcon"></span>
                       <div class="ant-upload-text">
                         Добавить изображение
@@ -229,18 +229,21 @@
               </div>
               <div class="form-block">
                 <div><label>Svg</label></div>
-                <el-input v-model="ruleForm.icon_svg" placeholder="Svg"></el-input>
+                <el-input
+                  v-model="ruleForm.icon_svg"
+                  placeholder="Svg"
+                ></el-input>
               </div>
               <div class="form-block">
                 <div><label for="">Добавить значок продукта</label></div>
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
-                    :file-list="fileList1"
+                    :file-list="fileList.icon"
                     @preview="handlePreview"
-                    @change="($event) => handleChange($event, false)"
+                    @change="($event) => handleChange($event, 'icon')"
                   >
-                    <div v-if="fileList1.length < 1">
+                    <div v-if="fileList.icon.length < 1">
                       <span v-html="addImgIcon"></span>
                       <div class="ant-upload-text">
                         Добавить изображение
@@ -276,7 +279,6 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 
-import { quillEditor } from "vue-quill-editor";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -295,6 +297,10 @@ export default {
       atributes: [],
       categories: [],
       groups: [],
+      fileList: {
+        img: [],
+        icon: [],
+      },
       lang: [
         {
           key: "ru",
@@ -309,7 +315,6 @@ export default {
           label: "English",
         },
       ],
-
       status: [
         {
           value: 1,
@@ -320,7 +325,6 @@ export default {
           label: "Inactive",
         },
       ],
-      value: [],
       rules: {
         name_ru: [
           {
@@ -362,12 +366,10 @@ export default {
         group_characteristics: [],
         position: null,
         is_active: 1,
-        icon_svg: ""
+        icon_svg: "",
       },
       previewVisible: false,
       previewImage: "",
-      fileList: [],
-      fileList1: [],
       editorOption: {
         theme: "snow",
         modules: {
@@ -441,24 +443,16 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    handleChange({ fileList }, type) {
-      type ? (this.fileList = fileList) : (this.fileList1 = fileList);
-      let formData = new FormData();
-      const newImg = fileList;
-      if (newImg.length > 0) {
-        formData.append("file", newImg[0].originFileObj);
-        this.uploadLoading = true;
-        this.__UPLOAD_FILE(type ? "img" : "icon", formData);
-      }
+    async handleChange({ fileList }, type) {
+      this.fileList[type] = fileList;
     },
-    async __UPLOAD_FILE(item, formData) {
+    async __UPLOAD_FILE(formData) {
       try {
         const data = await this.$store.dispatch(
           "uploadFile/uploadFile",
           formData
         );
-        this.ruleForm[item] = data.path;
-        this.uploadLoading = false;
+        return data.path;
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -530,6 +524,30 @@ export default {
     this.__GET_CATEGORIES();
     this.__GET_ATRIBUTES();
     this.__GET_GROUPS();
+  },
+  watch: {
+    async "fileList.img"() {
+      let formData = new FormData();
+      if (this.fileList.img.length > 0) {
+        formData.append("file", this.fileList.img[0].originFileObj);
+        this.uploadLoading = true;
+        this.ruleForm.img = await this.__UPLOAD_FILE(formData);
+        this.uploadLoading = false;
+      } else {
+        this.ruleForm.img = null;
+      }
+    },
+    async "fileList.icon"() {
+      let formData = new FormData();
+      if (this.fileList.icon.length > 0) {
+        formData.append("file", this.fileList.icon[0].originFileObj);
+        this.uploadLoading = true;
+        this.ruleForm.icon = await this.__UPLOAD_FILE(formData);
+        this.uploadLoading = false;
+      } else {
+        this.ruleForm.icon = null;
+      }
+    },
   },
   components: {
     FormTitle,
