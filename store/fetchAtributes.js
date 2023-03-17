@@ -1,8 +1,9 @@
 export const actions = {
-  async getAtributes({},payload) {
+  async getAtributes({}, payload) {
     try {
       const res = await this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/attributes`,{ params: payload }
+        `https://test.loftcity.uz/api/admin/attributes`,
+        { params: payload }
       );
       return res;
     } catch (e) {
@@ -20,35 +21,24 @@ export const actions = {
     }
   },
   async postAtributes({}, data) {
-    try {
-      const res = await this.$axios.$post(
-        `https://test.loftcity.uz/api/admin/attributes`,
-        data
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$post(
+      `https://test.loftcity.uz/api/admin/attributes`,
+      data
+    );
+    return res;
   },
   async editAtributes({}, payload) {
-    try {
-      const res = await this.$axios.$put(
-        `https://test.loftcity.uz/api/admin/attributes/${payload.id}`,payload.data
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$put(
+      `https://test.loftcity.uz/api/admin/attributes/${payload.id}`,
+      payload.data
+    );
+    return res;
   },
   async deleteAtributes({}, id) {
-    try {
-      const res = await this.$axios.$delete(
-        `https://test.loftcity.uz/api/admin/attributes/${id}`
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$delete(
+      `https://test.loftcity.uz/api/admin/attributes/${id}`
+    );
+    return res;
   },
   async postGroups({}, data) {
     const res = await this.$axios.$post(

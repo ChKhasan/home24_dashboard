@@ -138,16 +138,7 @@
               ></el-input>
             </el-form-item>
           </div>
-
-          <!-- <div class="post_img" v-if="editImage != ''">
-            <div>
-              <span @click="deleteImg()">
-                <i class="el-icon-delete"></i>
-              </span>
-            </div>
-            <img :src="editImage" alt="" />
-          </div> -->
-          <div class="clearfix">
+          <div class="clearfix variant-img mt-0">
             <a-upload
               list-type="picture-card"
               :file-list="fileList"
@@ -155,30 +146,9 @@
               @change="handleChange"
             >
               <div v-if="fileList.length < 1">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                  <path
-                    d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
-                    stroke="#3699FF"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
+                <span v-html="addImgIcon"></span>
                 <div class="ant-upload-text">
-                  Upload image
+                  Добавить изображение
                 </div>
               </div>
             </a-upload>
@@ -207,6 +177,7 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
+import AddBrandModal from "../../components/products/Add-brand-modal.vue";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -231,6 +202,7 @@ export default {
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
@@ -634,6 +606,7 @@ export default {
     FormTitle,
     AddModal,
     Editor,
+    AddBrandModal,
   },
   layout: "toolbar",
 };

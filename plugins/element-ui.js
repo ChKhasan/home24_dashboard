@@ -1,6 +1,8 @@
 import Vue from "vue";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+import 'element-ui/lib/theme-chalk/base.css';
+import CollapseTransition from "element-ui/lib/transitions/collapse-transition";
 import {
   Pagination,
   Dialog,
@@ -82,6 +84,7 @@ Vue.use(Dialog);
 Vue.use(Autocomplete);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
+Vue.use(CollapseTransition);
 Vue.use(DropdownItem);
 Vue.use(Menu);
 Vue.use(Submenu);

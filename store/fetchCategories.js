@@ -43,14 +43,10 @@ export const actions = {
     }
   },
   async deleteCategories({}, id) {
-    try {
-      const res = await this.$axios.$delete(
-        `https://test.loftcity.uz/api/admin/categories/${id}`
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$delete(
+      `https://test.loftcity.uz/api/admin/categories/${id}`
+    );
+    return res;
   },
   async postGroups({}, data) {
     const res = await this.$axios.$post(

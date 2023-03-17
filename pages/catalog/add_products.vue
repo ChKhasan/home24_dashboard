@@ -101,6 +101,7 @@
                   <div class="products-input-grid-3 w-100">
                     <div class="form-block mb-0 required">
                       <div><label>Категория</label></div>
+              
                       <el-form-item prop="category_id">
                         <el-select
                           v-model="ruleForm.category_id"
@@ -313,7 +314,7 @@
                 </el-tab-pane>
               </el-tabs>
               <!-- Product Variants -->
-              <transition-group name="list" tag="ul">
+              <transition-group name="el-zoom-in-top" tag="ul">
                 <div
                   class="form-container product_list"
                   v-for="element in ruleForm.products"
@@ -323,7 +324,7 @@
                     <h4 class="variant-title">Вариация №{{ element.id }}</h4>
                     <div
                       class="variant-btn variant-btn-delete"
-                      @click="deleteVariant(element.id)"
+                      @click="deleteProduct(element.id)"
                     >
                       <svg
                         width="30"
@@ -381,7 +382,7 @@
                   </div>
                   <div>
                     <!-- Validations -->
-                    <transition-group name="list" tag="ul">
+                    <transition-group name="el-zoom-in-top" tag="ul">
                       <div
                         class="product-variant"
                         v-for="item in element.variations"
@@ -514,7 +515,7 @@
                           <div class="variant_btns mb-1">
                             <div
                               class="variant-btn variant-btn-delete mx-2"
-                              @click="deleteInnerVariant(element.id, item.id)"
+                              @click="deleteValidation(element.id, item.id)"
                             >
                               <svg
                                 width="30"
@@ -563,7 +564,7 @@
               <div>
                 <div
                   class="add-variant create-inner-variant mt-0"
-                  @click="addVariant"
+                  @click="addProduct"
                 >
                   <span v-html="addInnerValidatIcon"></span>
                   Добавит варизаци
@@ -659,206 +660,12 @@
         </el-form>
       </div>
     </div>
-    <AddModal
-      title="New group"
-      name="add_brand_modal"
-      btnText="Add Group"
-      :callback="getData"
-      :loadingBtn="loadingBrand"
-      :closeModal="closeModal"
-    >
-      <el-form
-        label-position="top"
-        :model="brandData"
-        :rules="rulesModal"
-        ref="brandData"
-        label-width="120px"
-        class="demo-ruleForm"
-      >
-        <div class="form-block required">
-          <div><label for="">Brand </label></div>
-          <el-form-item prop="name">
-            <el-input
-              placeholder="Product model"
-              v-model="brandData.name"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div class="clearfix variant-img">
-          <a-upload
-            list-type="picture-card"
-            :file-list="fileListBrand"
-            @preview="handlePreview"
-            @change="handleChangeBrand"
-          >
-            <div v-if="fileListBrand.length < 1">
-              <span v-html="addImgIcon"></span>
-              <div class="ant-upload-text">
-                Добавить изображение
-              </div>
-            </div>
-          </a-upload>
-          <a-modal
-            :visible="previewVisible"
-            :footer="null"
-            @cancel="handleCancel"
-          >
-            <img alt="example" style="width: 100%;" :src="previewImage" />
-          </a-modal>
-        </div>
-      </el-form>
-    </AddModal>
-    <AddModal
-      title="Новая категория"
-      name="add_category_modal"
-      btnText="Add Group"
-      :callback="categoryPost"
-      :loadingBtn="loadingCategory"
-      :closeModal="closeModal"
-    >
-      <el-form
-        label-position="top"
-        :model="ruleFormCategory"
-        :rules="rulesCategory"
-        ref="categoryData"
-        label-width="120px"
-        class="demo-ruleForm"
-      >
-        <div class="form-block required">
-          <div><label for="">Название категории </label></div>
-          <el-form-item prop="name_ru">
-            <el-input
-              placeholder="Название категории "
-              v-model="ruleFormCategory.name_ru"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div class="form-block">
-          <div><label for="">Выберите категорию</label></div>
-          <el-form-item>
-            <el-select
-              class="w-100"
-              v-model="ruleFormCategory.parent_id"
-              filterable
-              :loading="brands.length < 1"
-              loading-text="Loading..."
-              no-data-text="No data"
-              no-match-text="No data"
-              placeholder="Выберите категорию"
-            >
-              <el-option
-                v-for="item in categories"
-                :key="item?.id"
-                :label="item?.name?.ru"
-                :value="item?.id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="form-block required">
-          <div><label for="">Информация о категории </label></div>
-          <el-form-item prop="desc_ru">
-            <el-input
-              type="textarea"
-              rows="5"
-              placeholder="Description"
-              v-model="ruleFormCategory.desc_ru"
-            ></el-input>
-          </el-form-item>
-        </div>
-        <div class="d-flex">
-          <div class="form-block">
-            <div><label for="">Популярный </label></div>
-            <div>
-              <a-switch
-                @change="switchPopular"
-                :checked="ruleFormCategory.is_popular == 1"
-              />
-            </div>
-          </div>
-          <div class="form-block mx-5">
-            <div><label for="">Статус </label></div>
-            <a-switch @change="switchActive" />
-          </div>
-        </div>
-
-        <div class="form-block">
-          <div><label for="">Атрибуты</label></div>
-          <el-form-item prop="attributes">
-            <el-select
-              class="w-100"
-              v-model="ruleFormCategory.attributes"
-              allow-create
-              :loading="brands.length < 1"
-              loading-text="Loading..."
-              no-data-text="No data"
-              no-match-text="No data"
-              multiple
-              placeholder="Atibut"
-              @focus="__GET_ATRIBUTES"
-            >
-              <el-option
-                v-for="item in allAtributes"
-                :key="item?.id"
-                :label="item?.name?.ru"
-                :value="item?.id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="form-block">
-          <div><label for="">Характеристическая группа</label></div>
-          <el-form-item prop="group_characteristics">
-            <el-select
-              class="w-100"
-              v-model="ruleFormCategory.group_characteristics"
-              allow-create
-              :loading="brands.length < 1"
-              loading-text="Loading..."
-              multiple
-              no-data-text="No data"
-              no-match-text="No data"
-              placeholder="Group"
-              @focus="__GET_GROUPS"
-            >
-              <el-option
-                v-for="item in allGroups"
-                :key="item?.id"
-                :label="item?.name?.ru"
-                :value="item?.id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="form-block mb-0"><div><label for="">Изображение</label></div>
-        <div class="clearfix variant-img pt-0">
-          <a-upload
-            list-type="picture-card"
-            :file-list="fileListCategory"
-            @preview="handlePreview"
-            @change="handleChangeCategory"
-          >
-            <div v-if="fileListCategory.length < 1">
-              <span v-html="addImgIcon"></span>
-              <div class="ant-upload-text">
-                Добавить изображение
-              </div>
-            </div>
-          </a-upload>
-          <a-modal
-            :visible="previewVisible"
-            :footer="null"
-            @cancel="handleCancel"
-          >
-            <img alt="example" style="width: 100%;" :src="previewImage" />
-          </a-modal>
-        </div>
-        </div>
-      </el-form>
-    </AddModal>
+    <AddBrandModal :getBrands="__GET_BRANDS" />
+    <AddCategoryModal
+      :brands="brands"
+      :getCategories="__GET_CATEGORIES"
+      :categories="categories"
+    />
     <modal
       :adaptive="true"
       name="characteristic_modal"
@@ -1008,7 +815,8 @@ import CommentCard from "../../components/products/CommentCard.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import AddModal from "../../components/modals/Add-modal.vue";
+import AddBrandModal from "../../components/products/Add-brand-modal.vue";
+import AddCategoryModal from "../../components/products/Add-category-modal.vue";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -1032,7 +840,6 @@ export default {
       addInnerValidatIcon: require("../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       plusCategoryIcon: require("../../assets/svg/components/add-category-icon.svg?raw"),
       title: "Quill Editor",
-      loadingCategory: false,
       items: [1, 2],
       editorOption: {
         theme: "snow",
@@ -1050,11 +857,8 @@ export default {
           ],
         },
       },
-
       atributes: [],
       variantId: null,
-      loadingBrand: false,
-      loadingCategory: false,
       activeName: "Русский",
       activeDesc: "Description",
       searchBlock: false,
@@ -1094,45 +898,6 @@ export default {
           {
             required: true,
             message: "Product name is required",
-            trigger: "change",
-          },
-        ],
-      },
-      rulesCategory: {
-        desc_ru: [
-          {
-            required: true,
-            message: "Description is required",
-            trigger: "change",
-          },
-        ],
-        name_ru: [
-          {
-            required: true,
-            message: "Category name is required",
-            trigger: "change",
-          },
-        ],
-        attributes: [
-          {
-            required: true,
-            message: "attributes name is required",
-            trigger: "change",
-          },
-        ],
-        group_characteristics: [
-          {
-            required: true,
-            message: "attributes name is required",
-            trigger: "change",
-          },
-        ],
-      },
-      rulesModal: {
-        name: [
-          {
-            required: true,
-            message: "Brand name is required",
             trigger: "change",
           },
         ],
@@ -1183,16 +948,6 @@ export default {
           },
         ],
       },
-      ruleFormCategory: {
-        name_ru: "",
-        img: null,
-        parent_id: "",
-        attributes: [],
-        group_characteristics: [],
-        is_popular: 0,
-        is_active: 0,
-        desc_ru: "",
-      },
       validateStatus: [
         {
           label: "Active",
@@ -1205,14 +960,7 @@ export default {
       ],
       previewVisible: false,
       previewImage: "",
-      fileListBrand: [],
-      fileListCategory: [],
       fileList: [],
-      brandData: {
-        name: "",
-        logo: "",
-      },
-
       rulesCharacter: {},
       rulesAtributes: {},
       brands: [],
@@ -1220,13 +968,12 @@ export default {
       character_group: [],
       characterNames: [],
       characterRequired: false,
-      allAtributes: [],
-      allGroups: [],
     };
   },
   mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
+    console.log("dot", process.env.BASE_URL);
   },
 
   methods: {
@@ -1246,49 +993,25 @@ export default {
           ? this.$refs.ruleFormAtributes.length
           : 0;
         const atributValid = artibutReqiured.length == atr;
-        if (valid && atributValid) {
-          this.characterRequired
-            ? this.__POST_PRODUCTS(newData)
-            : this.notification(
-                "Success",
-                "Вы не добавили характеристику",
-                "error"
-              );
-        } else {
-          return false;
-        }
+        if (!valid && !atributValid) return false;
+        this.characterRequired
+          ? this.__POST_PRODUCTS(newData)
+          : this.notification(
+              "Success",
+              "Вы не добавили характеристику",
+              "error"
+            );
       });
-    },
-    categoryPost() {
-      const newData = {
-        ...this.ruleFormCategory,
-        name: {
-          ru: this.ruleFormCategory.name_ru,
-        },
-        desc: {
-          ru: this.ruleFormCategory.desc_ru,
-        },
-      };
-      delete newData["name_ru"];
-      delete newData["desc_ru"];
-      this.$refs["categoryData"].validate((valid) =>
-        valid ? this.__POST_CATEGORY(newData) : false
-      );
     },
     submitFormCharacter(ruleForm) {
       this.characterRequired = false;
       const trueData = [];
       this.$refs[ruleForm].forEach((item) => {
         item.validate((valid) => {
-          if (valid) {
-            trueData.push(valid);
-            if (trueData.length == this.$refs[ruleForm].length) {
-              (this.characterRequired = true),
-                this.hide("characteristic_modal");
-            }
-          } else {
-            return false;
-          }
+          if (!valid) return false;
+          trueData.push(valid);
+          if (trueData.length == this.$refs[ruleForm].length)
+            (this.characterRequired = true), this.hide("characteristic_modal");
         });
       });
     },
@@ -1321,12 +1044,10 @@ export default {
       delete newData["name_ru"];
       delete newData["name_uz"];
       delete newData["name_en"];
-      if (this.categoryChild.child1.id) {
-        newData.category_id = this.categoryChild.child1.id;
-        if (this.categoryChild.child2.id) {
-          newData.category_id = this.categoryChild.child2.id;
-        }
-      }
+      if (!this.categoryChild.child1.id) return newData;
+      newData.category_id = this.categoryChild.child1.id;
+      if (!this.categoryChild.child2.id) return newData;
+      newData.category_id = this.categoryChild.child2.id;
       return newData;
     },
     notification(title, message, type) {
@@ -1336,24 +1057,11 @@ export default {
         type: type,
       });
     },
-    switchPopular(checked) {
-      checked
-        ? (this.ruleFormCategory.is_popular = 1)
-        : (this.ruleFormCategory.is_popular = 0);
-    },
-    switchActive(checked) {
-      checked
-        ? (this.ruleFormCategory.is_active = 1)
-        : (this.ruleFormCategory.is_active = 0);
-    },
     reloadCategories() {
       this.ruleForm.category_id = "";
     },
     closeModal(name) {
-      // console.log(name);
-      // this.hide(name);
       this.hide("add_category_modal");
-      this.hide("add_brand_modal");
     },
     handleScroll(event) {
       this.$refs.characterScrollItems.forEach((item) => {
@@ -1365,7 +1073,6 @@ export default {
       this.variantId = id;
       this.fileList = fileList;
     },
-
     atributOptions(obj) {
       const product = this.findProductWithId(obj.productId);
       product.variations.find((varId) => varId.id == obj.variantId).options[
@@ -1373,11 +1080,6 @@ export default {
       ] = product.variations.find(
         (varId) => varId.id == obj.variantId
       ).optionName[`at_${obj.id}`];
-    },
-    getData() {
-      this.$refs["brandData"].validate((valid) =>
-        valid ? this.__POST_BRAND() : false
-      );
     },
     show(name) {
       this.$modal.show(name);
@@ -1420,16 +1122,17 @@ export default {
         characteristics: [],
         characteristicsValues: {},
         optionName: options,
+        status: "active",
       });
     },
-    deleteVariant(variantId) {
+    deleteProduct(variantId) {
       if (this.ruleForm.products.length > 1) {
         this.ruleForm.products = this.ruleForm.products.filter(
           (item) => item.id != variantId
         );
       }
     },
-    deleteInnerVariant(variantId, innerVarId) {
+    deleteValidation(variantId, innerVarId) {
       const product = this.findProductWithId(variantId);
       if (product.variations.length > 1) {
         product.variations = product.variations.filter(
@@ -1440,7 +1143,7 @@ export default {
     findProductWithId(variantId) {
       return this.ruleForm.products.find((element) => element.id == variantId);
     },
-    addVariant() {
+    addProduct() {
       const options = { ...this.atributNames };
       const newVariations = [
         {
@@ -1453,6 +1156,7 @@ export default {
           optionName: options,
           characteristics: [],
           characteristicsValues: {},
+          status: "active",
         },
       ];
       this.ruleForm.products.push({
@@ -1463,49 +1167,13 @@ export default {
       });
     },
     // variant
-    handleChangeBrand({ fileList }) {
-      this.fileListBrand = fileList;
-    },
-    handleChangeCategory({ fileList }) {
-      console.log(fileList);
-      this.fileListCategory = fileList;
-    },
-    __UPLOAD_FILE_VARIANT(newImages, id) {
-      const currentProduct = this.findProductWithId(id);
-      newImages.forEach(async (element, index) => {
-        try {
-          const data = await this.$store.dispatch(
-            "uploadFile/uploadFile",
-            element
-          );
-          currentProduct.images[index] = data.path;
-          this.uploadLoading = false;
-        } catch (e) {
-          this.statusFunc(e.response);
-        }
-      });
-      this.loadingBrand = false;
-    },
-    async __UPLOAD_FILE_CATEGORY(item, formData) {
+    async __UPLOAD_FILE(formData) {
       try {
         const data = await this.$store.dispatch(
           "uploadFile/uploadFile",
           formData
         );
-        this[item].img = data.path;
-        this.loadingCategory = false;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    async __UPLOAD_FILE(item, formData) {
-      try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        this[item].logo = data.path;
-        this.loadingBrand = false;
+        return data.path;
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -1514,7 +1182,6 @@ export default {
       this.formVal = "";
     },
     onChangeVariants(elementId, varId) {
-      console.log(this.ruleForm.products);
       this.ruleForm.products
         .find((proId) => proId.id == elementId)
         .variations.find((variantId) => variantId.id == varId).is_default = 1;
@@ -1534,32 +1201,7 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    async __POST_BRAND() {
-      try {
-        await this.$store.dispatch("fetchBrands/postBrands", this.brandData);
-        this.notification("Success", "Бранд успешно добавлен", "success");
-        this.hide("add_brand_modal");
-        this.__GET_BRANDS();
-        this.brandData.name = "";
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    async __POST_CATEGORY(res) {
-      try {
-        await this.$store.dispatch("fetchCategories/postCategories", res);
-        this.notification("Success", "Категория успешно добавлен", "success");
-        this.hide("add_category_modal");
-        this.__GET_CATEGORIES();
-        this.ruleFormCategory.name_ru = "";
-        this.ruleFormCategory.desc_ru = "";
-        this.ruleFormCategory.is_active = 0;
-        this.ruleFormCategory.is_popular = 0;
-        this.ruleFormCategory.parent_id = null;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
+
     statusFunc(res) {
       switch (res.status) {
         case 422:
@@ -1589,15 +1231,6 @@ export default {
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = data.categories?.data;
-    },
-    async __GET_GROUPS() {
-      const data = await this.$store.dispatch("fetchCharacters/getGroups");
-
-      this.allGroups = data?.groups;
-    },
-    async __GET_ATRIBUTES() {
-      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
-      this.allAtributes = data.attributes?.data;
     },
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch(
@@ -1636,7 +1269,6 @@ export default {
         item.variations.forEach((elem, elemIndex) => {
           if (itemIndex == 0 && elemIndex == 0) {
             copyCharacter = { ...elem.characteristicsValues };
-            console.log(elem.characteristicsValues);
           } else {
             Object.keys(copyCharacter).forEach((charElem) => {
               if (!Object.keys(elem.characteristicsValues).includes(charElem)) {
@@ -1670,24 +1302,23 @@ export default {
       this.categoryChild.child2.id = "";
     },
     "categoryChild.child1.id"(val) {
-      if (val) {
-        const child2 = this.categoryChild.child1.arr.find(
-          (item) => item.id == val
-        );
-        this.__GET_CATEGORY_BY_ID(val);
-
-        if (child2.children.length > 0) {
-          this.categoryChild.child2.arr = child2.children;
-        } else {
-          this.categoryChild.child2.arr = [];
-          this.categoryChild.child2.id = "";
-        }
+      if (!val) return false;
+      console.log(val);
+      const child2 = this.categoryChild.child1.arr.find(
+        (item) => item.id == val
+      );
+      this.__GET_CATEGORY_BY_ID(val);
+      if (child2.children.length > 0) {
+        this.categoryChild.child2.arr = child2.children;
+      } else {
+        this.categoryChild.child2.arr = [];
+        this.categoryChild.child2.id = "";
       }
     },
     "categoryChild.child2.id"(val) {
       this.__GET_CATEGORY_BY_ID(val);
     },
-    fileList() {
+    async fileList() {
       const currentProduct = this.findProductWithId(this.variantId);
       currentProduct.imagesData = this.fileList;
       const newImages = [];
@@ -1697,25 +1328,10 @@ export default {
         newImages[index] = formData;
       });
       this.uploadLoading = true;
-      this.__UPLOAD_FILE_VARIANT(newImages, this.variantId);
-    },
-    fileListCategory() {
-      this.loadingCategory = true;
-      let formData = new FormData();
-      const newImg = this.fileListCategory;
-      if (newImg.length > 0) {
-        formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE_CATEGORY("ruleFormCategory", formData);
-      }
-    },
-    fileListBrand() {
-      this.loadingBrand = true;
-      let formData = new FormData();
-      const newImg = this.fileListBrand;
-      if (newImg.length > 0) {
-        formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE("brandData", formData);
-      }
+      newImages.forEach(async (element, index) => {
+        currentProduct.images[index] = await this.__UPLOAD_FILE(element);
+        this.uploadLoading = false;
+      });
     },
   },
   components: {
@@ -1723,7 +1339,8 @@ export default {
     ProductCharacterList,
     CommentCard,
     TitleBlock,
-    AddModal,
+    AddBrandModal,
+    AddCategoryModal,
   },
 };
 </script>
@@ -1738,14 +1355,17 @@ export default {
   display: grid;
   grid-gap: 24px;
 }
-.list-enter,
 .list-leave-to {
   opacity: 0;
   transform: translateX(30px);
 }
+.list-enter {
+  opacity: 0;
+  transform: translateY(-30px);
+}
 .list-enter-to {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
 }
 .list-move {
   opacity: 1;
@@ -1780,4 +1400,5 @@ export default {
 .search-block-leave-active {
   transition: all 0.4s;
 }
+// 1761
 </style>

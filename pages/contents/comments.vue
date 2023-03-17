@@ -36,6 +36,20 @@
               <h6>{{ text }}</h6>
             </span>
             <span slot="customTitle"></span>
+            <span slot="editId" slot-scope="text">
+         
+              <a-popconfirm
+                title="Are you sure delete this comment?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="deleteComment(text)"
+                @cancel="cancel"
+              >
+                <span class="action-btn">
+                  <img :src="deleteIcon" alt="" />
+                </span>
+              </a-popconfirm>
+            </span>
           </a-table>
         </div>
       </div>
@@ -115,15 +129,15 @@ export default {
           //   width: "10%",
         },
 
-        // {
-        //   title: "действия",
-        //   key: "editId",
-        //   dataIndex: "editId",
-        //   scopedSlots: { customRender: "editId" },
-        //   className: "column-btns",
-        //     width: "100px",
-        //   align: "right",
-        // },
+        {
+          title: "действия",
+          key: "editId",
+          dataIndex: "editId",
+          scopedSlots: { customRender: "editId" },
+          className: "column-btns",
+            width: "100px",
+          align: "right",
+        },
       ],
       previewVisible: false,
       comments: [],

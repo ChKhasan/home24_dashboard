@@ -85,7 +85,7 @@
                 tag_rejected: is_active == 0,
               }"
             >
-              {{ is_active ? 'Active':"Inactive" }}
+              {{ is_active ? "Active" : "Inactive" }}
             </span>
 
             <span slot="id" slot-scope="text">
@@ -359,17 +359,13 @@ export default {
           };
         }
       });
-
     },
     deleteCategory(id) {
       this.__DELETE_CATEGORY(id);
     },
     async __DELETE_CATEGORY(id) {
       try {
-        const data = await this.$store.dispatch(
-          "fetchCategories/deleteCategories",
-          id
-        );
+        await this.$store.dispatch("fetchCategories/deleteCategories", id);
         await this.$notify({
           title: "Success",
           message: "Категория был успешно удален",
@@ -377,6 +373,7 @@ export default {
         });
         this.__GET_CATEGORIES();
       } catch (e) {
+        console.log(e.response);
         this.statusFunc(e.response);
       }
     },
@@ -421,25 +418,28 @@ export default {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
-    deleteCategory(id) {
-      this.__DELETE_CATEGORY(id);
-    },
-    async __DELETE_CATEGORY(id) {
-      try {
-        const data = await this.$store.dispatch(
-          "fetchCategories/deleteCategories",
-          id
-        );
-        await this.$notify({
-          title: "Success",
-          message: "Категория был успешно удален",
-          type: "success",
-        });
-        this.__GET_CATEGORIES();
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
+    // deleteCategory(id) {
+    //   this.__DELETE_CATEGORY(id);
+    // },
+    // async __DELETE_CATEGORY(id) {
+    //   try {
+    //     const data = await this.$store.dispatch(
+    //       "fetchCategories/deleteCategories",
+    //       id
+    //     );
+    //     await this.$notify({
+    //       title: "Success",
+    //       message: "Категория был успешно удален",
+    //       type: "success",
+    //     });
+    //     console.log(data);
+    //     this.__GET_CATEGORIES();
+    //   } catch (e) {
+    //     console.log(e.response);
+
+    //     this.statusFunc(e.response);
+    //   }
+    // },
     onChangeCheckbox(id) {
       this.allCheckbox.includes(id)
         ? (this.allCheckbox = this.allCheckbox.filter((item) => item != id))
