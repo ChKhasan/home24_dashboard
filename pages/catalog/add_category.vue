@@ -11,9 +11,8 @@
             name="Отмена"
             :headerbtnCallback="toBack"
             :light="true"
-          />
-        </span>
-        <a-button
+          /> </span
+        ><a-button
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="headerbtnCallback('ruleForm')"
@@ -26,9 +25,6 @@
     </TitleBlock>
     <div class="container_xl">
       <div class="card_block-form py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
-        ></div>
         <div class="category-from-grid">
           <el-form
             label-position="top"
@@ -40,11 +36,7 @@
             action=""
           >
             <div class="category-select-grid">
-              <el-tabs
-                class="form_tabs"
-                v-model="activeName"
-                @tab-click="handleClick"
-              >
+              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -77,6 +69,7 @@
                             loading-text="Loading..."
                             no-match-text="no category"
                             no-data-text="No Category"
+                            default-first-option
                           >
                             <el-option
                               v-for="item in categories"
@@ -92,7 +85,7 @@
                     <div class="form-block">
                       <div><label for="">Информация о категории</label></div>
                       <quill-editor
-                        style="min-height: 250px;"
+                        style="min-height: 250px"
                         :options="editorOption"
                         :value="ruleForm.desc[item.key]"
                         v-model="ruleForm.desc[item.key]"
@@ -149,9 +142,7 @@
                   </el-form-item>
                 </div>
                 <div class="d-flex justify-content-end">
-                  <div class="form-btn form-outline-transparent mx-3">
-                    Cancel
-                  </div>
+                  <div class="form-btn form-outline-transparent mx-3">Cancel</div>
                   <div
                     type="submit"
                     class="form-btn form-btn-primary"
@@ -191,9 +182,7 @@
                   type="number"
                 ></el-input>
               </div>
-              <div
-                class="switch-text form-block d-flex flex-row align-items-center"
-              >
+              <div class="switch-text form-block d-flex flex-row align-items-center">
                 <a-switch @change="onChange" />
                 <label class="mx-3 mb-0">Популярный</label>
               </div>
@@ -208,9 +197,7 @@
                   >
                     <div v-if="fileList.img.length < 1">
                       <span v-html="addImgIcon"></span>
-                      <div class="ant-upload-text">
-                        Добавить изображение
-                      </div>
+                      <div class="ant-upload-text">Добавить изображение</div>
                       <span class="upload-resize">(678 x 784)</span>
                     </div>
                   </a-upload>
@@ -219,20 +206,13 @@
                     :footer="null"
                     @cancel="handleCancel"
                   >
-                    <img
-                      alt="example"
-                      style="width: 100%;"
-                      :src="previewImage"
-                    />
+                    <img alt="example" style="width: 100%" :src="previewImage" />
                   </a-modal>
                 </div>
               </div>
               <div class="form-block">
                 <div><label>Svg</label></div>
-                <el-input
-                  v-model="ruleForm.icon_svg"
-                  placeholder="Svg"
-                ></el-input>
+                <el-input v-model="ruleForm.icon_svg" placeholder="Svg"></el-input>
               </div>
               <div class="form-block">
                 <div><label for="">Добавить значок продукта</label></div>
@@ -245,9 +225,7 @@
                   >
                     <div v-if="fileList.icon.length < 1">
                       <span v-html="addImgIcon"></span>
-                      <div class="ant-upload-text">
-                        Добавить изображение
-                      </div>
+                      <div class="ant-upload-text">Добавить изображение</div>
                       <span class="upload-resize">(678 x 784)</span>
                     </div>
                   </a-upload>
@@ -256,11 +234,7 @@
                     :footer="null"
                     @cancel="handleCancel"
                   >
-                    <img
-                      alt="example"
-                      style="width: 100%;"
-                      :src="previewImage"
-                    />
+                    <img alt="example" style="width: 100%" :src="previewImage" />
                   </a-modal>
                 </div>
               </div>
@@ -448,10 +422,7 @@ export default {
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
         return data.path;
       } catch (e) {
         this.statusFunc(e.response);
@@ -474,6 +445,12 @@ export default {
         } else {
           this.categories = [item, ...this.categories];
         }
+      });
+      this.categories.unshift({
+        name: {
+          ru: "----------",
+        },
+        id: null,
       });
     },
     statusFunc(res) {

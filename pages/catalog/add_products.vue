@@ -6,9 +6,7 @@
       lastLink="Products"
     >
       <div class="d-flex">
-        <div
-          class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-        >
+        <div class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3">
           Cancel
         </div>
         <a-button
@@ -37,11 +35,7 @@
           ></div>
           <div class="products-from-grid">
             <div class="products-select-grid">
-              <el-tabs
-                class="form_tabs"
-                v-model="activeName"
-                @tab-click="handleClick"
-              >
+              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -120,9 +114,7 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <span class="bottom_text"
-                        >Добавить товар в категорию</span
-                      >
+                      <span class="bottom_text">Добавить товар в категорию</span>
                     </div>
                     <div class="form-block mb-0">
                       <div><label>Дочерняя категория</label></div>
@@ -142,9 +134,7 @@
                         >
                         </el-option>
                       </el-select>
-                      <span class="bottom_text"
-                        >Добавить товар в категорию</span
-                      >
+                      <span class="bottom_text">Добавить товар в категорию</span>
                     </div>
                     <div class="form-block mb-0">
                       <div><label>Последняя категория</label></div>
@@ -164,9 +154,7 @@
                         >
                         </el-option>
                       </el-select>
-                      <span class="bottom_text"
-                        >Добавить товар в категорию</span
-                      >
+                      <span class="bottom_text">Добавить товар в категорию</span>
                     </div>
                   </div>
                   <div class="prducts-details-btns">
@@ -267,11 +255,7 @@
                   </div>
                 </Transition>
               </div>
-              <el-tabs
-                class="form_tabs"
-                v-model="activeName"
-                @tab-click="handleClick"
-              >
+              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -290,7 +274,7 @@
                       <el-tab-pane label="Описание" name="Description">
                         <div class="mt-1">
                           <quill-editor
-                            style="min-height: 250px;"
+                            style="min-height: 250px"
                             :options="editorOption"
                             :value="ruleForm.desc[item.key]"
                             v-model="ruleForm.desc[item.key]"
@@ -301,9 +285,7 @@
                           <h5 class="variant-img-title mb-4 mt-2">
                             Добавить характеристику
                           </h5>
-                          <a-button
-                            type="primary"
-                            @click="show('characteristic_modal')"
+                          <a-button type="primary" @click="show('characteristic_modal')"
                             >Редактировать характеристику
                           </a-button>
                         </div>
@@ -351,15 +333,11 @@
                         :file-list="element.imagesData"
                         :multiple="true"
                         @preview="handlePreview"
-                        @change="
-                          ($event) => handleChangeVatiant($event, element.id)
-                        "
+                        @change="($event) => handleChangeVatiant($event, element.id)"
                       >
                         <div v-if="element.imagesData.length < 50">
                           <span v-html="addImgIcon"></span>
-                          <div class="ant-upload-text">
-                            Добавить изображение
-                          </div>
+                          <div class="ant-upload-text">Добавить изображение</div>
                         </div>
                       </a-upload>
                       <a-modal
@@ -367,11 +345,7 @@
                         :footer="null"
                         @cancel="handleCancel"
                       >
-                        <img
-                          alt="example"
-                          style="width: 100%;"
-                          :src="previewImage"
-                        />
+                        <img alt="example" style="width: 100%" :src="previewImage" />
                       </a-modal>
                     </div>
                     <p class="variant-img-text">
@@ -387,10 +361,7 @@
                         v-for="item in element.variations"
                         :key="item.id"
                       >
-                        <div
-                          class="product_variant_block"
-                          v-if="atributes.length > 0"
-                        >
+                        <div class="product_variant_block" v-if="atributes.length > 0">
                           <div class="variant-grid-4 w-100">
                             <el-form
                               label-position="top"
@@ -408,14 +379,9 @@
                                 <div>
                                   <label>{{ atribut.name.ru }}</label>
                                 </div>
-                                <el-form-item
-                                  :prop="`at_${atribut.id}`"
-                                  class="mb-0"
-                                >
+                                <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
                                   <el-select
-                                    v-model="
-                                      item.optionName[`at_${atribut.id}`]
-                                    "
+                                    v-model="item.optionName[`at_${atribut.id}`]"
                                     class="w-100"
                                     default-first-option
                                     placeholder="265 gb"
@@ -536,9 +502,7 @@
                               class="variant-btn variant-btn-check"
                               @click="onChangeVariants(element.id, item.id)"
                             >
-                              <a-radio
-                                :checked="item.is_default == 1"
-                              ></a-radio>
+                              <a-radio :checked="item.is_default == 1"></a-radio>
                             </div>
                           </div>
                         </div>
@@ -546,14 +510,8 @@
                     </transition-group>
                     <!-- Validations -->
                   </div>
-                  <div
-                    class="d-flex justify-content-start"
-                    v-if="atributes.length > 0"
-                  >
-                    <div
-                      class="create-inner-variant"
-                      @click="addValidation(element.id)"
-                    >
+                  <div class="d-flex justify-content-start" v-if="atributes.length > 0">
+                    <div class="create-inner-variant" @click="addValidation(element.id)">
                       <span v-html="addInnerValidatIcon"></span>
                       Добавит внутренний варизаци
                     </div>
@@ -561,10 +519,7 @@
                 </div>
               </transition-group>
               <div>
-                <div
-                  class="add-variant create-inner-variant mt-0"
-                  @click="addProduct"
-                >
+                <div class="add-variant create-inner-variant mt-0" @click="addProduct">
                   <span v-html="addInnerValidatIcon"></span>
                   Добавит варизаци
                 </div>
@@ -672,10 +627,7 @@
       height="100%"
       :clickToClose="false"
     >
-      <div
-        class="add_modal-container padding_characteristic_modal"
-        ref="ruleForm1"
-      >
+      <div class="add_modal-container padding_characteristic_modal" ref="ruleForm1">
         <div class="character_modal-header">
           <div class="character_modal-header_btn">
             <div
@@ -685,10 +637,7 @@
               <span class="svg-icon" v-html="addIcon"></span>
               сохранять
             </div>
-            <div
-              class="character-close-btn"
-              @click="hide('characteristic_modal')"
-            >
+            <div class="character-close-btn" @click="hide('characteristic_modal')">
               <span class="character-close-icon" v-html="closeIcon"></span>
               Закрыть
             </div>
@@ -704,11 +653,7 @@
                 v-for="variations in product.variations"
               >
                 <div class="ch-product-img">
-                  <img
-                    v-if="product.images.length > 0"
-                    :src="product.images[0]"
-                    alt=""
-                  />
+                  <img v-if="product.images.length > 0" :src="product.images[0]" alt="" />
                   <img
                     v-else
                     src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
@@ -716,15 +661,9 @@
                   />
                 </div>
                 <div class="ch-product-body">
-                  <span class="ch-product-info">
-                    Пурпурные
-                  </span>
-                  <span class="ch-product-info">
-                    dual SIM 265 gb
-                  </span>
-                  <span class="ch-product-info">
-                    17 100 000 сум LL A
-                  </span>
+                  <span class="ch-product-info"> Пурпурные </span>
+                  <span class="ch-product-info"> dual SIM 265 gb </span>
+                  <span class="ch-product-info"> 17 100 000 сум LL A </span>
                 </div>
               </div>
             </span>
@@ -774,9 +713,7 @@
                         <el-form-item :prop="`char_${characters.id}`">
                           <el-select
                             v-model="
-                              variations.characteristicsValues[
-                                `char_${characters.id}`
-                              ]
+                              variations.characteristicsValues[`char_${characters.id}`]
                             "
                             filterable
                             allow-create
@@ -994,11 +931,7 @@ export default {
         if (!valid && !atributValid) return false;
         this.characterRequired
           ? this.__POST_PRODUCTS(newData)
-          : this.notification(
-              "Success",
-              "Вы не добавили характеристику",
-              "error"
-            );
+          : this.notification("Success", "Вы не добавили характеристику", "error");
       });
     },
     submitFormCharacter(ruleForm) {
@@ -1075,9 +1008,9 @@ export default {
       const product = this.findProductWithId(obj.productId);
       product.variations.find((varId) => varId.id == obj.variantId).options[
         obj.index
-      ] = product.variations.find(
-        (varId) => varId.id == obj.variantId
-      ).optionName[`at_${obj.id}`];
+      ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
+        `at_${obj.id}`
+      ];
     },
     show(name) {
       this.$modal.show(name);
@@ -1133,9 +1066,7 @@ export default {
     deleteValidation(variantId, innerVarId) {
       const product = this.findProductWithId(variantId);
       if (product.variations.length > 1) {
-        product.variations = product.variations.filter(
-          (item) => item.id != innerVarId
-        );
+        product.variations = product.variations.filter((item) => item.id != innerVarId);
       }
     },
     findProductWithId(variantId) {
@@ -1167,10 +1098,7 @@ export default {
     // variant
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
         return data.path;
       } catch (e) {
         this.statusFunc(e.response);
@@ -1199,7 +1127,6 @@ export default {
         this.statusFunc(e.response);
       }
     },
-
     statusFunc(res) {
       switch (res.status) {
         case 422:
@@ -1224,17 +1151,20 @@ export default {
     },
     async __GET_BRANDS() {
       const data = await this.$store.dispatch("fetchBrands/getBrands");
-      this.brands = data?.brands.data;
+      this.brands = [
+        {
+          name: '----',
+          id: null,
+        },
+        ...data?.brands.data,
+      ];
     },
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
-      this.categories = data.categories?.data;
+      this.categories = [...data.categories?.data];
     },
     async __GET_CATEGORY_BY_ID(id) {
-      const data = await this.$store.dispatch(
-        "fetchCategories/getCategoriesById",
-        id
-      );
+      const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
       const category = data.category;
       this.atributes = category.attributes;
       this.character_group = category.characteristic_groups;
@@ -1285,6 +1215,7 @@ export default {
       if (val) {
         const child1 = this.categories.find((item) => item.id == val);
         this.__GET_CATEGORY_BY_ID(val);
+        if (!child1.children) return false;
         if (child1.children.length > 0) {
           this.categoryChild.child1.arr = child1.children;
         } else {
@@ -1301,10 +1232,7 @@ export default {
     },
     "categoryChild.child1.id"(val) {
       if (!val) return false;
-      console.log(val);
-      const child2 = this.categoryChild.child1.arr.find(
-        (item) => item.id == val
-      );
+      const child2 = this.categoryChild.child1.arr.find((item) => item.id == val);
       this.__GET_CATEGORY_BY_ID(val);
       if (child2.children.length > 0) {
         this.categoryChild.child2.arr = child2.children;
