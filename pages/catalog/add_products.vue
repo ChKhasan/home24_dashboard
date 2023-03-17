@@ -91,21 +91,31 @@
                 <div class="d-flex justify-content-start">
                   <FormTitle title="Информация о продукте" />
                 </div>
-                  <div class="form-block mb-0 required">
-                    <div><label>Категория</label></div>
-                    <el-form-item prop="category_id">
-                      <el-cascader
-                        :options="optionsCas"
-                        :props="{ checkStrictly: true }"
-                        clearable
-                        v-model="ruleForm.category_id"
-                        no-data-text="no category"
-                        no-match-text="no category"
-                        loading-text="Loading"
-                      ></el-cascader>
-                    </el-form-item>
-                    <span class="bottom_text">Добавить товар в категорию</span>
-                  </div>
+                <div class="form-block mb-0 required">
+                  <div><label>Категория</label></div>
+                  {{ cascader }}
+                  <el-form-item>
+                    <el-cascader
+                      class="w-100"
+                      :options="optionsCas"
+                      :props="{ checkStrictly: true }"
+                      clearable
+                      filterable
+                      placeholder="Try searchingL Guide"
+                      v-model="cascader"
+                      no-data-text="no category"
+                      no-match-text="no category"
+                      loading-text="Loading"
+                      empty
+                      separator=" -> "
+                      ><template slot-scope="{ node, data }">
+                        <span>{{ data.label }}</span>
+                        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                      </template></el-cascader
+                    >
+                  </el-form-item>
+                  <span class="bottom_text">Добавить товар в категорию</span>
+                </div>
                 <div class="d-flex align-items-end">
                   <div class="products-input-grid-3 w-100">
                     <div class="form-block mb-0 required">
@@ -792,6 +802,7 @@ export default {
       plusCategoryIcon: require("../../assets/svg/components/add-category-icon.svg?raw"),
       title: "Quill Editor",
       items: [1, 2],
+      cascader: [1, 11, 111],
       editorOption: {
         theme: "snow",
         modules: {
@@ -815,27 +826,27 @@ export default {
       searchBlock: false,
       optionsCas: [
         {
-          value: "guide",
+          value: 1,
           label: "Guide",
           children: [
             {
-              value: "disciplines",
+              value: 11,
               label: "Disciplines",
               children: [
                 {
-                  value: "consistency",
+                  value: 111,
                   label: "Consistency",
                 },
                 {
-                  value: "feedback",
+                  value: 112,
                   label: "Feedback",
                 },
                 {
-                  value: "efficiency",
+                  value: 113,
                   label: "Efficiency",
                 },
                 {
-                  value: "controllability",
+                  value: 114,
                   label: "Controllability",
                 },
               ],
