@@ -107,7 +107,6 @@
                       no-match-text="no category"
                       loading-text="Loading"
                       empty
-                      separator=" -> "
                       ><template slot-scope="{ node, data }">
                         <span>{{ data.label }}</span>
                         <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
