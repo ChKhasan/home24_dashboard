@@ -167,7 +167,7 @@ export default {
       pagination: {
         pageSize: 16,
       },
-      loading: false,
+      loading: true,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),

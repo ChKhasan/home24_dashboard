@@ -7,8 +7,9 @@
     width: 100%;
     margin-bottom: 0;
   }
-  .el-input {
-    .el-input__inner {
+  .el-input,.category-select {
+    .el-input__inner,
+    .ant-cascader-input {
       background: #ffffff;
       padding: 10px 13px !important;
       border: 1px solid #e4e6ef;
@@ -157,8 +158,8 @@
 .multi_select {
   .el-input__inner {
     height: 90px !important;
-   min-height: 40px !important;
-}
+    min-height: 40px !important;
+  }
 }
 
 @media (max-width: 1440px) {

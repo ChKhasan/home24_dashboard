@@ -142,12 +142,11 @@ export default {
       pagination: {
         pageSize: 16,
       },
-      loading: false,
+      loading: true,
       pageSize: 10,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      selectedRowKeys: [], // Check here to configure the default column
-      loading: false,
+      selectedRowKeys: [],
       atributes: [],
       columns: [
         {

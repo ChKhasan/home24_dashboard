@@ -198,14 +198,13 @@ export default {
       pagination: {
         pageSize: 16,
       },
-      loading: false,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
-      loading: false,
+      loading: true,
       loadingBtn: false,
       editorOption: {
         theme: "snow",

@@ -176,14 +176,13 @@ export default {
       pagination: {
         pageSize: 16,
       },
-      loading: false,
+      loading: true,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       loadingBtn: false,
-
       modalTabData: [
         {
           label: "Русский",
@@ -326,9 +325,7 @@ export default {
       };
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_FAQS(newData)
-            : this.__POST_FAQS(newData);
+          this.editId != "" ? this.__EDIT_FAQS(newData) : this.__POST_FAQS(newData);
         } else {
           return false;
         }
@@ -406,9 +403,7 @@ export default {
       });
     },
     async __GET_FAQ_CATEGORIES() {
-      const data = await this.$store.dispatch(
-        "fetchFaqCategories/getFaqsCategories"
-      );
+      const data = await this.$store.dispatch("fetchFaqCategories/getFaqsCategories");
       this.categories = data.categories?.data;
       this.categories = this.categories.map((item) => {
         return {

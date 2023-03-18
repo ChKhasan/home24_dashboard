@@ -151,12 +151,11 @@ export default {
       pagination: {
         pageSize: 16,
       },
-      loading: false,
+      loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       tableData: [],
       loadingBtn: false,
-
       modalTabData: [
         {
           label: "Русский",
@@ -176,7 +175,6 @@ export default {
         name_uz: "",
         name_en: "",
       },
-
       groups: [],
       columns: [
         {

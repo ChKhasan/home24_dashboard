@@ -91,31 +91,75 @@
                 <div class="d-flex justify-content-start">
                   <FormTitle title="Информация о продукте" />
                 </div>
-                <div class="form-block mb-0 required">
-                  <div><label>Категория</label></div>
-                  {{ cascader }}
-                  <el-form-item>
-                    <el-cascader
+                <div class="d-flex align-items-end">
+                  <div class="form-block mb-0 w-100 required">
+                    <div><label>Категория</label></div>
+                    <el-form-item>
+                      <a-cascader
+                        :options="cascaderCategories"
+                        :show-search="{ filter }"
+                        popupClassName="category-cascader"
+                        class="category-select w-100"
+                        :changeOnSelect="true"
+                        v-model="cascader"
+                        placeholder="Please select"
+                        @change="onChange"
+                        :fieldNames="{
+                          label: 'label',
+                          value: 'id',
+                          children: 'children',
+                        }"
+                      />
+                      <!-- <el-cascader
                       class="w-100"
-                      :options="optionsCas"
-                      :props="{ checkStrictly: true }"
+                      @change="cascaderChange"
+                      :props="{
+                        checkStrictly: true,
+                        label: 'label',
+                        noDataText: 'NO DA',
+                        value: 'id',
+                        noMatchText: 'no category',
+                        empty: 'text',
+                      }"
                       clearable
+                      popper-class="loading-cascader"
                       filterable
+                      no-match-text="no data"
+                      no-data-text="no data"
                       placeholder="Try searchingL Guide"
-                      v-model="cascader"
-                      no-data-text="no category"
-                      no-match-text="no category"
-                      loading-text="Loading"
-                      empty
-                      ><template slot-scope="{ node, data }">
+                      :options="cascaderCategories"
+                    >
+                      <template slot="empty" slot-scope="text">
+                        <span>No data</span>
+                      </template>
+
+                      <template slot-scope="{ node, data }">
                         <span>{{ data.label }}</span>
                         <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-                      </template></el-cascader
-                    >
-                  </el-form-item>
-                  <span class="bottom_text">Добавить товар в категорию</span>
+                      </template>
+                    </el-cascader> -->
+                    </el-form-item>
+                    <span class="bottom_text">Добавить товар в категорию</span>
+                  </div>
+                  <div class="prducts-details-btns">
+                    <div
+                      class="outline-btn outline-light-green-btn"
+                      @click="searchBlock = true"
+                      v-html="searchIcon"
+                    ></div>
+                    <div
+                      class="outline-btn outline-light-green-btn"
+                      @click="reloadCategories"
+                      v-html="reloadIcon"
+                    ></div>
+                    <div
+                      class="outline-btn outline-light-blue-btn"
+                      @click="show('add_category_modal')"
+                      v-html="plusCategoryIcon"
+                    ></div>
+                  </div>
                 </div>
-                <div class="d-flex align-items-end">
+                <!-- <div class="d-flex align-items-end">
                   <div class="products-input-grid-3 w-100">
                     <div class="form-block mb-0 required">
                       <div><label>Категория</label></div>
@@ -198,7 +242,7 @@
                       v-html="plusCategoryIcon"
                     ></div>
                   </div>
-                </div>
+                </div> -->
                 <Transition name="search-block">
                   <div class="d-flex" v-if="searchBlock">
                     <div class="search-container">
@@ -801,7 +845,60 @@ export default {
       plusCategoryIcon: require("../../assets/svg/components/add-category-icon.svg?raw"),
       title: "Quill Editor",
       items: [1, 2],
-      cascader: [1, 11, 111],
+      cascader: [],
+      optionsAntd: [
+        {
+          value: "zhejiang",
+          label: "Zhejiang",
+          children: [
+            {
+              value: "hangzhou",
+              label: "Hangzhou",
+              children: [
+                {
+                  value: "xihu",
+                  label: "West Lake",
+                },
+                {
+                  value: "xiasha",
+                  label: "Xia Sha",
+                  disabled: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: "jiangsu",
+          label: "Jiangsu",
+          children: [
+            {
+              value: "nanjing",
+              label: "Nanjing",
+              children: [
+                {
+                  value: "zhonghuamen",
+                  label: "Zhong Hua men",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      cascaderData: [
+        {
+          name: {
+            ru: "Name1",
+          },
+          id: 1,
+        },
+        {
+          name: {
+            ru: "Name2",
+          },
+          id: 2,
+        },
+      ],
       editorOption: {
         theme: "snow",
         modules: {
@@ -823,274 +920,7 @@ export default {
       activeName: "Русский",
       activeDesc: "Description",
       searchBlock: false,
-      optionsCas: [
-        {
-          value: 1,
-          label: "Guide",
-          children: [
-            {
-              value: 11,
-              label: "Disciplines",
-              children: [
-                {
-                  value: 111,
-                  label: "Consistency",
-                },
-                {
-                  value: 112,
-                  label: "Feedback",
-                },
-                {
-                  value: 113,
-                  label: "Efficiency",
-                },
-                {
-                  value: 114,
-                  label: "Controllability",
-                },
-              ],
-            },
-            {
-              value: "navigation",
-              label: "Navigation",
-              children: [
-                {
-                  value: "side nav",
-                  label: "Side Navigation",
-                },
-                {
-                  value: "top nav",
-                  label: "Top Navigation",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "component",
-          label: "Component",
-          children: [
-            {
-              value: "basic",
-              label: "Basic",
-              children: [
-                {
-                  value: "layout",
-                  label: "Layout",
-                },
-                {
-                  value: "color",
-                  label: "Color",
-                },
-                {
-                  value: "typography",
-                  label: "Typography",
-                },
-                {
-                  value: "icon",
-                  label: "Icon",
-                },
-                {
-                  value: "button",
-                  label: "Button",
-                },
-              ],
-            },
-            {
-              value: "form",
-              label: "Form",
-              children: [
-                {
-                  value: "radio",
-                  label: "Radio",
-                },
-                {
-                  value: "checkbox",
-                  label: "Checkbox",
-                },
-                {
-                  value: "input",
-                  label: "Input",
-                },
-                {
-                  value: "input-number",
-                  label: "InputNumber",
-                },
-                {
-                  value: "select",
-                  label: "Select",
-                },
-                {
-                  value: "cascader",
-                  label: "Cascader",
-                },
-                {
-                  value: "switch",
-                  label: "Switch",
-                },
-                {
-                  value: "slider",
-                  label: "Slider",
-                },
-                {
-                  value: "time-picker",
-                  label: "TimePicker",
-                },
-                {
-                  value: "date-picker",
-                  label: "DatePicker",
-                },
-                {
-                  value: "datetime-picker",
-                  label: "DateTimePicker",
-                },
-                {
-                  value: "upload",
-                  label: "Upload",
-                },
-                {
-                  value: "rate",
-                  label: "Rate",
-                },
-                {
-                  value: "form",
-                  label: "Form",
-                },
-              ],
-            },
-            {
-              value: "data",
-              label: "Data",
-              children: [
-                {
-                  value: "table",
-                  label: "Table",
-                },
-                {
-                  value: "tag",
-                  label: "Tag",
-                },
-                {
-                  value: "progress",
-                  label: "Progress",
-                },
-                {
-                  value: "tree",
-                  label: "Tree",
-                },
-                {
-                  value: "pagination",
-                  label: "Pagination",
-                },
-                {
-                  value: "badge",
-                  label: "Badge",
-                },
-              ],
-            },
-            {
-              value: "notice",
-              label: "Notice",
-              children: [
-                {
-                  value: "alert",
-                  label: "Alert",
-                },
-                {
-                  value: "loading",
-                  label: "Loading",
-                },
-                {
-                  value: "message",
-                  label: "Message",
-                },
-                {
-                  value: "message-box",
-                  label: "MessageBox",
-                },
-                {
-                  value: "notification",
-                  label: "Notification",
-                },
-              ],
-            },
-            {
-              value: "navigation",
-              label: "Navigation",
-              children: [
-                {
-                  value: "menu",
-                  label: "NavMenu",
-                },
-                {
-                  value: "tabs",
-                  label: "Tabs",
-                },
-                {
-                  value: "breadcrumb",
-                  label: "Breadcrumb",
-                },
-                {
-                  value: "dropdown",
-                  label: "Dropdown",
-                },
-                {
-                  value: "steps",
-                  label: "Steps",
-                },
-              ],
-            },
-            {
-              value: "others",
-              label: "Others",
-              children: [
-                {
-                  value: "dialog",
-                  label: "Dialog",
-                },
-                {
-                  value: "tooltip",
-                  label: "Tooltip",
-                },
-                {
-                  value: "popover",
-                  label: "Popover",
-                },
-                {
-                  value: "card",
-                  label: "Card",
-                },
-                {
-                  value: "carousel",
-                  label: "Carousel",
-                },
-                {
-                  value: "collapse",
-                  label: "Collapse",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "resource",
-          label: "Resource",
-          children: [
-            {
-              value: "axure",
-              label: "Axure Components",
-            },
-            {
-              value: "sketch",
-              label: "Sketch Templates",
-            },
-            {
-              value: "docs",
-              label: "Design Documentation",
-            },
-          ],
-        },
-      ],
+      cascaderCategories: [],
       lang: [
         {
           key: "ru",
@@ -1226,6 +1056,20 @@ export default {
           ? this.__POST_PRODUCTS(newData)
           : this.notification("Success", "Вы не добавили характеристику", "error");
       });
+    },
+    onChange(value, selectedOptions) {
+      console.log(value, selectedOptions);
+      this.__GET_CATEGORY_BY_ID(value.at(-1));
+    },
+    filter(inputValue, path) {
+      return (
+        path.some(
+          (option) => option.label.toUpperCase().indexOf(inputValue.toUpperCase()) > -1
+        ) ||
+        path.some(
+          (option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+        )
+      );
     },
     submitFormCharacter(ruleForm) {
       this.characterRequired = false;
@@ -1365,6 +1209,9 @@ export default {
     findProductWithId(variantId) {
       return this.ruleForm.products.find((element) => element.id == variantId);
     },
+    cascaderChange(e) {
+      this.__GET_CATEGORY_BY_ID(e.at(-1));
+    },
     addProduct() {
       const options = { ...this.atributNames };
       const newVariations = [
@@ -1455,6 +1302,34 @@ export default {
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = [...data.categories?.data];
+      this.cascaderCategories = this.categories.map((item) => {
+        item.label = item.name.ru;
+        if (item.children.length > 0) {
+          item.children = item.children.map((item2) => {
+            item2.label = item2.name.ru;
+            if (item2.children.length > 0) {
+              item2.children = item2.children.map((item3) => {
+                item3.label = item3.name.ru;
+                if (item3.children.length > 0) {
+                  return item3;
+                } else {
+                  delete item3["children"];
+                  return item3;
+                }
+              });
+              return item2;
+            } else {
+              delete item2["children"];
+              return item2;
+            }
+          });
+          return item;
+        } else {
+          delete item["children"];
+          return item;
+        }
+      });
+
     },
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
@@ -1470,7 +1345,6 @@ export default {
           },
         ];
       });
-
       category.characteristic_groups.forEach((item) => {
         item.characteristics.forEach((elem) => {
           this.characterNames.push(`char_${elem.id}`);
@@ -1568,7 +1442,15 @@ export default {
 .list-leave-active {
   transition: all 0.4s ease;
 }
-
+.loading-cascader {
+  position: relative;
+  .el-cascader-menu__empty-text {
+    &::before {
+      content: "No data";
+      position: absolute;
+    }
+  }
+}
 .list {
   transition: all 0.4s;
   display: grid;
@@ -1619,5 +1501,25 @@ export default {
 .search-block-leave-active {
   transition: all 0.4s;
 }
-// 1761
+.category-cascader {
+  .ant-cascader-menu {
+    .ant-cascader-menu-item {
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 3px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba($color: #000000, $alpha: 0.2);
+      border-radius: 5px;
+    }
+  }
+}
+
+// 1428
 </style>

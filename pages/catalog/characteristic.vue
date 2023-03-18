@@ -133,11 +133,10 @@ export default {
       pagination: {
         pageSize: 16,
       },
-      loading: false,
+      loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       selectedRowKeys: [], // Check here to configure the default column
-      loading: false,
       atributes: [],
       columns: [
         {
@@ -194,7 +193,6 @@ export default {
           },
         });
       }
-      this.loading = true;
       this.__GET_CHARACTERISTIC();
     },
     toAddProduct() {

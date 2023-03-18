@@ -210,7 +210,7 @@ export default {
       pagination: {
         pageSize: 16,
       },
-      loading: false,
+      loading: true,
       categories: [],
       options: [
         {
