@@ -117,7 +117,6 @@
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
 import SearchInput from "../../components/form/Search-input.vue";
-import SelectAntTable from "../../components/products/SelectAnt-table.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
 
@@ -288,7 +287,7 @@ export default {
       document.documentElement.scrollTop = 0;
     },
   },
-  components: { SelectAntTable, AddBtn, Title, TitleBlock, SearchInput },
+  components: {AddBtn, Title, TitleBlock, SearchInput },
 };
 </script>
 <style lang=""></style>

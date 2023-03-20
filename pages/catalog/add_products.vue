@@ -94,6 +94,7 @@
                 <div class="d-flex align-items-end">
                   <div class="form-block mb-0 w-100 required">
                     <div><label>Категория</label></div>
+                    {{ cascader }}
                     <el-form-item>
                       <a-cascader
                         :options="cascaderCategories"
@@ -104,6 +105,7 @@
                         v-model="cascader"
                         placeholder="Please select"
                         @change="onChange"
+                        :loadData="true"
                         :fieldNames="{
                           label: 'label',
                           value: 'id',
@@ -1058,7 +1060,7 @@ export default {
       });
     },
     onChange(value, selectedOptions) {
-      console.log(value, selectedOptions);
+      this.ruleForm.category_id = value.at(-1);
       this.__GET_CATEGORY_BY_ID(value.at(-1));
     },
     filter(inputValue, path) {
@@ -1126,7 +1128,8 @@ export default {
       });
     },
     reloadCategories() {
-      this.ruleForm.category_id = "";
+      console.log(JSON.parse(localStorage.getItem("lastCategory")));
+      this.cascader = JSON.parse(localStorage.getItem("lastCategory"));
     },
     closeModal(name) {
       this.hide("add_category_modal");
@@ -1213,6 +1216,7 @@ export default {
       this.__GET_CATEGORY_BY_ID(e.at(-1));
     },
     addProduct() {
+      
       const options = { ...this.atributNames };
       const newVariations = [
         {
@@ -1263,6 +1267,7 @@ export default {
         await this.$store.dispatch("fetchProducts/postProducts", data);
         this.$router.push("/catalog/products");
         this.notification("Success", "Продукт успешно добавлен", "success");
+        localStorage.setItem("lastCategory", JSON.stringify(this.cascader));
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -1329,7 +1334,6 @@ export default {
           return item;
         }
       });
-
     },
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
@@ -1378,39 +1382,39 @@ export default {
     },
   },
   watch: {
-    "ruleForm.category_id"(val) {
-      if (val) {
-        const child1 = this.categories.find((item) => item.id == val);
-        this.__GET_CATEGORY_BY_ID(val);
-        if (!child1.children) return false;
-        if (child1.children.length > 0) {
-          this.categoryChild.child1.arr = child1.children;
-        } else {
-          this.categoryChild.child1.arr = [];
-          this.categoryChild.child2.arr = [];
-        }
-      } else {
-        this.categoryChild.child1.arr = [];
-        this.categoryChild.child2.arr = [];
-        this.atributes = [];
-      }
-      this.categoryChild.child1.id = "";
-      this.categoryChild.child2.id = "";
-    },
-    "categoryChild.child1.id"(val) {
-      if (!val) return false;
-      const child2 = this.categoryChild.child1.arr.find((item) => item.id == val);
-      this.__GET_CATEGORY_BY_ID(val);
-      if (child2.children.length > 0) {
-        this.categoryChild.child2.arr = child2.children;
-      } else {
-        this.categoryChild.child2.arr = [];
-        this.categoryChild.child2.id = "";
-      }
-    },
-    "categoryChild.child2.id"(val) {
-      this.__GET_CATEGORY_BY_ID(val);
-    },
+    // "ruleForm.category_id"(val) {
+    //   if (val) {
+    //     const child1 = this.categories.find((item) => item.id == val);
+    //     this.__GET_CATEGORY_BY_ID(val);
+    //     if (!child1.children) return false;
+    //     if (child1.children.length > 0) {
+    //       this.categoryChild.child1.arr = child1.children;
+    //     } else {
+    //       this.categoryChild.child1.arr = [];
+    //       this.categoryChild.child2.arr = [];
+    //     }
+    //   } else {
+    //     this.categoryChild.child1.arr = [];
+    //     this.categoryChild.child2.arr = [];
+    //     this.atributes = [];
+    //   }
+    //   this.categoryChild.child1.id = "";
+    //   this.categoryChild.child2.id = "";
+    // },
+    // "categoryChild.child1.id"(val) {
+    //   if (!val) return false;
+    //   const child2 = this.categoryChild.child1.arr.find((item) => item.id == val);
+    //   this.__GET_CATEGORY_BY_ID(val);
+    //   if (child2.children.length > 0) {
+    //     this.categoryChild.child2.arr = child2.children;
+    //   } else {
+    //     this.categoryChild.child2.arr = [];
+    //     this.categoryChild.child2.id = "";
+    //   }
+    // },
+    // "categoryChild.child2.id"(val) {
+    //   this.__GET_CATEGORY_BY_ID(val);
+    // },
     async fileList() {
       const currentProduct = this.findProductWithId(this.variantId);
       currentProduct.imagesData = this.fileList;

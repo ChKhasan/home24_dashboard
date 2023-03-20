@@ -218,7 +218,6 @@ import Title from "../../../components/Title.vue";
 import FormTitle from "../../../components/Form-title.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
-import FormBlock from "../../../components/form/FormBlock.vue";
 import AddModal from "../../../components/modals/Add-modal.vue";
 
 export default {
@@ -461,7 +460,6 @@ export default {
     FormTitle,
     TitleBlock,
     LayoutHeaderBtn,
-    FormBlock,
     AddModal,
   },
 };

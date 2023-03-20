@@ -1,5 +1,4 @@
 export default {
-  // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes) {
       routes.push({
@@ -21,10 +20,8 @@ export default {
     ],
     link: [{ rel: "icon", type: "image/jpg", href: "/logo.jpg" }],
   },
-  // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["~/assets/scss/app.scss", "~/assets/fonts/stylesheet.css"],
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: "~plugins/element-ui.js", ssr: false },
     { src: "~plugins/vue-js-modal.js", ssr: false },
@@ -38,23 +35,21 @@ export default {
     },
     baseURL: "https://bombadmin.pythonanywhere.com",
   },
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: ["@nuxtjs/svg", "@nuxt/postcss8", "@nuxtjs/dotenv"],
 
-  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/bootstrap
     "bootstrap-vue/nuxt",
     "@nuxtjs/axios",
     "@nuxtjs/auth",
     "@nuxtjs/dotenv",
+    "nuxt-precompress",
   ],
-  mode: "spa",
-  // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  ssr: false,
+  build: {
+    analyze: true,
+  },
 
   auth: {
     strategies: {
@@ -91,6 +86,38 @@ export default {
       home: "/catalog/products",
     },
     watchLoggedIn: true,
+  },
+  nuxtPrecompress: {
+    enabled: true, // Enable in production
+    report: false, // set true to turn one console messages during module init
+    test: /\.(js|css|html|txt|xml|svg)$/, // files to compress on build
+    // Serving options
+    middleware: {
+      // You can disable middleware if you serve static files using nginx...
+      enabled: true,
+      // Enable if you have .gz or .br files in /static/ folder
+      enabledStatic: true,
+      // Priority of content-encodings, first matched with request Accept-Encoding will me served
+      encodingsPriority: ["br", "gzip"],
+    },
+
+    // build time compression settings
+    gzip: {
+      // should compress to gzip?
+      enabled: true,
+
+      filename: "[path].gz[query]",
+      threshold: 10240,
+      minRatio: 0.8,
+      compressionOptions: { level: 9 },
+    },
+    brotli: {
+      enabled: true,
+      filename: "[path].br[query]",
+      compressionOptions: { level: 11 },
+      threshold: 10240,
+      minRatio: 0.8,
+    },
   },
   server: {
     port: 8000, // default: 3000

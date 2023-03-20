@@ -123,10 +123,7 @@
 </template>
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
-import SelectAntTable from "../../components/products/SelectAnt-table.vue";
 import Title from "../../components/Title.vue";
-import SelectTable from "../../components/products/SelectTable.vue";
-import SearchBlock from "../../components/form/Search-block.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
@@ -260,9 +257,6 @@ export default {
   components: {
     AddBtn,
     Title,
-    SelectAntTable,
-    SelectTable,
-    SearchBlock,
     TitleBlock,
     SearchInput,
     LayoutHeaderBtn,

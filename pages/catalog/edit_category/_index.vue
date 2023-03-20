@@ -340,7 +340,6 @@
 import AddBtn from "../../../components/form/Add-btn.vue";
 import Title from "../../../components/Title.vue";
 import FormTitle from "../../../components/Form-title.vue";
-import Editor from "../../../components/form/editor.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import "quill/dist/quill.core.css";
@@ -732,7 +731,6 @@ export default {
     AddBtn,
     Title,
     FormTitle,
-    Editor,
     TitleBlock,
     LayoutHeaderBtn,
     quillEditor,

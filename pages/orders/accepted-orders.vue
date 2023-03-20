@@ -132,7 +132,6 @@
 import AddBtn from "../../components/form/Add-btn.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import TitleBlock from "../../components/Title-block.vue";
-import AntdTable from "../../components/products/Antd-table.vue";
 
 export default {
   layout: "toolbar",
@@ -332,7 +331,7 @@ export default {
       this.pageSize = command;
     },
   },
-  components: { TitleBlock, SearchInput, AddBtn, AntdTable },
+  components: { TitleBlock, SearchInput, AddBtn },
 };
 </script>
 <style lang="scss"></style>

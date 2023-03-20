@@ -555,7 +555,6 @@
 import AddBtn from "../../../components/form/Add-btn.vue";
 import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
-import AntdTable from "../../../components/products/Antd-table.vue";
 import FormTitle from "../../../components/Form-title.vue";
 
 export default {
@@ -887,7 +886,6 @@ export default {
     TitleBlock,
     SearchInput,
     AddBtn,
-    AntdTable,
     FormTitle,
     FormTitle,
   },

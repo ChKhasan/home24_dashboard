@@ -166,13 +166,8 @@
   </div>
 </template>
 <script>
-import Editor from "../../components/form/editor.vue";
-
 import AddBtn from "../../components/form/Add-btn.vue";
-import FilterBtn from "../../components/form/Filter-btn.vue";
 import SearchInput from "../../components/form/Search-input.vue";
-import SearchBlock from "../../components/form/Search-block.vue";
-import AntdTable from "../../components/products/Antd-table.vue";
 import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
@@ -541,7 +536,7 @@ export default {
     },
     async __EDIT_BRANDS(res) {
       try {
-        const data = await this.$store.dispatch("fetchBrands/editBrands", {
+         await this.$store.dispatch("fetchBrands/editBrands", {
           id: this.editId,
           data: { ...res, slug: this.slug },
         });
@@ -596,15 +591,11 @@ export default {
   },
   components: {
     AddBtn,
-    FilterBtn,
     SearchInput,
-    SearchBlock,
-    AntdTable,
     Title,
     TitleBlock,
     FormTitle,
     AddModal,
-    Editor,
     AddBrandModal,
   },
   layout: "toolbar",

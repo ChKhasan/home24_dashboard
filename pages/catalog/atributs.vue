@@ -126,10 +126,8 @@
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
 import HeaderBtn from "../../components/form/Header-btn.vue";
-import SelectAntTable from "../../components/products/SelectAnt-table.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
-import SearchBlock from "../../components/form/Search-block.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 export default {
   layout: "toolbar",
@@ -297,9 +295,7 @@ export default {
     },
   },
   components: {
-    SelectAntTable,
     AddBtn,
-    SearchBlock,
     Title,
     SearchInput,
     HeaderBtn,
