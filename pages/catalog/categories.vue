@@ -13,19 +13,11 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header"
-        >
-          <!-- <Title title="Categories panel" /> -->
+        <div class="d-flex justify-content-between align-items-center card_header">
           <div class="d-flex align-items-between justify-content-between w-100">
-            <!-- <SearchBlock /> -->
             <SearchInput placeholder="Категория поиска" />
             <div class="d-flex align-items-center">
-              <AddBtn
-                name="Добавить категорию"
-                :icon="true"
-                :callback="toAddProduct"
-              />
+              <AddBtn name="Добавить категорию" :icon="true" :callback="toAddProduct" />
             </div>
           </div>
         </div>
@@ -68,12 +60,7 @@
               align="center"
               class="table_product_row select-table-child"
             >
-              <img
-                class="table-image select-img"
-                v-if="text"
-                :src="text"
-                alt=""
-              />
+              <img class="table-image select-img" v-if="text" :src="text" alt="" />
               <p v-else>-----</p>
             </div>
             <span
@@ -110,10 +97,7 @@
               </a-popconfirm>
             </span>
             <span slot="is_popular" slot-scope="text">
-              <a-checkbox
-                @change="onChangeCheckbox(text)"
-                :checked="text == 1"
-              />
+              <a-checkbox @change="onChangeCheckbox(text)" :checked="text == 1" />
             </span>
           </a-table>
         </div>
@@ -180,21 +164,6 @@ const columns = [
   },
 ];
 
-const rowSelection = {
-  onChange: (selectedRowKeys, selectedRows) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-  onSelect: (record, selected, selectedRows) => {
-    console.log(record, selected, selectedRows);
-  },
-  onSelectAll: (selected, selectedRows, changeRows) => {
-    console.log(selected, selectedRows, changeRows);
-  },
-};
 export default {
   layout: "toolbar",
   middleware: "auth",
@@ -246,7 +215,6 @@ export default {
       formVal: "",
 
       columns,
-      rowSelection,
       expandedRowKeys: [],
       selectedRowKeys: [],
       allCheckbox: [],
@@ -262,10 +230,6 @@ export default {
     LayoutHeaderBtn,
   },
   methods: {
-    confirm(e) {
-      console.log(e);
-      this.$message.success("Click on Yes");
-    },
     cancel(e) {
       console.log(e);
       this.$message.error("Click on No");
@@ -394,31 +358,16 @@ export default {
           break;
       }
     },
-    handleClick(tab, event) {
-      console.log("handlchange", tab, event);
-      this.formVal = "";
-    },
     toAddProduct() {
       this.$router.push("/catalog/add_category");
-      console.log("errors");
     },
-    sendForm() {
-      console.log(this.formVal);
-    },
-
     headerbtnCallback() {
       console.log("fsfsdf");
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
     },
     onChangeCheckbox(id) {
       this.allCheckbox.includes(id)
         ? (this.allCheckbox = this.allCheckbox.filter((item) => item != id))
         : this.allCheckbox.push(id);
-
-      console.log(this.allCheckbox);
     },
   },
   async mounted() {

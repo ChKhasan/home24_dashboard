@@ -848,59 +848,6 @@ export default {
       title: "Quill Editor",
       items: [1, 2],
       cascader: [],
-      optionsAntd: [
-        {
-          value: "zhejiang",
-          label: "Zhejiang",
-          children: [
-            {
-              value: "hangzhou",
-              label: "Hangzhou",
-              children: [
-                {
-                  value: "xihu",
-                  label: "West Lake",
-                },
-                {
-                  value: "xiasha",
-                  label: "Xia Sha",
-                  disabled: true,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "jiangsu",
-          label: "Jiangsu",
-          children: [
-            {
-              value: "nanjing",
-              label: "Nanjing",
-              children: [
-                {
-                  value: "zhonghuamen",
-                  label: "Zhong Hua men",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      cascaderData: [
-        {
-          name: {
-            ru: "Name1",
-          },
-          id: 1,
-        },
-        {
-          name: {
-            ru: "Name2",
-          },
-          id: 2,
-        },
-      ],
       editorOption: {
         theme: "snow",
         modules: {
@@ -1034,7 +981,6 @@ export default {
   mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
-    console.log(process.env);
   },
   methods: {
     // products

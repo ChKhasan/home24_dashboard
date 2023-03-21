@@ -133,17 +133,11 @@
             >
               <div v-if="fileList.length < 1">
                 <span v-html="addImgIcon"></span>
-                <div class="ant-upload-text">
-                  Добавить изображение
-                </div>
+                <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
-              <img alt="example" style="width: 100%;" :src="previewImage" />
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
         </div>
@@ -365,9 +359,7 @@ export default {
       }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_POSTS(newData)
-            : this.__POST_POSTS(newData);
+          this.editId != "" ? this.__EDIT_POSTS(newData) : this.__POST_POSTS(newData);
         } else {
           return false;
         }
@@ -443,26 +435,23 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    handleChange({ fileList }) {
+    async handleChange({ fileList }) {
       this.fileList = fileList;
       let formData = new FormData();
       const newImg = fileList;
       if (newImg.length > 0) {
         this.loadingBtn = true;
         formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE(formData);
+        this.ruleForm.img = await this.__UPLOAD_FILE(formData);
+        this.loadingBtn = false;
       } else {
         this.ruleForm.img = null;
       }
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        this.ruleForm.img = data.path;
-        this.loadingBtn = false;
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
+        return data.path;
       } catch (e) {
         this.statusFunc(e.response);
       }

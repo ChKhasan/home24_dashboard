@@ -63,7 +63,6 @@ export default {
   middleware: "auth",
   data() {
     return {
-      pageSize: 10,
       page: 1,
       params: {
         page: 1,

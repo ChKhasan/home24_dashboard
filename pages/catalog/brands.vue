@@ -1,38 +1,11 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Бренды"
-      :breadbrumb="['Контент сайта']"
-      lastLink="Бренды"
-    >
+    <TitleBlock title="Бренды" :breadbrumb="['Контент сайта']" lastLink="Бренды">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
-        <span class="svg-icon"
-          ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            version="1.1"
-          >
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <polygon points="0 0 24 0 24 24 0 24"></polygon>
-              <path
-                d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                fill="#000000"
-                fill-rule="nonzero"
-                opacity="0.3"
-              ></path>
-              <path
-                d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                fill="#000000"
-              ></path>
-            </g></svg
-          ><!--end::Svg Icon--></span
-        >
+        <span class="svg-icon" v-html="addIcon"></span>
         Добавить
       </div>
     </TitleBlock>
@@ -147,17 +120,11 @@
             >
               <div v-if="fileList.length < 1">
                 <span v-html="addImgIcon"></span>
-                <div class="ant-upload-text">
-                  Добавить изображение
-                </div>
+                <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
-              <img alt="example" style="width: 100%;" :src="previewImage" />
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
         </div>
@@ -185,7 +152,6 @@ export default {
   middleware: "auth",
   data() {
     return {
-      pageSize: 10,
       page: 1,
       params: {
         page: 1,
@@ -194,46 +160,6 @@ export default {
         pageSize: 16,
       },
       modalTab: "ru",
-      editIcon: require("../../assets/svg/components/edit-icon.svg"),
-      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
-      tableData: [],
-      selectedRowKeys: [], // Check here to configure the default column
-      loading: true,
-      loadingBtn: false,
-      editorOption: {
-        theme: "snow",
-        modules: {
-          toolbar: [
-            [
-              {
-                size: [],
-              },
-            ],
-            ["bold", "italic", "underline", "strike"],
-
-            ["image"],
-            ["code-block"],
-          ],
-        },
-      },
-      option: {
-        theme: "bubble",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "link"],
-            [
-              {
-                header: 1,
-              },
-              {
-                header: 2,
-              },
-              "blockquote",
-            ],
-          ],
-        },
-      },
       modalTabData: [
         {
           label: "Русский",
@@ -248,6 +174,13 @@ export default {
           index: "en",
         },
       ],
+      editIcon: require("../../assets/svg/components/edit-icon.svg"),
+      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
+      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+      selectedRowKeys: [], // Check here to configure the default column
+      loading: true,
+      loadingBtn: false,
       ruleForm: {
         name: "",
         logo: "",
@@ -295,8 +228,6 @@ export default {
           align: "right",
         },
       ],
-
-      value: "",
       editId: "",
       previewVisible: false,
       previewImage: "",
@@ -328,10 +259,6 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-      console.log("errors");
-    },
     async handleTableChange(pagination, filters, sorter) {
       this.params.page = pagination.current;
       const pager = { ...this.pagination };
@@ -349,7 +276,6 @@ export default {
       this.__GET_BRANDS();
     },
     getData() {
-      console.log(this.fileList);
       if (this.fileList.length > 0) {
         if (this.fileList[0].oldImg) {
           this.ruleForm.logo = this.fileList[0].url;
@@ -385,7 +311,6 @@ export default {
         ...data,
         log: data.lg_logo,
       };
-      //   this.editImage = this.ruleForm.lg_logo;
       this.show("add_brand");
       this.fileList = [
         {
@@ -396,9 +321,6 @@ export default {
           url: this.ruleForm.lg_logo,
         },
       ];
-      console.log(this.ruleForm);
-
-      // this.__GET_BRANDS_BY_ID(id);
     },
     closeModal() {
       this.hide("add_brand");
@@ -423,29 +345,7 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
-    tableActions(id) {
-      console.log(id);
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
-    },
+
     async handlePreview(file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
@@ -453,26 +353,23 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    handleChange({ fileList }) {
+    async handleChange({ fileList }) {
       this.fileList = fileList;
       let formData = new FormData();
       const newImg = fileList;
       if (newImg.length > 0) {
         formData.append("file", newImg[0].originFileObj);
         this.loadingBtn = true;
-        this.__UPLOAD_FILE(formData);
+        this.ruleForm.logo = await this.__UPLOAD_FILE(formData);
+        this.loadingBtn = false;
       } else {
         this.ruleForm.logo = null;
       }
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        this.ruleForm.logo = data.path;
-        this.loadingBtn = false;
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
+        return data.path;
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -536,7 +433,7 @@ export default {
     },
     async __EDIT_BRANDS(res) {
       try {
-         await this.$store.dispatch("fetchBrands/editBrands", {
+        await this.$store.dispatch("fetchBrands/editBrands", {
           id: this.editId,
           data: { ...res, slug: this.slug },
         });
@@ -553,23 +450,8 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    async __GET_BRANDS_BY_ID(id) {
-      const data = await this.$store.dispatch("fetchPosts/getPostsById", id);
-      console.log(data);
-    },
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
 
-    classObject(tag) {
-      return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
-      };
-    },
-  },
   async mounted() {
     if (!Object.keys(this.$route.query).includes("page")) {
       await this.$router.replace({
@@ -579,9 +461,6 @@ export default {
     }
     this.pagination.current = this.$route.query.page * 1;
     this.__GET_BRANDS();
-    if (this.data) {
-      this.tableData = this.data;
-    }
   },
   watch: {
     "pagination.current"() {

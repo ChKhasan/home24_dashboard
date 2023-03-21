@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Баннеры"
-      :breadbrumb="['Контент сайта']"
-      lastLink="Баннеры"
-    >
+    <TitleBlock title="Баннеры" :breadbrumb="['Контент сайта']" lastLink="Баннеры">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -127,17 +123,11 @@
             >
               <div v-if="fileList.length < 1">
                 <span v-html="addImgIcon"></span>
-                <div class="ant-upload-text">
-                  Добавить изображение
-                </div>
+                <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
-              <img alt="example" style="width: 100%;" :src="previewImage" />
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
         </div>
@@ -273,7 +263,6 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-
     async handleTableChange(pagination, filters, sorter) {
       this.params.page = pagination.current;
       const pager = { ...this.pagination };
@@ -304,9 +293,7 @@ export default {
       delete newData["link_en"];
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_BANNERS(newData)
-            : this.__POST_BANNERS(newData);
+          this.editId != "" ? this.__EDIT_BANNERS(newData) : this.__POST_BANNERS(newData);
         } else {
           return false;
         }
@@ -381,24 +368,21 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    handleChange({ fileList }) {
+    async handleChange({ fileList }) {
       this.loadingBtn = true;
       this.fileList = fileList;
       let formData = new FormData();
       const newImg = fileList;
       if (newImg.length > 0) {
         formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE(formData);
+        this.ruleForm.img.ru = await this.__UPLOAD_FILE(formData);
+        this.loadingBtn = false;
       }
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        this.ruleForm.img.ru = data.path;
-        this.loadingBtn = false;
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
+        return data.path;
       } catch (e) {
         this.statusFunc(e.response);
       }
