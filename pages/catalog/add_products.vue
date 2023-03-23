@@ -1079,8 +1079,10 @@ export default {
           : 0;
         const atributValid = artibutReqiured.length == atr;
         if (!valid && !atributValid) return false;
-
-        this.__POST_PRODUCTS(newData);
+        console.log("asdasd");
+        this.characterRequired
+          ? this.__POST_PRODUCTS(newData)
+          : this.notification("Success", "Вы не добавили характеристику", "error");
       });
     },
     onChange(value, selectedOptions) {
@@ -1438,7 +1440,7 @@ export default {
     // "categoryChild.child2.id"(val) {
     //   this.__GET_CATEGORY_BY_ID(val);
     // },
-    async fileList() {
+    async fileList(val) {
       const currentProduct = this.findProductWithId(this.variantId);
       currentProduct.imagesData = this.fileList;
       const newImages = [];
@@ -1447,11 +1449,13 @@ export default {
         formData.append("file", element.originFileObj);
         newImages[index] = formData;
       });
-      this.uploadLoading = true;
-      newImages.forEach(async (element, index) => {
-        currentProduct.images[index] = await this.__UPLOAD_FILE(element);
-        this.uploadLoading = false;
-      });
+      if (val.length > 0) {
+        this.uploadLoading = true;
+        newImages.forEach(async (element, index) => {
+          currentProduct.images[index] = await this.__UPLOAD_FILE(element);
+          this.uploadLoading = false;
+        });
+      }
     },
   },
   components: {
