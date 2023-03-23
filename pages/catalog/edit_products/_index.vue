@@ -6,9 +6,7 @@
       lastLink="Products"
     >
       <div class="d-flex">
-        <div
-          class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-        >
+        <div class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3">
           Cancel
         </div>
         <a-button
@@ -37,11 +35,7 @@
           ></div>
           <div class="products-from-grid">
             <div class="products-select-grid">
-              <el-tabs
-                class="form_tabs"
-                v-model="activeName"
-                @tab-click="handleClick"
-              >
+              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -120,9 +114,7 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <span class="bottom_text"
-                        >Добавить товар в категорию</span
-                      >
+                      <span class="bottom_text">Добавить товар в категорию</span>
                     </div>
                     <div class="form-block mb-0">
                       <div><label>Дочерняя категория</label></div>
@@ -142,9 +134,7 @@
                         >
                         </el-option>
                       </el-select>
-                      <span class="bottom_text"
-                        >Добавить товар в категорию</span
-                      >
+                      <span class="bottom_text">Добавить товар в категорию</span>
                     </div>
                     <div class="form-block mb-0">
                       <div><label>Последняя категория</label></div>
@@ -164,9 +154,7 @@
                         >
                         </el-option>
                       </el-select>
-                      <span class="bottom_text"
-                        >Добавить товар в категорию</span
-                      >
+                      <span class="bottom_text">Добавить товар в категорию</span>
                     </div>
                   </div>
                   <div class="prducts-details-btns">
@@ -265,11 +253,7 @@
                   </div>
                 </div>
               </div>
-              <el-tabs
-                class="form_tabs"
-                v-model="activeName"
-                @tab-click="handleClick"
-              >
+              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -288,7 +272,7 @@
                       <el-tab-pane label="Описание" name="Description">
                         <div class="mt-1">
                           <quill-editor
-                            style="min-height: 250px;"
+                            style="min-height: 250px"
                             :options="editorOption"
                             :value="ruleForm.desc[item.key]"
                             v-model="ruleForm.desc[item.key]"
@@ -299,9 +283,7 @@
                           <h5 class="variant-img-title mb-4 mt-2">
                             Добавить характеристику
                           </h5>
-                          <a-button
-                            type="primary"
-                            @click="show('characteristic_modal')"
+                          <a-button type="primary" @click="show('characteristic_modal')"
                             >Редактировать характеристику
                           </a-button>
                         </div>
@@ -345,15 +327,11 @@
                       :file-list="element.imagesData"
                       :multiple="true"
                       @preview="handlePreview"
-                      @change="
-                        ($event) => handleChangeVatiant($event, element.id)
-                      "
+                      @change="($event) => handleChangeVatiant($event, element.id)"
                     >
                       <div v-if="element.imagesData.length < 50">
                         <span v-html="addImgIcon"></span>
-                        <div class="ant-upload-text">
-                          Добавить изображение
-                        </div>
+                        <div class="ant-upload-text">Добавить изображение</div>
                       </div>
                     </a-upload>
                     <a-modal
@@ -361,11 +339,7 @@
                       :footer="null"
                       @cancel="handleCancel"
                     >
-                      <img
-                        alt="example"
-                        style="width: 100%;"
-                        :src="previewImage"
-                      />
+                      <img alt="example" style="width: 100%" :src="previewImage" />
                     </a-modal>
                   </div>
                   <p class="variant-img-text">
@@ -375,14 +349,8 @@
                 </div>
                 <div>
                   <!-- Validations -->
-                  <div
-                    class="product-variant"
-                    v-for="item in element.variations"
-                  >
-                    <div
-                      class="product_variant_block"
-                      v-if="atributes.length > 0"
-                    >
+                  <div class="product-variant" v-for="item in element.variations">
+                    <div class="product_variant_block" v-if="atributes.length > 0">
                       <div class="variant-grid-4 w-100">
                         <el-form
                           label-position="top"
@@ -400,10 +368,7 @@
                             <div>
                               <label>{{ atribut.name.ru }}</label>
                             </div>
-                            <el-form-item
-                              :prop="`at_${atribut.id}`"
-                              class="mb-0"
-                            >
+                            <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
                               <el-select
                                 v-model="item.optionName[`at_${atribut.id}`]"
                                 class="w-100"
@@ -515,14 +480,8 @@
                   </div>
                   <!-- Validations -->
                 </div>
-                <div
-                  class="d-flex justify-content-start"
-                  v-if="atributes.length > 0"
-                >
-                  <div
-                    class="create-inner-variant"
-                    @click="addInnerVariant(element.id)"
-                  >
+                <div class="d-flex justify-content-start" v-if="atributes.length > 0">
+                  <div class="create-inner-variant" @click="addInnerVariant(element.id)">
                     <span v-html="addInnerValidatIcon"></span>
                     Добавит внутренний варизаци
                   </div>
@@ -531,10 +490,7 @@
               <!-- Product Variants -->
 
               <div>
-                <div
-                  class="add-variant create-inner-variant mt-0"
-                  @click="addVariant"
-                >
+                <div class="add-variant create-inner-variant mt-0" @click="addVariant">
                   <span v-html="addInnerValidatIcon"></span>
                   Добавит варизаци
                 </div>
@@ -677,10 +633,7 @@
         <div class="form-block required">
           <div><label for="">Brand </label></div>
           <el-form-item prop="name">
-            <el-input
-              placeholder="Product model"
-              v-model="brandData.name"
-            ></el-input>
+            <el-input placeholder="Product model" v-model="brandData.name"></el-input>
           </el-form-item>
         </div>
         <div class="clearfix">
@@ -713,17 +666,11 @@
                   stroke-linejoin="round"
                 />
               </svg>
-              <div class="ant-upload-text">
-                Upload image
-              </div>
+              <div class="ant-upload-text">Upload image</div>
             </div>
           </a-upload>
-          <a-modal
-            :visible="previewVisible"
-            :footer="null"
-            @cancel="handleCancel"
-          >
-            <img alt="example" style="width: 100%;" :src="previewImage" />
+          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage" />
           </a-modal>
         </div>
       </el-form>
@@ -853,29 +800,24 @@
             </el-select>
           </el-form-item>
         </div>
-        <div class="form-block mb-0"><div><label for="">Изображение</label></div>
-        <div class="clearfix variant-img pt-0">
-          <a-upload
-            list-type="picture-card"
-            :file-list="fileListCategory"
-            @preview="handlePreview"
-            @change="handleChangeCategory"
-          >
-            <div v-if="fileListCategory.length < 1">
-              <span v-html="addImgIcon"></span>
-              <div class="ant-upload-text">
-                Добавить изображение
+        <div class="form-block mb-0">
+          <div><label for="">Изображение</label></div>
+          <div class="clearfix variant-img pt-0">
+            <a-upload
+              list-type="picture-card"
+              :file-list="fileListCategory"
+              @preview="handlePreview"
+              @change="handleChangeCategory"
+            >
+              <div v-if="fileListCategory.length < 1">
+                <span v-html="addImgIcon"></span>
+                <div class="ant-upload-text">Добавить изображение</div>
               </div>
-            </div>
-          </a-upload>
-          <a-modal
-            :visible="previewVisible"
-            :footer="null"
-            @cancel="handleCancel"
-          >
-            <img alt="example" style="width: 100%;" :src="previewImage" />
-          </a-modal>
-        </div>
+            </a-upload>
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
+            </a-modal>
+          </div>
         </div>
       </el-form>
     </AddModal>
@@ -886,10 +828,7 @@
       height="100%"
       :clickToClose="false"
     >
-      <div
-        class="add_modal-container padding_characteristic_modal"
-        ref="ruleForm1"
-      >
+      <div class="add_modal-container padding_characteristic_modal" ref="ruleForm1">
         <div class="character_modal-header">
           <div class="character_modal-header_btn">
             <div
@@ -899,10 +838,7 @@
               <span class="svg-icon" v-html="addIcon"></span>
               сохранять
             </div>
-            <div
-              class="character-close-btn"
-              @click="hide('characteristic_modal')"
-            >
+            <div class="character-close-btn" @click="hide('characteristic_modal')">
               <span class="character-close-icon" v-html="closeIcon"></span>
               Закрыть
             </div>
@@ -918,11 +854,7 @@
                 v-for="variations in product.variations"
               >
                 <div class="ch-product-img">
-                  <img
-                    v-if="product.images.length > 0"
-                    :src="product.images[0]"
-                    alt=""
-                  />
+                  <img v-if="product.images.length > 0" :src="product.images[0]" alt="" />
                   <img
                     v-else
                     src="../../../assets/images/photo_2023-03-04_13-28-58.jpg"
@@ -930,15 +862,9 @@
                   />
                 </div>
                 <div class="ch-product-body">
-                  <span class="ch-product-info">
-                    Пурпурные
-                  </span>
-                  <span class="ch-product-info">
-                    dual SIM 265 gb
-                  </span>
-                  <span class="ch-product-info">
-                    17 100 000 сум LL A
-                  </span>
+                  <span class="ch-product-info"> Пурпурные </span>
+                  <span class="ch-product-info"> dual SIM 265 gb </span>
+                  <span class="ch-product-info"> 17 100 000 сум LL A </span>
                 </div>
               </div>
             </span>
@@ -988,9 +914,7 @@
                         <el-form-item :prop="`char_${characters.id}`">
                           <el-select
                             v-model="
-                              variations.characteristicsValues[
-                                `char_${characters.id}`
-                              ]
+                              variations.characteristicsValues[`char_${characters.id}`]
                             "
                             filterable
                             allow-create
@@ -1229,8 +1153,7 @@ export default {
       characterRequired: false,
       allAtributes: [],
       allGroups: [],
-      fileListCategory: []
-
+      fileListCategory: [],
     };
   },
   mounted() {
@@ -1374,20 +1297,12 @@ export default {
     handleChangeVatiant({ fileList }, id) {
       this.variantId = id;
       this.fileList = fileList;
-      // console.log(fileList);
-      // console.log(id);
-      // console.log(this.ruleForm);
     },
     __UPLOAD_FILE_VARIANT(newImages, id) {
-      const currentProduct = this.ruleForm.products.find(
-        (item) => item.id == id
-      );
+      const currentProduct = this.ruleForm.products.find((item) => item.id == id);
       newImages.forEach(async (element, index) => {
         try {
-          const data = await this.$store.dispatch(
-            "uploadFile/uploadFile",
-            element
-          );
+          const data = await this.$store.dispatch("uploadFile/uploadFile", element);
           currentProduct.images[index] = data.path;
           this.uploadLoading = false;
         } catch (e) {
@@ -1402,14 +1317,12 @@ export default {
       );
       product.variations.find((varId) => varId.id == obj.variantId).options[
         obj.index
-      ] = product.variations.find(
-        (varId) => varId.id == obj.variantId
-      ).optionName[`at_${obj.id}`];
+      ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
+        `at_${obj.id}`
+      ];
     },
     getData() {
-      this.$refs["brandData"].validate((valid) =>
-        valid ? this.__POST_BRAND() : false
-      );
+      this.$refs["brandData"].validate((valid) => (valid ? this.__POST_BRAND() : false));
     },
     show(name) {
       this.$modal.show(name);
@@ -1461,9 +1374,7 @@ export default {
     deleteInnerVariant(variantId, innerVarId) {
       const addVar = this.findVarintWithId(variantId);
       if (addVar.variations.length > 1) {
-        addVar.variations = addVar.variations.filter(
-          (item) => item.id != innerVarId
-        );
+        addVar.variations = addVar.variations.filter((item) => item.id != innerVarId);
       }
     },
     findVarintWithId(variantId) {
@@ -1498,24 +1409,21 @@ export default {
       });
     },
     // variant
-    handleChangeBrand({ fileList }) {
+    async handleChangeBrand({ fileList }) {
       this.loadingBrand = true;
       this.fileListBrand = fileList;
       let formData = new FormData();
       const newImg = fileList;
       if (newImg.length > 0) {
         formData.append("file", newImg[0].originFileObj);
-        this.__UPLOAD_FILE("brandData", formData);
+        this.brandData.logo = await this.__UPLOAD_FILE(formData);
+        this.loadingBrand = false;
       }
     },
-    async __UPLOAD_FILE(item, formData) {
+    async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        this[item].logo = data.path;
-        this.loadingBrand = false;
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
+        return data.path;
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -1600,10 +1508,7 @@ export default {
       this.categories = data.categories?.data;
     },
     async __GET_CATEGORY_BY_ID(id) {
-      const data = await this.$store.dispatch(
-        "fetchCategories/getCategoriesById",
-        id
-      );
+      const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
       const category = data.category;
       this.atributes = category.attributes;
       this.character_group = category.characteristic_groups;
@@ -1635,7 +1540,6 @@ export default {
         "fetchProducts/getProductsById",
         this.$route.params.index
       );
-      console.log(data);
       this.ruleForm.name_ru = data.name.ru;
       this.ruleForm.name_uz = data.name.uz;
       this.ruleForm.name_en = data.name.en;
@@ -1752,9 +1656,7 @@ export default {
     },
     "categoryChild.child1.id"(val) {
       if (val) {
-        const child2 = this.categoryChild.child1.arr.find(
-          (item) => item.id == val
-        );
+        const child2 = this.categoryChild.child1.arr.find((item) => item.id == val);
         this.__GET_CATEGORY_BY_ID(val);
 
         if (child2.children.length > 0) {
@@ -1783,8 +1685,8 @@ export default {
       });
       // this.uploadLoading = true;
       if (
-        this.ruleForm.products.find((item) => item.id == this.variantId)
-          .imagesData < oldVal
+        this.ruleForm.products.find((item) => item.id == this.variantId).imagesData <
+        oldVal
       ) {
         this.__UPLOAD_FILE_VARIANT(newImages, this.variantId);
       }

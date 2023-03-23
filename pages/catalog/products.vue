@@ -6,40 +6,18 @@
       lastLink="Продукты"
     >
       <div class="d-flex">
-        <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
-          <span class="svg-icon"
-            ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              version="1.1"
-            >
-              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                <path
-                  d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                  fill="#000000"
-                  fill-rule="nonzero"
-                  opacity="0.3"
-                ></path>
-                <path
-                  d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                  fill="#000000"
-                ></path>
-              </g></svg
-            ><!--end::Svg Icon--></span
-          >
+        <div
+          class="add-btn add-header-btn add-header-btn-padding btn-primary"
+          @click="$router.push('/catalog/add_products')"
+        >
+          <span class="svg-icon" v-html="addIcon"></span>
           Добавить продукт
         </div>
       </div>
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header"
-        >
+        <div class="d-flex justify-content-between align-items-center card_header">
           <div class="d-flex justify-content-between w-100">
             <SearchInput placeholder="Поиск продукта" />
             <div class="d-flex align-items-center">
@@ -70,19 +48,12 @@
               alt=""
             />
           </span>
-          <div
-            slot="name"
-            slot-scope="text"
-            align="center"
-            class="table_product_row"
-          >
+          <div slot="name" slot-scope="text" align="center" class="table_product_row">
             <h6>{{ text.ru }}</h6>
           </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
-          <a slot="price" slot-scope="text">{{
-            text ? `${text}` : "------"
-          }}</a>
+          <a slot="price" slot-scope="text">{{ text ? `${text}` : "------" }}</a>
           <span slot="customTitle"></span>
 
           <span
@@ -137,6 +108,8 @@ export default {
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
       columns: [
@@ -224,7 +197,7 @@ export default {
       this.products = await this.$store.dispatch("fetchProducts/getProducts", {
         ...this.$route.query,
       });
-      this.loading = false
+      this.loading = false;
       const pagination = { ...this.pagination };
       this.pagination = pagination;
       pagination.total = this.products.products?.total;

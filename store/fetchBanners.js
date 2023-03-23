@@ -51,16 +51,9 @@ export const actions = {
       return e.response;
     }
   },
-  async postGroups({}, data) {
-    const res = await this.$axios.$post(
-      `https://test.loftcity.uz/api/admin/banners_groups`,
-      data
-    );
-    return res;
-  },
-  async getGroups() {
+  async getBannerType() {
     const res = await this.$axios.$get(
-      `https://test.loftcity.uz/api/admin/banners_groups/all`
+      `https://test.loftcity.uz/api/admin/banners/types`
     );
     return res;
   },

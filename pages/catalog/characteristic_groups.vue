@@ -84,54 +84,56 @@
         </div>
       </div>
     </div>
-    <AddModal
-      :title="editId ? 'Изменить категорию' : 'Добавить категорию'"
-      name="add_faqs"
-      btnText="Save"
-      :callback="getData"
-      :closeModal="closeModal"
-      :loadingBtn="loadingBtn"
-    >
-      <div class="modal_tab mb-4">
-        <span
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          @click="modalTab = item.index"
-          :class="{ 'avtive-modalTab': modalTab == item.index }"
-        >
-          {{ item.label }}
-        </span>
-      </div>
-
-      <el-form
-        label-position="top"
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="120px"
-        class="demo-ruleForm"
-        action=""
+    <Teleport to="body">
+      <AddModal
+        :title="editId ? 'Изменить категорию' : 'Добавить категорию'"
+        name="add_faqs"
+        btnText="Save"
+        :callback="getData"
+        :closeModal="closeModal"
+        :loadingBtn="loadingBtn"
       >
-        <div
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          v-if="modalTab == item.index"
-        >
-          <div class="form-block required">
-            <div>
-              <label for="">Group name</label>
-            </div>
-            <el-form-item prop="name_ru">
-              <el-input
-                type="text"
-                placeholder="Group name"
-                v-model="ruleForm[`name_${item.index}`]"
-              ></el-input>
-            </el-form-item>
-          </div>
+        <div class="modal_tab mb-4">
+          <span
+            v-for="(item, index) in modalTabData"
+            :key="index"
+            @click="modalTab = item.index"
+            :class="{ 'avtive-modalTab': modalTab == item.index }"
+          >
+            {{ item.label }}
+          </span>
         </div>
-      </el-form>
-    </AddModal>
+
+        <el-form
+          label-position="top"
+          :model="ruleForm"
+          :rules="rules"
+          ref="ruleForm"
+          label-width="120px"
+          class="demo-ruleForm"
+          action=""
+        >
+          <div
+            v-for="(item, index) in modalTabData"
+            :key="index"
+            v-if="modalTab == item.index"
+          >
+            <div class="form-block required">
+              <div>
+                <label for="">Group name</label>
+              </div>
+              <el-form-item prop="name_ru">
+                <el-input
+                  type="text"
+                  placeholder="Group name"
+                  v-model="ruleForm[`name_${item.index}`]"
+                ></el-input>
+              </el-form-item>
+            </div>
+          </div>
+        </el-form>
+      </AddModal>
+    </Teleport>
   </div>
 </template>
 <script>
@@ -299,10 +301,7 @@ export default {
     },
     async __DELETE_CHARACTER_GROUP(id) {
       try {
-        const data = await this.$store.dispatch(
-          "fetchCharacters/deleteGroups",
-          id
-        );
+        const data = await this.$store.dispatch("fetchCharacters/deleteGroups", id);
         await this.$notify({
           title: "Success",
           message: "Группа был успешно удален",

@@ -313,7 +313,6 @@ export default {
 
   methods: {
     submitForm(ruleForm) {
-      console.log(this.ruleForm);
       this.multiSelectError = false;
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
@@ -346,7 +345,6 @@ export default {
           delete data["name_ru"];
           delete data["name_uz"];
           delete data["name_en"];
-          console.log(data);
           this.__EDIT_ATRIBUTES(data);
         } else {
           return false;
@@ -387,9 +385,6 @@ export default {
     },
     hide(name) {
       this.$modal.hide(name);
-    },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
     },
     async __EDIT_ATRIBUTES(data) {
       try {

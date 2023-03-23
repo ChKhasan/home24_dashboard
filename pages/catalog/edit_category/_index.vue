@@ -361,7 +361,6 @@ export default {
     return {
       activeName: "Русский",
       atributes: [],
-
       categories: [],
       groups: [],
       lang: [
@@ -402,7 +401,6 @@ export default {
           label: "Inactive",
         },
       ],
-      value: [],
       rules: {
         name_ru: [
           {

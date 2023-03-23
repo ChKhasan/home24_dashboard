@@ -7,7 +7,8 @@
     width: 100%;
     margin-bottom: 0;
   }
-  .el-input,.category-select {
+  .el-input,
+  .category-select {
     .el-input__inner,
     .ant-cascader-input {
       background: #ffffff;
@@ -37,6 +38,18 @@
     line-height: 18px;
     color: #a1a5bf;
     margin-top: 8px;
+  }
+  .last-info {
+    @include fontTTinterface(14px, 400);
+    line-height: 18px;
+    color: #a1a5bf;
+    margin-top: 8px;
+    display: flex;
+    p {
+      margin-left: 8px;
+      color: #409eff;
+      text-decoration: underline;
+    }
   }
   .el-form-item__error {
     position: static;
@@ -198,6 +211,9 @@
       line-height: 18px;
       color: #a1a5bf;
       margin-top: 8px;
+    }
+    .last-info {
+      @include fontTTinterface(12px, 400);
     }
   }
 }

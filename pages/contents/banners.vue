@@ -100,21 +100,28 @@
               ></el-input>
             </el-form-item>
           </div>
-          <div class="form-block required">
+          <div class="form-block required mb-0">
             <div>
               <label for="banner_type">Type</label>
             </div>
             <el-form-item prop="type">
-              <el-input
-                id="banner_type"
-                type="text"
-                placeholder="Link"
+              <el-select
                 v-model="ruleForm.type"
-              ></el-input>
+                class="w-100"
+                filterable
+                placeholder="Banner type"
+                loading-text="Loading..."
+                no-match-text="no category"
+                no-data-text="No Category"
+                default-first-option
+              >
+                <el-option v-for="item in types" :key="item" :label="item" :value="item">
+                </el-option>
+              </el-select>
             </el-form-item>
           </div>
 
-          <div class="clearfix">
+          <div class="clearfix variant-img">
             <a-upload
               list-type="picture-card"
               :file-list="fileList"
@@ -237,6 +244,7 @@ export default {
       previewImage: "",
       fileList: [],
       banners: [],
+      types: {},
       rules: {
         link_ru: [
           {
@@ -346,6 +354,10 @@ export default {
     },
     deletePost(id) {
       this.__DELETE_BANNERS(id);
+    },
+    async __GET_BANNERS_TYPES() {
+      const types = await this.$store.dispatch("fetchBanners/getBannerType");
+      this.types = Object.values(types.types);
     },
     async __DELETE_BANNERS(id) {
       try {
@@ -473,6 +485,7 @@ export default {
     }
     this.pagination.current = this.$route.query.page * 1;
     this.__GET_BANNERS();
+    this.__GET_BANNERS_TYPES();
   },
   watch: {
     "pagination.current"() {

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="toolbar">
     <el-container
-      style="height: 500px; border: 1px solid #eee;"
+      style="height: 500px; border: 1px solid #eee"
       :class="{ collapsedСontrol: collapsed }"
     >
       <div class="toolbar-aside">
@@ -13,7 +13,7 @@
             v-html="icons.toolbarResIcon"
           ></div>
         </div>
-        <el-aside width="200px" style="background-color: rgb(238, 241, 246);">
+        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
           <el-menu
             @open="handleOpen"
             @close="handleClose"
@@ -34,9 +34,7 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
+                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -55,9 +53,7 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
+                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -76,9 +72,7 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
+                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -105,9 +99,7 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
+                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -126,9 +118,7 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"
-                      ><span class="bullet-dot"></span
-                    ></span>
+                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -137,27 +127,20 @@
             <el-menu-item-group class="home_menu toolbar-menu-products">
               <nuxt-link to="/home/content-manager">
                 <el-menu-item index="70">
-                  <span
-                    class="menu-icon"
-                    v-html="icons.contentManagerIcon"
-                  ></span>
-                  <p class="not-ul-menu">
-                    Контент-менеджеры
-                  </p></el-menu-item
+                  <span class="menu-icon" v-html="icons.contentManagerIcon"></span>
+                  <p class="not-ul-menu">Контент-менеджеры</p></el-menu-item
                 >
               </nuxt-link>
             </el-menu-item-group>
           </el-menu>
         </el-aside>
         <div class="toolbar-setting pt-05r pr-15r pl-15r pb-15r">
-          <a href="">
-            Docs & Components
-          </a>
+          <a href=""> Docs & Components </a>
         </div>
       </div>
       <el-container class="toolbar-right">
         <el-header
-          style="text-align: right; font-size: 12px;"
+          style="text-align: right; font-size: 12px"
           class="d-flex justify-content-between"
         >
           <div><div class="header-btn"></div></div>
@@ -165,11 +148,7 @@
             <div class="block d-flex align-items-center">
               <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link d-flex">
-                  <el-avatar
-                    shape="circle"
-                    size="medium"
-                    :src="squareUrl"
-                  ></el-avatar>
+                  <el-avatar shape="circle" size="medium" :src="squareUrl"></el-avatar>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="logout">Log Out</el-dropdown-item>
@@ -211,8 +190,7 @@ export default {
         contentManagerIcon: require("../assets/svg/custom/toolbar/contentManagerIcon.svg?raw"),
         toolbarResIcon: require("../assets/svg/custom/toolbar/toolbarResIcon.svg?raw"),
       },
-      squareUrl:
-        "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+      squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
       toolbarMenu: {
         category: [
           {
@@ -389,11 +367,17 @@ export default {
             disabled: false,
           },
           {
-            name: "Категории (Faqs)",
+            name: "Категории (F.A.Q)",
             index: "56",
             to: "/contents/faq_categories",
             path: "contents-faq_categories",
-
+            disabled: false,
+          },
+          {
+            name: "Feedbacks",
+            index: "57",
+            to: "/contents/feedbacks",
+            path: "contents-feedbacks",
             disabled: false,
           },
         ],
@@ -443,7 +427,6 @@ export default {
     this.handleClose();
     this.activeOpens();
     this.checkToolbar(this.$route.name);
-
   },
 
   methods: {

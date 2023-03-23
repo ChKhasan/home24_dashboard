@@ -94,7 +94,7 @@
                 <div class="d-flex align-items-end">
                   <div class="form-block mb-0 w-100 required">
                     <div><label>Категория</label></div>
-                    {{ cascader }}
+                    <span class="bottom_text mt-0 mb-1">Добавить товар в категорию</span>
                     <el-form-item>
                       <a-cascader
                         :options="cascaderCategories"
@@ -141,14 +141,17 @@
                       </template>
                     </el-cascader> -->
                     </el-form-item>
-                    <span class="bottom_text">Добавить товар в категорию</span>
+                    <span class="last-info" v-if="lastCategory.length > 0"
+                      >Недавняя категория:
+                      <p>{{ findLastCategory }}</p></span
+                    >
                   </div>
                   <div class="prducts-details-btns">
-                    <div
+                    <!-- <div
                       class="outline-btn outline-light-green-btn"
                       @click="searchBlock = true"
                       v-html="searchIcon"
-                    ></div>
+                    ></div> -->
                     <div
                       class="outline-btn outline-light-green-btn"
                       @click="reloadCategories"
@@ -870,6 +873,7 @@ export default {
       activeDesc: "Description",
       searchBlock: false,
       cascaderCategories: [],
+      lastCategory: [],
       lang: [
         {
           key: "ru",
@@ -978,9 +982,40 @@ export default {
       characterRequired: false,
     };
   },
+  computed: {
+    findLastCategory() {
+      const findCategory = this.cascaderCategories.find(
+        (item) => item.id == this.lastCategory[0]
+      );
+      switch (this.lastCategory.length) {
+        case 1:
+          return findCategory?.label;
+        case 2:
+          const findChildCategory = findCategory?.children.find(
+            (item) => item.id == this.lastCategory[1]
+          );
+          return findCategory?.label + "/" + findChildCategory?.label;
+        case 3:
+          const findChild1Category = findCategory?.children.find(
+            (item) => item.id == this.lastCategory[1]
+          );
+          const findChild2Category = findChild1Category?.children.find(
+            (item) => item.id == this.lastCategory[2]
+          );
+          return (
+            findCategory?.label +
+            "/" +
+            findChild1Category?.label +
+            "/" +
+            findChild2Category?.label
+          );
+      }
+    },
+  },
   mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
+    this.lastCategory = JSON.parse(localStorage.getItem("lastCategory"));
   },
   methods: {
     // products
@@ -1162,7 +1197,6 @@ export default {
       this.__GET_CATEGORY_BY_ID(e.at(-1));
     },
     addProduct() {
-      
       const options = { ...this.atributNames };
       const newVariations = [
         {
@@ -1453,6 +1487,7 @@ export default {
 }
 .category-cascader {
   .ant-cascader-menu {
+    height: 250px;
     .ant-cascader-menu-item {
       overflow: hidden;
 

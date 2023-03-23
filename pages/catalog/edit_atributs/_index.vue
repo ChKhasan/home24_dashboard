@@ -316,9 +316,7 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-    },
+  
     async __EDIT_ATRIBUTES(data) {
       try {
         await this.$store.dispatch("fetchAtributes/editAtributes", {
