@@ -1014,7 +1014,11 @@ export default {
   mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
-    this.lastCategory = JSON.parse(localStorage.getItem("lastCategory"));
+    if (localStorage.getItem("lastCategory")) {
+      this.lastCategory = JSON.parse(localStorage.getItem("lastCategory"));
+    } else {
+      this.lastCategory = [];
+    }
   },
   methods: {
     // products
@@ -1039,7 +1043,6 @@ export default {
           ? this.__POST_PRODUCTS(newData)
           : this.notification("Success", "Вы не добавили характеристику", "error");
       });
-
     },
     onChange(value, selectedOptions) {
       this.ruleForm.category_id = value.at(-1);
@@ -1110,7 +1113,6 @@ export default {
       });
     },
     reloadCategories() {
-      console.log(JSON.parse(localStorage.getItem("lastCategory")));
       this.cascader = JSON.parse(localStorage.getItem("lastCategory"));
     },
     closeModal(name) {
