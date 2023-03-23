@@ -872,6 +872,45 @@ export default {
       activeDesc: "Description",
       searchBlock: false,
       cascaderCategories: [],
+      options1: [
+        {
+          value: "zhejiang",
+          label: "Zhejiang",
+          children: [
+            {
+              value: "hangzhou",
+              label: "Hangzhou",
+              children: [
+                {
+                  value: "xihu",
+                  label: "West Lake",
+                },
+                {
+                  value: "xiasha",
+                  label: "Xia Sha",
+                  disabled: true,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          value: "jiangsu",
+          label: "Jiangsu",
+          children: [
+            {
+              value: "nanjing",
+              label: "Nanjing",
+              children: [
+                {
+                  value: "zhonghuamen",
+                  label: "Zhong Hua men",
+                },
+              ],
+            },
+          ],
+        },
+      ],
       lastCategory: [],
       lang: [
         {
@@ -1040,10 +1079,8 @@ export default {
           : 0;
         const atributValid = artibutReqiured.length == atr;
         if (!valid && !atributValid) return false;
-        console.log("asdasd");
-        this.characterRequired
-          ? this.__POST_PRODUCTS(newData)
-          : this.notification("Success", "Вы не добавили характеристику", "error");
+
+        this.__POST_PRODUCTS(newData);
       });
     },
     onChange(value, selectedOptions) {
@@ -1319,6 +1356,7 @@ export default {
           return item;
         }
       });
+      console.log(this.cascaderCategories);
     },
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
