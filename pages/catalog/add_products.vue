@@ -983,31 +983,33 @@ export default {
   },
   computed: {
     findLastCategory() {
-      const findCategory = this.cascaderCategories.find(
-        (item) => item.id == this.lastCategory[0]
-      );
-      switch (this.lastCategory.length) {
-        case 1:
-          return findCategory?.label;
-        case 2:
-          const findChildCategory = findCategory?.children.find(
-            (item) => item.id == this.lastCategory[1]
-          );
-          return findCategory?.label + "/" + findChildCategory?.label;
-        case 3:
-          const findChild1Category = findCategory?.children.find(
-            (item) => item.id == this.lastCategory[1]
-          );
-          const findChild2Category = findChild1Category?.children.find(
-            (item) => item.id == this.lastCategory[2]
-          );
-          return (
-            findCategory?.label +
-            "/" +
-            findChild1Category?.label +
-            "/" +
-            findChild2Category?.label
-          );
+      if (this.lastCategory.length > 0) {
+        const findCategory = this.cascaderCategories.find(
+          (item) => item.id == this.lastCategory[0]
+        );
+        switch (this.lastCategory.length) {
+          case 1:
+            return findCategory?.label;
+          case 2:
+            const findChildCategory = findCategory?.children.find(
+              (item) => item.id == this.lastCategory[1]
+            );
+            return findCategory?.label + "/" + findChildCategory?.label;
+          case 3:
+            const findChild1Category = findCategory?.children.find(
+              (item) => item.id == this.lastCategory[1]
+            );
+            const findChild2Category = findChild1Category?.children.find(
+              (item) => item.id == this.lastCategory[2]
+            );
+            return (
+              findCategory?.label +
+              "/" +
+              findChild1Category?.label +
+              "/" +
+              findChild2Category?.label
+            );
+        }
       }
     },
   },
