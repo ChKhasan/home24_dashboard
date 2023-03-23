@@ -105,7 +105,6 @@
                         v-model="cascader"
                         placeholder="Please select"
                         @change="onChange"
-                        :loadData="true"
                         :fieldNames="{
                           label: 'label',
                           value: 'id',
