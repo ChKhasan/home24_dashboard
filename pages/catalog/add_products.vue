@@ -101,6 +101,7 @@
                         :show-search="{ filter }"
                         popupClassName="category-cascader"
                         class="category-select w-100"
+                        popper-class="select-popper-hover"
                         :changeOnSelect="true"
                         v-model="cascader"
                         placeholder="Please select"
@@ -456,6 +457,7 @@
                                     v-model="item.optionName[`at_${atribut.id}`]"
                                     class="w-100"
                                     default-first-option
+                                    popper-class="select-popper-hover"
                                     placeholder="265 gb"
                                     @change="
                                       atributOptions({
@@ -485,6 +487,7 @@
                                 v-model="item.is_popular"
                                 allow-create
                                 class="w-100"
+                                popper-class="select-popper-hover"
                                 default-first-option
                                 placeholder="265 gb"
                               >
@@ -506,6 +509,7 @@
                                 v-model="item.product_of_the_day"
                                 allow-create
                                 class="w-100"
+                                popper-class="select-popper-hover"
                                 default-first-option
                                 placeholder="265 gb"
                               >
@@ -527,6 +531,7 @@
                                 v-model="item.status"
                                 allow-create
                                 class="w-100"
+                                popper-class="select-popper-hover"
                                 default-first-option
                                 placeholder="265 gb"
                               >
@@ -616,6 +621,7 @@
                       <el-select
                         id="status"
                         class="w-100"
+                        popper-class="select-popper-hover"
                         v-model="ruleForm.is_active"
                         default-first-option
                         placeholder="Статус"
@@ -639,6 +645,7 @@
                           class="w-100"
                           v-model="ruleForm.brand_id"
                           allow-create
+                          popper-class="select-popper-hover"
                           :loading="brands.length < 1"
                           loading-text="Loading..."
                           placeholder="Бренд"
@@ -787,6 +794,7 @@
                             v-model="
                               variations.characteristicsValues[`char_${characters.id}`]
                             "
+                            popper-class="select-popper-hover"
                             filterable
                             allow-create
                             default-first-option
@@ -1537,8 +1545,13 @@ export default {
     height: 250px;
     .ant-cascader-menu-item {
       overflow: hidden;
-
       text-overflow: ellipsis;
+      color: rgb(0, 0, 0, 0.5);
+
+      &:hover {
+        background: #fafafa;
+        color: #000;
+      }
     }
     &::-webkit-scrollbar {
       width: 5px;

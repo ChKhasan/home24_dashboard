@@ -65,6 +65,7 @@
                             v-model="ruleForm.parent_id"
                             class="w-100"
                             filterable
+                            popper-class="select-popper-hover"
                             placeholder="Choose tags for your article"
                             loading-text="Loading..."
                             no-match-text="no category"
@@ -104,6 +105,7 @@
                       filterable
                       class="w-100"
                       allow-create
+                      popper-class="select-popper-hover"
                       default-first-option
                       no-data-text="No atribut"
                       placeholder="Choose tags for your article"
@@ -127,6 +129,7 @@
                       multiple
                       filterable
                       allow-create
+                      popper-class="select-popper-hover"
                       default-first-option
                       no-data-text="No characteristics"
                       placeholder="Choose tags for your article"
@@ -161,6 +164,7 @@
                 <div><label>Статус</label></div>
                 <el-select
                   class="w-100"
+                  popper-class="select-popper-hover"
                   placeholder="Status"
                   default-first-option
                   v-model="ruleForm.is_active"

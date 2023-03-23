@@ -174,7 +174,14 @@
     min-height: 40px !important;
   }
 }
-
+.select-popper-hover {
+  .el-select-dropdown__item {
+    color: rgba(0, 0, 0,0.5);
+    &:hover {
+      color: #000;
+    }
+  }
+}
 @media (max-width: 1440px) {
   .form-block {
     display: flex;

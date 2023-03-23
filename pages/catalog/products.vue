@@ -120,7 +120,7 @@ export default {
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           // width: "8%",
-          align: "right",
+          align: "left",
           className: "column-img",
           colSpan: 2,
         },

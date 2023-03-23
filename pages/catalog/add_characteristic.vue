@@ -56,6 +56,7 @@
                     <el-form-item prop="group_id">
                       <el-select
                         class="w-100"
+                        popper-class="select-popper-hover"
                         v-model="ruleForm.group_id"
                         filterable
                         no-data-text="No group"
@@ -117,6 +118,7 @@
                       <el-select
                         class="w-100"
                         v-model="ruleForm.options"
+                        popper-class="select-popper-hover"
                         filterable
                         multiple
                         allow-create

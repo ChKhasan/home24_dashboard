@@ -292,6 +292,9 @@
 }
 .ant-table-row-level-0 {
   background: #fff;
+  .select-table-child {
+    padding-left: 0;
+  }
   .column-name {
     position: relative;
     .ant-table-row-collapsed,
@@ -299,7 +302,7 @@
       position: absolute;
       width: 45px;
       height: 100%;
-      left: 40px;
+      left: 0;
       top: 0;
       opacity: 0;
     }
@@ -402,7 +405,7 @@
 .select-table {
   .ant-table-thead {
     .column-name {
-      padding-left: 40px !important;
+      // padding-left: 40px !important;
     }
   }
 }

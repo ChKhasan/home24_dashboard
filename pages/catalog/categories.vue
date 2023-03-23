@@ -125,18 +125,10 @@ const columns = [
     title: "Икона",
     dataIndex: "lg_icon",
     slots: { title: "customTitle" },
+    align: "center",
     scopedSlots: { customRender: "lg_icon" },
     key: "lg_icon",
     width: "12%",
-    align: "right",
-  },
-  {
-    title: "Key",
-    dataIndex: "key",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "key" },
-    key: "key",
-    align: "right",
   },
   {
     title: "ПОПУЛЯРНЫЙ",
@@ -144,7 +136,7 @@ const columns = [
     key: "is_popular",
     align: "center",
     scopedSlots: { customRender: "is_popular" },
-    width: "30%",
+    width: "15%",
   },
   {
     title: "Статус",
@@ -152,7 +144,7 @@ const columns = [
     dataIndex: "is_active",
     scopedSlots: { customRender: "is_active" },
     className: "column-tags",
-    width: "16%",
+    width: "10%",
   },
   {
     title: "действия",
@@ -160,7 +152,7 @@ const columns = [
     dataIndex: "id",
     scopedSlots: { customRender: "id" },
     className: "column-btns",
-    width: "10%",
+    width: "100px",
   },
 ];
 
