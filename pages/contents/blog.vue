@@ -126,6 +126,7 @@
 
           <div class="clearfix">
             <a-upload
+              action="https://home24-dashboard.vercel.app/contents/blog?page=1"
               list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"
