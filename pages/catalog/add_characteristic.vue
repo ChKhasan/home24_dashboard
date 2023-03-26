@@ -216,7 +216,7 @@
                   <div class="d-flex justify-content-start">
                     <div class="create-inner-variant">
                       <span v-html="addInnerValidatIcon"></span>
-                      Добавит внутренний варизаци
+                      Добавить характеристику
                     </div>
                   </div>
                 </div>
