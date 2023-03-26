@@ -138,7 +138,7 @@
                 <div class="list">
                   <transition-group name="flip-list" tag="div">
                     <div
-                      class="character-input-grid mb-3"
+                      class="character-input-grid pb-3"
                       v-for="(item1, i) in ruleForm.characters"
                       :class="{
                         over: item1 === over.item && item1 !== dragFrom,
@@ -166,6 +166,7 @@
                             filterable
                             multiple
                             allow-create
+                            default-first-option
                             no-data-text="No options"
                             placeholder="Option name"
                           >
@@ -583,7 +584,7 @@ export default {
 }
 
 .flip-list-move {
-  // transition: transform 0.2s;
+  transition: transform 0.2s;
 }
 
 .over {

@@ -113,6 +113,7 @@
           </div>
           <div class="clearfix variant-img mt-0">
             <a-upload
+              action="https://test.loftcity.uz/api/admin/files/upload"
               list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"
@@ -146,6 +147,7 @@ function getBase64(file) {
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
+    console.log("sdfsdfsdfsdf");
   });
 }
 export default {
@@ -233,6 +235,7 @@ export default {
       previewImage: "",
       fileList: [],
       brands: [],
+      formData: {},
       rules: {
         title_ru: [
           {
@@ -352,28 +355,14 @@ export default {
       }
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
+      console.log("sdfsdfsdfsdf");
     },
-    async handleChange({ fileList }) {
+
+    handleChange({ fileList }) {
       this.fileList = fileList;
-      let formData = new FormData();
-      const newImg = fileList;
-      if (newImg.length > 0) {
-        formData.append("file", newImg[0].originFileObj);
-        this.loadingBtn = true;
-        this.ruleForm.logo = await this.__UPLOAD_FILE(formData);
-        this.loadingBtn = false;
-      } else {
-        this.ruleForm.logo = null;
-      }
+      this.ruleForm.logo = fileList[0]?.response?.path;
     },
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
-        return data.path;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
+
     handleCancel() {
       this.previewVisible = false;
     },
@@ -393,7 +382,7 @@ export default {
         };
       });
     },
-    
+
     async __POST_BRANDS(res) {
       try {
         await this.$store.dispatch("fetchBrands/postBrands", res);

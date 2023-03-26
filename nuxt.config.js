@@ -30,10 +30,10 @@ export default {
     { src: "~plugins/vue-drag-and-drop-list.js", ssr: false },
   ],
   axios: {
-    credentials: true,
-    init(axios) {
-      axios.defaults.withCredentials = true;
-    },
+    // credentials: true,
+    // init(axios) {
+    //   axios.defaults.withCredentials = true;
+    // },
     baseURL: "https://bombadmin.pythonanywhere.com",
   },
   components: true,
