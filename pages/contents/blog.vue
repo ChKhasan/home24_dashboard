@@ -124,7 +124,7 @@
             </el-form-item>
           </div>
 
-          <div class="clearfix">
+          <div class="clearfix variant-img">
             <a-upload
               action="https://home24-dashboard.vercel.app/contents/blog?page=1"
               list-type="picture-card"

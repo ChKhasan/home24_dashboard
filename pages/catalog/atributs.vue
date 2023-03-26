@@ -5,7 +5,10 @@
       :breadbrumb="['эКоммерция', 'Каталог']"
       lastLink="Атрибуты"
     >
-      <div class="add-btn add-header-btn add-header-btn-padding btn-primary">
+      <div
+        class="add-btn add-header-btn add-header-btn-padding btn-primary"
+        @click="$router.push('/catalog/add_atributs')"
+      >
         <span class="svg-icon" v-html="addIcon"></span>
         Добавить атрибуты
       </div>
@@ -16,9 +19,6 @@
           <div class="d-flex justify-content-between w-100" style="grid-gap: 1.25rem">
             <div>
               <SearchInput placeholder="Атрибуты поиска" />
-            </div>
-            <div class="d-flex align-items-center">
-              <AddBtn name="Добавить атрибуты" :icon="true" :callback="toAddProduct" />
             </div>
           </div>
         </div>
@@ -75,6 +75,7 @@
               </a-popconfirm>
             </span>
           </a-table>
+          
         </div>
       </div>
     </div>

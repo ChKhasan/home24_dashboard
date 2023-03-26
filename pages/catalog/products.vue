@@ -20,9 +20,7 @@
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="d-flex justify-content-between w-100">
             <SearchInput placeholder="Поиск продукта" />
-            <div class="d-flex align-items-center">
-              <AddBtn name="Добавить продукт" :callback="toAddProduct" />
-            </div>
+          
           </div>
         </div>
         <a-table

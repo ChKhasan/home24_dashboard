@@ -15,7 +15,7 @@
         ><a-button
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
-          @click="headerbtnCallback('ruleForm')"
+          @click="headerbtnCallback()"
           :loading="uploadLoading"
         >
           <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"></span>
@@ -412,7 +412,7 @@ export default {
       this.previewVisible = false;
     },
     headerbtnCallback() {
-      console.log("fsfsdf");
+      this.$router.push("/catalog/add_products");
     },
     async handlePreview(file) {
       if (!file.url && !file.preview) {
@@ -452,7 +452,7 @@ export default {
       });
       this.categories.unshift({
         name: {
-          ru: "----------",
+          ru: "Главная категория ",
         },
         id: null,
       });

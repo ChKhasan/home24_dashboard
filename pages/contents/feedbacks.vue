@@ -23,7 +23,7 @@
             @change="handleTableChange"
           >
             <div slot="img" slot-scope="text">
-              <img v-if="text?.ru" class="table-image" :src="text?.ru" alt="" />
+              <img v-if="text[0]?.lg_img" class="table-image" :src="text[0]?.lg_img" alt="" />
               <img
                 v-else
                 class="table-image"
@@ -126,8 +126,8 @@ export default {
         },
         {
           title: "Image",
-          dataIndex: "lg_img",
-          key: "lg_img",
+          dataIndex: "images",
+          key: "images",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",

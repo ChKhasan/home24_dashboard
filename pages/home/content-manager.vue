@@ -156,7 +156,7 @@
           </el-form-item>
         </div>
 
-        <div class="clearfix">
+        <div class="clearfix variant-img">
           <a-upload
             list-type="picture-card"
             :file-list="fileList"

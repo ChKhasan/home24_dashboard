@@ -55,7 +55,7 @@
                         ></el-input>
                       </el-form-item>
                     </div>
-                    
+
                     <div class="products-input-grid-3">
                       <div class="form-block">
                         <div><label for="">Модель</label></div>
@@ -100,6 +100,7 @@
                       <a-cascader
                         :options="cascaderCategories"
                         :show-search="{ filter }"
+                        separator="=>"
                         popupClassName="category-cascader"
                         class="category-select w-100"
                         popper-class="select-popper-hover"
@@ -112,7 +113,8 @@
                           value: 'id',
                           children: 'children',
                         }"
-                      />
+                      >
+                      </a-cascader>
                       <!-- <el-cascader
                       class="w-100"
                       @change="cascaderChange"
@@ -142,12 +144,8 @@
                       </template>
                     </el-cascader> -->
                     </el-form-item>
-                    <span class="last-info" v-if="lastCategory.length > 0"
-                      >Недавняя категория:
-                      <p>{{ findLastCategory }}</p></span
-                    >
                   </div>
-                  <div class="prducts-details-btns">
+                  <div class="prducts-details-btns mb-2">
                     <!-- <div
                       class="outline-btn outline-light-green-btn"
                       @click="searchBlock = true"
@@ -165,6 +163,10 @@
                     ></div>
                   </div>
                 </div>
+                <span class="last-info" v-if="lastCategory.length > 0"
+                  >Недавняя категория:
+                  <p>{{ findLastCategory }}</p></span
+                >
                 <!-- <div class="d-flex align-items-end">
                   <div class="products-input-grid-3 w-100">
                     <div class="form-block mb-0 required">
@@ -834,7 +836,7 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import AddBrandModal from "../../components/products/Add-brand-modal.vue";
 import AddCategoryModal from "../../components/products/Add-category-modal.vue";
-
+import draggable from "vuedraggable";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1367,6 +1369,7 @@ export default {
           return item;
         }
       });
+
       console.log(this.cascaderCategories);
     },
     async __GET_CATEGORY_BY_ID(id) {
@@ -1477,6 +1480,7 @@ export default {
     TitleBlock,
     AddBrandModal,
     AddCategoryModal,
+    draggable,
   },
 };
 </script>

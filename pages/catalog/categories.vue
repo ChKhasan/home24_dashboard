@@ -16,9 +16,6 @@
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="d-flex align-items-between justify-content-between w-100">
             <SearchInput placeholder="Категория поиска" />
-            <div class="d-flex align-items-center">
-              <AddBtn name="Добавить категорию" :icon="true" :callback="toAddProduct" />
-            </div>
           </div>
         </div>
         <div class="antd_table select-table">
@@ -52,7 +49,10 @@
                 />
               </div>
 
-              <h6>{{ text?.name?.ru ? text?.name?.ru : "----" }}</h6>
+              <h6>
+                {{ text?.name?.ru ? text?.name?.ru : "----" }}
+                <span v-if="text?.child">({{ text?.child }})</span>
+              </h6>
             </div>
             <div
               slot="lg_icon"
@@ -275,6 +275,7 @@ export default {
                 dataName: {
                   name: childItem.name,
                   img: childItem.lg_img,
+                  child: childItem.children.length,
                 },
                 children: [...newChild2],
               };
@@ -296,6 +297,7 @@ export default {
             dataName: {
               name: item.name,
               img: item.lg_img,
+              child: item.children.length,
             },
             children: [...newChild],
           };
@@ -354,7 +356,7 @@ export default {
       this.$router.push("/catalog/add_category");
     },
     headerbtnCallback() {
-      console.log("fsfsdf");
+      this.$router.push("/catalog/add_category");
     },
     onChangeCheckbox(id) {
       this.allCheckbox.includes(id)
