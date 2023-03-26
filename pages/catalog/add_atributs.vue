@@ -85,6 +85,7 @@
                         filterable
                         multiple
                         allow-create
+                        default-first-option
                         placeholder="Option name"
                         no-data-text="No options"
                       >
@@ -102,32 +103,6 @@
                       Разделяйте ключевые слова, добавляя запятую между каждым ключевое
                       слово.</span
                     >
-                    <div id="app">
-                      items{{ items }}
-                      <div class="list">
-                        <transition-group name="flip-list" tag="div">
-                          <li
-                            v-for="(item, i) in items"
-                            class="item"
-                            :class="{
-                              over: item === over.item && item !== dragFrom,
-                              [over.dir]: item === over.item && item !== dragFrom,
-                            }"
-                            :key="item"
-                          >
-                            {{ item }}
-                            <button
-                              draggable="true"
-                              @dragend="(e) => finishDrag(item, i, e)"
-                              @dragover="(e) => onDragOver(item, i, e)"
-                              @dragstart="(e) => startDrag(item, i, e)"
-                            >
-                              drag
-                            </button>
-                          </li>
-                        </transition-group>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -192,11 +167,7 @@ export default {
   layout: "toolbar",
   data() {
     return {
-      items: ['one', 'two', 'three', 'four'],
-    over: {},
-    startLoc: 0,
-    dragging: false,
-    dragFrom: {},
+
       activeName: "Русский",
       multiSelectError: true,
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
@@ -281,25 +252,6 @@ export default {
   },
 
   methods: {
-    startDrag(item, i, e) {
-      this.startLoc = e.clientY;
-      this.dragging = true;
-      this.dragFrom = item;
-      console.log(this.dragFrom);
-    },
-    finishDrag(item, pos) {
-      this.items.splice(pos, 1)
-      this.items.splice(this.over.pos, 0, item);
-      this.over = {}
-    },
-
-    onDragOver(item, pos, e) {
-      const dir = (this.startLoc < e.clientY) ? 'down': 'up';
-      setTimeout(() => {
-        this.over = { item, pos, dir };
-      }, 50)
-
-    },
     submitForm(ruleForm) {
       this.multiSelectError = false;
       this.$refs[ruleForm].validate((valid) => {
@@ -417,42 +369,9 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-.list > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.item {
-  width: 200px;
-  padding: 10px;
-  margin: 10px auto 10px 10px;
-  background: tomato;
-  color: white;
-  font-family: sans-serif;
-  border-radius: 5px;
-  display: inline-block;
+<style lang="css">
+ul[dnd-list],
+ul[dnd-list] > li {
   position: relative;
-  button {
-    position: absolute;
-    right: -100%;
-  }
-  /*   transition: opacity .3s ease-in-out; */
-}
-
-.flip-list-move {
-  transition: transform 0.2s;
-}
-
-.over {
-  opacity: 0.6;
-}
-
-.down {
-  /*   transform: translateY(-20px); */
-}
-
-.up {
-  /*    transform: translateY(20px); */
 }
 </style>

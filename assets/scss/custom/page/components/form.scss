@@ -147,8 +147,14 @@
 
 .atribut-input-grid {
   display: grid;
-  grid-template-columns: 2fr 3fr;
-  grid-gap: 23px;
+  grid-template-columns: 2fr 3fr 24px;
+  grid-gap: 16px;
+}
+.character-input-grid {
+  display: grid;
+  grid-template-columns: 2fr 3fr auto;
+  grid-gap: 8px;
+  transition: transform 0.2s;
 }
 .group-grid {
   display: grid;
