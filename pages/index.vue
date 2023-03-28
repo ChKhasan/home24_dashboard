@@ -4,9 +4,9 @@
 
 <script>
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   asyncData({ redirect }) {
-    redirect("/admin/login");
+    redirect("/catalog/products");
   },
 };
 </script>

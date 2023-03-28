@@ -155,7 +155,7 @@ function getBase64(file) {
   });
 }
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       params: {
@@ -210,8 +210,8 @@ export default {
         },
         {
           title: "Image",
-          dataIndex: "lg_img",
-          key: "lg_img",
+          dataIndex: "sm_img",
+          key: "sm_img",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
@@ -320,7 +320,7 @@ export default {
       this.editId = id;
       const data = this.banners.find((item) => item.id == id);
       this.ruleForm = {
-        img: data.lg_img,
+        img: data.sm_img,
         link_ru: data.link.ru,
         link_uz: data.link.uz,
         link_en: data.link.en,

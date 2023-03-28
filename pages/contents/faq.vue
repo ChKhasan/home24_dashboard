@@ -167,7 +167,7 @@ import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       params: {

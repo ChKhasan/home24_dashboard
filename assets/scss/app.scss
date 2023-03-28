@@ -1,6 +1,7 @@
 @import "./config/default/variables";
 @import "../fonts/fonts.scss";
 @import "../scss/config/create/width";
+@import "./custom/page/app-styles.scss";
 @import "./custom/page/mixins/fonts.scss";
 @import "./custom/page/components/title-block";
 @import "./custom/page/components/tabs";
@@ -8,7 +9,6 @@
 @import "./custom//layout/toolbar.scss";
 @import "./custom//layout/layout-toolbar.scss";
 @import "./custom/page/containers";
-@import "./custom/page/app-styles";
 @import "./config//create/padding";
 @import "./custom/page/components/table.scss";
 @import "./custom/page/bock-style";

@@ -35,7 +35,7 @@
           ></div>
           <div class="products-from-grid">
             <div class="products-select-grid">
-              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
+              <el-tabs class="form_tabs" v-model="activeName">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -100,11 +100,9 @@
                       <a-cascader
                         :options="cascaderCategories"
                         :show-search="{ filter }"
-                        separator="=>"
                         popupClassName="category-cascader"
                         class="category-select w-100"
                         popper-class="select-popper-hover"
-                        :changeOnSelect="true"
                         v-model="cascader"
                         placeholder="Please select"
                         @change="onChange"
@@ -153,6 +151,7 @@
                     ></div> -->
                     <div
                       class="outline-btn outline-light-green-btn"
+                      :class="{ disabledBtn: lastCategory.length < 1 }"
                       @click="reloadCategories"
                       v-html="reloadIcon"
                     ></div>
@@ -167,90 +166,7 @@
                   >Недавняя категория:
                   <p>{{ findLastCategory }}</p></span
                 >
-                <!-- <div class="d-flex align-items-end">
-                  <div class="products-input-grid-3 w-100">
-                    <div class="form-block mb-0 required">
-                      <div><label>Категория</label></div>
-                      <el-form-item prop="category_id">
-                        <el-select
-                          v-model="ruleForm.category_id"
-                          filterable
-                          class="w-100"
-                          default-first-option
-                          placeholder="Select category"
-                          no-data-text="no category"
-                          no-match-text="no category"
-                        >
-                          <el-option
-                            v-for="item in categories"
-                            :key="item.id"
-                            :label="item.name?.ru"
-                            :value="item.id"
-                          >
-                          </el-option>
-                        </el-select>
-                      </el-form-item>
-                      <span class="bottom_text">Добавить товар в категорию</span>
-                    </div>
-                    <div class="form-block mb-0">
-                      <div><label>Дочерняя категория</label></div>
-                      <el-select
-                        v-model="categoryChild.child1.id"
-                        filterable
-                        no-data-text="no category"
-                        no-match-text="no category"
-                        :disabled="categoryChild.child1.arr.length < 1"
-                        placeholder="Select post category"
-                      >
-                        <el-option
-                          v-for="item in categoryChild.child1.arr"
-                          :key="item.id"
-                          :label="item.name.ru"
-                          :value="item.id"
-                        >
-                        </el-option>
-                      </el-select>
-                      <span class="bottom_text">Добавить товар в категорию</span>
-                    </div>
-                    <div class="form-block mb-0">
-                      <div><label>Последняя категория</label></div>
-                      <el-select
-                        v-model="categoryChild.child2.id"
-                        filterable
-                        no-data-text="no category"
-                        no-match-text="no category"
-                        :disabled="categoryChild.child2.arr.length < 1"
-                        placeholder="Select last category"
-                      >
-                        <el-option
-                          v-for="item in categoryChild.child2.arr"
-                          :key="item.id"
-                          :label="item.name?.ru"
-                          :value="item.id"
-                        >
-                        </el-option>
-                      </el-select>
-                      <span class="bottom_text">Добавить товар в категорию</span>
-                    </div>
-                  </div>
-                  <div class="prducts-details-btns">
-                    <div
-                      class="outline-btn outline-light-green-btn"
-                      @click="searchBlock = true"
-                      v-html="searchIcon"
-                    ></div>
-                    <div
-                      class="outline-btn outline-light-green-btn"
-                      @click="reloadCategories"
-                      v-html="reloadIcon"
-                    ></div>
-                    <div
-                      class="outline-btn outline-light-blue-btn"
-                      @click="show('add_category_modal')"
-                      v-html="plusCategoryIcon"
-                    ></div>
-                  </div>
-                </div> -->
+
                 <Transition name="search-block">
                   <div class="d-flex" v-if="searchBlock">
                     <div class="search-container">
@@ -405,13 +321,14 @@
 
                     <div class="variant-img">
                       <a-upload
+                        action="https://test.loftcity.uz/api/admin/files/upload"
                         list-type="picture-card"
                         :file-list="element.imagesData"
                         :multiple="true"
                         @preview="handlePreview"
                         @change="($event) => handleChangeVatiant($event, element.id)"
                       >
-                        <div v-if="element.imagesData.length < 50">
+                        <div v-if="fileList.length < 50">
                           <span v-html="addImgIcon"></span>
                           <div class="ant-upload-text">Добавить изображение</div>
                         </div>
@@ -836,7 +753,6 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import AddBrandModal from "../../components/products/Add-brand-modal.vue";
 import AddCategoryModal from "../../components/products/Add-category-modal.vue";
-import draggable from "vuedraggable";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -847,7 +763,6 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
-  middleware: "auth",
   data() {
     return {
       closeIcon: require("../../assets/svg/components/remove.svg?raw"),
@@ -964,16 +879,6 @@ export default {
         ],
       },
       categories: [],
-      categoryChild: {
-        child1: {
-          id: "",
-          arr: [],
-        },
-        child2: {
-          id: "",
-          arr: [],
-        },
-      },
       ruleForm: {
         name_ru: "",
         name_uz: "",
@@ -1151,10 +1056,6 @@ export default {
       delete newData["name_ru"];
       delete newData["name_uz"];
       delete newData["name_en"];
-      if (!this.categoryChild.child1.id) return newData;
-      newData.category_id = this.categoryChild.child1.id;
-      if (!this.categoryChild.child2.id) return newData;
-      newData.category_id = this.categoryChild.child2.id;
       return newData;
     },
     notification(title, message, type) {
@@ -1164,11 +1065,15 @@ export default {
         type: type,
       });
     },
+    notificationError(title, message) {
+      this.$notify.error({
+        title: title,
+        message: message,
+      });
+    },
     reloadCategories() {
       this.cascader = JSON.parse(localStorage.getItem("lastCategory"));
-    },
-    closeModal(name) {
-      this.hide("add_category_modal");
+      this.__GET_CATEGORY_BY_ID(this.cascader.at(-1));
     },
     handleScroll(event) {
       this.$refs.characterScrollItems.forEach((item) => {
@@ -1177,8 +1082,11 @@ export default {
       this.$refs.characterScroll.scrollLeft = this.$refs.productScroll.scrollLeft;
     },
     handleChangeVatiant({ fileList }, id) {
-      this.variantId = id;
+      const currentProduct = this.findProductWithId(id);
+      currentProduct.imagesData = fileList;
       this.fileList = fileList;
+      if (fileList[0]?.response?.path)
+        currentProduct.images = fileList.map((item) => item?.response?.path);
     },
     atributOptions(obj) {
       const product = this.findProductWithId(obj.productId);
@@ -1275,17 +1183,6 @@ export default {
       });
     },
     // variant
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
-        return data.path;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    handleClick(tab, event) {
-      this.formVal = "";
-    },
     onChangeVariants(elementId, varId) {
       this.ruleForm.products
         .find((proId) => proId.id == elementId)
@@ -1310,22 +1207,13 @@ export default {
     statusFunc(res) {
       switch (res.status) {
         case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
+          this.notificationError("Error", "Указанные данные недействительны.");
           break;
         case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
+          this.notificationError("Error", "Cервер не работает");
           break;
         case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
+          this.notificationError("Error", res.data.errors);
           break;
       }
     },
@@ -1369,8 +1257,6 @@ export default {
           return item;
         }
       });
-
-      console.log(this.cascaderCategories);
     },
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
@@ -1418,61 +1304,6 @@ export default {
       copyCharacter = {};
     },
   },
-  watch: {
-    // "ruleForm.category_id"(val) {
-    //   if (val) {
-    //     const child1 = this.categories.find((item) => item.id == val);
-    //     this.__GET_CATEGORY_BY_ID(val);
-    //     if (!child1.children) return false;
-    //     if (child1.children.length > 0) {
-    //       this.categoryChild.child1.arr = child1.children;
-    //     } else {
-    //       this.categoryChild.child1.arr = [];
-    //       this.categoryChild.child2.arr = [];
-    //     }
-    //   } else {
-    //     this.categoryChild.child1.arr = [];
-    //     this.categoryChild.child2.arr = [];
-    //     this.atributes = [];
-    //   }
-    //   this.categoryChild.child1.id = "";
-    //   this.categoryChild.child2.id = "";
-    // },
-    // "categoryChild.child1.id"(val) {
-    //   if (!val) return false;
-    //   const child2 = this.categoryChild.child1.arr.find((item) => item.id == val);
-    //   this.__GET_CATEGORY_BY_ID(val);
-    //   if (child2.children.length > 0) {
-    //     this.categoryChild.child2.arr = child2.children;
-    //   } else {
-    //     this.categoryChild.child2.arr = [];
-    //     this.categoryChild.child2.id = "";
-    //   }
-    // },
-    // "categoryChild.child2.id"(val) {
-    //   this.__GET_CATEGORY_BY_ID(val);
-    // },
-    "ruleForm.desc.ru"(val) {
-      console.log(val);
-    },
-    async fileList(val) {
-      const currentProduct = this.findProductWithId(this.variantId);
-      currentProduct.imagesData = this.fileList;
-      const newImages = [];
-      this.fileList.forEach((element, index) => {
-        let formData = new FormData();
-        formData.append("file", element.originFileObj);
-        newImages[index] = formData;
-      });
-      if (val.length > 0) {
-        this.uploadLoading = true;
-        newImages.forEach(async (element, index) => {
-          currentProduct.images[index] = await this.__UPLOAD_FILE(element);
-          this.uploadLoading = false;
-        });
-      }
-    },
-  },
   components: {
     ProductsStatistic,
     ProductCharacterList,
@@ -1480,99 +1311,6 @@ export default {
     TitleBlock,
     AddBrandModal,
     AddCategoryModal,
-    draggable,
   },
 };
 </script>
-<style lang="scss">
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.4s ease;
-}
-.loading-cascader {
-  position: relative;
-  .el-cascader-menu__empty-text {
-    &::before {
-      content: "No data";
-      position: absolute;
-    }
-  }
-}
-.list {
-  transition: all 0.4s;
-  display: grid;
-  grid-gap: 24px;
-}
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.list-enter {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-.list-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-.list-move {
-  opacity: 1;
-  transition: all 0.4s;
-}
-.product_list {
-  margin-bottom: 24px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.search-block-enter,
-.search-block-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.search-block-enter-form,
-.search-block-leave-to {
-  transform: translateX(30px);
-  opacity: 0;
-}
-.search-block {
-  transition: all 0.4s;
-}
-.search-block-enter-to,
-.search-block-leave-from {
-  transform: translateX(0);
-  opacity: 1;
-}
-.search-block-enter-active,
-.search-block-leave-active {
-  transition: all 0.4s;
-}
-.category-cascader {
-  .ant-cascader-menu {
-    height: 250px;
-    .ant-cascader-menu-item {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(0, 0, 0, 0.5);
-
-      &:hover {
-        background: #fafafa;
-        color: #000;
-      }
-    }
-    &::-webkit-scrollbar {
-      width: 5px;
-    }
-    &::-webkit-scrollbar-track {
-      border-radius: 3px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: rgba($color: #000000, $alpha: 0.2);
-      border-radius: 5px;
-    }
-  }
-}
-
-// 1428
-</style>

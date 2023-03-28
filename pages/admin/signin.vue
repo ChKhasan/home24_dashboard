@@ -23,10 +23,10 @@
 </template>
 <script>
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   methods: {
     login() {
-      localStorage.setItem("Auth", "token");
+      // localStorage.setItem("Auth", "token");
       this.$router.push("/catalog/products");
     },
   },

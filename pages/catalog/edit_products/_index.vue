@@ -964,7 +964,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       closeIcon: require("../../../assets/svg/components/remove.svg?raw"),

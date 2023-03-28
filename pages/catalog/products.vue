@@ -20,7 +20,6 @@
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="d-flex justify-content-between w-100">
             <SearchInput placeholder="Поиск продукта" />
-          
           </div>
         </div>
         <a-table
@@ -38,16 +37,23 @@
           }"
         >
           <span slot="img" slot-scope="text">
-            <img v-if="text" class="table-image" :src="text" alt="" />
+            <img v-if="text != null" class="table-image" :src="text" />
             <img
               v-else
               class="table-image"
               src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
-              alt=""
             />
           </span>
           <div slot="name" slot-scope="text" align="center" class="table_product_row">
-            <h6>{{ text.ru }}</h6>
+            <h6>{{ text?.name?.ru }}</h6>
+            <span>{{
+              text?.category?.parent?.parent &&
+              text?.category?.parent?.parent?.name?.ru +
+                "/" +
+                text?.category?.parent?.name?.ru +
+                "/" +
+                text?.category?.name?.ru
+            }}</span>
           </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
@@ -92,7 +98,7 @@ import SearchInput from "../../components/form/Search-input.vue";
 import TitleBlock from "../../components/Title-block.vue";
 
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       pageSize: 10,
@@ -200,21 +206,26 @@ export default {
       this.pagination = pagination;
       pagination.total = this.products.products?.total;
       this.data = this.products.products.data.map((item) => {
-        console.log(item.products);
         if (item.products[0].images.length > 0) {
           return {
             ...item,
             key: item.id,
             price: item.products[0].price,
             model: item.products[0].model,
-            img: item.products[0].images[0].lg_img
-              ? item.products[0].images[0].lg_img
-              : null,
+            name: {
+              name: item.name,
+              category: item.category,
+            },
+            img: item.products[0].images[0].sm_img,
             status: item.products[0].status,
           };
         } else {
           return {
             ...item,
+            name: {
+              name: item.name,
+              category: item.category,
+            },
             key: item.id,
             price: item.products[0].price,
             model: item.products[0].model,

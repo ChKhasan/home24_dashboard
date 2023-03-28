@@ -23,7 +23,12 @@
             @change="handleTableChange"
           >
             <div slot="img" slot-scope="text">
-              <img v-if="text[0]?.lg_img" class="table-image" :src="text[0]?.lg_img" alt="" />
+              <img
+                v-if="text[0]?.lg_img"
+                class="table-image"
+                :src="text[0]?.lg_img"
+                alt=""
+              />
               <img
                 v-else
                 class="table-image"
@@ -71,7 +76,7 @@ function getBase64(file) {
   });
 }
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       params: {

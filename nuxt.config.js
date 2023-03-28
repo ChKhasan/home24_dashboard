@@ -30,10 +30,10 @@ export default {
     { src: "~plugins/vue-drag-and-drop-list.js", ssr: false },
   ],
   axios: {
-    // credentials: true,
-    // init(axios) {
-    //   axios.defaults.withCredentials = true;
-    // },
+    credentials: true,
+    init(axios) {
+      axios.defaults.withCredentials = true;
+    },
     baseURL: "https://bombadmin.pythonanywhere.com",
   },
   components: true,
@@ -43,7 +43,7 @@ export default {
   modules: [
     "bootstrap-vue/nuxt",
     "@nuxtjs/axios",
-    "@nuxtjs/auth",
+    // "@nuxtjs/auth",
     "@nuxtjs/dotenv",
     "nuxt-precompress",
   ],
@@ -52,42 +52,42 @@ export default {
     analyze: true,
   },
 
-  auth: {
-    strategies: {
-      local: {
-        scheme: "refresh",
-        token: {
-          property: "access",
-          maxAge: 60 * 60 * 2,
-        },
-        refreshToken: {
-          property: "refresh",
-          data: "refresh",
-          maxAge: 60 * 60 * 24,
-        },
-        user: {
-          property: false,
-        },
-        endpoints: {
-          login: {
-            url: "/api/account/login",
-            method: "post",
-            propertyName: "access",
-          },
-          refresh: { url: "/api/auth/refresh", method: "post" },
-          logout: { url: "/api/account/logout", method: "post" },
-          user: false,
-        },
-      },
-    },
-    redirect: {
-      login: "/admin/login",
-      logout: "/admin/login",
-      callback: "/admin/login",
-      home: "/catalog/products",
-    },
-    watchLoggedIn: true,
-  },
+  // auth: {
+  //   strategies: {
+  //     local: {
+  //       scheme: "refresh",
+  //       token: {
+  //         property: "access",
+  //         maxAge: 60 * 60 * 2,
+  //       },
+  //       refreshToken: {
+  //         property: "refresh",
+  //         data: "refresh",
+  //         maxAge: 60 * 60 * 24,
+  //       },
+  //       user: {
+  //         property: false,
+  //       },
+  //       endpoints: {
+  //         login: {
+  //           url: "/api/account/login",
+  //           method: "post",
+  //           propertyName: "access",
+  //         },
+  //         refresh: { url: "/api/auth/refresh", method: "post" },
+  //         logout: { url: "/api/account/logout", method: "post" },
+  //         user: false,
+  //       },
+  //     },
+  //   },
+  //   redirect: {
+  //     login: "/admin/login",
+  //     logout: "/admin/login",
+  //     callback: "/admin/login",
+  //     home: "/catalog/products",
+  //   },
+  //   watchLoggedIn: true,
+  // },
   nuxtPrecompress: {
     enabled: true, // Enable in production
     report: false, // set true to turn one console messages during module init

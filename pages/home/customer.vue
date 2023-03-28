@@ -70,7 +70,7 @@ import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       pageSize: 10,

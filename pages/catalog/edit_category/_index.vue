@@ -7,41 +7,15 @@
     >
       <div class="d-flex">
         <span class="mx-3">
-          <LayoutHeaderBtn
-            name="Отмена"
-            :headerbtnCallback="toBack"
-            :light="true"
-          />
+          <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
         </span>
         <a-button
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
-          @click="headerbtnCallback('ruleForm')"
+          @click="submitForm('ruleForm')"
           :loading="uploadLoading"
         >
-          <span class="svg-icon" v-if="!uploadLoading"
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              version="1.1"
-            >
-              <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                <path
-                  d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                  fill="#000000"
-                  fill-rule="nonzero"
-                  opacity="0.3"
-                ></path>
-                <path
-                  d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                  fill="#000000"
-                ></path>
-              </g></svg
-          ></span>
+          <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"></span>
           Добавить категорию
         </a-button>
       </div>
@@ -65,11 +39,7 @@
             action=""
           >
             <div class="category-select-grid">
-              <el-tabs
-                class="form_tabs"
-                v-model="activeName"
-                @tab-click="handleClick"
-              >
+              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -103,10 +73,10 @@
                             no-data-text="No Category"
                           >
                             <el-option
-                              v-for="item in categories"
+                              v-for="(item, index) in categories"
                               :key="item.id"
                               :label="item.name?.ru"
-                              :value="item.name?.ru"
+                              :value="item?.id"
                             >
                             </el-option>
                           </el-select>
@@ -116,7 +86,7 @@
                     <div class="form-block">
                       <div><label for="">Информация о категории</label></div>
                       <quill-editor
-                        style="min-height: 250px;"
+                        style="min-height: 250px"
                         :options="editorOption"
                         :value="ruleForm.desc[item.key]"
                         v-model="ruleForm.desc[item.key]"
@@ -125,60 +95,175 @@
                   </div>
                 </el-tab-pane>
               </el-tabs>
-              <div class="form-container">
-                <div class="form-block required">
-                  <div><label>Атрибуты группы</label></div>
-                  <el-form-item prop="attributes">
-                    <el-select
-                      v-model="ruleForm.attributes"
-                      multiple
-                      class="w-100"
-                      allow-create
-                      default-first-option
-                      placeholder="Choose tags for your article"
-                    >
-                      <el-option
-                        v-for="item in atributes"
-                        :key="item.id"
-                        :label="item.name.ru"
-                        :value="item.id"
+              <div class="category-character-grid">
+                <div class="form-container">
+                  <div>
+                    <div class="form-block required">
+                      <div><label>Атрибуты</label></div>
+                    </div>
+                    <transition-group name="flip-list" tag="div">
+                      <div
+                        class="d-flex mb-3 item"
+                        v-for="(atribute, i) in attributes"
+                        :key="atribute.id"
+                        :class="{
+                          over: atribute === over.item && atribute !== dragFrom,
+                          [over.dir]: atribute === over.item && atribute !== dragFrom,
+                        }"
                       >
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-                <div class="form-block required">
-                  <div><label>Групповая характеристика</label></div>
-                  <el-form-item prop="group_characteristics">
-                    <el-select
-                      v-model="ruleForm.group_characteristics"
-                      class="w-100"
-                      multiple
-                      filterable
-                      allow-create
-                      default-first-option
-                      placeholder="Choose tags for your article"
-                    >
-                      <el-option
-                        v-for="item in groups"
-                        :key="item.id"
-                        :label="item.name.ru"
-                        :value="item.id"
+                        <div class="form-block required w-100 mb-0">
+                          <el-form-item>
+                            <el-select
+                              v-model="atribute.name"
+                              class="w-100"
+                              @change="filterElement('attributes')"
+                              popper-class="select-popper-hover"
+                              default-first-option
+                              no-data-text="No atribut"
+                              placeholder="Choose tags for your article"
+                            >
+                              <el-option
+                                v-for="item in atributes"
+                                :key="item.id"
+                                :label="item.name.ru"
+                                :value="item.id"
+                              >
+                              </el-option>
+                            </el-select>
+                          </el-form-item>
+                        </div>
+                        <div class="variant_btns mb-1 mt-0">
+                          <div
+                            class="variant-btn variant-btn-delete mx-2"
+                            @click="deleteElement('attributes', atribute.id)"
+                          >
+                            <svg
+                              width="30"
+                              height="30"
+                              viewBox="0 0 30 30"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                stroke="#F65160"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
+                          <div
+                            class="variant-btn variant-btn-check cursor_drag"
+                            draggable="true"
+                            @dragend="(e) => finishDrag(atribute, i, e, 'attributes')"
+                            @dragover="(e) => onDragOver(atribute, i, e)"
+                            @dragstart="(e) => startDrag(atribute, i, e)"
+                          >
+                            <a-icon
+                              type="drag"
+                              :style="{ color: '#3699FF', fontSize: '18px' }"
+                            />
+                            <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
+                          </div>
+                        </div>
+                      </div>
+                    </transition-group>
+                    <div class="d-flex justify-content-start">
+                      <div
+                        class="create-inner-variant mt-0"
+                        @click="addElement('attributes')"
                       >
-                      </el-option>
-                    </el-select>
-                  </el-form-item>
-                </div>
-                <div class="d-flex justify-content-end">
-                  <div class="form-btn form-outline-transparent mx-3">
-                    Cancel
+                        <span v-html="addInnerValidatIcon"></span>
+                        Добавить атрибут
+                      </div>
+                    </div>
                   </div>
-                  <div
-                    type="submit"
-                    class="form-btn form-btn-primary"
-                    @click="submitForm('ruleForm')"
-                  >
-                    Save changes
+                </div>
+                <div class="form-container">
+                  <div>
+                    <div class="form-block required">
+                      <div><label>Характеристическая группа</label></div>
+                    </div>
+                    <transition-group name="flip-list" tag="div">
+                      <div
+                        class="d-flex mb-3 item"
+                        v-for="(character, i) in group_characteristics"
+                        :key="character.id"
+                        :class="{
+                          over: character === over.item && character !== dragFrom,
+                          [over.dir]: character === over.item && character !== dragFrom,
+                        }"
+                      >
+                        <div class="form-block required mb-0 w-100">
+                          <el-form-item>
+                            <el-select
+                              v-model="character.name"
+                              class="w-100"
+                              popper-class="select-popper-hover"
+                              @change="filterElement('group_characteristics')"
+                              default-first-option
+                              no-data-text="No characteristics"
+                              placeholder="Choose tags for your article"
+                            >
+                              <el-option
+                                v-for="item in groups"
+                                :key="item.id"
+                                :label="item.name.ru"
+                                :value="item.id"
+                              >
+                              </el-option>
+                            </el-select>
+                          </el-form-item>
+                        </div>
+                        <div class="variant_btns mb-1 mt-0">
+                          <div
+                            class="variant-btn variant-btn-delete mx-2"
+                            @click="deleteElement('group_characteristics', character.id)"
+                          >
+                            <svg
+                              width="30"
+                              height="30"
+                              viewBox="0 0 30 30"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                stroke="#F65160"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </div>
+                          <div
+                            class="variant-btn variant-btn-check cursor_drag"
+                            draggable="true"
+                            @dragend="
+                              (e) => finishDrag(character, i, e, 'group_characteristics')
+                            "
+                            @dragover="(e) => onDragOver(character, i, e)"
+                            @dragstart="(e) => startDrag(character, i, e)"
+                          >
+                            <a-icon
+                              type="drag"
+                              :style="{ color: '#3699FF', fontSize: '18px' }"
+                            />
+                            <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
+                          </div>
+                        </div>
+                      </div>
+                    </transition-group>
+                    <div class="d-flex justify-content-start">
+                      <div
+                        class="create-inner-variant mt-0"
+                        @click="addElement('group_characteristics')"
+                      >
+                        <span v-html="addInnerValidatIcon"></span>
+                        Добавить группа
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -212,13 +297,8 @@
                   type="number"
                 ></el-input>
               </div>
-              <div
-                class="switch-text form-block d-flex flex-row align-items-center"
-              >
-                <a-switch
-                  @change="onChange"
-                  :checked="ruleForm.is_popular == 1"
-                />
+              <div class="switch-text form-block d-flex flex-row align-items-center">
+                <a-switch @change="onChange" :checked="ruleForm.is_popular == 1" />
                 <label class="mx-3 mb-0">Популярный</label>
               </div>
               <div class="form-block">
@@ -227,6 +307,7 @@
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
+                    action="https://test.loftcity.uz/api/admin/files/upload"
                     :file-list="fileList.img"
                     @preview="handlePreview"
                     @change="($event) => handleChange($event, 'img')"
@@ -254,9 +335,7 @@
                           stroke-linejoin="round"
                         />
                       </svg>
-                      <div class="ant-upload-text">
-                        Upload image
-                      </div>
+                      <div class="ant-upload-text">Upload image</div>
                       <span class="upload-resize">(678 x 784)</span>
                     </div>
                   </a-upload>
@@ -265,11 +344,7 @@
                     :footer="null"
                     @cancel="handleCancel"
                   >
-                    <img
-                      alt="example"
-                      style="width: 100%;"
-                      :src="previewImage"
-                    />
+                    <img alt="example" style="width: 100%" :src="previewImage" />
                   </a-modal>
                 </div>
               </div>
@@ -283,6 +358,7 @@
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
+                    action="https://test.loftcity.uz/api/admin/files/upload"
                     :file-list="fileList.icon"
                     @preview="handlePreview"
                     @change="($event) => handleChange($event, 'icon')"
@@ -310,9 +386,7 @@
                           stroke-linejoin="round"
                         />
                       </svg>
-                      <div class="ant-upload-text">
-                        Upload image
-                      </div>
+                      <div class="ant-upload-text">Upload image</div>
                       <span class="upload-resize">(678 x 784)</span>
                     </div>
                   </a-upload>
@@ -321,11 +395,7 @@
                     :footer="null"
                     @cancel="handleCancel"
                   >
-                    <img
-                      alt="example"
-                      style="width: 100%;"
-                      :src="previewImage"
-                    />
+                    <img alt="example" style="width: 100%" :src="previewImage" />
                   </a-modal>
                 </div>
               </div>
@@ -359,10 +429,26 @@ export default {
   layout: "toolbar",
   data() {
     return {
+      over: {},
+      startLoc: 0,
+      dragging: false,
+      dragFrom: {},
       activeName: "Русский",
+      addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
+      addImgIcon: require("../../../assets/svg/components/add-img-icon.svg?raw"),
+      addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       atributes: [],
-      categories: [],
+      categories: [
+        {
+          name: {
+            ru: "Главная категория ",
+          },
+          id: null,
+        },
+      ],
       groups: [],
+      allAtributes: [],
+      allGroups: [],
       lang: [
         {
           key: "ru",
@@ -443,6 +529,9 @@ export default {
         group_characteristics: [],
         position: null,
       },
+      attributes: [{ name: "", id: 1 }],
+      group_characteristics: [{ name: "", id: 1 }],
+      categoryChild: [],
       previewVisible: false,
       previewImage: "",
       fileList: {
@@ -502,6 +591,45 @@ export default {
     };
   },
   methods: {
+    startDrag(item, i, e) {
+      this.startLoc = e.clientY;
+      this.dragging = true;
+      this.dragFrom = item;
+    },
+    finishDrag(item, pos, e, name) {
+      this[name].splice(pos, 1);
+      this[name].splice(this.over.pos, 0, item);
+      this.over = {};
+    },
+    onDragOver(item, pos, e) {
+      const dir = this.startLoc < e.clientY ? "down" : "up";
+      setTimeout(() => {
+        this.over = { item, pos, dir };
+      }, 10);
+    },
+    addElement(type) {
+      this[type].push({
+        name: "",
+        id: Math.max(...this[type].map((o) => o.id)) + 1,
+      });
+    },
+
+    filterElement(typeName) {
+      let allArt = this.allAtributes;
+      let allGr = this.allGroups;
+      this[typeName].forEach((elem) => {
+        if (typeName == "attributes") {
+          allArt = allArt.filter((item) => item.id != elem.name);
+        } else {
+          allGr = allGr.filter((item) => item.id != elem.name);
+        }
+      });
+      this.atributes = allArt;
+      this.groups = allGr;
+    },
+    deleteElement(type, id) {
+      if (this[type].length > 1) this[type] = this[type].filter((item) => item.id != id);
+    },
     submitForm(ruleForm) {
       const data = {
         ...this.ruleForm,
@@ -510,20 +638,13 @@ export default {
           uz: this.ruleForm.name_uz,
           en: this.ruleForm.name_en,
         },
+        attributes: this.attributes.map((item) => item.name),
+        group_characteristics: this.group_characteristics.map((item) => item.name),
       };
       delete data["name_ru"];
       delete data["name_uz"];
       delete data["name_en"];
-      data.attributes = data.attributes.map((item) => {
-        if (typeof item != "number") return item.id;
-        else return item;
-      });
-      data.group_characteristics = this.groups.map((item) => {
-        if (data.group_characteristics.includes(item.name.ru)) return item.id;
-      });
-      data.group_characteristics = data.group_characteristics.filter(
-        (elem) => elem
-      );
+
       if (data.parent_id) {
         data.parent_id = this.categories.filter(
           (item) => item.name.ru == data.parent_id
@@ -540,16 +661,9 @@ export default {
         this.__EDIT_CATEGORIES(data);
       });
     },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-    },
     handleCancel() {
       this.previewVisible = false;
     },
-    headerbtnCallback() {
-      console.log("fsfsdf");
-    },
-
     deleteIcon() {
       this.ruleForm.oldIcon = "";
       this.ruleForm = this.ruleForm;
@@ -563,17 +677,7 @@ export default {
     },
     async handleChange({ fileList }, type) {
       this.fileList[type] = fileList;
-    },
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
-        return data.path;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
+      if (fileList[0]?.response?.path) this.ruleForm[type] = fileList[0]?.response?.path;
     },
     handleClick(tab, event) {
       this.formVal = "";
@@ -586,30 +690,12 @@ export default {
     },
 
     async __GET_CATEGORY_BY_ID() {
-      const dataAtr = await this.$store.dispatch("fetchAtributes/getAtributes");
-      this.atributes = dataAtr.attributes?.data;
       const data = await this.$store.dispatch(
         "fetchCategories/getCategoriesById",
         this.$route.params.index
       );
-      const dataCat = await this.$store.dispatch(
-        "fetchCategories/getCategories"
-      );
-      dataCat.categories?.data.forEach((item) => {
-        if (item.children.length > 0) {
-          this.categories = [item, ...item.children, ...this.categories];
-        } else {
-          this.categories = [item, ...this.categories];
-        }
-      });
       this.slug = data.category.slug;
-
-      this.categories = this.categories
-        .filter((elem) => elem.id != this.$route.params.index)
-        .filter(
-          (item) =>
-            !data.category.children.find((childId) => childId.id == item.id)
-        );
+      this.categoryChild = data.category.children;
       this.ruleForm.name_ru = data.category.name.ru;
       this.ruleForm.name_uz = data.category.name.uz;
       this.ruleForm.name_en = data.category.name.en;
@@ -617,35 +703,55 @@ export default {
       this.ruleForm.desc.uz = data.category.desc.uz;
       this.ruleForm.desc.en = data.category.desc.en;
       this.ruleForm.is_active = data.category.is_active;
-      this.ruleForm.attributes = data.category.attributes.map(
-        (item) => item.id
+      this.attributes = data.category.attributes.map((item, index) => {
+        return {
+          name: item.id,
+          id: index + 1,
+        };
+      });
+      if (this.groups.length == 0) {
+        this.groups = data.category.characteristic_groups;
+      }
+      if (this.atributes == 0) {
+        this.atributes = data.category.attributes;
+      }
+      this.group_characteristics = data.category.characteristic_groups.map(
+        (item, index) => {
+          return {
+            name: item.id,
+            id: index + 1,
+          };
+        }
       );
-      this.ruleForm.group_characteristics = data.category.characteristic_groups.map(
-        (item) => item.name.ru
-      );
-      this.fileList.img = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: data.category.lg_img,
-        },
-      ];
-      this.fileList.icon = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: data.category.lg_icon,
-        },
-      ];
+      if (data.category.lg_img) {
+        this.fileList.img = [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            oldImg: true,
+            url: data.category.lg_img,
+          },
+        ];
+      }
+      if (data.category.lg_icon) {
+        this.fileList.icon = [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            oldImg: true,
+            url: data.category.lg_icon,
+          },
+        ];
+      }
       this.ruleForm.is_popular = data.category.is_popular;
       if (data.category.parent_id) {
         this.ruleForm.parent_id = this.categories.filter(
           (item) => item.id == data.category.parent_id
         )[0].name.ru;
+      } else {
+        this.ruleForm.parent_id = null;
       }
     },
     statusFunc(res) {
@@ -673,10 +779,29 @@ export default {
     async __GET_ATRIBUTES() {
       const data = await this.$store.dispatch("fetchAtributes/getAtributes");
       this.atributes = data.attributes?.data;
+      this.allAtributes = data.attributes?.data;
+      this.filterElement("attributes");
     },
     async __GET_GROUPS() {
       const data = await this.$store.dispatch("fetchCharacters/getGroups");
       this.groups = data?.groups;
+      this.allGroups = data?.groups;
+      this.filterElement("group_characteristics");
+    },
+
+    async __GET_CATEGORIES() {
+      const dataCat = await this.$store.dispatch("fetchCategories/getCategories");
+      dataCat.categories?.data.forEach((item) => {
+        if (item.children.length > 0) {
+          this.categories = [item, ...item.children, ...this.categories];
+        } else {
+          this.categories = [item, ...this.categories];
+        }
+      });
+
+      this.categories = this.categories
+        .filter((elem) => elem.id != this.$route.params.index)
+        .filter((item) => !this.categoryChild.find((childId) => childId.id == item.id));
     },
     async __EDIT_CATEGORIES(res) {
       try {
@@ -696,34 +821,10 @@ export default {
     },
   },
   mounted() {
-    // this.__GET_ATRIBUTES();
+    this.__GET_CATEGORIES();
+    this.__GET_ATRIBUTES();
     this.__GET_GROUPS();
     this.__GET_CATEGORY_BY_ID();
-  },
-  watch: {
-    async "fileList.img"() {
-      let formData = new FormData();
-      console.log(this.fileList.img);
-      if (this.fileList.img.length > 0 && !this.fileList.img[0].oldImg) {
-        formData.append("file", this.fileList.img[0].originFileObj);
-        this.uploadLoading = true;
-        this.ruleForm.img = await this.__UPLOAD_FILE(formData);
-        this.uploadLoading = false;
-      } else {
-        this.ruleForm.img = null;
-      }
-    },
-    async "fileList.icon"() {
-      let formData = new FormData();
-      if (this.fileList.icon.length > 0 && !this.fileList.icon[0].oldImg) {
-        formData.append("file", this.fileList.icon[0].originFileObj);
-        this.uploadLoading = true;
-        this.ruleForm.icon = await this.__UPLOAD_FILE(formData);
-        this.uploadLoading = false;
-      } else {
-        this.ruleForm.icon = null;
-      }
-    },
   },
   components: {
     AddBtn,
@@ -731,7 +832,6 @@ export default {
     FormTitle,
     TitleBlock,
     LayoutHeaderBtn,
-    quillEditor,
   },
 };
 </script>
@@ -836,5 +936,31 @@ export default {
       height: 160px;
     }
   }
+}
+
+.list > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.flip-list {
+  transition: all 0.4s;
+  display: grid;
+  grid-gap: 24px;
+}
+.flip-list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.flip-list-enter {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+.flip-list-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.item {
+  transition: transform 0.2s;
 }
 </style>

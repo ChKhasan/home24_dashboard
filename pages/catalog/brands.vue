@@ -151,7 +151,7 @@ function getBase64(file) {
   });
 }
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       page: 1,

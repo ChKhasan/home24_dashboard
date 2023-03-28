@@ -18,6 +18,11 @@
   display: grid;
   grid-gap: 24px;
 }
+.category-character-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr) auto;
+  grid-gap: 16px;
+}
 @media (max-width: 1440px) {
   .category-from-grid {
     grid-gap: 13px;

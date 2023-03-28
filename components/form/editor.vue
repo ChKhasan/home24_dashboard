@@ -63,7 +63,7 @@ export default {
       },
     };
   },
-  middleware: "router-auth",
+  // middleware: "router-auth",
   components: { quillEditor },
 };
 </script>

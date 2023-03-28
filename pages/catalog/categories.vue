@@ -158,7 +158,7 @@ const columns = [
 
 export default {
   layout: "toolbar",
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       page: 1,
@@ -265,7 +265,7 @@ export default {
                   key: (index + 1) * 100 + (index1 + 1) * 10 + (index2 + 1),
                   dataName: {
                     name: lastChild.name,
-                    img: lastChild.lg_img,
+                    img: lastChild.sm_img,
                   },
                 };
               });
@@ -274,7 +274,7 @@ export default {
                 ...childItem,
                 dataName: {
                   name: childItem.name,
-                  img: childItem.lg_img,
+                  img: childItem.sm_img,
                   child: childItem.children.length,
                 },
                 children: [...newChild2],
@@ -286,7 +286,7 @@ export default {
                 ...childItem,
                 dataName: {
                   name: childItem.name,
-                  img: childItem.lg_img,
+                  img: childItem.sm_img,
                 },
               };
             }
@@ -296,7 +296,7 @@ export default {
             ...item,
             dataName: {
               name: item.name,
-              img: item.lg_img,
+              img: item.sm_img,
               child: item.children.length,
             },
             children: [...newChild],
@@ -308,7 +308,7 @@ export default {
             ...item,
             dataName: {
               name: item.name,
-              img: item.lg_img,
+              img: item.sm_img,
             },
           };
         }

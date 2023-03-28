@@ -46,7 +46,7 @@
                   <div><label for="character_group">Группа</label></div>
                   <div class="group-grid1" id="character_group">
                     <el-form-item prop="group_id">
-                    <el-input placeholder="group"/>
+                      <el-input placeholder="group" />
                       <!-- <el-select
                         class="w-100"
                         popper-class="select-popper-hover"
@@ -199,7 +199,7 @@
                           </svg>
                         </div>
                         <div
-                          class="variant-btn variant-btn-check"
+                          class="variant-btn variant-btn-check cursor_drag"
                           draggable="true"
                           @dragend="(e) => finishDrag(item1, i, e)"
                           @dragover="(e) => onDragOver(item1, i, e)"

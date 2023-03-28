@@ -126,7 +126,6 @@
 
           <div class="clearfix variant-img">
             <a-upload
-              action="https://home24-dashboard.vercel.app/contents/blog?page=1"
               list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"
@@ -162,7 +161,7 @@ function getBase64(file) {
   });
 }
 export default {
-  middleware: "auth",
+  // middleware: "auth",
   data() {
     return {
       params: {
@@ -247,8 +246,8 @@ export default {
         },
         {
           title: "Зоговолок",
-          dataIndex: "lg_img",
-          key: "lg_img",
+          dataIndex: "sm_img",
+          key: "sm_img",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
@@ -395,7 +394,7 @@ export default {
           name: "image.png",
           status: "done",
           oldImg: true,
-          url: this.ruleForm.lg_img,
+          url: this.ruleForm.sm_img,
         },
       ];
       this.show("add_blog");
