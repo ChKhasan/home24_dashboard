@@ -56,15 +56,13 @@
         </div>
       </div>
     </div>
-    <AddModal
+    <a-modal
+      v-model="visible"
       :title="editId ? 'Изменить баннера' : 'Добавить баннера'"
-      name="add_banners"
-      btnText="Save"
-      :callback="getData"
-      :closeModal="closeModal"
-      :loadingBtn="loadingBtn"
+      :closable="false"
+      @ok="handleOk"
     >
-      <div class="modal_tab mb-4">
+    <div class="modal_tab mb-4">
         <span
           v-for="(item, index) in modalTabData"
           :key="index"
@@ -123,6 +121,7 @@
 
           <div class="clearfix variant-img">
             <a-upload
+              action="https://test.loftcity.uz/api/admin/files/upload"
               list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"
@@ -139,7 +138,26 @@
           </div>
         </div>
       </el-form>
-    </AddModal>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="closeModal"
+          >
+            Cancel
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="getData"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Save
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -170,7 +188,6 @@ export default {
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
-      selectedRowKeys: [], // Check here to configure the default column
       loadingBtn: false,
       modalTabData: [
         {
@@ -262,15 +279,17 @@ export default {
           },
         ],
       },
+      visible: false,
     };
   },
   methods: {
-    show(name) {
-      this.$modal.show(name);
+    showModal() {
+      this.visible = true;
     },
-    hide(name) {
-      this.$modal.hide(name);
+    handleOk() {
+      this.visible = false;
     },
+
     async handleTableChange(pagination, filters, sorter) {
       this.params.page = pagination.current;
       const pager = { ...this.pagination };
@@ -314,7 +333,7 @@ export default {
       this.fileList = [];
       this.editId = "";
       this.ruleForm.type = "";
-      this.show("add_banners");
+      this.showModal();
     },
     editPost(id) {
       this.editId = id;
@@ -334,10 +353,10 @@ export default {
           url: this.ruleForm.img.ru,
         },
       ];
-      this.show("add_banners");
+      this.showModal();
     },
     closeModal() {
-      this.hide("add_banners");
+      this.handleOk();
       this.ruleFormEmpty();
       this.editId = "";
       this.__GET_BANNERS();
@@ -383,22 +402,14 @@ export default {
     async handleChange({ fileList }) {
       this.loadingBtn = true;
       this.fileList = fileList;
-      let formData = new FormData();
-      const newImg = fileList;
-      if (newImg.length > 0) {
-        formData.append("file", newImg[0].originFileObj);
-        this.ruleForm.img.ru = await this.__UPLOAD_FILE(formData);
+      if (fileList[0]?.response?.path) {
+        this.ruleForm.img.ru = fileList[0]?.response?.path;
+        this.loadingBtn = false;
+      } else if (fileList.length == 0) {
         this.loadingBtn = false;
       }
     },
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
-        return data.path;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
+
     handleCancel() {
       this.previewVisible = false;
     },
@@ -426,7 +437,7 @@ export default {
           message: "Атрибут успешно добавлен",
           type: "success",
         });
-        this.hide("add_banners");
+        this.handleOk();
         this.__GET_BANNERS();
         this.ruleFormEmpty();
       } catch (e) {
@@ -466,7 +477,7 @@ export default {
           message: "Пост успешно добавлен",
           type: "success",
         });
-        this.hide("add_banners");
+        this.handleOk();
         this.__GET_BANNERS();
         this.ruleFormEmpty();
         this.ruleForm.type = "";

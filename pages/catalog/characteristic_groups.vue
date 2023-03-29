@@ -84,56 +84,72 @@
         </div>
       </div>
     </div>
-    <Teleport to="body">
-      <AddModal
-        :title="editId ? 'Изменить категорию' : 'Добавить категорию'"
-        name="add_faqs"
-        btnText="Save"
-        :callback="getData"
-        :closeModal="closeModal"
-        :loadingBtn="loadingBtn"
-      >
-        <div class="modal_tab mb-4">
-          <span
-            v-for="(item, index) in modalTabData"
-            :key="index"
-            @click="modalTab = item.index"
-            :class="{ 'avtive-modalTab': modalTab == item.index }"
-          >
-            {{ item.label }}
-          </span>
-        </div>
 
-        <el-form
-          label-position="top"
-          :model="ruleForm"
-          :rules="rules"
-          ref="ruleForm"
-          label-width="120px"
-          class="demo-ruleForm"
-          action=""
+    <a-modal
+      v-model="visible"
+      :title="editId ? 'Изменить категорию' : 'Добавить категорию'"
+      :closable="false"
+      @ok="handleOk"
+    >
+      <div class="modal_tab mb-4">
+        <span
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          @click="modalTab = item.index"
+          :class="{ 'avtive-modalTab': modalTab == item.index }"
         >
-          <div
-            v-for="(item, index) in modalTabData"
-            :key="index"
-            v-if="modalTab == item.index"
-          >
-            <div class="form-block required">
-              <div>
-                <label for="">Group name</label>
-              </div>
-              <el-form-item prop="name_ru">
-                <el-input
-                  type="text"
-                  placeholder="Group name"
-                  v-model="ruleForm[`name_${item.index}`]"
-                ></el-input>
-              </el-form-item>
+          {{ item.label }}
+        </span>
+      </div>
+
+      <el-form
+        label-position="top"
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="120px"
+        class="demo-ruleForm"
+        action=""
+      >
+        <div
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          v-if="modalTab == item.index"
+        >
+          <div class="form-block required">
+            <div>
+              <label for="">Group name</label>
             </div>
+            <el-form-item prop="name_ru">
+              <el-input
+                type="text"
+                placeholder="Group name"
+                v-model="ruleForm[`name_${item.index}`]"
+              ></el-input>
+            </el-form-item>
           </div>
-        </el-form>
-      </AddModal>
-    </Teleport>
+        </div>
+      </el-form>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="closeModal"
+          >
+            Cancel
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="getData"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Save
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -146,6 +162,7 @@ export default {
   data() {
     return {
       modalTab: "ru",
+      visible: false,
       page: 1,
       params: {
         page: 1,
@@ -156,6 +173,7 @@ export default {
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       tableData: [],
       loadingBtn: false,
       modalTabData: [
@@ -222,11 +240,11 @@ export default {
     };
   },
   methods: {
-    show(name) {
-      this.$modal.show(name);
+    showModal() {
+      this.visible = true;
     },
-    hide(name) {
-      this.$modal.hide(name);
+    handleOk(e) {
+      this.visible = false;
     },
     toAddProduct() {
       this.$router.push("/catalog/add_products");
@@ -272,7 +290,7 @@ export default {
     },
 
     openAddModal() {
-      this.show("add_faqs");
+      this.showModal();
       this.editId = "";
     },
     editPost(id) {
@@ -284,12 +302,12 @@ export default {
         name_uz: data.name.uz,
         name_en: data.name.en,
       };
-      this.show("add_faqs");
+      this.showModal();
 
       // this.__GET_GROUPS_BY_ID(id);
     },
     closeModal() {
-      this.hide("add_faqs");
+      this.visible = false;
       this.ruleForm.name_ru = "";
       this.ruleForm.name_uz = "";
       this.ruleForm.name_en = "";
@@ -321,7 +339,7 @@ export default {
           message: "Атрибут успешно добавлен",
           type: "success",
         });
-        this.hide("add_faqs");
+        this.handleOk();
         this.__GET_GROUPS();
         this.ruleForm.name_ru = "";
         this.ruleForm.name_uz = "";

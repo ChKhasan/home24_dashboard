@@ -81,13 +81,11 @@
         </div>
       </div>
     </div>
-    <AddModal
+    <a-modal
+      v-model="visible"
       :title="editId ? 'Изменения бренда' : 'Добавить бренда'"
-      name="add_brand"
-      btnText="Save"
-      :callback="getData"
-      :closeModal="closeModal"
-      :loadingBtn="loadingBtn"
+      :closable="false"
+      @ok="handleOk"
     >
       <el-form
         label-position="top"
@@ -130,7 +128,26 @@
           </div>
         </div>
       </el-form>
-    </AddModal>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="closeModal"
+          >
+            Cancel
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="getData"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Save
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -139,15 +156,12 @@ import SearchInput from "../../components/form/Search-input.vue";
 import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
-import AddModal from "../../components/modals/Add-modal.vue";
-import AddBrandModal from "../../components/products/Add-brand-modal.vue";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
-    console.log("sdfsdfsdfsdf");
   });
 }
 export default {
@@ -158,6 +172,7 @@ export default {
       params: {
         page: 1,
       },
+      visible: false,
       pagination: {
         pageSize: 16,
       },
@@ -256,11 +271,11 @@ export default {
     };
   },
   methods: {
-    show(name) {
-      this.$modal.show(name);
+    showModal() {
+      this.visible = true;
     },
-    hide(name) {
-      this.$modal.hide(name);
+    handleOk(e) {
+      this.visible = false;
     },
     async handleTableChange(pagination, filters, sorter) {
       this.params.page = pagination.current;
@@ -298,11 +313,17 @@ export default {
       console.log(e);
       this.$message.error("Click on No");
     },
+    showModal() {
+      this.visible = true;
+    },
+    handleOk(e) {
+      this.visible = false;
+    },
     deleteImg() {
       this.editImage = "";
     },
     openAddModal() {
-      this.show("add_brand");
+      this.showModal();
       this.editId = "";
       this.fileList = [];
     },
@@ -314,7 +335,7 @@ export default {
         ...data,
         log: data.lg_logo,
       };
-      this.show("add_brand");
+      this.showModal();
       this.fileList = [
         {
           uid: "-1",
@@ -326,7 +347,7 @@ export default {
       ];
     },
     closeModal() {
-      this.hide("add_brand");
+      this.visible = false;
       this.ruleForm.logo = "";
       this.ruleForm.name = "";
       this.editId = "";
@@ -355,12 +376,18 @@ export default {
       }
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
-      console.log("sdfsdfsdfsdf");
     },
 
     handleChange({ fileList }) {
       this.fileList = fileList;
-      this.ruleForm.logo = fileList[0]?.response?.path;
+      this.loadingBtn = true;
+      if (fileList[0]?.response?.path) {
+        this.loadingBtn = false;
+        this.ruleForm.logo = fileList[0]?.response?.path;
+      }
+      if (fileList.length == 0) {
+        this.loadingBtn = false;
+      }
     },
 
     handleCancel() {
@@ -375,10 +402,11 @@ export default {
       this.pagination = pagination;
       pagination.total = data.brands?.total;
       this.brands = data.brands?.data;
-      this.brands = this.brands.map((item) => {
+      this.brands = this.brands.map((item, index) => {
         return {
           ...item,
           numberId: item.id,
+          key: index + 1,
         };
       });
     },
@@ -391,7 +419,7 @@ export default {
           message: "Бранд успешно добавлен",
           type: "success",
         });
-        this.hide("add_brand");
+        this.handleOk();
         this.__GET_BRANDS();
         this.ruleForm.logo = "";
         this.ruleForm.name = "";
@@ -432,7 +460,7 @@ export default {
           message: "Пост успешно добавлен",
           type: "success",
         });
-        this.hide("add_brand");
+        this.handleOk();
         this.__GET_BRANDS();
         this.ruleForm.logo = "";
         this.ruleForm.name = "";
@@ -464,8 +492,6 @@ export default {
     Title,
     TitleBlock,
     FormTitle,
-    AddModal,
-    AddBrandModal,
   },
   layout: "toolbar",
 };

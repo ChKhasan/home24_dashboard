@@ -149,7 +149,7 @@
                       <div class="form-block required mb-0">
                         <el-form-item>
                           <el-input
-                            v-model="item1[`name_ru`]"
+                            v-model="item1[`name_${item.key}`]"
                             placeholder="Atribut Name"
                           ></el-input>
                         </el-form-item>
@@ -181,7 +181,10 @@
                         </el-form-item>
                       </div>
                       <div class="variant_btns mb-1 mt-0">
-                        <div class="variant-btn variant-btn-delete mx-2">
+                        <div
+                          class="variant-btn variant-btn-delete mx-2"
+                          @click="deleteElement(item1.id)"
+                        >
                           <svg
                             width="30"
                             height="30"
@@ -215,7 +218,7 @@
                     </div>
                   </transition-group>
                   <div class="d-flex justify-content-start">
-                    <div class="create-inner-variant">
+                    <div class="create-inner-variant mt-0" @click="addElement()">
                       <span v-html="addInnerValidatIcon"></span>
                       Добавить характеристику
                     </div>
@@ -253,48 +256,6 @@
         </div>
       </div>
     </el-form>
-    <AddModal
-      title="New group"
-      name="add_atribute_group"
-      btnText="Add Group"
-      :callback="getData"
-      :closeModal="closeModal"
-    >
-      <el-form
-        label-position="top"
-        :model="characteristic"
-        :rules="rulesModal"
-        ref="characteristic"
-        label-width="120px"
-        class="demo-ruleForm"
-        action=""
-      >
-        <div class="modal_tab mb-4">
-          <span
-            v-for="(item, index) in modalTabData"
-            :key="index"
-            @click="modalTab = item.index"
-            :class="{ 'avtive-modalTab': modalTab == item.index }"
-          >
-            {{ item.label }}
-          </span>
-        </div>
-        <div
-          class="form-block required"
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          v-if="modalTab == item.index"
-        >
-          <div><label for="">Group </label></div>
-          <el-form-item prop="name_ru">
-            <el-input
-              placeholder="Group"
-              v-model="characteristic[`name_${item.index}`]"
-            ></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-    </AddModal>
   </div>
 </template>
 <script>
@@ -389,33 +350,9 @@ export default {
         characters: [
           {
             id: 1,
-            name_ru: "11111",
-            name_uz: "2222",
-            name_en: "",
-            options: [],
-          },
-          {
-            id: 2,
-
-            name_ru: "222222",
-            name_uz: "",
-            name_en: "",
-            options: [],
-          },
-          {
-            id: 3,
-
-            name_ru: "333333",
-            name_uz: "",
-            name_en: "",
-            options: [],
-          },
-          {
-            id: 4,
-
-            name_ru: "44444",
-            name_uz: "",
-            name_en: "",
+            name_ru: "ru",
+            name_uz: "uz",
+            name_en: "en",
             options: [],
           },
         ],
@@ -428,12 +365,25 @@ export default {
     };
   },
   methods: {
+    deleteElement(id) {
+      if (this.ruleForm.characters.length > 1)
+        this.ruleForm.characters = this.ruleForm.characters.filter(
+          (item) => item.id != id
+        );
+    },
+    addElement() {
+      this.ruleForm.characters.push({
+        name: "",
+        id: Math.max(...this.ruleForm.characters.map((o) => o.id)) + 1,
+      });
+    },
     startDrag(item, i, e) {
       this.startLoc = e.clientY;
       this.dragging = true;
       this.dragFrom = item;
       console.log(this.dragFrom);
     },
+
     finishDrag(item, pos) {
       this.ruleForm.characters.splice(pos, 1);
       this.ruleForm.characters.splice(this.over.pos, 0, item);
@@ -565,37 +515,11 @@ export default {
   flex-direction: column;
 }
 
-.item {
-  width: 200px;
-  padding: 10px;
-  margin: 10px auto 10px 10px;
-  background: tomato;
-  color: white;
-  font-family: sans-serif;
-  border-radius: 5px;
-  display: inline-block;
-  position: relative;
-  transition: transform 0.2s;
-  button {
-    position: absolute;
-    right: -100%;
-  }
-  /*   transition: opacity .3s ease-in-out; */
-}
-
 .flip-list-move {
   transition: transform 0.2s;
 }
 
 .over {
   opacity: 0.6;
-}
-
-.down {
-  /*   transform: translateY(-20px); */
-}
-
-.up {
-  /*    transform: translateY(20px); */
 }
 </style>

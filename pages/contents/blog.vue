@@ -68,13 +68,12 @@
         </div>
       </div>
     </div>
-    <AddModal
+    <a-modal
+      v-model="visible"
+      :dialog-style="{ top: '5px' }"
       :title="editId ? 'Изменить блога' : 'Добавить блога'"
-      name="add_blog"
-      btnText="Save"
-      :callback="getData"
-      :closeModal="closeModal"
-      :loadingBtn="loadingBtn"
+      :closable="false"
+      @ok="handleOk"
     >
       <div class="modal_tab mb-4">
         <span
@@ -86,7 +85,6 @@
           {{ item.label }}
         </span>
       </div>
-
       <el-form
         label-position="top"
         :model="ruleForm"
@@ -126,6 +124,7 @@
 
           <div class="clearfix variant-img">
             <a-upload
+              action="https://test.loftcity.uz/api/admin/files/upload"
               list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"
@@ -142,7 +141,26 @@
           </div>
         </div>
       </el-form>
-    </AddModal>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="closeModal"
+          >
+            Cancel
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="getData"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Save
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -170,6 +188,7 @@ export default {
       pagination: {
         pageSize: 16,
       },
+      visible: false,
       loading: true,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
@@ -317,11 +336,11 @@ export default {
     };
   },
   methods: {
-    show(name) {
-      this.$modal.show(name);
+    showModal() {
+      this.visible = true;
     },
-    hide(name) {
-      this.$modal.hide(name);
+    handleOk() {
+      this.visible = false;
     },
     async handleTableChange(pagination, filters, sorter) {
       this.params.page = pagination.current;
@@ -374,7 +393,7 @@ export default {
     openAddModal() {
       this.fileList = [];
       this.editId = "";
-      this.show("add_blog");
+      this.showModal();
     },
     editPost(id) {
       this.editId = id;
@@ -397,10 +416,10 @@ export default {
           url: this.ruleForm.sm_img,
         },
       ];
-      this.show("add_blog");
+      this.showModal();
     },
     closeModal() {
-      this.hide("add_blog");
+      this.handleOk();
       this.ruleFormEmpty();
       this.editId = "";
       this.editImage = "";
@@ -440,25 +459,15 @@ export default {
     },
     async handleChange({ fileList }) {
       this.fileList = fileList;
-      let formData = new FormData();
-      const newImg = fileList;
-      if (newImg.length > 0) {
-        this.loadingBtn = true;
-        formData.append("file", newImg[0].originFileObj);
-        this.ruleForm.img = await this.__UPLOAD_FILE(formData);
+      this.loadingBtn = true;
+      if (fileList[0]?.response?.path) {
+        this.ruleForm.img = fileList[0].response.path;
         this.loadingBtn = false;
-      } else {
-        this.ruleForm.img = null;
+      } else if (fileList.length == 0) {
+        this.loadingBtn = false;
       }
     },
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
-        return data.path;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
+
     handleCancel() {
       this.previewVisible = false;
     },
@@ -486,7 +495,7 @@ export default {
           message: "Атрибут успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
+        this.handleOk();
         this.__GET_POSTS();
         this.ruleFormEmpty();
       } catch (e) {
@@ -526,7 +535,7 @@ export default {
           message: "Пост успешно добавлен",
           type: "success",
         });
-        this.hide("add_blog");
+        this.handleOk();
         this.__GET_POSTS();
         this.ruleFormEmpty();
       } catch (e) {

@@ -76,13 +76,12 @@
         </div>
       </div>
     </div>
-    <AddModal
+    <a-modal
+      v-model="visible"
+      
       :title="editId ? 'Изменить' : 'Добавить'"
-      name="add_faqs"
-      btnText="Save"
-      :callback="getData"
-      :closeModal="closeModal"
-      :loadingBtn="loadingBtn"
+      :closable="false"
+      @ok="handleOk"
     >
       <div class="modal_tab mb-4">
         <span
@@ -94,7 +93,6 @@
           {{ item.label }}
         </span>
       </div>
-
       <el-form
         label-position="top"
         :model="ruleForm"
@@ -159,7 +157,26 @@
           </div>
         </div>
       </el-form>
-    </AddModal>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="closeModal"
+          >
+            Cancel
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="getData"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Save
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -283,16 +300,16 @@ export default {
           },
         ],
       },
+      visible: false,
     };
   },
   methods: {
-    show(name) {
-      this.$modal.show(name);
+    showModal() {
+      this.visible = true;
     },
-    hide(name) {
-      this.$modal.hide(name);
+    handleOk() {
+      this.visible = false;
     },
-
     async handleTableChange(pagination, filters, sorter) {
       this.params.page = pagination.current;
       const pager = { ...this.pagination };
@@ -336,7 +353,7 @@ export default {
     },
 
     openAddModal() {
-      this.show("add_faqs");
+      this.showModal();
       this.editId = "";
     },
     editPost(id) {
@@ -353,10 +370,10 @@ export default {
         category_id: data.category_id,
       };
 
-      this.show("add_faqs");
+      this.showModal();
     },
     closeModal() {
-      this.hide("add_faqs");
+      this.handleOk();
       this.ruleFormEmpty();
       this.editId = "";
       this.__GET_FAQS();
@@ -420,7 +437,7 @@ export default {
           message: "Успешно добавлен",
           type: "success",
         });
-        this.hide("add_faqs");
+        this.handleOk();
         this.__GET_FAQS();
         this.ruleFormEmpty();
       } catch (e) {
@@ -460,7 +477,7 @@ export default {
           message: "Успешно добавлен",
           type: "success",
         });
-        this.hide("add_faqs");
+        this.handleOk();
         this.__GET_FAQS();
         this.ruleFormEmpty();
       } catch (e) {

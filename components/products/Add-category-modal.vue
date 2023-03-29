@@ -7,6 +7,7 @@
       :callback="categoryPost"
       :loadingBtn="loadingCategory"
       :closeModal="closeModal"
+      :visible="visibleCategory"
     >
       <el-form
         label-position="top"
@@ -136,17 +137,11 @@
             >
               <div v-if="fileListCategory.length < 1">
                 <span v-html="addImgIcon"></span>
-                <div class="ant-upload-text">
-                  Добавить изображение
-                </div>
+                <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
-              <img alt="example" style="width: 100%;" :src="previewImage" />
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
         </div>
@@ -175,6 +170,9 @@ export default {
     },
     categories: {
       type: Array,
+    },
+    visible: {
+      type: Boolean,
     },
   },
   data() {
@@ -226,11 +224,15 @@ export default {
       allGroups: [],
       previewVisible: false,
       previewImage: "",
+      visibleCategory: false,
     };
   },
   methods: {
     handleCancel() {
       this.previewVisible = false;
+    },
+    handleOk() {
+      this.visibleCategory = false;
     },
     execute() {
       if (this.getCategories) {
@@ -282,10 +284,7 @@ export default {
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
         return data.path;
       } catch (e) {
         this.statusFunc(e.response);
@@ -300,23 +299,13 @@ export default {
       this.allAtributes = data.attributes?.data;
     },
     closeModal(name) {
-      this.hide("add_category_modal");
-    },
-    show(name) {
-      this.$modal.show(name);
-      document.body.style.overflowY = "hidden";
-      document.body.style.height = "100vh";
-    },
-    hide(name) {
-      this.$modal.hide(name);
-      document.body.style.overflowY = "auto";
-      document.body.style.height = "auto";
+      this.handleOk();
     },
     async __POST_CATEGORY(res) {
       try {
         await this.$store.dispatch("fetchCategories/postCategories", res);
         this.notification("Success", "Категория успешно добавлен", "success");
-        this.hide("add_category_modal");
+        this.handleOk();
         this.execute();
         this.ruleFormCategory.name_ru = "";
         this.ruleFormCategory.desc_ru = "";
@@ -363,6 +352,10 @@ export default {
         this.ruleFormCategory.img = await this.__UPLOAD_FILE(formData);
         this.loadingCategory = false;
       }
+    },
+    visible(val) {
+      console.log(val);
+      this.visibleCategory = val;
     },
   },
   components: { AddModal },

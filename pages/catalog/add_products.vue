@@ -157,7 +157,7 @@
                     ></div>
                     <div
                       class="outline-btn outline-light-blue-btn"
-                      @click="show('add_category_modal')"
+                      @click="showModal('category')"
                       v-html="plusCategoryIcon"
                     ></div>
                   </div>
@@ -247,7 +247,7 @@
                   </div>
                 </Transition>
               </div>
-              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
+              <el-tabs class="form_tabs" v-model="activeName">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -258,11 +258,7 @@
                     <div class="d-flex justify-content-start">
                       <FormTitle title="Информация о продукте" />
                     </div>
-                    <el-tabs
-                      class="desc_tab"
-                      v-model="activeDesc"
-                      @tab-click="handleClick"
-                    >
+                    <el-tabs class="desc_tab" v-model="activeDesc">
                       <el-tab-pane label="Описание" name="Description">
                         <div class="mt-1">
                           <quill-editor
@@ -277,7 +273,7 @@
                           <h5 class="variant-img-title mb-4 mt-2">
                             Добавить характеристику
                           </h5>
-                          <a-button type="primary" @click="show('characteristic_modal')"
+                          <a-button type="primary" @click="showModal('character')"
                             >Редактировать характеристику
                           </a-button>
                         </div>
@@ -581,7 +577,7 @@
                       </el-form-item>
                       <div
                         class="outline-btn outline-light-blue-btn mt-1"
-                        @click="show('add_brand_modal')"
+                        @click="showModal('brand')"
                       >
                         <svg
                           width="24"
@@ -613,20 +609,241 @@
         </el-form>
       </div>
     </div>
-    <AddBrandModal :getBrands="__GET_BRANDS" />
-    <AddCategoryModal
-      :brands="brands"
-      :getCategories="__GET_CATEGORIES"
-      :categories="categories"
-    />
-    <modal
-      :adaptive="true"
-      name="characteristic_modal"
-      width="100%"
-      height="100%"
-      :clickToClose="false"
+    <!-- brand modal -->
+    <a-modal
+      v-model="visible.brand"
+      title="Добавить бранд"
+      :closable="false"
+      @ok="handleOk('brand')"
     >
-      <div class="add_modal-container padding_characteristic_modal" ref="ruleForm1">
+      <el-form
+        label-position="top"
+        :model="brandData"
+        :rules="rulesModal"
+        ref="brandData"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <div class="form-block required">
+          <div><label for="">Brand </label></div>
+          <el-form-item prop="name">
+            <el-input placeholder="Product model" v-model="brandData.name"></el-input>
+          </el-form-item>
+        </div>
+        <div class="clearfix variant-img">
+          <a-upload
+            action="https://test.loftcity.uz/api/admin/files/upload"
+            list-type="picture-card"
+            :file-list="fileListBrand"
+            @preview="handlePreview"
+            @change="handleChangeBrand"
+          >
+            <div v-if="fileListBrand.length < 1">
+              <span v-html="addImgIcon"></span>
+              <div class="ant-upload-text">Добавить изображение</div>
+            </div>
+          </a-upload>
+          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage" />
+          </a-modal>
+        </div>
+      </el-form>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="handleOk('brand')"
+          >
+            Cancel
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="getData"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Save
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
+    <!-- brand modal -->
+    <!-- category modal -->
+    <a-modal
+      v-model="visible.category"
+      title="Добавить категории"
+      :closable="false"
+      @ok="handleOk('category')"
+      :dialog-style="{ top: '20px' }"
+    >
+      <el-form
+        label-position="top"
+        :model="ruleFormCategory"
+        :rules="rulesCategory"
+        ref="categoryData"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <div class="form-block required">
+          <div><label for="">Название категории </label></div>
+          <el-form-item prop="name_ru">
+            <el-input
+              placeholder="Название категории "
+              v-model="ruleFormCategory.name_ru"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="form-block">
+          <div><label for="">Выберите категорию</label></div>
+          <el-form-item>
+            <el-select
+              class="w-100"
+              v-model="ruleFormCategory.parent_id"
+              filterable
+              loading-text="Loading..."
+              no-data-text="No data"
+              no-match-text="No data"
+              placeholder="Выберите категорию"
+            >
+              <el-option
+                v-for="item in categories"
+                :key="item?.id"
+                :label="item?.name?.ru"
+                :value="item?.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-block required">
+          <div><label for="">Информация о категории </label></div>
+          <el-form-item prop="desc_ru">
+            <el-input
+              type="textarea"
+              rows="5"
+              placeholder="Description"
+              v-model="ruleFormCategory.desc_ru"
+            ></el-input>
+          </el-form-item>
+        </div>
+        <div class="d-flex">
+          <div class="form-block">
+            <div><label for="">Популярный </label></div>
+            <div>
+              <a-switch
+                @change="switchPopular"
+                :checked="ruleFormCategory.is_popular == 1"
+              />
+            </div>
+          </div>
+          <div class="form-block mx-5">
+            <div><label for="">Статус </label></div>
+            <a-switch @change="switchActive" />
+          </div>
+        </div>
+
+        <div class="form-block">
+          <div><label for="">Атрибуты</label></div>
+          <el-form-item prop="attributes">
+            <el-select
+              class="w-100"
+              v-model="ruleFormCategory.attributes"
+              allow-create
+              :loading="brands.length < 1"
+              loading-text="Loading..."
+              no-data-text="No data"
+              no-match-text="No data"
+              multiple
+              placeholder="Atibut"
+              @focus="__GET_ATRIBUTES"
+            >
+              <el-option
+                v-for="item in allAtributes"
+                :key="item?.id"
+                :label="item?.name?.ru"
+                :value="item?.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-block">
+          <div><label for="">Характеристическая группа</label></div>
+          <el-form-item prop="group_characteristics">
+            <el-select
+              class="w-100"
+              v-model="ruleFormCategory.group_characteristics"
+              allow-create
+              :loading="brands.length < 1"
+              loading-text="Loading..."
+              multiple
+              no-data-text="No data"
+              no-match-text="No data"
+              placeholder="Group"
+              @focus="__GET_GROUPS"
+            >
+              <el-option
+                v-for="item in allGroups"
+                :key="item?.id"
+                :label="item?.name?.ru"
+                :value="item?.id"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="form-block mb-0">
+          <div><label for="">Изображение</label></div>
+          <div class="clearfix variant-img pt-0">
+            <a-upload
+              action="https://test.loftcity.uz/api/admin/files/upload"
+              list-type="picture-card"
+              :file-list="fileListCategory"
+              @preview="handlePreview"
+              @change="handleChangeCategory"
+            >
+              <div v-if="fileListCategory.length < 1">
+                <span v-html="addImgIcon"></span>
+                <div class="ant-upload-text">Добавить изображение</div>
+              </div>
+            </a-upload>
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+              <img alt="example" style="width: 100%" :src="previewImage" />
+            </a-modal>
+          </div>
+        </div>
+      </el-form>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="handleOk('category')"
+          >
+            Cancel
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="categoryPost"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Save
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
+    <!-- category modal -->
+    <a-modal
+      v-model="visible.character"
+      :closable="false"
+      :dialog-style="{ top: '0' }"
+      width="100%"
+      :footer="false"
+      @ok="handleOk('character')"
+    >
+      <div class="add_modal-container" ref="ruleForm1">
         <div class="character_modal-header">
           <div class="character_modal-header_btn">
             <div
@@ -636,7 +853,7 @@
               <span class="svg-icon" v-html="addIcon"></span>
               сохранять
             </div>
-            <div class="character-close-btn" @click="hide('characteristic_modal')">
+            <div class="character-close-btn" @click="handleOk('character')">
               <span class="character-close-icon" v-html="closeIcon"></span>
               Закрыть
             </div>
@@ -740,7 +957,7 @@
           <div></div>
         </div>
       </div>
-    </modal>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -934,36 +1151,104 @@ export default {
       character_group: [],
       characterNames: [],
       characterRequired: false,
+      visible: {
+        brand: false,
+        category: false,
+        character: false,
+      },
+      rulesCategory: {
+        desc_ru: [
+          {
+            required: true,
+            message: "Description is required",
+            trigger: "change",
+          },
+        ],
+        name_ru: [
+          {
+            required: true,
+            message: "Category name is required",
+            trigger: "change",
+          },
+        ],
+        attributes: [
+          {
+            required: true,
+            message: "attributes name is required",
+            trigger: "change",
+          },
+        ],
+        group_characteristics: [
+          {
+            required: true,
+            message: "attributes name is required",
+            trigger: "change",
+          },
+        ],
+      },
+      ruleFormCategory: {
+        name_ru: "",
+        img: null,
+        parent_id: null,
+        attributes: [],
+        group_characteristics: [],
+        is_popular: 0,
+        is_active: 0,
+        desc_ru: "",
+      },
+      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
+      fileListCategory: [],
+      allAtributes: [],
+      allGroups: [],
+      visibleCategory: false,
+      fileListBrand: [],
+      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
+      brandData: {
+        name: "",
+        logo: "",
+      },
+      rulesModal: {
+        name: [
+          {
+            required: true,
+            message: "Brand name is required",
+            trigger: "change",
+          },
+        ],
+      },
+      loadingBtn: false,
     };
   },
   computed: {
     findLastCategory() {
-      if (this.lastCategory.length > 0) {
-        const findCategory = this.cascaderCategories.find(
-          (item) => item.id == this.lastCategory[0]
-        );
-        switch (this.lastCategory.length) {
-          case 1:
-            return findCategory?.label;
-          case 2:
-            const findChildCategory = findCategory?.children.find(
-              (item) => item.id == this.lastCategory[1]
-            );
-            return findCategory?.label + "/" + findChildCategory?.label;
-          case 3:
-            const findChild1Category = findCategory?.children.find(
-              (item) => item.id == this.lastCategory[1]
-            );
-            const findChild2Category = findChild1Category?.children.find(
-              (item) => item.id == this.lastCategory[2]
-            );
-            return (
-              findCategory?.label +
-              "/" +
-              findChild1Category?.label +
-              "/" +
-              findChild2Category?.label
-            );
+      if (this.cascaderCategories.length > 0) {
+        if (this.lastCategory.length > 0) {
+          const findCategory = this.cascaderCategories.find(
+            (item) => item.id == this.lastCategory[0]
+          );
+          switch (this.lastCategory.length) {
+            case 1:
+              return findCategory?.label;
+            case 2:
+              const findChildCategory = findCategory?.children.find(
+                (item) => item.id == this.lastCategory[1]
+              );
+              return findCategory?.label + "/" + findChildCategory?.label;
+            case 3:
+              const findChild1Category = findCategory?.children.find(
+                (item) => item.id == this.lastCategory[1]
+              );
+              const findChild2Category = findChild1Category?.children.find(
+                (item) => item.id == this.lastCategory[2]
+              );
+              return (
+                findCategory?.label +
+                "/" +
+                findChild1Category?.label +
+                "/" +
+                findChild2Category?.label
+              );
+          }
         }
       }
     },
@@ -978,6 +1263,129 @@ export default {
     }
   },
   methods: {
+    getData() {
+      this.$refs["brandData"].validate((valid) => (valid ? this.__POST_BRAND() : false));
+    },
+
+    handleChangeBrand({ fileList }) {
+      this.fileListBrand = fileList;
+      this.loadingBtn = true;
+      if (fileList[0]?.response?.path) {
+        this.brandData.logo = fileList[0]?.response?.path;
+        this.loadingBtn = false;
+      } else if (fileList.length == 0) {
+        this.loadingBtn = false;
+      }
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    show(name) {
+      this.$modal.show(name);
+      document.body.style.overflowY = "hidden";
+      document.body.style.height = "100vh";
+    },
+    hide(name) {
+      this.$modal.hide(name);
+      document.body.style.overflowY = "auto";
+      document.body.style.height = "auto";
+    },
+    async __POST_BRAND() {
+      try {
+        await this.$store.dispatch("fetchBrands/postBrands", this.brandData);
+        this.notification("Success", "Бранд успешно добавлен", "success");
+        this.handleOk("brand");
+        this.brandData.name = "";
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    categoryPost() {
+      const newData = {
+        ...this.ruleFormCategory,
+        name: {
+          ru: this.ruleFormCategory.name_ru,
+        },
+        desc: {
+          ru: this.ruleFormCategory.desc_ru,
+        },
+      };
+      delete newData["name_ru"];
+      delete newData["desc_ru"];
+      this.$refs["categoryData"].validate((valid) =>
+        valid ? this.__POST_CATEGORY(newData) : false
+      );
+    },
+    handleChangeCategory({ fileList }) {
+      this.fileListCategory = fileList;
+      this.loadingBtn = true;
+      if (fileList[0]?.response?.path) {
+        this.ruleFormCategory.img = fileList[0]?.response?.path;
+        this.loadingBtn = false;
+      } else if (fileList.length == 0) {
+        this.loadingBtn = false;
+      }
+    },
+    switchPopular(checked) {
+      checked
+        ? (this.ruleFormCategory.is_popular = 1)
+        : (this.ruleFormCategory.is_popular = 0);
+    },
+    switchActive(checked) {
+      checked
+        ? (this.ruleFormCategory.is_active = 1)
+        : (this.ruleFormCategory.is_active = 0);
+    },
+    notification(title, message, type) {
+      this.$notify({
+        title: title,
+        message: message,
+        type: type,
+      });
+    },
+    async __GET_GROUPS() {
+      const data = await this.$store.dispatch("fetchCharacters/getGroups");
+      this.allGroups = data?.groups;
+    },
+    async __GET_ATRIBUTES() {
+      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
+      this.allAtributes = data.attributes?.data;
+    },
+    async __POST_CATEGORY(res) {
+      try {
+        await this.$store.dispatch("fetchCategories/postCategories", res);
+        this.notification("Success", "Категория успешно добавлен", "success");
+        this.handleOk("category");
+        this.ruleFormCategory.name_ru = "";
+        this.ruleFormCategory.desc_ru = "";
+        this.ruleFormCategory.is_active = 0;
+        this.ruleFormCategory.is_popular = 0;
+        this.ruleFormCategory.parent_id = null;
+        this.fileListCategory = [];
+        this.allAtributes = [];
+        this.allGroups = [];
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    showModal(type) {
+      this.visible[type] = true;
+    },
+    handleOk(type) {
+      this.visible[type] = false;
+    },
     // products
     submitForm(ruleForm) {
       const newData = this.transformData();
@@ -1023,7 +1431,7 @@ export default {
           if (!valid) return false;
           trueData.push(valid);
           if (trueData.length == this.$refs[ruleForm].length)
-            (this.characterRequired = true), this.hide("characteristic_modal");
+            (this.characterRequired = true), this.handleOk("character");
         });
       });
     },
@@ -1057,13 +1465,6 @@ export default {
       delete newData["name_uz"];
       delete newData["name_en"];
       return newData;
-    },
-    notification(title, message, type) {
-      this.$notify({
-        title: title,
-        message: message,
-        type: type,
-      });
     },
     notificationError(title, message) {
       this.$notify.error({
@@ -1256,6 +1657,12 @@ export default {
           delete item["children"];
           return item;
         }
+      });
+      this.categories.unshift({
+        name: {
+          ru: "Главная категория",
+        },
+        id: null,
       });
     },
     async __GET_CATEGORY_BY_ID(id) {

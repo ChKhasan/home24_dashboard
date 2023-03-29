@@ -7,6 +7,7 @@
       :callback="getData"
       :loadingBtn="loadingBrand"
       :closeModal="closeModal"
+      :visible="visible"
     >
       <el-form
         label-position="top"
@@ -19,10 +20,7 @@
         <div class="form-block required">
           <div><label for="">Brand </label></div>
           <el-form-item prop="name">
-            <el-input
-              placeholder="Product model"
-              v-model="brandData.name"
-            ></el-input>
+            <el-input placeholder="Product model" v-model="brandData.name"></el-input>
           </el-form-item>
         </div>
         <div class="clearfix variant-img">
@@ -34,17 +32,11 @@
           >
             <div v-if="fileListBrand.length < 1">
               <span v-html="addImgIcon"></span>
-              <div class="ant-upload-text">
-                Добавить изображение
-              </div>
+              <div class="ant-upload-text">Добавить изображение</div>
             </div>
           </a-upload>
-          <a-modal
-            :visible="previewVisible"
-            :footer="null"
-            @cancel="handleCancel"
-          >
-            <img alt="example" style="width: 100%;" :src="previewImage" />
+          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage" />
           </a-modal>
         </div>
       </el-form>
@@ -66,6 +58,9 @@ export default {
   props: {
     getBrands: {
       type: Function,
+    },
+    visible: {
+      type: Boolean,
     },
   },
   data() {
@@ -97,9 +92,7 @@ export default {
       }
     },
     getData() {
-      this.$refs["brandData"].validate((valid) =>
-        valid ? this.__POST_BRAND() : false
-      );
+      this.$refs["brandData"].validate((valid) => (valid ? this.__POST_BRAND() : false));
     },
     closeModal(name) {
       this.hide("add_brand_modal");
@@ -138,10 +131,7 @@ export default {
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
         return data.path;
       } catch (e) {
         this.statusFunc(e.response);
