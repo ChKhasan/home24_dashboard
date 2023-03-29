@@ -582,7 +582,9 @@ export default {
       this.atributes = allArt;
       this.groups = allGr;
     },
-    
+    deleteElement(type, id) {
+      if (this[type].length > 1) this[type] = this[type].filter((item) => item.id != id);
+    },
     toAddProduct() {
       this.$router.push("/catalog/add_products");
     },
