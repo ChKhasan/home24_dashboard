@@ -47,13 +47,11 @@
               align="center"
               class="option-container"
             >
-              <!-- <span v-for="item in text" class="option-items">{{ item }}</span> -->
               <span class="option-items" v-for="(item, index) in text" :key="index">{{
                 item.name.ru ? item.name.ru : "-----"
               }}</span>
             </div>
             <span slot="customTitle"></span>
-
             <span slot="id" slot-scope="text">
               <span
                 class="action-btn"
@@ -61,7 +59,6 @@
               >
                 <img :src="editIcon" alt="" />
               </span>
-
               <a-popconfirm
                 title="Are you sure delete this atribut?"
                 ok-text="Yes"
@@ -115,7 +112,7 @@ export default {
           width: "30%",
         },
         {
-          title: "ПАРАМЕТРЫ",
+          title: "Категории",
           dataIndex: "categories",
           scopedSlots: { customRender: "categories" },
           className: "column-options",
@@ -192,24 +189,21 @@ export default {
     statusFunc(res) {
       switch (res.status) {
         case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
+          this.notificationError("Error", "Указанные данные недействительны.");
           break;
         case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
+          this.notificationError("Error", "Cервер не работает");
           break;
         case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
+          this.notificationError("Error", res.data.errors);
           break;
       }
+    },
+    notificationError(title, message) {
+      this.$notify.error({
+        title: title,
+        message: message,
+      });
     },
     async __GET_ATRIBUTES() {
       const data = await this.$store.dispatch("fetchAtributes/getAtributes", {
@@ -241,5 +235,5 @@ export default {
     TitleBlock,
   },
 };
+// 246
 </script>
-<style lang=""></style>

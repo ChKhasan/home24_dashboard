@@ -821,7 +821,7 @@
         </div>
       </el-form>
     </AddModal>
-    <modal
+    <!-- <modal
       :adaptive="true"
       name="characteristic_modal"
       width="100%"
@@ -941,7 +941,7 @@
           <div></div>
         </div>
       </div>
-    </modal>
+    </modal> -->
   </div>
 </template>
 <script>

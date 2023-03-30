@@ -20,14 +20,9 @@
     "nuxt": "^2.15.8",
     "nuxt-precompress": "^0.5.9",
     "vue": "^2.7.10",
-    "vue-drag-and-drop-list": "^1.0.0",
-    "vue-js-modal": "^2.0.1",
     "vue-quill-editor": "^3.0.6",
     "vue-server-renderer": "^2.7.10",
-    "vue-template-compiler": "^2.7.10",
-    "vue-toast-notification": "^0.6.3",
-    "vuedraggable": "^4.1.0",
-    "vuelidate": "^0.7.7"
+    "vue-template-compiler": "^2.7.10"
   },
   "devDependencies": {
     "@nuxt/postcss8": "^1.1.3",

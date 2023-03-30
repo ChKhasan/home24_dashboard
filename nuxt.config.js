@@ -24,10 +24,8 @@ export default {
 
   plugins: [
     { src: "~plugins/element-ui.js", ssr: false },
-    { src: "~plugins/vue-js-modal.js", ssr: false },
     { src: "~plugins/quill-editor.js", ssr: false },
     { src: "~plugins/antd-ui.js", ssr: false },
-    { src: "~plugins/vue-drag-and-drop-list.js", ssr: false },
   ],
   axios: {
     credentials: true,

@@ -61,7 +61,12 @@
               class="table_product_row select-table-child"
             >
               <img class="table-image select-img" v-if="text" :src="text" alt="" />
-              <p v-else>-----</p>
+              <img
+                  class="table-image select-img"
+                  v-else
+                  src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                  alt=""
+                />
             </div>
             <span
               slot="is_active"
