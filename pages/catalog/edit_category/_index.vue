@@ -39,7 +39,7 @@
             action=""
           >
             <div class="category-select-grid">
-              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
+              <el-tabs class="form_tabs" v-model="activeName">
                 <el-tab-pane
                   v-for="(item, index) in lang"
                   :label="item.label"
@@ -644,12 +644,12 @@ export default {
       delete data["name_ru"];
       delete data["name_uz"];
       delete data["name_en"];
-
-      if (data.parent_id) {
-        data.parent_id = this.categories.filter(
-          (item) => item.name.ru == data.parent_id
-        )[0].id;
-      }
+      // console.log(data.parent_id);
+      // if (data.parent_id) {
+      //   data.parent_id = this.categories.filter(
+      //     (item) => item.name.ru == data.parent_id
+      //   )[0].id;
+      // }
       if (this.fileList.img[0].oldImg) {
         data.img = this.fileList.img[0].url;
       }
@@ -678,9 +678,6 @@ export default {
     async handleChange({ fileList }, type) {
       this.fileList[type] = fileList;
       if (fileList[0]?.response?.path) this.ruleForm[type] = fileList[0]?.response?.path;
-    },
-    handleClick(tab, event) {
-      this.formVal = "";
     },
     onChange(checked) {
       checked ? (this.ruleForm.is_popular = 1) : (this.ruleForm.is_popular = 0);
@@ -747,32 +744,27 @@ export default {
       }
       this.ruleForm.is_popular = data.category.is_popular;
       if (data.category.parent_id) {
-        this.ruleForm.parent_id = this.categories.filter(
-          (item) => item.id == data.category.parent_id
-        )[0].name.ru;
+        this.ruleForm.parent_id = data.category.parent_id;
       } else {
         this.ruleForm.parent_id = null;
       }
     },
+    notificationError(title, message) {
+      this.$notify.error({
+        title: title,
+        message: message,
+      });
+    },
     statusFunc(res) {
       switch (res.status) {
         case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
+          this.notificationError("Error", "Указанные данные недействительны.");
           break;
         case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
+          this.notificationError("Error", "Cервер не работает");
           break;
         case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
+          this.notificationError("Error", res.data.errors);
           break;
       }
     },

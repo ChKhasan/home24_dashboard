@@ -75,7 +75,6 @@
               </a-popconfirm>
             </span>
           </a-table>
-          
         </div>
       </div>
     </div>
@@ -220,7 +219,12 @@ export default {
       const pagination = { ...this.pagination };
       this.pagination = pagination;
       pagination.total = data.attributes?.total;
-      this.atributes = data.attributes?.data;
+      this.atributes = data.attributes?.data.map((item) => {
+        return {
+          ...item,
+          key: item.id,
+        };
+      });
     },
   },
   watch: {

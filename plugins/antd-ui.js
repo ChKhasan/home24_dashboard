@@ -10,7 +10,8 @@ import {
   Modal,
   Popconfirm,
   Radio,
-  Icon
+  Icon,
+  Input
 } from "ant-design-vue";
 
 Vue.use(Button);
@@ -23,3 +24,4 @@ Vue.use(Modal);
 Vue.use(Popconfirm);
 Vue.use(Radio);
 Vue.use(Icon);
+Vue.use(Input);

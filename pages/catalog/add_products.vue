@@ -66,24 +66,6 @@
                           ></el-input>
                         </el-form-item>
                       </div>
-                      <!-- <div class="form-block">
-                        <div><label for="">Имя</label></div>
-                        <el-form-item prop="nbm">
-                          <el-input
-                            v-model="ruleForm.nbm"
-                            placeholder="Product model"
-                          ></el-input>
-                        </el-form-item>
-                      </div>
-                      <div class="form-block">
-                        <div><label for="">Код</label></div>
-                        <el-form-item prop="nbm">
-                          <el-input
-                            disabled
-                            placeholder="162 111 415 515 118"
-                          ></el-input>
-                        </el-form-item>
-                      </div> -->
                     </div>
                   </div>
                 </el-tab-pane>
@@ -113,34 +95,6 @@
                         }"
                       >
                       </a-cascader>
-                      <!-- <el-cascader
-                      class="w-100"
-                      @change="cascaderChange"
-                      :props="{
-                        checkStrictly: true,
-                        label: 'label',
-                        noDataText: 'NO DA',
-                        value: 'id',
-                        noMatchText: 'no category',
-                        empty: 'text',
-                      }"
-                      clearable
-                      popper-class="loading-cascader"
-                      filterable
-                      no-match-text="no data"
-                      no-data-text="no data"
-                      placeholder="Try searchingL Guide"
-                      :options="cascaderCategories"
-                    >
-                      <template slot="empty" slot-scope="text">
-                        <span>No data</span>
-                      </template>
-
-                      <template slot-scope="{ node, data }">
-                        <span>{{ data.label }}</span>
-                        <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
-                      </template>
-                    </el-cascader> -->
                     </el-form-item>
                   </div>
                   <div class="prducts-details-btns mb-2">
@@ -164,88 +118,8 @@
                 </div>
                 <span class="last-info" v-if="lastCategory.length > 0"
                   >Недавняя категория:
-                  <p>{{ findLastCategory }}</p></span
+                  <p @click="reloadCategories">{{ findLastCategory }}</p></span
                 >
-
-                <Transition name="search-block">
-                  <div class="d-flex" v-if="searchBlock">
-                    <div class="search-container">
-                      <div class="search-input-block">
-                        <div class="form-block w-100 mb-0">
-                          <div class="position-relative search-input-icon">
-                            <el-input
-                              class="w-100"
-                              v-model="ruleForm.nbm"
-                              placeholder="Product model"
-                            ></el-input>
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M18.5 18.5L22 22M21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21C16.7467 21 21 16.7467 21 11.5Z"
-                                stroke="#A1A5BF"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div class="search-resoults">
-                            <div class="search-clear">
-                              <p>Вы недавно искали</p>
-                              <span>Очистить</span>
-                            </div>
-                            <div class="search-resoult-items">
-                              <p>Строймате</p>
-                            </div>
-                            <div class="search-resoult-items">
-                              <p>Строймате</p>
-                            </div>
-                            <div class="search-resoult-items">
-                              <p>Строймате</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div>
-                          <div
-                            class="outline-btn outline-white-btn"
-                            @click="searchBlock = false"
-                          >
-                            <svg
-                              width="30"
-                              height="30"
-                              viewBox="0 0 30 30"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                                stroke="#28303F"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="d-flex search-container-btns">
-                      <div
-                        class="outline-btn outline-light-green-btn mx-3"
-                        v-html="reloadIcon"
-                      ></div>
-                      <div
-                        class="outline-btn outline-light-blue-btn"
-                        v-html="plusCategoryIcon"
-                      ></div>
-                    </div>
-                  </div>
-                </Transition>
               </div>
               <el-tabs class="form_tabs" v-model="activeName">
                 <el-tab-pane
@@ -294,23 +168,8 @@
                     <div
                       class="variant-btn variant-btn-delete"
                       @click="deleteProduct(element.id)"
-                    >
-                      <svg
-                        width="30"
-                        height="30"
-                        viewBox="0 0 30 30"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                          stroke="#F65160"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
+                      v-html="removeIcon"
+                    ></div>
                   </div>
                   <div class="variant-img-container">
                     <h5 class="variant-img-title">Изображение товара</h5>
@@ -462,6 +321,7 @@
                             </div>
                             <div class="form-variant-block">
                               <div><label>Price</label></div>
+                              <!-- <a-input placeholder="a Price" v-model="item.price" /> -->
                               <el-input
                                 v-model="item.price"
                                 placeholder="Price"
@@ -474,23 +334,8 @@
                             <div
                               class="variant-btn variant-btn-delete mx-2"
                               @click="deleteValidation(element.id, item.id)"
-                            >
-                              <svg
-                                width="30"
-                                height="30"
-                                viewBox="0 0 30 30"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                                  stroke="#F65160"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                />
-                              </svg>
-                            </div>
+                              v-html="removeIcon"
+                            ></div>
                             <div
                               class="variant-btn variant-btn-check"
                               @click="onChangeVariants(element.id, item.id)"
@@ -839,6 +684,7 @@
       v-model="visible.character"
       :closable="false"
       :dialog-style="{ top: '0' }"
+      :bodyStyle="{ minHeight: '100vh' }"
       width="100%"
       :footer="false"
       @ok="handleOk('character')"
@@ -987,6 +833,7 @@ export default {
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       searchIcon: require("../../assets/svg/components/search-icon.svg?raw"),
       reloadIcon: require("../../assets/svg/components/reload-icon.svg?raw"),
+      removeIcon: require("../../assets/svg/components/remove.svg?raw"),
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       addInnerValidatIcon: require("../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       plusCategoryIcon: require("../../assets/svg/components/add-category-icon.svg?raw"),
@@ -1106,7 +953,7 @@ export default {
           uz: "",
           en: "",
         },
-        brand_id: "",
+        brand_id: null,
         is_active: 1,
         category_id: "",
         products: [
@@ -1221,35 +1068,23 @@ export default {
   },
   computed: {
     findLastCategory() {
-      if (this.cascaderCategories.length > 0) {
-        if (this.lastCategory.length > 0) {
-          const findCategory = this.cascaderCategories.find(
-            (item) => item.id == this.lastCategory[0]
-          );
-          switch (this.lastCategory.length) {
-            case 1:
-              return findCategory?.label;
-            case 2:
-              const findChildCategory = findCategory?.children.find(
-                (item) => item.id == this.lastCategory[1]
-              );
-              return findCategory?.label + "/" + findChildCategory?.label;
-            case 3:
-              const findChild1Category = findCategory?.children.find(
-                (item) => item.id == this.lastCategory[1]
-              );
-              const findChild2Category = findChild1Category?.children.find(
-                (item) => item.id == this.lastCategory[2]
-              );
-              return (
-                findCategory?.label +
-                "/" +
-                findChild1Category?.label +
-                "/" +
-                findChild2Category?.label
-              );
-          }
-        }
+      let allCategories = [];
+      if (this.cascaderCategories.length > 0 && this.lastCategory.length > 0) {
+        const findCategory = this.cascaderCategories.find(
+          (item) => item.id == this.lastCategory[0]
+        );
+        const findChildCategory = findCategory?.children.find(
+          (item) => item.id == this.lastCategory[1]
+        );
+        const findChild2Category = findChildCategory?.children.find(
+          (item) => item.id == this.lastCategory[2]
+        );
+        findCategory?.label && allCategories.push(findCategory?.label);
+        findChildCategory?.label && allCategories.push(findChildCategory?.label);
+        findChild2Category?.label && allCategories.push(findChild2Category?.label);
+      }
+      if (allCategories.length == 3) {
+        return allCategories.join("/");
       }
     },
   },
@@ -1283,16 +1118,6 @@ export default {
       }
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
-    },
-    show(name) {
-      this.$modal.show(name);
-      document.body.style.overflowY = "hidden";
-      document.body.style.height = "100vh";
-    },
-    hide(name) {
-      this.$modal.hide(name);
-      document.body.style.overflowY = "auto";
-      document.body.style.height = "auto";
     },
     async __POST_BRAND() {
       try {
@@ -1414,6 +1239,8 @@ export default {
       this.__GET_CATEGORY_BY_ID(value.at(-1));
     },
     filter(inputValue, path) {
+      console.log(inputValue);
+      console.log(path);
       return (
         path.some(
           (option) => option.label.toUpperCase().indexOf(inputValue.toUpperCase()) > -1
@@ -1497,16 +1324,6 @@ export default {
         `at_${obj.id}`
       ];
     },
-    show(name) {
-      this.$modal.show(name);
-      document.body.style.overflowY = "hidden";
-      document.body.style.height = "100vh";
-    },
-    hide(name) {
-      this.$modal.hide(name);
-      document.body.style.overflowY = "auto";
-      document.body.style.height = "auto";
-    },
     handleCancel() {
       this.previewVisible = false;
     },
@@ -1552,6 +1369,10 @@ export default {
       const product = this.findProductWithId(variantId);
       if (product.variations.length > 1) {
         product.variations = product.variations.filter((item) => item.id != innerVarId);
+      }
+      const checkDefault = product.variations.filter((item) => item.is_default == 1);
+      if (checkDefault.length == 0) {
+        product.variations[0].is_default = 1;
       }
     },
     findProductWithId(variantId) {

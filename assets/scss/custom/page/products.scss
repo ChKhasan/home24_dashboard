@@ -417,6 +417,12 @@
     }
   }
 }
+.ant-upload-list-picture .ant-upload-list-item,
+.ant-upload-list-picture-card .ant-upload-list-item {
+  &:first-child {
+    border: 1px dashed #d9d9d9 !important;
+  }
+}
 @media (max-width: 1440px) {
   .products-from-grid {
     grid-gap: 13px;
