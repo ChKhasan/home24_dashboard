@@ -70,7 +70,7 @@
               <div class="form-container form-container-ltr">
                 <FormTitle title="Атрибут" />
                 <div class="form-block required">
-                  <div><label for="">Keywords</label></div>
+                  <div><label for="">Description</label></div>
 
                   <el-form-item prop="keywords">
                     <el-input

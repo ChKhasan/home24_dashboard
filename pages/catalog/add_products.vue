@@ -302,6 +302,7 @@
                             </div>
                             <div class="form-variant-block">
                               <div><label>Status</label></div>
+                              <a-switch />
                               <el-select
                                 v-model="item.status"
                                 allow-create
@@ -378,6 +379,7 @@
                 >
                   <div class="form-block status-style">
                     <div><label for="status">Статус</label></div>
+
                     <el-form-item>
                       <el-select
                         id="status"
