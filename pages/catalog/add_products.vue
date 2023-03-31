@@ -256,70 +256,7 @@
                               </div>
                             </el-form>
 
-                            <div class="form-variant-block">
-                              <div><label>Popular</label></div>
-                              <el-select
-                                v-model="item.is_popular"
-                                allow-create
-                                class="w-100"
-                                popper-class="select-popper-hover"
-                                default-first-option
-                                placeholder="265 gb"
-                              >
-                                <el-option
-                                  v-for="item in [
-                                    { label: `Да`, id: 1 },
-                                    { label: `Нет`, id: 0 },
-                                  ]"
-                                  :key="item.id"
-                                  :label="item.label"
-                                  :value="item.id"
-                                >
-                                </el-option>
-                              </el-select>
-                            </div>
-                            <div class="form-variant-block">
-                              <div><label>Product of day</label></div>
-                              <el-select
-                                v-model="item.product_of_the_day"
-                                allow-create
-                                class="w-100"
-                                popper-class="select-popper-hover"
-                                default-first-option
-                                placeholder="265 gb"
-                              >
-                                <el-option
-                                  v-for="item in [
-                                    { label: `Да`, id: 1 },
-                                    { label: `Нет`, id: 0 },
-                                  ]"
-                                  :key="item.id"
-                                  :label="item.label"
-                                  :value="item.id"
-                                >
-                                </el-option>
-                              </el-select>
-                            </div>
-                            <div class="form-variant-block">
-                              <div><label>Status</label></div>
-                              <a-switch />
-                              <el-select
-                                v-model="item.status"
-                                allow-create
-                                class="w-100"
-                                popper-class="select-popper-hover"
-                                default-first-option
-                                placeholder="265 gb"
-                              >
-                                <el-option
-                                  v-for="item in validateStatus"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value"
-                                >
-                                </el-option>
-                              </el-select>
-                            </div>
+                            
                             <div class="form-variant-block">
                               <div><label>Price</label></div>
                               <!-- <a-input placeholder="a Price" v-model="item.price" /> -->
@@ -328,6 +265,43 @@
                                 placeholder="Price"
                                 type="number"
                               ></el-input>
+                            </div>
+                            <div class="form-block">
+                              <div><label>Popular</label></div>
+                              <span>
+                              <a-switch
+                                @change="
+                                  ($event) =>
+                                    $event ? (item.is_popular = 1) : (item.is_popular = 0)
+                                "
+                              />
+                              </span>
+                            </div>
+                            <div class="form-block mx-2">
+                              <div><label>Pr of day</label></div>
+                              <span>
+                              <a-switch
+                                @change="
+                                  ($event) =>
+                                    $event
+                                      ? (item.product_of_the_day = 1)
+                                      : (item.product_of_the_day = 0)
+                                "
+                              />
+                              </span>
+                            </div>
+                            <div class="form-block">
+                              <div><label>Stat</label></div>
+                              <span>
+                              <a-switch
+                                @change="
+                                  ($event) =>
+                                    $event
+                                      ? (item.status = 'active')
+                                      : (item.status = 'inactive')
+                                "
+                              />
+                              </span>
                             </div>
                           </div>
 
@@ -1061,7 +1035,7 @@ export default {
           {
             required: true,
             message: "Brand name is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
@@ -1113,6 +1087,9 @@ export default {
         this.loadingBtn = false;
       }
     },
+    switchStatus(e) {
+      console.log(e);
+    },
     async handlePreview(file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
@@ -1126,6 +1103,9 @@ export default {
         this.notification("Success", "Бранд успешно добавлен", "success");
         this.handleOk("brand");
         this.brandData.name = "";
+        this.brandData.logo = "";
+        this.fileListBrand = [];
+        this.__GET_BRANDS();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -1230,8 +1210,9 @@ export default {
         const atributValid = artibutReqiured.length == atr;
         if (!valid && !atributValid) return false;
         this.characterRequired
-          ? this.__POST_PRODUCTS(newData)
+          ? console.log(newData)
           : this.notification("Success", "Вы не добавили характеристику", "error");
+        // this.__POST_PRODUCTS(newData)
       });
     },
     onChange(value, selectedOptions) {

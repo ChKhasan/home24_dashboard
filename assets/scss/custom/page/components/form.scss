@@ -32,6 +32,7 @@
     margin-bottom: 6.5px;
     color: #181c32;
     position: relative;
+    white-space: nowrap;
   }
   .bottom_text {
     @include fontTTinterface(14px, 400);
@@ -183,7 +184,7 @@
 }
 .select-popper-hover {
   .el-select-dropdown__item {
-    color: rgba(0, 0, 0,0.5);
+    color: rgba(0, 0, 0, 0.5);
     &:hover {
       color: #000;
     }

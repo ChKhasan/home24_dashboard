@@ -252,19 +252,11 @@ export default {
       brands: [],
       formData: {},
       rules: {
-        title_ru: [
+        name: [
           {
             required: true,
             message: "Blog title is required",
-            trigger: "change",
-          },
-        ],
-
-        desc_ru: [
-          {
-            required: true,
-            message: "Blog desc is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
