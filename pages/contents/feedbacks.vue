@@ -216,7 +216,7 @@ export default {
         });
       }
       this.loading = true;
-      this.__GET_BANNERS();
+      this.__GET_FEEDBACKS();
     },
     getData() {
       const newData = {
@@ -271,7 +271,7 @@ export default {
       this.hide("add_feedbacks");
       this.ruleFormEmpty();
       this.editId = "";
-      this.__GET_BANNERS();
+      this.__GET_FEEDBACKS();
     },
     ruleFormEmpty() {
       this.ruleForm.img = {
@@ -284,21 +284,18 @@ export default {
       this.ruleForm.link_en = "";
     },
     deletePost(id) {
-      this.__DELETE_BANNERS(id);
+      this.__DELETE_FEEDBACKS(id);
     },
-    async __GET_BANNERS_TYPES() {
-      const types = await this.$store.dispatch("fetchBanners/getBannerType");
-      this.types = Object.values(types.types);
-    },
-    async __DELETE_BANNERS(id) {
+
+    async __DELETE_FEEDBACKS(id) {
       try {
-        await this.$store.dispatch("fetchBanners/deleteBanners", id);
+        await this.$store.dispatch("fetchFeedbacks/deleteFeedbacks", id);
         await this.$notify({
           title: "Success",
           message: "Баннер был успешно удален",
           type: "success",
         });
-        this.__GET_BANNERS();
+        this.__GET_FEEDBACKS();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -333,7 +330,7 @@ export default {
     handleCancel() {
       this.previewVisible = false;
     },
-    async __GET_BANNERS() {
+    async __GET_FEEDBACKS() {
       const data = await this.$store.dispatch("fetchFeedbacks/getFeedbacks", {
         ...this.$route.query,
       });
@@ -359,7 +356,7 @@ export default {
           type: "success",
         });
         this.hide("add_feedbacks");
-        this.__GET_BANNERS();
+        this.__GET_FEEDBACKS();
         this.ruleFormEmpty();
       } catch (e) {
         this.statusFunc(e.response);
@@ -399,7 +396,7 @@ export default {
           type: "success",
         });
         this.hide("add_feedbacks");
-        this.__GET_BANNERS();
+        this.__GET_FEEDBACKS();
         this.ruleFormEmpty();
         this.ruleForm.type = "";
       } catch (e) {
@@ -416,8 +413,8 @@ export default {
       });
     }
     this.pagination.current = this.$route.query.page * 1;
-    this.__GET_BANNERS();
-    this.__GET_BANNERS_TYPES();
+    this.__GET_FEEDBACKS();
+    this.__GET_FEEDBACKS_TYPES();
   },
   watch: {
     "pagination.current"() {
