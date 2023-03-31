@@ -650,11 +650,11 @@ export default {
       //     (item) => item.name.ru == data.parent_id
       //   )[0].id;
       // }
-      if (this.fileList.img[0].oldImg) {
-        data.img = this.fileList.img[0].url;
+      if (this.fileList.img[0]?.oldImg) {
+        data.img = this.fileList.img[0]?.url;
       }
-      if (this.fileList.icon[0].oldImg) {
-        data.icon = this.fileList.icon[0].url;
+      if (this.fileList.icon[0]?.oldImg) {
+        data.icon = this.fileList.icon[0]?.url;
       }
       this.$refs[ruleForm].validate((valid) => {
         if (!valid) return false;

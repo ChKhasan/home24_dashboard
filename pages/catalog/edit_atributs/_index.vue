@@ -36,12 +36,7 @@
                 viewBox="0 0 24 24"
                 version="1.1"
               >
-                <g
-                  stroke="none"
-                  stroke-width="1"
-                  fill="none"
-                  fill-rule="evenodd"
-                >
+                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                   <polygon points="0 0 24 0 24 24 0 24"></polygon>
                   <path
                     d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
@@ -99,35 +94,74 @@
                       уникальный.</span
                     >
                   </div>
-                  <div
-                    class="form-block required"
-                    :class="{ 'multi-select-required': multiSelectError }"
-                  >
-                    <div><label>Имя опции</label></div>
-                    <el-form-item label-position="top" prop="options">
-                      <el-select
-                        class="w-100 multi_select"
-                        v-model="ruleForm.options"
-                        filterable
-                        multiple
-                        allow-create
-                        placeholder="Option name"
-                        loading-text="atribute"
-                      >
-                        <el-option
-                          v-for="item in options"
-                          :key="item.id"
-                          :label="item.name.ru"
-                          :value="item.id"
-                        >
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                    <span class="bottom_text"
-                      >Установите список ключевых слов, с которыми связана
-                      категория. Разделяйте ключевые слова, добавляя запятую
-                      между каждым ключевое слово.</span
+                  <div class="d-flex flex-column">
+                    <div
+                      class="form-block required"
+                      :class="{ 'multi-select-required': multiSelectError }"
                     >
+                      <div><label>Имя опции</label></div>
+                      <el-form-item label-position="top">
+                        <transition-group name="flip-list" tag="div">
+                          <div
+                            class="d-flex align-items-center"
+                            v-for="(item, i) in ruleForm.optionsName"
+                            :key="item.elemId"
+                          >
+                            <el-input
+                              class="w-100 mb-2"
+                              v-model="item.name"
+                              placeholder="Option name"
+                            />
+                            <div class="variant_btns mb-1 mt-0">
+                              <div
+                                class="variant-btn variant-btn-delete mx-2"
+                                @click="deleteElement(item.elemId)"
+                              >
+                                <svg
+                                  width="30"
+                                  height="30"
+                                  viewBox="0 0 30 30"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                    stroke="#F65160"
+                                    stroke-width="1.5"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  />
+                                </svg>
+                              </div>
+                              <div
+                                class="variant-btn variant-btn-check cursor_drag"
+                                draggable="true"
+                                @dragend="(e) => finishDrag(item, i, e)"
+                                @dragover="(e) => onDragOver(item, i, e)"
+                                @dragstart="(e) => startDrag(item, i, e)"
+                              >
+                                <a-icon
+                                  type="drag"
+                                  :style="{ color: '#3699FF', fontSize: '18px' }"
+                                />
+                                <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
+                              </div>
+                            </div>
+                          </div>
+                        </transition-group>
+                      </el-form-item>
+                      <div class="d-flex justify-content-start">
+                        <div class="create-inner-variant mt-0" @click="addElement()">
+                          <span v-html="addInnerValidatIcon"></span>
+                          Добавить опции
+                        </div>
+                      </div>
+                      <span class="bottom_text"
+                        >Установите список ключевых слов, с которыми связана категория.
+                        Разделяйте ключевые слова, добавляя запятую между каждым ключевое
+                        слово.</span
+                      >
+                    </div>
                   </div>
                 </div>
                 <!-- <div class="d-flex justify-content-end">
@@ -234,6 +268,12 @@ export default {
         name_uz: "",
         name_en: "",
         options: [],
+        optionsName: [
+          {
+            name: "",
+            elemId: 1,
+          },
+        ],
       },
       atributGroup: {
         name: {
@@ -246,6 +286,37 @@ export default {
   },
 
   methods: {
+    startDrag(item, i, e) {
+      this.startLoc = e.clientY;
+      this.dragging = true;
+      this.dragFrom = item;
+      console.log(this.dragFrom);
+    },
+
+    finishDrag(item, pos) {
+      this.ruleForm.optionsName.splice(pos, 1);
+      this.ruleForm.optionsName.splice(this.over.pos, 0, item);
+      this.over = {};
+    },
+
+    onDragOver(item, pos, e) {
+      const dir = this.startLoc < e.clientY ? "down" : "up";
+      setTimeout(() => {
+        this.over = { item, pos, dir };
+      }, 50);
+    },
+    addElement() {
+      this.ruleForm.optionsName.push({
+        name: "",
+        elemId: Math.max(...this.ruleForm.optionsName.map((o) => o.elemId)) + 1,
+      });
+    },
+    deleteElement(id) {
+      if (this.ruleForm.optionsName.length > 1)
+        this.ruleForm.optionsName = this.ruleForm.optionsName.filter(
+          (item) => item.elemId != id
+        );
+    },
     submitForm(ruleForm) {
       this.multiSelectError = false;
       this.$refs[ruleForm].validate((valid) => {
@@ -257,12 +328,10 @@ export default {
       if (typeof this.ruleForm.group_id == "string") {
         this.ruleForm.group_id = this.group_id;
       }
-      const newOptionsNames = this.options.map(
-        (item) => (item.name = item.name.ru)
-      );
-      const newOptions = this.ruleForm.options.map((item) => {
-        if (newOptionsNames.includes(item)) {
-          return this.options.find((item2) => item2.name == item);
+      const newOptionsNames = this.options.map((item) => (item.name = item.name.ru));
+      const newOptions = this.ruleForm.optionsName.map((item) => {
+        if (newOptionsNames.includes(item.name)) {
+          return this.options.find((item2) => item2.name == item.name);
         } else {
           return {
             id: 0,
@@ -282,6 +351,7 @@ export default {
       delete data["name_ru"];
       delete data["name_uz"];
       delete data["name_en"];
+      delete data["optionsName"];
       this.__EDIT_ATRIBUTES(data);
     },
     headerbtnCallback() {
@@ -304,9 +374,13 @@ export default {
       this.ruleForm.keywords = data.attribute.keywords;
       this.atribut_id = data.attribute.id;
       this.options = data.attribute.options;
-      this.ruleForm.options = data.attribute.options.map(
-        (item) => item.name.ru
-      );
+      this.ruleForm.options = data.attribute.options.map((item) => item.name.ru);
+      this.ruleForm.optionsName = data.attribute.options.map((item, index) => {
+        return {
+          name: item.name.ru,
+          elemId: index + 1,
+        };
+      });
     },
     getData() {
       this.$refs["atributGroup"].validate((valid) =>
@@ -316,7 +390,7 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-  
+
     async __EDIT_ATRIBUTES(data) {
       try {
         await this.$store.dispatch("fetchAtributes/editAtributes", {
