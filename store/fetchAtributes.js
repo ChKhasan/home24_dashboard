@@ -10,6 +10,12 @@ export const actions = {
       return e.response;
     }
   },
+  async getAllAtributes() {
+    const res = await this.$axios.$get(
+      `https://test.loftcity.uz/api/admin/attributes/all`
+    );
+    return res;
+  },
   async getAtributesById({}, id) {
     try {
       const res = await this.$axios.$get(

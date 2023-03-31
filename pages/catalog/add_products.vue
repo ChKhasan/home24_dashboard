@@ -1210,9 +1210,9 @@ export default {
         const atributValid = artibutReqiured.length == atr;
         if (!valid && !atributValid) return false;
         this.characterRequired
-          ? console.log(newData)
+        
+          ? this.__POST_PRODUCTS(newData)
           : this.notification("Success", "Вы не добавили характеристику", "error");
-        // this.__POST_PRODUCTS(newData)
       });
     },
     onChange(value, selectedOptions) {

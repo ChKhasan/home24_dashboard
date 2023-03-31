@@ -769,7 +769,7 @@ export default {
       }
     },
     async __GET_ATRIBUTES() {
-      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
+      const data = await this.$store.dispatch("fetchAtributes/getAllAtributes");
       this.atributes = data.attributes?.data;
       this.allAtributes = data.attributes?.data;
       this.filterElement("attributes");
