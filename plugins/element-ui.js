@@ -45,7 +45,6 @@ ElementUI.Select.computed.readonly = function () {
 };
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
-Vue.use(CollapseTransition);
 Vue.use(DropdownItem);
 Vue.use(Menu);
 Vue.use(Submenu);

@@ -1069,7 +1069,7 @@ export default {
   computed: {
     findLastCategory() {
       let allCategories = [];
-      if (this.cascaderCategories.length > 0 && this.lastCategory.length > 0) {
+      if (this.cascaderCategories.length > 0 && this.lastCategory.length == 3) {
         const findCategory = this.cascaderCategories.find(
           (item) => item.id == this.lastCategory[0]
         );
@@ -1101,7 +1101,6 @@ export default {
     getData() {
       this.$refs["brandData"].validate((valid) => (valid ? this.__POST_BRAND() : false));
     },
-
     handleChangeBrand({ fileList }) {
       this.fileListBrand = fileList;
       this.loadingBtn = true;
@@ -1238,8 +1237,6 @@ export default {
       this.__GET_CATEGORY_BY_ID(value.at(-1));
     },
     filter(inputValue, path) {
-      console.log(inputValue);
-      console.log(path);
       return (
         path.some(
           (option) => option.label.toUpperCase().indexOf(inputValue.toUpperCase()) > -1

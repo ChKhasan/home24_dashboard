@@ -46,7 +46,7 @@
                   <div><label for="character_group">Группа</label></div>
                   <div class="group-grid1" id="character_group">
                     <el-form-item prop="group_id">
-                      <el-input placeholder="group" />
+                      <el-input placeholder="group"  v-model="ruleForm.group_id"/>
                       <!-- <el-select
                         class="w-100"
                         popper-class="select-popper-hover"
