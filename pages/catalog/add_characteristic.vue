@@ -87,9 +87,7 @@
                     </div> -->
                   </div>
                 </div>
-            
                 <div class="list">
-                  {{ ruleForm.characters }}
                   <drop-list
                     :items="ruleForm.characters"
                     @insert="onInsert"
