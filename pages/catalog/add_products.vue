@@ -1336,7 +1336,7 @@ export default {
           });
           return {
             variations: newVariation,
-            images: item.images,
+            images: item.imagesData.map((item) => item.response.path),
           };
         }),
       };
