@@ -34,9 +34,9 @@
           ></div>
           <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
             <el-tab-pane
-              v-for="(item, index) in lang"
-              :label="item.label"
-              :name="item.label"
+              v-for="(itemLang, index) in lang"
+              :label="itemLang.label"
+              :name="itemLang.label"
               :key="index"
             >
               <div class="form-container form-container-ltr">
@@ -46,7 +46,7 @@
                   <div><label for="character_group">Группа</label></div>
                   <div class="group-grid1" id="character_group">
                     <el-form-item prop="group_id">
-                      <el-input placeholder="group"  v-model="ruleForm.group_id"/>
+                      <el-input placeholder="group" v-model="ruleForm.group_id" />
                       <!-- <el-select
                         class="w-100"
                         popper-class="select-popper-hover"
@@ -87,69 +87,22 @@
                     </div> -->
                   </div>
                 </div>
-                <!-- <div class="atribut-input-grid">
-                  <div class="form-block required">
-                    <div><label for="">Имя характеристики </label></div>
-                    <el-form-item :prop="`name_${item.key}`">
-                      <el-input
-                        v-model="ruleForm[`name_${item.key}`]"
-                        placeholder="Atribut Name"
-                      ></el-input>
-                    </el-form-item>
-                    <span class="bottom_text"
-                      >Установите список ключевых слов, с которыми связана категория.
-                      Разделите ключевые слова, добавив запятую между каждым ключевым
-                      словом.</span
-                    >
-                  </div>
-                  <div
-                    class="form-block"
-                    :class="{ 'multi-select-required': multiSelectError }"
-                  >
-                    <div><label>Имя опции</label></div>
-                    <el-form-item label-position="top" prop="options">
-                      <el-select
-                        class="w-100"
-                        v-model="ruleForm.options"
-                        popper-class="select-popper-hover"
-                        filterable
-                        multiple
-                        allow-create
-                        no-data-text="No options"
-                        placeholder="Option name"
-                      >
-                        <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        >
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-
-                    <span class="bottom_text"
-                      >Установите список ключевых слов, с которыми связана категория.
-                      Разделите ключевые слова, добавив запятую между каждым ключевым
-                      словом.</span
-                    >
-                  </div>
-                </div> -->
+            
                 <div class="list">
-                  <transition-group name="flip-list" tag="div">
-                    <div
-                      class="character-input-grid pb-3"
-                      v-for="(item1, i) in ruleForm.characters"
-                      :class="{
-                        over: item1 === over.item && item1 !== dragFrom,
-                        [over.dir]: item1 === over.item && item1 !== dragFrom,
-                      }"
-                      :key="item1.id"
-                    >
-                      <div class="form-block required mb-0">
+                  {{ ruleForm.characters }}
+                  <drop-list
+                    :items="ruleForm.characters"
+                    @insert="onInsert"
+                    @reorder="$event.apply(ruleForm.characters)"
+                  >
+                    <template v-slot:item="{ item }">
+                      <drag class="item " :key="item.id"
+                        >
+                        <div class="character-input-grid pb-3">
+                        <div class="form-block required mb-0">
                         <el-form-item>
                           <el-input
-                            v-model="item1[`name_${item.key}`]"
+                            v-model="item[`name_${itemLang.key}`]"
                             placeholder="Atribut Name"
                           ></el-input>
                         </el-form-item>
@@ -171,10 +124,10 @@
                             placeholder="Option name"
                           >
                             <el-option
-                              v-for="item in options"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.value"
+                              v-for="option in options"
+                              :key="option.value"
+                              :label="option.label"
+                              :value="option.value"
                             >
                             </el-option>
                           </el-select>
@@ -183,7 +136,7 @@
                       <div class="variant_btns mb-1 mt-0">
                         <div
                           class="variant-btn variant-btn-delete mx-2"
-                          @click="deleteElement(item1.id)"
+                          @click="deleteElement(item.id)"
                         >
                           <svg
                             width="30"
@@ -203,20 +156,21 @@
                         </div>
                         <div
                           class="variant-btn variant-btn-check cursor_drag"
-                          draggable="true"
-                          @dragend="(e) => finishDrag(item1, i, e)"
-                          @dragover="(e) => onDragOver(item1, i, e)"
-                          @dragstart="(e) => startDrag(item1, i, e)"
+                          
                         >
                           <a-icon
                             type="drag"
                             :style="{ color: '#3699FF', fontSize: '18px' }"
                           />
-                          <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
                         </div>
                       </div>
-                    </div>
-                  </transition-group>
+                        </div>
+                      </drag>
+                    </template>
+                    <template v-slot:feedback="{ data }">
+                      <div class="item feedback" :key="data">{{ data }}</div>
+                    </template>
+                  </drop-list>
                   <div class="d-flex justify-content-start">
                     <div class="create-inner-variant mt-0" @click="addElement()">
                       <span v-html="addInnerValidatIcon"></span>
@@ -262,7 +216,7 @@
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
 import TitleBlock from "../../components/Title-block.vue";
-
+import { Drag, DropList } from "vue-easy-dnd";
 export default {
   layout: "toolbar",
   data() {
@@ -498,6 +452,9 @@ export default {
       this.$router.push("/catalog/characteristic");
     },
     handleClick() {},
+    onInsert(event) {
+      this.ruleForm.characters.splice(event.index, 0, event.data);
+    },
   },
   mounted() {
     this.__GET_GROUPS();
@@ -506,6 +463,8 @@ export default {
     TitleBlock,
     LayoutHeaderBtn,
     AddModal,
+    Drag,
+    DropList,
   },
 };
 </script>
@@ -516,10 +475,49 @@ export default {
 }
 
 .flip-list-move {
-  transition: transform 0.2s;
+  // transition: transform 0.2s;
 }
 
 .over {
   opacity: 0.6;
+}
+
+html,
+body,
+#app,
+.v-application--wrap,
+.v-content,
+.v-content__wrap {
+  height: 100%;
+}
+
+.drop-in {
+  box-shadow: 0 0 10px rgba(0, 0, 255, 0.3);
+}
+.wrapper {
+  .list {
+    border: 1px solid black;
+    margin: 100px auto;
+    width: 200px;
+
+    .item {
+      padding: 20px;
+      margin: 10px;
+      background-color: rgb(220, 220, 255);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.feedback {
+        background-color: rgb(255, 220, 220);
+        border: 2px dashed black;
+      }
+
+      &.drag-image {
+        background-color: rgb(220, 255, 220);
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
 }
 </style>

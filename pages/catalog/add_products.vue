@@ -175,19 +175,38 @@
                     <h5 class="variant-img-title">Изображение товара</h5>
 
                     <div class="variant-img">
-                      <a-upload
-                        action="https://test.loftcity.uz/api/admin/files/upload"
-                        list-type="picture-card"
-                        :file-list="element.imagesData"
-                        :multiple="true"
-                        @preview="handlePreview"
-                        @change="($event) => handleChangeVatiant($event, element.id)"
-                      >
-                        <div v-if="fileList.length < 50">
-                          <span v-html="addImgIcon"></span>
-                          <div class="ant-upload-text">Добавить изображение</div>
+                      <div class="list2">
+                        <!-- <transition-group name="el-zoom-in-left" tag="div"> -->
+                        <div
+                          v-for="(img, i) in element.images"
+                          :class="{
+                            over: img === over.item && img !== dragFrom,
+                            [over.dir]: img === over.item && img !== dragFrom,
+                          }"
+                          :key="i"
+                          class="upload-card"
+                          draggable="true"
+                          @dragend="(e) => finishDrag(img, i, e, element.id)"
+                          @dragover="(e) => onDragOver(img, i, e, element.id)"
+                          @dragstart="(e) => startDrag(img, i, e, element.id)"
+                        >
+                          <img :src="img" alt="" />
                         </div>
-                      </a-upload>
+                        <a-upload
+                          action="https://test.loftcity.uz/api/admin/files/upload"
+                          list-type="picture-card"
+                          :multiple="true"
+                          :showUploadList="false"
+                          @preview="handlePreview"
+                          @change="($event) => handleChangeVatiant($event, element.id)"
+                        >
+                          <div v-if="fileList.length < 50">
+                            <span v-html="addImgIcon"></span>
+                            <div class="ant-upload-text">Добавить изображение</div>
+                          </div>
+                        </a-upload>
+                        <!-- </transition-group> -->
+                      </div>
                       <a-modal
                         :visible="previewVisible"
                         :footer="null"
@@ -256,7 +275,6 @@
                               </div>
                             </el-form>
 
-                            
                             <div class="form-variant-block">
                               <div><label>Price</label></div>
                               <!-- <a-input placeholder="a Price" v-model="item.price" /> -->
@@ -269,38 +287,40 @@
                             <div class="form-block">
                               <div><label>Popular</label></div>
                               <span>
-                              <a-switch
-                                @change="
-                                  ($event) =>
-                                    $event ? (item.is_popular = 1) : (item.is_popular = 0)
-                                "
-                              />
+                                <a-switch
+                                  @change="
+                                    ($event) =>
+                                      $event
+                                        ? (item.is_popular = 1)
+                                        : (item.is_popular = 0)
+                                  "
+                                />
                               </span>
                             </div>
                             <div class="form-block mx-2">
                               <div><label>Pr of day</label></div>
                               <span>
-                              <a-switch
-                                @change="
-                                  ($event) =>
-                                    $event
-                                      ? (item.product_of_the_day = 1)
-                                      : (item.product_of_the_day = 0)
-                                "
-                              />
+                                <a-switch
+                                  @change="
+                                    ($event) =>
+                                      $event
+                                        ? (item.product_of_the_day = 1)
+                                        : (item.product_of_the_day = 0)
+                                  "
+                                />
                               </span>
                             </div>
                             <div class="form-block">
                               <div><label>Stat</label></div>
                               <span>
-                              <a-switch
-                                @change="
-                                  ($event) =>
-                                    $event
-                                      ? (item.status = 'active')
-                                      : (item.status = 'inactive')
-                                "
-                              />
+                                <a-switch
+                                  @change="
+                                    ($event) =>
+                                      $event
+                                        ? (item.status = 'active')
+                                        : (item.status = 'inactive')
+                                  "
+                                />
                               </span>
                             </div>
                           </div>
@@ -804,6 +824,10 @@ export default {
   layout: "toolbar",
   data() {
     return {
+      over: {},
+      startLoc: 0,
+      dragging: false,
+      dragFrom: {},
       closeIcon: require("../../assets/svg/components/remove.svg?raw"),
       copyIcon: require("../../assets/svg/components/copy.svg?raw"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
@@ -1074,6 +1098,27 @@ export default {
     }
   },
   methods: {
+    startDrag(item, i, e) {
+      this.startLoc = e.clientY;
+      this.dragging = true;
+      this.dragFrom = item;
+      console.log(this.dragFrom);
+    },
+
+    finishDrag(item, pos, e, id) {
+      this.ruleForm.products.find((elem2) => elem2.id == id).images.splice(pos, 1);
+      this.ruleForm.products
+        .find((elem1) => elem1.id == id)
+        .images.splice(this.over.pos, 0, item);
+      this.over = {};
+    },
+
+    onDragOver(item, pos, e) {
+      const dir = this.startLoc < e.clientY ? "down" : "up";
+      setTimeout(() => {
+        this.over = { item, pos, dir };
+      }, 50);
+    },
     getData() {
       this.$refs["brandData"].validate((valid) => (valid ? this.__POST_BRAND() : false));
     },
@@ -1210,7 +1255,6 @@ export default {
         const atributValid = artibutReqiured.length == atr;
         if (!valid && !atributValid) return false;
         this.characterRequired
-        
           ? this.__POST_PRODUCTS(newData)
           : this.notification("Success", "Вы не добавили характеристику", "error");
       });
@@ -1290,8 +1334,8 @@ export default {
     },
     handleChangeVatiant({ fileList }, id) {
       const currentProduct = this.findProductWithId(id);
-      currentProduct.imagesData = fileList;
-      this.fileList = fileList;
+      // currentProduct.imagesData = fileList;
+      // this.fileList = fileList;
       if (fileList[0]?.response?.path)
         currentProduct.images = fileList.map((item) => item?.response?.path);
     },
@@ -1521,3 +1565,45 @@ export default {
   },
 };
 </script>
+<style lang="scss">
+.upload-card {
+  width: 119px !important;
+  height: 119px !important;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  transition: transform 0.2s !important;
+  transition: 0.2s !important;
+  padding: 8px;
+  border: 1px dashed #d9d9d9;
+  border-radius: 4px;
+  img {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s !important;
+    transition: 0.2s !important;
+  }
+}
+.list > div {
+  display: flex;
+  flex-wrap: wrap;
+  transition: transform 0.2s !important;
+  transition: 0.2s !important;
+}
+
+.list2 {
+  display: flex;
+  flex-wrap: wrap;
+  transition: transform 0.2s !important;
+  transition: 0.2s !important;
+}
+.flip-list2-move {
+  transition: transform 0.2s;
+  transition: transform 0.2s !important;
+  transition: 0.2s !important;
+}
+.over {
+  opacity: 0.6;
+  transition: transform 0.2s !important;
+  transition: 0.2s !important;
+}
+</style>

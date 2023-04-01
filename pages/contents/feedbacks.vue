@@ -414,7 +414,7 @@ export default {
     }
     this.pagination.current = this.$route.query.page * 1;
     this.__GET_FEEDBACKS();
-    this.__GET_FEEDBACKS_TYPES();
+    // this.__GET_FEEDBACKS_TYPES();
   },
   watch: {
     "pagination.current"() {
