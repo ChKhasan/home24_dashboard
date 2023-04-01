@@ -179,32 +179,7 @@
               </div>
             </el-tab-pane>
           </el-tabs>
-          <!-- <div id="app">
-            items{{ items }}
-            <div class="list">
-              <transition-group name="flip-list" tag="div">
-                <li
-                  v-for="(item, i) in ruleForm.characters"
-                  class="item"
-                  :class="{
-                    over: item === over.item && item !== dragFrom,
-                    [over.dir]: item === over.item && item !== dragFrom,
-                  }"
-                  :key="item"
-                >
-                  {{ item.name_ru }}
-                  <button
-                    draggable="true"
-                    @dragend="(e) => finishDrag(item, i, e)"
-                    @dragover="(e) => onDragOver(item, i, e)"
-                    @dragstart="(e) => startDrag(item, i, e)"
-                  >
-                    drag
-                  </button>
-                </li>
-              </transition-group>
-            </div>
-          </div> -->
+        
         </div>
       </div>
     </el-form>

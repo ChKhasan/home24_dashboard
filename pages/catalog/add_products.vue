@@ -157,6 +157,7 @@
                 </el-tab-pane>
               </el-tabs>
               <!-- Product Variants -->
+
               <transition-group name="el-zoom-in-top" tag="ul">
                 <div
                   class="form-container product_list"
@@ -176,39 +177,49 @@
 
                     <div class="variant-img">
                       <div class="list2">
-                        <!-- <transition-group name="el-zoom-in-left" tag="div"> -->
-                        <div
-                          v-for="(img, i) in element.images"
-                          :class="{
-                            over: img === over.item && img !== dragFrom,
-                            [over.dir]: img === over.item && img !== dragFrom,
-                          }"
-                          :key="i"
-                          class="upload-card"
-                          draggable="true"
-                          @dragend="(e) => finishDrag(img, i, e, element.id)"
-                          @dragover="(e) => onDragOver(img, i, e, element.id)"
-                          @dragstart="(e) => startDrag(img, i, e, element.id)"
+                        <drop-list
+                          :items="element.imagesData"
+                          class="item-upload"
+                          @insert="($event) => onInsert($event, element.id)"
+                          @reorder="$event.apply(element.imagesData)"
                         >
-                          <img :src="img" alt="" />
-                        </div>
-                        <a-upload
-                          action="https://test.loftcity.uz/api/admin/files/upload"
-                          list-type="picture-card"
-                          :multiple="true"
-                          :showUploadList="false"
-                          @preview="handlePreview"
-                          @change="($event) => handleChangeVatiant($event, element.id)"
-                        >
-                          <div v-if="fileList.length < 50">
-                            <span v-html="addImgIcon"></span>
-                            <div class="ant-upload-text">Добавить изображение</div>
-                          </div>
-                        </a-upload>
-                        <!-- </transition-group> -->
+                          <template v-slot:item="{ item }">
+                            <drag :key="item.uid">
+                              <div class="upload-card">
+                                <div class="upload_actions">
+                                  <span @click="uploadSHow(item)">
+                                    <a-icon class="upload_icons" type="eye" />
+                                  </span>
+                                  <span @click="uploadDelete(element.id, item.uid)">
+                                    <a-icon class="upload_icons" type="delete" />
+                                  </span>
+                                </div>
+                                <img :src="item?.response?.path" alt="" />
+                              </div>
+                            </drag>
+                          </template>
+
+                          <template v-slot:feedback="{ data }">
+                            <div class="item feedback" :key="data">{{ data }}</div>
+                          </template>
+                        </drop-list>
                       </div>
+                      <a-upload
+                        action="https://test.loftcity.uz/api/admin/files/upload"
+                        list-type="picture-card"
+                        :multiple="true"
+                        :showUploadList="false"
+                        :file-list="element.imagesData"
+                        @preview="handlePreview"
+                        @change="($event) => handleChangeVatiant($event, element.id)"
+                      >
+                        <div v-if="fileList.length < 50">
+                          <span v-html="addImgIcon"></span>
+                          <div class="ant-upload-text">Добавить изображение</div>
+                        </div>
+                      </a-upload>
                       <a-modal
-                        :visible="previewVisible"
+                        v-model="previewVisible"
                         :footer="null"
                         @cancel="handleCancel"
                       >
@@ -808,6 +819,7 @@ import ProductsStatistic from "../../components/products/Products-statistic.vue"
 import ProductCharacterList from "../../components/products/Product-character-list.vue";
 import CommentCard from "../../components/products/CommentCard.vue";
 import "quill/dist/quill.core.css";
+import { Drag, DropList } from "vue-easy-dnd";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import AddBrandModal from "../../components/products/Add-brand-modal.vue";
@@ -961,6 +973,7 @@ export default {
             id: 1,
             images: [],
             imagesData: [],
+            fileList: [],
             variations: [
               {
                 id: 1,
@@ -1098,6 +1111,22 @@ export default {
     }
   },
   methods: {
+    uploadSHow(img) {
+      this.previewImage = img.response.path;
+      this.previewVisible = true;
+    },
+    uploadDelete(id, imgId) {
+      const product = this.findProductWithId(id);
+
+      product.imagesData = product.imagesData.filter((item) => item.uid != imgId);
+    },
+
+    onInsert(event, id) {
+      console.log(this.ruleForm.products);
+      this.ruleForm.products
+        .find((item) => item.id == id)
+        .images.splice(event.index, 0, event.data);
+    },
     startDrag(item, i, e) {
       this.startLoc = e.clientY;
       this.dragging = true;
@@ -1332,13 +1361,15 @@ export default {
       });
       this.$refs.characterScroll.scrollLeft = this.$refs.productScroll.scrollLeft;
     },
-    handleChangeVatiant({ fileList }, id) {
+
+    async handleChangeVatiant({ fileList }, id) {
       const currentProduct = this.findProductWithId(id);
-      // currentProduct.imagesData = fileList;
-      // this.fileList = fileList;
-      if (fileList[0]?.response?.path)
-        currentProduct.images = fileList.map((item) => item?.response?.path);
+      currentProduct.imagesData = await fileList;
+      if (fileList[0]?.response?.path) {
+        currentProduct.imagesData = [...fileList];
+      }
     },
+
     atributOptions(obj) {
       const product = this.findProductWithId(obj.productId);
       product.variations.find((varId) => varId.id == obj.variantId).options[
@@ -1562,6 +1593,8 @@ export default {
     TitleBlock,
     AddBrandModal,
     AddCategoryModal,
+    Drag,
+    DropList,
   },
 };
 </script>
@@ -1576,9 +1609,35 @@ export default {
   padding: 8px;
   border: 1px dashed #d9d9d9;
   border-radius: 4px;
+  position: relative;
+  &:hover {
+    .upload_actions {
+      z-index: 10;
+      opacity: 1;
+    }
+  }
+  .upload_actions {
+    width: 101px;
+    height: 101px;
+    transition: 0.3s;
+    top: 8px;
+    left: 8px;
+    opacity: 0;
+    z-index: -1;
+    background-color: hsla(0, 0%, 100%, 0.5);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    span {
+      padding: 5px;
+      cursor: pointer;
+    }
+  }
   img {
     width: 100%;
     height: 100%;
+    pointer-events: none;
     transition: transform 0.2s !important;
     transition: 0.2s !important;
   }
@@ -1586,20 +1645,21 @@ export default {
 .list > div {
   display: flex;
   flex-wrap: wrap;
-  transition: transform 0.2s !important;
-  transition: 0.2s !important;
 }
 
 .list2 {
   display: flex;
   flex-wrap: wrap;
-  transition: transform 0.2s !important;
-  transition: 0.2s !important;
+  .ant-upload-picture-card-wrapper {
+    width: 119px;
+  }
+}
+.item-upload {
+  display: flex;
+  flex-wrap: wrap;
 }
 .flip-list2-move {
   transition: transform 0.2s;
-  transition: transform 0.2s !important;
-  transition: 0.2s !important;
 }
 .over {
   opacity: 0.6;
