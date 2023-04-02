@@ -101,74 +101,72 @@
                     <div class="form-block required">
                       <div><label>Атрибуты</label></div>
                     </div>
-                    <transition-group name="flip-list" tag="div">
-                      <div
-                        class="d-flex mb-3 item"
-                        v-for="(atribute, i) in attributes"
-                        :key="atribute.id"
-                        :class="{
-                          over: atribute === over.item && atribute !== dragFrom,
-                          [over.dir]: atribute === over.item && atribute !== dragFrom,
-                        }"
-                      >
-                        <div class="form-block required w-100 mb-0">
-                          <el-form-item>
-                            <el-select
-                              v-model="atribute.name"
-                              class="w-100"
-                              @change="filterElement('attributes')"
-                              popper-class="select-popper-hover"
-                              default-first-option
-                              no-data-text="No atribut"
-                              placeholder="Choose tags for your article"
-                            >
-                              <el-option
-                                v-for="item in atributes"
-                                :key="item.id"
-                                :label="item.name.ru"
-                                :value="item.id"
+                    <drop-list
+                      :items="attributes"
+                      @insert="($event) => onInsert($event, 'attributes')"
+                      @reorder="$event.apply(attributes)"
+                    >
+                      <template v-slot:item="{ item }">
+                        <drag class="item d-flex mb-3" :key="item.id">
+                          <div class="form-block required w-100 mb-0">
+                            <el-form-item>
+                              <el-select
+                                v-model="item.name"
+                                class="w-100"
+                                @change="filterElement('attributes')"
+                                popper-class="select-popper-hover"
+                                default-first-option
+                                no-data-text="No atribut"
+                                placeholder="Choose tags for your article"
                               >
-                              </el-option>
-                            </el-select>
-                          </el-form-item>
-                        </div>
-                        <div class="variant_btns mb-1 mt-0">
-                          <div
-                            class="variant-btn variant-btn-delete mx-2"
-                            @click="deleteElement('attributes', atribute.id)"
-                          >
-                            <svg
-                              width="30"
-                              height="30"
-                              viewBox="0 0 30 30"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
+                                <el-option
+                                  v-for="item in atributes"
+                                  :key="item.id"
+                                  :label="item.name.ru"
+                                  :value="item.id"
+                                >
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </div>
+                          <div class="variant_btns mb-1 mt-0">
+                            <div
+                              class="variant-btn variant-btn-delete mx-2"
+                              @click="deleteElement('attributes', item.id)"
                             >
-                              <path
-                                d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                                stroke="#F65160"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                              <svg
+                                width="30"
+                                height="30"
+                                viewBox="0 0 30 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                  stroke="#F65160"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div
+                              class="variant-btn variant-btn-check cursor_drag"
+                              draggable="true"
+                            >
+                              <a-icon
+                                type="drag"
+                                :style="{ color: '#3699FF', fontSize: '18px' }"
                               />
-                            </svg>
+                              <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
+                            </div>
                           </div>
-                          <div
-                            class="variant-btn variant-btn-check cursor_drag"
-                            draggable="true"
-                            @dragend="(e) => finishDrag(atribute, i, e, 'attributes')"
-                            @dragover="(e) => onDragOver(atribute, i, e)"
-                            @dragstart="(e) => startDrag(atribute, i, e)"
-                          >
-                            <a-icon
-                              type="drag"
-                              :style="{ color: '#3699FF', fontSize: '18px' }"
-                            />
-                            <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
-                          </div>
-                        </div>
-                      </div>
-                    </transition-group>
+                        </drag>
+                      </template>
+                      <template v-slot:feedback="{ data }">
+                        <div class="item feedback" :key="data">{{ data }}</div>
+                      </template>
+                    </drop-list>
                     <div class="d-flex justify-content-start">
                       <div
                         class="create-inner-variant mt-0"
@@ -185,76 +183,72 @@
                     <div class="form-block required">
                       <div><label>Характеристическая группа</label></div>
                     </div>
-                    <transition-group name="flip-list" tag="div">
-                      <div
-                        class="d-flex mb-3 item"
-                        v-for="(character, i) in group_characteristics"
-                        :key="character.id"
-                        :class="{
-                          over: character === over.item && character !== dragFrom,
-                          [over.dir]: character === over.item && character !== dragFrom,
-                        }"
-                      >
-                        <div class="form-block required mb-0 w-100">
-                          <el-form-item>
-                            <el-select
-                              v-model="character.name"
-                              class="w-100"
-                              popper-class="select-popper-hover"
-                              @change="filterElement('group_characteristics')"
-                              default-first-option
-                              no-data-text="No characteristics"
-                              placeholder="Choose tags for your article"
-                            >
-                              <el-option
-                                v-for="item in groups"
-                                :key="item.id"
-                                :label="item.name.ru"
-                                :value="item.id"
+                    <drop-list
+                      :items="group_characteristics"
+                      @insert="($event) => onInsert($event, 'group_characteristics')"
+                      @reorder="$event.apply(group_characteristics)"
+                    >
+                      <template v-slot:item="{ item }">
+                        <drag class="item d-flex mb-3" :key="item.id">
+                          <div class="form-block required mb-0 w-100">
+                            <el-form-item>
+                              <el-select
+                                v-model="item.name"
+                                class="w-100"
+                                filterable
+                                popper-class="select-popper-hover"
+                                @change="filterElement('group_characteristics')"
+                                default-first-option
+                                no-data-text="No characteristics"
+                                placeholder="Choose tags for your article"
                               >
-                              </el-option>
-                            </el-select>
-                          </el-form-item>
-                        </div>
-                        <div class="variant_btns mb-1 mt-0">
-                          <div
-                            class="variant-btn variant-btn-delete mx-2"
-                            @click="deleteElement('group_characteristics', character.id)"
-                          >
-                            <svg
-                              width="30"
-                              height="30"
-                              viewBox="0 0 30 30"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
+                                <el-option
+                                  v-for="item in groups"
+                                  :key="item.id"
+                                  :label="item.name.ru"
+                                  :value="item.id"
+                                >
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </div>
+                          <div class="variant_btns mb-1 mt-0">
+                            <div
+                              class="variant-btn variant-btn-delete mx-2"
+                              @click="deleteElement('group_characteristics', item.id)"
                             >
-                              <path
-                                d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                                stroke="#F65160"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
+                              <svg
+                                width="30"
+                                height="30"
+                                viewBox="0 0 30 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                  stroke="#F65160"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div
+                              class="variant-btn variant-btn-check cursor_drag"
+                              draggable="true"
+                            >
+                              <a-icon
+                                type="drag"
+                                :style="{ color: '#3699FF', fontSize: '18px' }"
                               />
-                            </svg>
+                            </div>
                           </div>
-                          <div
-                            class="variant-btn variant-btn-check cursor_drag"
-                            draggable="true"
-                            @dragend="
-                              (e) => finishDrag(character, i, e, 'group_characteristics')
-                            "
-                            @dragover="(e) => onDragOver(character, i, e)"
-                            @dragstart="(e) => startDrag(character, i, e)"
-                          >
-                            <a-icon
-                              type="drag"
-                              :style="{ color: '#3699FF', fontSize: '18px' }"
-                            />
-                            <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
-                          </div>
-                        </div>
-                      </div>
-                    </transition-group>
+                        </drag>
+                      </template>
+                      <template v-slot:feedback="{ data }">
+                        <div class="item feedback" :key="data">{{ data }}</div>
+                      </template>
+                    </drop-list>
                     <div class="d-flex justify-content-start">
                       <div
                         class="create-inner-variant mt-0"
@@ -415,8 +409,8 @@ import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import { Drag, DropList } from "vue-easy-dnd";
 
-import { quillEditor } from "vue-quill-editor";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -492,7 +486,7 @@ export default {
           {
             required: true,
             message: "Category name is required",
-            trigger: "change",
+            trigger: ["change","blur"],
           },
         ],
 
@@ -591,21 +585,8 @@ export default {
     };
   },
   methods: {
-    startDrag(item, i, e) {
-      this.startLoc = e.clientY;
-      this.dragging = true;
-      this.dragFrom = item;
-    },
-    finishDrag(item, pos, e, name) {
-      this[name].splice(pos, 1);
-      this[name].splice(this.over.pos, 0, item);
-      this.over = {};
-    },
-    onDragOver(item, pos, e) {
-      const dir = this.startLoc < e.clientY ? "down" : "up";
-      setTimeout(() => {
-        this.over = { item, pos, dir };
-      }, 10);
+    onInsert(event, elem) {
+      this[elem].splice(event.index, 0, event.data);
     },
     addElement(type) {
       this[type].push({
@@ -644,12 +625,7 @@ export default {
       delete data["name_ru"];
       delete data["name_uz"];
       delete data["name_en"];
-      // console.log(data.parent_id);
-      // if (data.parent_id) {
-      //   data.parent_id = this.categories.filter(
-      //     (item) => item.name.ru == data.parent_id
-      //   )[0].id;
-      // }
+
       if (this.fileList.img[0]?.oldImg) {
         data.img = this.fileList.img[0]?.url;
       }
@@ -770,8 +746,9 @@ export default {
     },
     async __GET_ATRIBUTES() {
       const data = await this.$store.dispatch("fetchAtributes/getAllAtributes");
-      this.atributes = data.attributes?.data;
-      this.allAtributes = data.attributes?.data;
+      this.atributes = data.attributes;
+      this.allAtributes = data.attributes;
+      console.log(data.attributes);
       this.filterElement("attributes");
     },
     async __GET_GROUPS() {
@@ -824,6 +801,8 @@ export default {
     FormTitle,
     TitleBlock,
     LayoutHeaderBtn,
+    Drag,
+    DropList,
   },
 };
 </script>

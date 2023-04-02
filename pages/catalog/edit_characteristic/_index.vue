@@ -67,16 +67,16 @@
           ></div>
           <el-tabs class="form_tabs" v-model="activeName">
             <el-tab-pane
-              v-for="(item, index) in lang"
-              :label="item.label"
-              :name="item.label"
+              v-for="(itemLang, index) in lang"
+              :label="itemLang.label"
+              :name="itemLang.label"
               :key="index"
             >
               <div class="form-container form-container-ltr">
                 <FormTitle title="Атрибут" />
                 <div class="form-block required">
                   <div><label for="">Группа</label></div>
-                  <div class="group-grid">
+                  <div class="group-grid1">
                     <el-form-item prop="group_id">
                       <el-select
                         class="w-100"
@@ -95,71 +95,91 @@
                         </el-option>
                       </el-select>
                     </el-form-item>
-                    <div
-                      class="outline-btn outline-light-blue-btn mt-2"
-                      @click="show('add_atribute_group')"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 6V18M18 12L6 12"
-                          stroke="#5899FF"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
                   </div>
                 </div>
-                <div class="atribut-input-grid">
-                  <div class="form-block required">
-                    <div><label for="">Имя атрибута</label></div>
-                    <el-form-item :prop="`name_${item.key}`">
-                      <el-input
-                        v-model="ruleForm[`name_${item.key}`]"
-                        placeholder="Atribut Name"
-                      ></el-input>
-                    </el-form-item>
-                    <span class="bottom_text"
-                      >Имя атрибута является обязательным и рекомендуется
-                      уникальный.</span
-                    >
-                  </div>
-                  <div
-                    class="form-block required"
-                    :class="{ 'multi-select-required': multiSelectError }"
+                <div class="list">
+                  <drop-list
+                    :items="ruleForm.characters"
+                    @insert="onInsert"
+                    @reorder="$event.apply(ruleForm.characters)"
                   >
-                    <div><label>Имя опции</label></div>
-                    <el-form-item label-position="top" prop="options">
-                      <el-select
-                        class="w-100 multi_select"
-                        v-model="ruleForm.options"
-                        filterable
-                        multiple
-                        allow-create
-                        placeholder="Option name"
-                        loading-text="atribute"
-                      >
-                        <el-option
-                          v-for="item in options"
-                          :key="item.id"
-                          :label="item.name.ru"
-                          :value="item.id"
-                        >
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                    <span class="bottom_text"
-                      >Установите список ключевых слов, с которыми связана
-                      категория. Разделяйте ключевые слова, добавляя запятую
-                      между каждым ключевое слово.</span
-                    >
+                    <template v-slot:item="{ item }">
+                      <drag class="item" :key="item.id">
+                        <div class="character-input-grid pb-3">
+                          <div class="form-block required mb-0">
+                            <el-form-item>
+                              <el-input
+                                v-model="item[`name_${itemLang.key}`]"
+                                placeholder="Atribut Name"
+                              ></el-input>
+                            </el-form-item>
+                          </div>
+                          <div
+                            class="form-block mb-0"
+                            :class="{ 'multi-select-required': multiSelectError }"
+                          >
+                            <el-form-item label-position="top" prop="options">
+                              <el-select
+                                class="w-100"
+                                v-model="ruleForm.options"
+                                popper-class="select-popper-hover"
+                                filterable
+                                multiple
+                                allow-create
+                                default-first-option
+                                no-data-text="No options"
+                                placeholder="Option name"
+                              >
+                                <el-option
+                                  v-for="option in options"
+                                  :key="option.value"
+                                  :label="option.label"
+                                  :value="option.value"
+                                >
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </div>
+                          <div class="variant_btns mb-1 mt-0">
+                            <div
+                              class="variant-btn variant-btn-delete mx-2"
+                              @click="deleteElement(item.id)"
+                            >
+                              <svg
+                                width="30"
+                                height="30"
+                                viewBox="0 0 30 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                  stroke="#F65160"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div class="variant-btn variant-btn-check cursor_drag">
+                              <a-icon
+                                type="drag"
+                                :style="{ color: '#3699FF', fontSize: '18px' }"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </drag>
+                    </template>
+                    <template v-slot:feedback="{ data }">
+                      <div class="item feedback" :key="data">{{ data }}</div>
+                    </template>
+                  </drop-list>
+                  <div class="d-flex justify-content-start">
+                    <div class="create-inner-variant mt-0" @click="addElement()">
+                      <span v-html="addInnerValidatIcon"></span>
+                      Добавить характеристику
+                    </div>
                   </div>
                 </div>
               </div>
@@ -168,48 +188,6 @@
         </div>
       </div>
     </el-form>
-    <AddModal
-      title="New group"
-      name="add_atribute_group"
-      btnText="Add Group"
-      :callback="getData"
-      :closeModal="closeModal"
-    >
-      <el-form
-        label-position="top"
-        :model="atributGroup"
-        :rules="rulesModal"
-        ref="atributGroup"
-        label-width="120px"
-        class="demo-ruleForm"
-        action=""
-      >
-        <div class="modal_tab mb-4">
-          <span
-            v-for="(item, index) in modalTabData"
-            :key="index"
-            @click="modalTab = item.index"
-            :class="{ 'avtive-modalTab': modalTab == item.index }"
-          >
-            {{ item.label }}
-          </span>
-        </div>
-        <div
-          class="form-block required"
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          v-if="modalTab == item.index"
-        >
-          <div><label for="">Group </label></div>
-          <el-form-item prop="character_name">
-            <el-input
-              placeholder="Product model"
-              v-model="atributGroup.name[item.index]"
-            ></el-input>
-          </el-form-item>
-        </div>
-      </el-form>
-    </AddModal>
   </div>
 </template>
 <script>
@@ -219,12 +197,16 @@ import FormTitle from "../../../components/Form-title.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import AddModal from "../../../components/modals/Add-modal.vue";
+import { Drag, DropList } from "vue-easy-dnd";
 
 export default {
   layout: "toolbar",
   data() {
     return {
       activeName: "Русский",
+      addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
+      addImgIcon: require("../../../assets/svg/components/add-img-icon.svg?raw"),
+      addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       multiSelectError: true,
       groups: [],
       options: [],
@@ -298,6 +280,15 @@ export default {
         name_uz: "",
         name_en: "",
         options: [],
+        characters: [
+          {
+            id: 1,
+            name_ru: "",
+            name_uz: "",
+            name_en: "",
+            options: [],
+          },
+        ],
       },
       group_id: null,
       characteristic_id: null,
@@ -312,6 +303,21 @@ export default {
   },
 
   methods: {
+    deleteElement(id) {
+      if (this.ruleForm.characters.length > 1)
+        this.ruleForm.characters = this.ruleForm.characters.filter(
+          (item) => item.id != id
+        );
+    },
+    onInsert(event) {
+      this.ruleForm.characters.splice(event.index, 0, event.data);
+    },
+    addElement() {
+      this.ruleForm.characters.push({
+        name: "",
+        id: Math.max(...this.ruleForm.characters.map((o) => o.id)) + 1,
+      });
+    },
     submitForm(ruleForm) {
       this.multiSelectError = false;
       this.$refs[ruleForm].validate((valid) => {
@@ -456,6 +462,8 @@ export default {
     TitleBlock,
     LayoutHeaderBtn,
     AddModal,
+    Drag,
+    DropList,
   },
 };
 </script>

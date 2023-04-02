@@ -39,9 +39,9 @@
           ></div>
           <el-tabs class="form_tabs" v-model="activeName">
             <el-tab-pane
-              v-for="(item, index) in lang"
-              :label="item.label"
-              :name="item.label"
+              v-for="(itemLang, index) in lang"
+              :label="itemLang.label"
+              :name="itemLang.label"
               :key="index"
             >
               <div class="form-container form-container-ltr">
@@ -62,9 +62,9 @@
                 <div class="atribut-input-grid">
                   <div class="form-block required">
                     <div><label for="">Имя атрибута</label></div>
-                    <el-form-item :prop="`name_${item.key}`">
+                    <el-form-item :prop="`name_${itemLang.key}`">
                       <el-input
-                        v-model="ruleForm[`name_${item.key}`]"
+                        v-model="ruleForm[`name_${itemLang.key}`]"
                         placeholder="Atribut Name"
                       ></el-input>
                     </el-form-item>
@@ -80,7 +80,55 @@
                     >
                       <div><label>Имя опции</label></div>
                       <el-form-item label-position="top">
-                        <transition-group name="flip-list" tag="div">
+                        <drop-list
+                          :items="ruleForm.optionsName"
+                          @insert="onInsert"
+                          @reorder="$event.apply(ruleForm.optionsName)"
+                        >
+                          <template v-slot:item="{ item }">
+                            <drag class="item" :key="item.id">
+                              <div class="d-flex align-items-center">
+                                <el-input
+                                  class="w-100 mb-2"
+                                  v-model="item.name"
+                                  placeholder="Option name"
+                                />
+                                <div class="variant_btns mb-1 mt-0">
+                                  <div
+                                    class="variant-btn variant-btn-delete mx-2"
+                                    @click="deleteElement(item.id)"
+                                  >
+                                    <svg
+                                      width="30"
+                                      height="30"
+                                      viewBox="0 0 30 30"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                        stroke="#F65160"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      />
+                                    </svg>
+                                  </div>
+                                  <div class="variant-btn variant-btn-check cursor_drag">
+                                    <a-icon
+                                      type="drag"
+                                      :style="{ color: '#3699FF', fontSize: '18px' }"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </drag>
+                          </template>
+                          <template v-slot:feedback="{ data }">
+                            <div class="item feedback" :key="data">{{ data }}</div>
+                          </template>
+                        </drop-list>
+                        <!-- <transition-group name="flip-list" tag="div">
                           <div
                             class="d-flex align-items-center"
                             v-for="(item, i) in ruleForm.optionsName"
@@ -123,11 +171,10 @@
                                   type="drag"
                                   :style="{ color: '#3699FF', fontSize: '18px' }"
                                 />
-                                <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
                               </div>
                             </div>
                           </div>
-                        </transition-group>
+                        </transition-group> -->
                       </el-form-item>
                       <div class="d-flex justify-content-start">
                         <div class="create-inner-variant mt-0" @click="addElement()">
@@ -157,6 +204,7 @@ import FormTitle from "../../components/Form-title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
+import { Drag, DropList } from "vue-easy-dnd";
 
 export default {
   layout: "toolbar",
@@ -252,24 +300,8 @@ export default {
   },
 
   methods: {
-    startDrag(item, i, e) {
-      this.startLoc = e.clientY;
-      this.dragging = true;
-      this.dragFrom = item;
-      console.log(this.dragFrom);
-    },
-
-    finishDrag(item, pos) {
-      this.ruleForm.optionsName.splice(pos, 1);
-      this.ruleForm.optionsName.splice(this.over.pos, 0, item);
-      this.over = {};
-    },
-
-    onDragOver(item, pos, e) {
-      const dir = this.startLoc < e.clientY ? "down" : "up";
-      setTimeout(() => {
-        this.over = { item, pos, dir };
-      }, 50);
+    onInsert(event) {
+      this.ruleForm.optionsName.splice(event.index, 0, event.data);
     },
     addElement() {
       this.ruleForm.optionsName.push({
@@ -407,6 +439,7 @@ export default {
     TitleBlock,
     LayoutHeaderBtn,
     AddModal,
+    Drag, DropList
   },
 };
 </script>

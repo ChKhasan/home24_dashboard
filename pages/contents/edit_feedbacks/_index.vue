@@ -1,16 +1,28 @@
 <template lang="html">
   <div class="wrapper">
-    <div class="list">
-      <!-- <drag v-for="n in [1, 2, 3, 4, 5]" :data="n" class="item" :key="n">{{ n }}</drag> -->
-    </div>
+    {{ items }}
+    {{ itemsNum }}
+    <drop-list
+      :items="itemsNum"
+      class="list"
+      @insert="($event) => onInsert($event, 'itemsNum')"
+      @reorder="$event.apply(itemsNum)"
+    >
+      <template v-slot:item="{ item }">
+        <drag class="item" :key="item" :data="item">{{ item }}</drag>
+      </template>
+      <template v-slot:feedback="{ data }">
+        <div class="item feedback" :key="data">{{ data }}</div>
+      </template>
+    </drop-list>
     <drop-list
       :items="items"
       class="list"
-      @insert="onInsert"
+      @insert="($event) => onInsert($event, 'items')"
       @reorder="$event.apply(items)"
     >
       <template v-slot:item="{ item }">
-        <drag class="item" :key="item">{{ item }}</drag>
+        <drag class="item" :key="item" :data="item">{{ item }}</drag>
       </template>
       <template v-slot:feedback="{ data }">
         <div class="item feedback" :key="data">{{ data }}</div>
@@ -24,11 +36,13 @@ export default {
   data() {
     return {
       items: ["a", "b", "c", "d", "e"],
+      itemsNum: [1, 2, 3, 4, 5],
+      itemsNum1: [11, 22, 33, 44, 55],
     };
   },
   methods: {
-    onInsert(event) {
-      this.items.splice(event.index, 0, event.data);
+    onInsert(event, arr) {
+      this[arr].splice(event.index, 0, event.data);
     },
   },
   components: {
@@ -51,6 +65,7 @@ body,
   box-shadow: 0 0 10px rgba(0, 0, 255, 0.3);
 }
 .wrapper {
+  display: flex;
   .list {
     border: 1px solid black;
     margin: 100px auto;

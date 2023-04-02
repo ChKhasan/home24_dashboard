@@ -11,7 +11,8 @@ import {
   Popconfirm,
   Radio,
   Icon,
-  Input
+  Input,
+  Spin
 } from "ant-design-vue";
 
 Vue.use(Button);
@@ -25,3 +26,4 @@ Vue.use(Popconfirm);
 Vue.use(Radio);
 Vue.use(Icon);
 Vue.use(Input);
+Vue.use(Spin);

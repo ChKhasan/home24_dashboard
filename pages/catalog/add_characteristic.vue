@@ -47,44 +47,7 @@
                   <div class="group-grid1" id="character_group">
                     <el-form-item prop="group_id">
                       <el-input placeholder="group" v-model="ruleForm.group_id" />
-                      <!-- <el-select
-                        class="w-100"
-                        popper-class="select-popper-hover"
-                        v-model="ruleForm.group_id"
-                        filterable
-                        no-data-text="No group"
-                        no-match-text="No group"
-                        placeholder="Choose tags for your article"
-                      >
-                        <el-option
-                          v-for="item in groups"
-                          :key="item.id"
-                          :label="item.name.ru"
-                          :value="item.id"
-                        >
-                        </el-option>
-                      </el-select> -->
                     </el-form-item>
-                    <!-- <div
-                      class="outline-btn outline-light-blue-btn mt-1"
-                      @click="show('add_atribute_group')"
-                    >
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M12 6V18M18 12L6 12"
-                          stroke="#5899FF"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div> -->
                   </div>
                 </div>
                 <div class="list">
@@ -94,74 +57,70 @@
                     @reorder="$event.apply(ruleForm.characters)"
                   >
                     <template v-slot:item="{ item }">
-                      <drag class="item " :key="item.id"
-                        >
+                      <drag class="item" :key="item.id">
                         <div class="character-input-grid pb-3">
-                        <div class="form-block required mb-0">
-                        <el-form-item>
-                          <el-input
-                            v-model="item[`name_${itemLang.key}`]"
-                            placeholder="Atribut Name"
-                          ></el-input>
-                        </el-form-item>
-                      </div>
-                      <div
-                        class="form-block mb-0"
-                        :class="{ 'multi-select-required': multiSelectError }"
-                      >
-                        <el-form-item label-position="top" prop="options">
-                          <el-select
-                            class="w-100"
-                            v-model="ruleForm.options"
-                            popper-class="select-popper-hover"
-                            filterable
-                            multiple
-                            allow-create
-                            default-first-option
-                            no-data-text="No options"
-                            placeholder="Option name"
+                          <div class="form-block required mb-0">
+                            <el-form-item>
+                              <el-input
+                                v-model="item[`name_${itemLang.key}`]"
+                                placeholder="Atribut Name"
+                              ></el-input>
+                            </el-form-item>
+                          </div>
+                          <div
+                            class="form-block mb-0"
+                            :class="{ 'multi-select-required': multiSelectError }"
                           >
-                            <el-option
-                              v-for="option in options"
-                              :key="option.value"
-                              :label="option.label"
-                              :value="option.value"
+                            <el-form-item label-position="top" prop="options">
+                              <el-select
+                                class="w-100"
+                                v-model="ruleForm.options"
+                                popper-class="select-popper-hover"
+                                filterable
+                                multiple
+                                allow-create
+                                default-first-option
+                                no-data-text="No options"
+                                placeholder="Option name"
+                              >
+                                <el-option
+                                  v-for="option in options"
+                                  :key="option.value"
+                                  :label="option.label"
+                                  :value="option.value"
+                                >
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </div>
+                          <div class="variant_btns mb-1 mt-0">
+                            <div
+                              class="variant-btn variant-btn-delete mx-2"
+                              @click="deleteElement(item.id)"
                             >
-                            </el-option>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-                      <div class="variant_btns mb-1 mt-0">
-                        <div
-                          class="variant-btn variant-btn-delete mx-2"
-                          @click="deleteElement(item.id)"
-                        >
-                          <svg
-                            width="30"
-                            height="30"
-                            viewBox="0 0 30 30"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                              stroke="#F65160"
-                              stroke-width="1.5"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </svg>
-                        </div>
-                        <div
-                          class="variant-btn variant-btn-check cursor_drag"
-                          
-                        >
-                          <a-icon
-                            type="drag"
-                            :style="{ color: '#3699FF', fontSize: '18px' }"
-                          />
-                        </div>
-                      </div>
+                              <svg
+                                width="30"
+                                height="30"
+                                viewBox="0 0 30 30"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                  stroke="#F65160"
+                                  stroke-width="1.5"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                />
+                              </svg>
+                            </div>
+                            <div class="variant-btn variant-btn-check cursor_drag">
+                              <a-icon
+                                type="drag"
+                                :style="{ color: '#3699FF', fontSize: '18px' }"
+                              />
+                            </div>
+                          </div>
                         </div>
                       </drag>
                     </template>
@@ -179,7 +138,6 @@
               </div>
             </el-tab-pane>
           </el-tabs>
-        
         </div>
       </div>
     </el-form>
@@ -277,9 +235,9 @@ export default {
         characters: [
           {
             id: 1,
-            name_ru: "ru",
-            name_uz: "uz",
-            name_en: "en",
+            name_ru: "",
+            name_uz: "",
+            name_en: "",
             options: [],
           },
         ],
@@ -303,25 +261,6 @@ export default {
         name: "",
         id: Math.max(...this.ruleForm.characters.map((o) => o.id)) + 1,
       });
-    },
-    startDrag(item, i, e) {
-      this.startLoc = e.clientY;
-      this.dragging = true;
-      this.dragFrom = item;
-      console.log(this.dragFrom);
-    },
-
-    finishDrag(item, pos) {
-      this.ruleForm.characters.splice(pos, 1);
-      this.ruleForm.characters.splice(this.over.pos, 0, item);
-      this.over = {};
-    },
-
-    onDragOver(item, pos, e) {
-      const dir = this.startLoc < e.clientY ? "down" : "up";
-      setTimeout(() => {
-        this.over = { item, pos, dir };
-      }, 50);
     },
     submitForm(ruleForm) {
       this.multiSelectError = false;
@@ -424,7 +363,6 @@ export default {
     toBack() {
       this.$router.push("/catalog/characteristic");
     },
-    handleClick() {},
     onInsert(event) {
       this.ruleForm.characters.splice(event.index, 0, event.data);
     },

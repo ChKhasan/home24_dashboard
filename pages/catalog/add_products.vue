@@ -163,14 +163,40 @@
                   class="form-container product_list"
                   v-for="element in ruleForm.products"
                   :key="element.id"
+                  :class="{
+                    'variant-modal': productModal[`product_modal${element.id}`] == true,
+                  }"
                 >
                   <div class="d-flex justify-content-between variant-header">
                     <h4 class="variant-title">Вариация №{{ element.id }}</h4>
-                    <div
-                      class="variant-btn variant-btn-delete"
-                      @click="deleteProduct(element.id)"
-                      v-html="removeIcon"
-                    ></div>
+                    <div class="d-flex">
+                      <div
+                        class="variant-btn variant-btn-check"
+                        v-if="productModal[`product_modal${element.id}`]"
+                        @click="fullScreen(element.id, false)"
+                      >
+                        <a-icon
+                          type="fullscreen-exit"
+                          :style="{ color: '#3699FF', fontSize: '18px' }"
+                        />
+                      </div>
+                      <div
+                        v-else
+                        class="variant-btn variant-btn-check mx-3"
+                        @click="fullScreen(element.id, true)"
+                      >
+                        <a-icon
+                          type="fullscreen"
+                          :style="{ color: '#3699FF', fontSize: '18px' }"
+                        />
+                      </div>
+                      <div
+                        v-if="!productModal[`product_modal${element.id}`]"
+                        class="variant-btn variant-btn-delete"
+                        @click="deleteProduct(element.id)"
+                        v-html="removeIcon"
+                      ></div>
+                    </div>
                   </div>
                   <div class="variant-img-container">
                     <h5 class="variant-img-title">Изображение товара</h5>
@@ -194,7 +220,12 @@
                                     <a-icon class="upload_icons" type="delete" />
                                   </span>
                                 </div>
-                                <img :src="item?.response?.path" alt="" />
+                                <img
+                                  v-if="item?.response?.path"
+                                  :src="item?.response?.path"
+                                  alt=""
+                                />
+                                <a-spin tip="Uploading..." v-else> </a-spin>
                               </div>
                             </drag>
                           </template>
@@ -840,6 +871,9 @@ export default {
       startLoc: 0,
       dragging: false,
       dragFrom: {},
+      productModal: {
+        product_modal1: false,
+      },
       closeIcon: require("../../assets/svg/components/remove.svg?raw"),
       copyIcon: require("../../assets/svg/components/copy.svg?raw"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
@@ -1111,6 +1145,18 @@ export default {
     }
   },
   methods: {
+    fullScreen(id, val) {
+      this.productModal = {
+        [`product_modal${id}`]: val,
+      };
+      if (val) {
+        document.body.style.height = "100vh";
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.height = "auto";
+        document.body.style.overflow = "auto";
+      }
+    },
     uploadSHow(img) {
       this.previewImage = img.response.path;
       this.previewVisible = true;
@@ -1586,6 +1632,14 @@ export default {
       copyCharacter = {};
     },
   },
+  watch: {
+    "ruleForm.products.length"(val) {
+      this.ruleForm.products.forEach((item) => {
+        this.productModal[`product_modal${item.id}`] = false;
+      });
+      console.log(this.productModal);
+    },
+  },
   components: {
     ProductsStatistic,
     ProductCharacterList,
@@ -1603,6 +1657,9 @@ export default {
   width: 119px !important;
   height: 119px !important;
   margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 10px;
   transition: transform 0.2s !important;
   transition: 0.2s !important;
@@ -1637,6 +1694,7 @@ export default {
   img {
     width: 100%;
     height: 100%;
+    object-fit: contain;
     pointer-events: none;
     transition: transform 0.2s !important;
     transition: 0.2s !important;
@@ -1665,5 +1723,21 @@ export default {
   opacity: 0.6;
   transition: transform 0.2s !important;
   transition: 0.2s !important;
+}
+.variant-modal {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  border-radius: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3000;
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+}
+.product_list {
+  transition: 0.2s;
 }
 </style>
