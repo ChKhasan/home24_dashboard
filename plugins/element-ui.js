@@ -38,11 +38,11 @@ import {
   Aside,
   Main,
 } from "element-ui";
-ElementUI.Select.computed.readonly = function () {
-  const isIE = !this.$isServer && !Number.isNaN(Number(document.documentMode));
+// ElementUI.Select.computed.readonly = function () {
+//   const isIE = !this.$isServer && !Number.isNaN(Number(document.documentMode));
 
-  return !(this.filterable || this.multiple || !isIE) && !this.visible;
-};
+//   return !(this.filterable || this.multiple || !isIE) && !this.visible;
+// };
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);

@@ -18,8 +18,10 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
-          <div class="d-flex justify-content-between w-100">
-            <SearchInput placeholder="Поиск продукта" />
+          <div class="prodduct-list-header-grid w-100 align-items-center">
+            <SearchInput placeholder="Поиск продукта" @changeSearch="changeSearch" />
+            <SearchInput placeholder="Поиск товара по бренду" @changeSearch="changeSearch" />
+            <StatusFilter />
           </div>
         </div>
         <a-table
@@ -93,15 +95,14 @@
   </div>
 </template>
 <script>
-import AddBtn from "../../components/form/Add-btn.vue";
 import SearchInput from "../../components/form/Search-input.vue";
+import StatusFilter from "../../components/form/Status-filter.vue";
 import TitleBlock from "../../components/Title-block.vue";
 
 export default {
   // middleware: "auth",
   data() {
     return {
-      pageSize: 10,
       page: 1,
       params: {
         page: 1,
@@ -191,13 +192,12 @@ export default {
 
       products: [],
       data: [],
+      searchProduct: "",
     };
   },
   methods: {
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-    },
     async __GET_PRODUCTS() {
+      this.loading = true;
       this.products = await this.$store.dispatch("fetchProducts/getProducts", {
         ...this.$route.query,
       });
@@ -230,6 +230,7 @@ export default {
             price: item.products[0].price,
             model: item.products[0].model,
             img: null,
+            status: item.products[0].status,
           };
         }
       });
@@ -279,27 +280,28 @@ export default {
         this.statusFunc(e.response);
       }
     },
+    notification(title, message, type) {
+      this.$notify({
+        title: title,
+        message: message,
+        type: type,
+      });
+    },
     statusFunc(res) {
       switch (res.status) {
         case 422:
-          this.$notify.error({
-            title: res.data.message,
-            message: res.data.errors,
-          });
+          this.notificationError("Error", "Указанные данные недействительны.");
           break;
         case 500:
-          this.$notify.error({
-            title: res.data.message,
-            message: res.data.errors,
-          });
+          this.notificationError("Error", "Cервер не работает");
           break;
         case 404:
-          this.$notify.error({
-            title: res.data.message,
-            message: res.data.errors,
-          });
+          this.notificationError("Error", res.data.errors);
           break;
       }
+    },
+    changeSearch(val) {
+      this.searchProduct = val.target.value;
     },
   },
   async mounted() {
@@ -319,9 +321,9 @@ export default {
     },
   },
   components: {
-    AddBtn,
     SearchInput,
     TitleBlock,
+    StatusFilter,
   },
   layout: "toolbar",
 };

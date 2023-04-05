@@ -24,7 +24,11 @@
         ></path>
       </svg>
     </span>
-    <input type="text" :placeholder="placeholder" />
+    <input
+      type="text"
+      :placeholder="placeholder"
+      @input="($event) => $emit('changeSearch', $event)"
+    />
   </div>
 </template>
 <script>

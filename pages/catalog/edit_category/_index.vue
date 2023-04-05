@@ -16,7 +16,7 @@
           :loading="uploadLoading"
         >
           <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"></span>
-          Добавить категорию
+          Сохранить изменение
         </a-button>
       </div>
     </TitleBlock>
@@ -24,10 +24,7 @@
       <div class="card_block-form py-5">
         <div
           class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
-        >
-          <!-- <Title title="Category edit" />
-          <AddBtn name="Save" :icon="false" :callback="toAddProduct" /> -->
-        </div>
+        ></div>
         <div class="category-from-grid">
           <el-form
             label-position="top"
@@ -48,7 +45,7 @@
                 >
                   <div class="form-container form-container-ltr">
                     <div class="d-flex justify-content-between">
-                      <FormTitle title="Добавить категорию" />
+                      <FormTitle title="Изменить категорию" />
                     </div>
 
                     <div class="category-input-grid">
@@ -158,7 +155,6 @@
                                 type="drag"
                                 :style="{ color: '#3699FF', fontSize: '18px' }"
                               />
-                              <!-- <a-radio :checked="item.is_default == 1"></a-radio> -->
                             </div>
                           </div>
                         </drag>
@@ -343,28 +339,7 @@
                     @change="($event) => handleChange($event, 'img')"
                   >
                     <div v-if="fileList.img.length < 1">
-                      <svg
-                        width="40"
-                        height="40"
-                        viewBox="0 0 40 40"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
-                          stroke="#3699FF"
-                          stroke-width="3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
-                          stroke="#3699FF"
-                          stroke-width="3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
+                      <span v-html="addImgIcon"></span>
                       <div class="ant-upload-text">Upload image</div>
                       <span class="upload-resize">(678 x 784)</span>
                     </div>
@@ -394,28 +369,7 @@
                     @change="($event) => handleChange($event, 'icon')"
                   >
                     <div v-if="fileList.icon.length < 1">
-                      <svg
-                        width="40"
-                        height="40"
-                        viewBox="0 0 40 40"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M15.0264 19.999L20.0125 24.999M20.0125 24.999L24.9987 19.999M20.0125 24.999L20.0125 4.99902"
-                          stroke="#3699FF"
-                          stroke-width="3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M12.5334 15V15C8.40276 15 5.0542 18.3486 5.0542 22.4792L5.0542 26.3333C5.0542 31.1198 8.9344 35 13.7209 35L26.3044 35C31.0909 35 34.9711 31.1198 34.9711 26.3333L34.9711 22.4792C34.9711 18.3486 31.6225 15 27.4919 15V15"
-                          stroke="#3699FF"
-                          stroke-width="3"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
+                      <span v-html="addImgIcon"></span>
                       <div class="ant-upload-text">Upload image</div>
                       <span class="upload-resize">(678 x 784)</span>
                     </div>

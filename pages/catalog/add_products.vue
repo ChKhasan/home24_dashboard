@@ -1,13 +1,13 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Products"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Products"
+    title="Продукты"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Продукты"
     >
       <div class="d-flex">
         <div class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3">
-          Cancel
+          Отмена
         </div>
         <a-button
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
@@ -16,7 +16,7 @@
           :loading="uploadLoading"
         >
           <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"> </span>
-          Add Product
+          Добавить продукт
         </a-button>
       </div>
     </TitleBlock>
@@ -296,7 +296,7 @@
                                     popper-class="select-popper-hover"
                                     placeholder="265 gb"
                                     @change="
-                                      atributOptions({
+                                      atributOptionsChange({
                                         productId: element.id,
                                         variantId: item.id,
                                         index: index,
@@ -853,8 +853,6 @@ import "quill/dist/quill.core.css";
 import { Drag, DropList } from "vue-easy-dnd";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import AddBrandModal from "../../components/products/Add-brand-modal.vue";
-import AddCategoryModal from "../../components/products/Add-category-modal.vue";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -867,10 +865,6 @@ export default {
   layout: "toolbar",
   data() {
     return {
-      over: {},
-      startLoc: 0,
-      dragging: false,
-      dragFrom: {},
       productModal: {
         product_modal1: false,
       },
@@ -908,45 +902,6 @@ export default {
       activeDesc: "Description",
       searchBlock: false,
       cascaderCategories: [],
-      options1: [
-        {
-          value: "zhejiang",
-          label: "Zhejiang",
-          children: [
-            {
-              value: "hangzhou",
-              label: "Hangzhou",
-              children: [
-                {
-                  value: "xihu",
-                  label: "West Lake",
-                },
-                {
-                  value: "xiasha",
-                  label: "Xia Sha",
-                  disabled: true,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          value: "jiangsu",
-          label: "Jiangsu",
-          children: [
-            {
-              value: "nanjing",
-              label: "Nanjing",
-              children: [
-                {
-                  value: "zhonghuamen",
-                  label: "Zhong Hua men",
-                },
-              ],
-            },
-          ],
-        },
-      ],
       lastCategory: [],
       lang: [
         {
@@ -1090,13 +1045,11 @@ export default {
         is_active: 0,
         desc_ru: "",
       },
-      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       fileListCategory: [],
       allAtributes: [],
       allGroups: [],
       visibleCategory: false,
       fileListBrand: [],
-      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       brandData: {
         name: "",
         logo: "",
@@ -1164,36 +1117,12 @@ export default {
     },
     uploadDelete(id, imgId) {
       const product = this.findProductWithId(id);
-
       product.imagesData = product.imagesData.filter((item) => item.uid != imgId);
     },
-
     onInsert(event, id) {
-      console.log(this.ruleForm.products);
       this.ruleForm.products
         .find((item) => item.id == id)
         .images.splice(event.index, 0, event.data);
-    },
-    startDrag(item, i, e) {
-      this.startLoc = e.clientY;
-      this.dragging = true;
-      this.dragFrom = item;
-      console.log(this.dragFrom);
-    },
-
-    finishDrag(item, pos, e, id) {
-      this.ruleForm.products.find((elem2) => elem2.id == id).images.splice(pos, 1);
-      this.ruleForm.products
-        .find((elem1) => elem1.id == id)
-        .images.splice(this.over.pos, 0, item);
-      this.over = {};
-    },
-
-    onDragOver(item, pos, e) {
-      const dir = this.startLoc < e.clientY ? "down" : "up";
-      setTimeout(() => {
-        this.over = { item, pos, dir };
-      }, 50);
     },
     getData() {
       this.$refs["brandData"].validate((valid) => (valid ? this.__POST_BRAND() : false));
@@ -1211,13 +1140,6 @@ export default {
     switchStatus(e) {
       console.log(e);
     },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
-    },
     async __POST_BRAND() {
       try {
         await this.$store.dispatch("fetchBrands/postBrands", this.brandData);
@@ -1231,7 +1153,6 @@ export default {
         this.statusFunc(e.response);
       }
     },
-
     async handlePreview(file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
@@ -1249,10 +1170,11 @@ export default {
           ru: this.ruleFormCategory.desc_ru,
         },
       };
-      delete newData["name_ru"];
-      delete newData["desc_ru"];
+      // delete newData["name_ru"];
+      // delete newData["desc_ru"];
+      const { name_ru, desc_ru, ...rest } = newData;
       this.$refs["categoryData"].validate((valid) =>
-        valid ? this.__POST_CATEGORY(newData) : false
+        valid ? this.__POST_CATEGORY(rest) : false
       );
     },
     handleChangeCategory({ fileList }) {
@@ -1391,10 +1313,8 @@ export default {
           };
         }),
       };
-      delete newData["name_ru"];
-      delete newData["name_uz"];
-      delete newData["name_en"];
-      return newData;
+      const { name_ru, name_en, name_uz, ...rest } = newData;
+      return rest;
     },
     notificationError(title, message) {
       this.$notify.error({
@@ -1404,6 +1324,7 @@ export default {
     },
     reloadCategories() {
       this.cascader = JSON.parse(localStorage.getItem("lastCategory"));
+      this.ruleForm.category_id = this.cascader.at(-1);
       this.__GET_CATEGORY_BY_ID(this.cascader.at(-1));
     },
     handleScroll(event) {
@@ -1420,8 +1341,7 @@ export default {
         currentProduct.imagesData = [...fileList];
       }
     },
-
-    atributOptions(obj) {
+    atributOptionsChange(obj) {
       const product = this.findProductWithId(obj.productId);
       product.variations.find((varId) => varId.id == obj.variantId).options[
         obj.index
@@ -1431,13 +1351,6 @@ export default {
     },
     handleCancel() {
       this.previewVisible = false;
-    },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
     },
     //variant
     atributNames() {
@@ -1580,7 +1493,6 @@ export default {
       };
 
       this.cascaderCategories = mapCategories(this.categories);
-      console.log(this.cascaderCategories);
       this.cascaderCategories.unshift({
         name: { ru: "Главная категория" },
         id: null,
@@ -1648,7 +1560,6 @@ export default {
       this.ruleForm.products.forEach((item) => {
         this.productModal[`product_modal${item.id}`] = false;
       });
-      console.log(this.productModal);
     },
   },
   components: {
@@ -1656,8 +1567,6 @@ export default {
     ProductCharacterList,
     CommentCard,
     TitleBlock,
-    AddBrandModal,
-    AddCategoryModal,
     Drag,
     DropList,
   },

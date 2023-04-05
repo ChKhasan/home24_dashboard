@@ -41,12 +41,7 @@
               <h6>{{ text?.name.ru }}</h6>
               <span>{{ text.keywords }}</span>
             </a>
-            <div
-              slot="options"
-              slot-scope="text"
-              align="center"
-              class="option-container"
-            >
+            <div slot="options" slot-scope="text" align="center" class="option-container">
               <span class="option-items" v-for="(item, index) in text" :key="index">{{
                 item.name.ru ? item.name.ru : "-----"
               }}</span>
@@ -223,23 +218,27 @@ export default {
       });
     },
     async __GET_ATRIBUTES() {
-      const data = await this.$store.dispatch("fetchAtributes/getAtributes", {
-        ...this.$route.query,
-      });
-      this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.attributes?.total;
-      this.atributes = data.attributes?.data.map((item) => {
-        return {
-          ...item,
-          key: item.id,
-          info: {
-            name: item.name,
-            keywords: item.keywords
-          }
-        };
-      });
+      try {
+        const data = await this.$store.dispatch("fetchAtributes/getAtributes", {
+          ...this.$route.query,
+        });
+        this.loading = false;
+        const pagination = { ...this.pagination };
+        this.pagination = pagination;
+        pagination.total = data.attributes?.total;
+        this.atributes = data.attributes?.data.map((item) => {
+          return {
+            ...item,
+            key: item.id,
+            info: {
+              name: item.name,
+              keywords: item.keywords,
+            },
+          };
+        });
+      } catch (e) {
+        this.statusFunc(e);
+      }
     },
   },
   watch: {

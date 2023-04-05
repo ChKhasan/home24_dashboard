@@ -1,13 +1,13 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Products"
-      :breadbrumb="['eCommerce', 'Catalog']"
-      lastLink="Products"
+      title="Продукты"
+      :breadbrumb="['эКоммерция', 'Каталог']"
+      lastLink="Продукты"
     >
       <div class="d-flex">
         <div class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3">
-          Cancel
+          Отмена
         </div>
         <a-button
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
@@ -16,7 +16,7 @@
           :loading="uploadLoading"
         >
           <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"> </span>
-          Add Product
+          Сохранить изменение
         </a-button>
       </div>
     </TitleBlock>
@@ -44,7 +44,7 @@
                 >
                   <div class="form-container form-container-ltr">
                     <div class="d-flex justify-content-start">
-                      <FormTitle title="Добавить продукт" />
+                      <FormTitle title="Изменить продукт" />
                     </div>
                     <div class="form-block required">
                       <div><label for="">Имя</label></div>

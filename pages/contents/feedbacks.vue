@@ -248,24 +248,7 @@ export default {
       this.$router.push("/contents/add_feedbacks");
     },
     editPost(id) {
-      this.editId = id;
-      const data = this.feedbacks.find((item) => item.id == id);
-      this.ruleForm = {
-        img: data.lg_img,
-        link_ru: data.link.ru,
-        link_uz: data.link.uz,
-        link_en: data.link.en,
-        type: "main",
-      };
-      this.fileList = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          url: this.ruleForm.img.ru,
-        },
-      ];
-      this.show("add_feedbacks");
+      this.$router.push(`/contents/edit_feedbacks/${id}`);
     },
     closeModal() {
       this.hide("add_feedbacks");

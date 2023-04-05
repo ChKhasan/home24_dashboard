@@ -1,94 +1,222 @@
 <template lang="html">
-  <div class="wrapper">
-    {{ items }}
-    {{ itemsNum }}
-    <drop-list
-      :items="itemsNum"
-      class="list"
-      @insert="($event) => onInsert($event, 'itemsNum')"
-      @reorder="$event.apply(itemsNum)"
+  <div>
+    <el-form
+      label-position="top"
+      :model="ruleForm"
+      :rules="rules"
+      ref="ruleForm"
+      label-width="120px"
+      class="demo-ruleForm"
     >
-      <template v-slot:item="{ item }">
-        <drag class="item" :key="item" :data="item">{{ item }}</drag>
-      </template>
-      <template v-slot:feedback="{ data }">
-        <div class="item feedback" :key="data">{{ data }}</div>
-      </template>
-    </drop-list>
-    <drop-list
-      :items="items"
-      class="list"
-      @insert="($event) => onInsert($event, 'items')"
-      @reorder="$event.apply(items)"
-    >
-      <template v-slot:item="{ item }">
-        <drag class="item" :key="item" :data="item">{{ item }}</drag>
-      </template>
-      <template v-slot:feedback="{ data }">
-        <div class="item feedback" :key="data">{{ data }}</div>
-      </template>
-    </drop-list>
+      <TitleBlock title="Feedback" :breadbrumb="['Контент сайта']" lastLink="Feedback">
+        <div class="d-flex">
+          <span class="mx-3">
+            <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
+          </span>
+          <a-button
+            class="add-btn add-header-btn btn-primary d-flex align-items-center"
+            type="primary"
+            @click="submitForm('ruleForm')"
+            :loading="uploadLoading"
+          >
+            <span class="svg-icon" v-html="addIcon" v-if="!uploadLoading"></span>
+            Сохранить изменение
+          </a-button>
+        </div>
+      </TitleBlock>
+      <div class="container_xl">
+        <div class="card_block-form py-5">
+          <div
+            class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
+          ></div>
+
+          <div class="form-container form-container-ltr">
+            <FormTitle title="Feedback" />
+
+            <div class="form-block required">
+              <div><label for="character_group">company</label></div>
+              <el-form-item prop="company">
+                <el-input type="text" v-model="ruleForm.company" />
+              </el-form-item>
+            </div>
+            <div class="form-block required">
+              <div><label for="">feedback</label></div>
+              <el-form-item prop="feedback">
+                <el-input
+                  v-model="ruleForm.feedback"
+                  placeholder="Atribut Name"
+                  type="textarea"
+                  rows="5"
+                ></el-input>
+              </el-form-item>
+            </div>
+            <div class="form-block required">
+              <div><label for="">Logo</label></div>
+              <div class="clearfix variant-img">
+                <a-upload
+                  action="https://test.loftcity.uz/api/admin/files/upload"
+                  list-type="picture-card"
+                  :file-list="fileList1"
+                  @preview="handlePreview"
+                  @change="($event) => handleChange($event, false)"
+                >
+                  <div v-if="fileList1.length < 1">
+                    <span v-html="addImgIcon"></span>
+                    <div class="ant-upload-text">Добавить изображение</div>
+                  </div>
+                </a-upload>
+                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                  <img alt="example" style="width: 100%" :src="previewImage" />
+                </a-modal>
+              </div>
+            </div>
+            <div class="form-block required">
+              <div><label for="">Изображение</label></div>
+              <div class="clearfix variant-img">
+                <a-upload
+                  action="https://test.loftcity.uz/api/admin/files/upload"
+                  list-type="picture-card"
+                  :file-list="fileList"
+                  :multiple="true"
+                  @preview="handlePreview"
+                  @change="($event) => handleChange($event, true)"
+                >
+                  <div v-if="fileList.length < 50">
+                    <span v-html="addImgIcon"></span>
+                    <div class="ant-upload-text">Добавить изображение</div>
+                  </div>
+                </a-upload>
+                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                  <img alt="example" style="width: 100%" :src="previewImage" />
+                </a-modal>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-form>
   </div>
 </template>
 <script>
-import { Drag, DropList } from "vue-easy-dnd";
+import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
+import AddModal from "../../../components/modals/Add-modal.vue";
+import TitleBlock from "../../../components/Title-block.vue";
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
 export default {
+  layout: "toolbar",
   data() {
     return {
-      items: ["a", "b", "c", "d", "e"],
-      itemsNum: [1, 2, 3, 4, 5],
-      itemsNum1: [11, 22, 33, 44, 55],
+      addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
+      addImgIcon: require("../../../assets/svg/components/add-img-icon.svg?raw"),
+      fileList1: [],
+      fileList: [],
+      uploadLoading: false,
+      rules: {
+        company: [
+          {
+            required: true,
+            message: "company name is required",
+            trigger: "change",
+          },
+        ],
+
+        feedback: [
+          {
+            required: true,
+            message: "feedback is required",
+            trigger: "change",
+          },
+        ],
+      },
+      previewVisible: false,
+      previewImage: "",
+      ruleForm: {
+        feedback: null,
+        company: "",
+        logo: "",
+        images: [],
+      },
     };
   },
   methods: {
-    onInsert(event, arr) {
-      this[arr].splice(event.index, 0, event.data);
+    submitForm(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
+        valid ? this.__POST_FEEDBACK(this.ruleForm) : false;
+      });
+    },
+    handleCancel() {
+      this.previewVisible = false;
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    handleChange({ fileList }, type) {
+      if (fileList[0]?.response?.path && type) {
+        this.ruleForm.images = fileList.map((item) => item.response?.path);
+      } else if (fileList[0]?.response?.path && !type) {
+        this.ruleForm.logo = fileList[0]?.response?.path;
+      }
+      this[type ? `fileList` : `fileList1`] = fileList;
+    },
+    handleCancel() {
+      this.previewVisible = false;
+    },
+    async __POST_FEEDBACK(data) {
+      try {
+        await this.$store.dispatch("fetchFeedbacks/postFeedbacks", data);
+        await this.$notify({
+          title: "Success",
+          message: "Упешно добавлен",
+          type: "success",
+        });
+        this.$router.push("/contents/feedbacks");
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    statusFunc(res) {
+      switch (res.status) {
+        case 422:
+          this.$notify.error({
+            title: "Error",
+            message: "Указанные данные недействительны.",
+          });
+          break;
+        case 500:
+          this.$notify.error({
+            title: "Error",
+            message: "Cервер не работает",
+          });
+          break;
+        case 404:
+          this.$notify.error({
+            title: "Error",
+            message: res.data.errors,
+          });
+          break;
+      }
+    },
+
+    toBack() {
+      this.$router.push("/contents/feedbacks");
     },
   },
+
   components: {
-    Drag,
-    DropList,
+    TitleBlock,
+    LayoutHeaderBtn,
+    AddModal,
   },
 };
 </script>
-<style lang="scss">
-html,
-body,
-#app,
-.v-application--wrap,
-.v-content,
-.v-content__wrap {
-  height: 100%;
-}
-
-.drop-in {
-  box-shadow: 0 0 10px rgba(0, 0, 255, 0.3);
-}
-.wrapper {
-  display: flex;
-  .list {
-    border: 1px solid black;
-    margin: 100px auto;
-    width: 200px;
-
-    .item {
-      padding: 20px;
-      margin: 10px;
-      background-color: rgb(220, 220, 255);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &.feedback {
-        background-color: rgb(255, 220, 220);
-        border: 2px dashed black;
-      }
-
-      &.drag-image {
-        background-color: rgb(220, 255, 220);
-        transform: translate(-50%, -50%);
-      }
-    }
-  }
-}
-</style>

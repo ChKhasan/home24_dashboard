@@ -54,7 +54,7 @@
               <div><label for="">Logo</label></div>
               <div class="clearfix variant-img">
                 <a-upload
-                action="https://test.loftcity.uz/api/admin/files/upload"
+                  action="https://test.loftcity.uz/api/admin/files/upload"
                   list-type="picture-card"
                   :file-list="fileList1"
                   @preview="handlePreview"
@@ -74,6 +74,7 @@
               <div><label for="">Изображение</label></div>
               <div class="clearfix variant-img">
                 <a-upload
+                  action="https://test.loftcity.uz/api/admin/files/upload"
                   list-type="picture-card"
                   :file-list="fileList"
                   :multiple="true"
@@ -161,19 +162,12 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }, type) {
-      if (fileList[0]?.response?.path && type == "fileList") {
-        this.ruleForm.images = fileList.map((item) => item.response.path);
-      } else if (fileList[0]?.response?.path && type == "fileList1") {
+      if (fileList[0]?.response?.path && type) {
+        this.ruleForm.images = fileList.map((item) => item.response?.path);
+      } else if (fileList[0]?.response?.path && !type) {
         this.ruleForm.logo = fileList[0]?.response?.path;
       }
       this[type ? `fileList` : `fileList1`] = fileList;
-    },
-    show(name) {
-      this.$modal.show(name);
-    },
-
-    hide(name) {
-      this.$modal.hide(name);
     },
     handleCancel() {
       this.previewVisible = false;
@@ -191,7 +185,6 @@ export default {
         this.statusFunc(e.response);
       }
     },
-
     statusFunc(res) {
       switch (res.status) {
         case 422:
@@ -218,43 +211,8 @@ export default {
     toBack() {
       this.$router.push("/contents/feedbacks");
     },
-    async __UPLOAD_FILE(formData) {
-      try {
-        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
-        return data.path;
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
   },
-  watch: {
-    // async fileList1(val) {
-    //   if (val.length > 0) {
-    //     let images = "";
-    //     let formData = new FormData();
-    //     formData.append("file", this.fileList1[0].originFileObj);
-    //     images = formData;
-    //     this.uploadLoading = true;
-    //     this.ruleForm.logo = await this.__UPLOAD_FILE(images);
-    //     this.uploadLoading = false;
-    //   }
-    // },
-    // async fileList(val) {
-    //   if (val.length > 0) {
-    //     let images = [];
-    //     this.fileList.forEach((element, index) => {
-    //       let formData = new FormData();
-    //       formData.append("file", element.originFileObj);
-    //       images[index] = formData;
-    //     });
-    //     this.uploadLoading = true;
-    //     images.forEach(async (element, index) => {
-    //       this.ruleForm.images[index] = await this.__UPLOAD_FILE(element);
-    //       this.uploadLoading = false;
-    //     });
-    //   }
-    // },
-  },
+
   components: {
     TitleBlock,
     LayoutHeaderBtn,

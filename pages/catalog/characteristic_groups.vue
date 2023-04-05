@@ -52,7 +52,6 @@
             @change="handleTableChange"
           >
             <span
-              @click="$router.push('/home/customer-info/123')"
               slot="name"
               slot-scope="text"
               align="center"
