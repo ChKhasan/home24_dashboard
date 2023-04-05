@@ -78,7 +78,7 @@
                   <div class="form-block mb-0 w-100 required">
                     <div><label>Категория</label></div>
                     <span class="bottom_text mt-0 mb-1">Добавить товар в категорию</span>
-                    <el-form-item>
+                    <el-form-item prop="category_id">
                       <a-cascader
                         :options="cascaderCategories"
                         :show-search="{ filter }"
@@ -105,7 +105,7 @@
                     ></div> -->
                     <div
                       class="outline-btn outline-light-green-btn"
-                      :class="{ disabledBtn: lastCategory.length < 1 }"
+                      :class="{ disabledBtn: lastCategory.length < 3 }"
                       @click="reloadCategories"
                       v-html="reloadIcon"
                     ></div>
@@ -116,7 +116,7 @@
                     ></div>
                   </div>
                 </div>
-                <span class="last-info" v-if="lastCategory.length > 0"
+                <span class="last-info" v-if="lastCategory.length > 2"
                   >Недавняя категория:
                   <p @click="reloadCategories">{{ findLastCategory }}</p></span
                 >
@@ -590,7 +590,7 @@
               placeholder="Выберите категорию"
             >
               <el-option
-                v-for="item in categories"
+                v-for="item in categoriesWidthChild"
                 :key="item?.id"
                 :label="item?.name?.ru"
                 :value="item?.id"
@@ -1110,6 +1110,7 @@ export default {
           },
         ],
       },
+      categoriesWidthChild: [],
       loadingBtn: false,
     };
   },
@@ -1302,6 +1303,7 @@ export default {
         this.fileListCategory = [];
         this.allAtributes = [];
         this.allGroups = [];
+        this.__GET_CATEGORIES();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -1328,10 +1330,13 @@ export default {
           ? this.$refs.ruleFormAtributes.length
           : 0;
         const atributValid = artibutReqiured.length == atr;
-        if (!valid && !atributValid) return false;
-        this.characterRequired
-          ? this.__POST_PRODUCTS(newData)
-          : this.notification("Success", "Вы не добавили характеристику", "error");
+        if (valid && atributValid) {
+          this.characterRequired
+            ? this.__POST_PRODUCTS(newData)
+            : this.notification("Success", "Вы не добавили характеристику", "error");
+        } else {
+          return false;
+        }
       });
     },
     onChange(value, selectedOptions) {
@@ -1552,38 +1557,44 @@ export default {
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = [...data.categories?.data];
-      this.cascaderCategories = this.categories.map((item) => {
-        item.label = item.name.ru;
-        if (item.children.length > 0) {
-          item.children = item.children.map((item2) => {
-            item2.label = item2.name.ru;
-            if (item2.children.length > 0) {
-              item2.children = item2.children.map((item3) => {
-                item3.label = item3.name.ru;
-                if (item3.children.length > 0) {
-                  return item3;
-                } else {
-                  delete item3["children"];
-                  return item3;
-                }
-              });
-              return item2;
-            } else {
-              delete item2["children"];
-              return item2;
-            }
-          });
-          return item;
-        } else {
-          delete item["children"];
-          return item;
-        }
-      });
-      this.categories.unshift({
-        name: {
-          ru: "Главная категория",
-        },
+
+      const mapCategories = (categories) => {
+        return categories.map((category) => {
+          const label = category.name.ru;
+          const children =
+            category.children.length > 0 ? mapCategories(category.children) : undefined;
+          const { children: _, ...rest } = category;
+          if (category.children.length == 0) {
+            return {
+              ...rest,
+              label,
+            };
+          } else {
+            return {
+              ...rest,
+              label,
+              children,
+            };
+          }
+        });
+      };
+
+      this.cascaderCategories = mapCategories(this.categories);
+      console.log(this.cascaderCategories);
+      this.cascaderCategories.unshift({
+        name: { ru: "Главная категория" },
         id: null,
+      });
+      data.categories?.data.forEach((item) => {
+        if (item.children?.length > 0) {
+          this.categoriesWidthChild = [
+            ...this.categoriesWidthChild,
+            item,
+            ...item.children,
+          ];
+        } else {
+          this.categoriesWidthChild = [...this.categoriesWidthChild, item];
+        }
       });
     },
     async __GET_CATEGORY_BY_ID(id) {

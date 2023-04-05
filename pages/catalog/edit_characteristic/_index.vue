@@ -303,6 +303,52 @@ export default {
   },
 
   methods: {
+    // async __GET_PRODUCT_BY_ID() {
+    //   const data = await this.$store.dispatch(
+    //     "fetchProducts/getProductsById",
+    //     this.$route.params.index
+    //   );
+    //   this.ruleForm.name_ru = data.name.ru;
+    //   this.ruleForm.name_uz = data.name.uz;
+    //   this.ruleForm.name_en = data.name.en;
+    //   this.ruleForm.desc = { ...data.desc };
+    //   this.ruleForm.category_id = data.category.id;
+    //   this.ruleForm.brand_id = data.brand_id;
+    //   this.ruleForm.products = data.products.map((item, productIndex) => {
+    //     let characterNames = {};
+    //     data.category.characteristic_groups.forEach((element) => {
+    //       characterNames[`char_${element.id}`];
+    //     });
+    //     return {
+    //       id: productIndex + 1,
+    //       images: item.images.map((itemImg) => itemImg.lg_img),
+    //       imagesData: item.images.map((itemImg2, index) => {
+    //         return {
+    //           uid: (index + 1) * -1,
+    //           name: "image.png",
+    //           status: "done",
+    //           oldImg: true,
+    //           url: itemImg2.lg_img,
+    //         };
+    //       }),
+    //       variations: [
+    //         {
+    //           id: 1,
+    //           options: [],
+    //           optionName: {},
+    //           characteristics: [],
+    //           characteristicsValues: {},
+    //           price: item.price,
+    //           is_default: 1,
+    //           is_popular: item.is_popular,
+    //           product_of_the_day: item.product_of_the_day,
+    //         },
+    //       ],
+    //     };
+    //   });
+    //   this.comments = data.comments;
+
+    // },
     deleteElement(id) {
       if (this.ruleForm.characters.length > 1)
         this.ruleForm.characters = this.ruleForm.characters.filter(

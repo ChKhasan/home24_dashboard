@@ -218,8 +218,8 @@ export default {
           {
             name: "Характеристика",
             index: "14",
-            to: "/catalog/characteristic",
-            path: "catalog-characteristic",
+            to: "/catalog/characteristic_groups",
+            path: "catalog-characteristic_groups",
             disabled: false,
           },
           {
@@ -230,13 +230,13 @@ export default {
 
             disabled: false,
           },
-          {
-            name: "Группа характеристика",
-            index: "16",
-            to: "/catalog/characteristic_groups",
-            path: "catalog-characteristic_groups",
-            disabled: false,
-          },
+          // {
+          //   name: "Группа характеристика",
+          //   index: "16",
+          //   to: "/catalog/characteristic_groups",
+          //   path: "catalog-characteristic_groups",
+          //   disabled: false,
+          // },
         ],
         orders: [
           {

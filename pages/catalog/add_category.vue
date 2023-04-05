@@ -168,73 +168,6 @@
                         <div class="item feedback" :key="data">{{ data }}</div>
                       </template>
                     </drop-list>
-                    <!-- <transition-group name="flip-list" tag="div">
-                      <div
-                        class="d-flex mb-3 item"
-                        v-for="(atribute, i) in attributes"
-                        :key="atribute.id"
-                        :class="{
-                          over: atribute === over.item && atribute !== dragFrom,
-                          [over.dir]: atribute === over.item && atribute !== dragFrom,
-                        }"
-                      >
-                        <div class="form-block required w-100 mb-0">
-                          <el-form-item>
-                            <el-select
-                              v-model="atribute.name"
-                              class="w-100"
-                              @change="filterElement('attributes')"
-                              popper-class="select-popper-hover"
-                              default-first-option
-                              no-data-text="No atribut"
-                              placeholder="Choose tags for your article"
-                            >
-                              <el-option
-                                v-for="item in atributes"
-                                :key="item.id"
-                                :label="item.name.ru"
-                                :value="item.id"
-                              >
-                              </el-option>
-                            </el-select>
-                          </el-form-item>
-                        </div>
-                        <div class="variant_btns mb-1 mt-0">
-                          <div
-                            class="variant-btn variant-btn-delete mx-2"
-                            @click="deleteElement('attributes', atribute.id)"
-                          >
-                            <svg
-                              width="30"
-                              height="30"
-                              viewBox="0 0 30 30"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                                stroke="#F65160"
-                                stroke-width="1.5"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </div>
-                          <div
-                            class="variant-btn variant-btn-check cursor_drag"
-                            draggable="true"
-                            @dragend="(e) => finishDrag(atribute, i, e, 'attributes')"
-                            @dragover="(e) => onDragOver(atribute, i, e)"
-                            @dragstart="(e) => startDrag(atribute, i, e)"
-                          >
-                            <a-icon
-                              type="drag"
-                              :style="{ color: '#3699FF', fontSize: '18px' }"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </transition-group> -->
                     <div class="d-flex justify-content-start">
                       <div
                         class="create-inner-variant mt-0"
@@ -282,9 +215,7 @@
                           <div class="variant_btns mb-1 mt-0">
                             <div
                               class="variant-btn variant-btn-delete mx-2"
-                              @click="
-                                deleteElement('group_characteristics', item.id)
-                              "
+                              @click="deleteElement('group_characteristics', item.id)"
                             >
                               <svg
                                 width="30"
@@ -319,7 +250,6 @@
                         <div class="item feedback" :key="data">{{ data }}</div>
                       </template>
                     </drop-list>
-                  
                     <div class="d-flex justify-content-start">
                       <div
                         class="create-inner-variant mt-0"
@@ -330,6 +260,42 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="form-container">
+                <div class="d-flex justify-content-between">
+                  <FormTitle title="SEO" />
+                </div>
+                <div class="form-block required">
+                  <div><label for="">Slug</label></div>
+                  <el-form-item>
+                    <el-input
+                      v-model="ruleForm.slug"
+                      placeholder="Product model"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+                <div class="form-block required">
+                  <div><label for="">Keywords</label></div>
+                  <el-form-item>
+                    <el-input
+                      type="textarea"
+                      rows="5"
+                      v-model="ruleForm.slug"
+                      placeholder="Product model"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+                <div class="form-block required mb-0">
+                  <div><label for="">Meta-desctiption</label></div>
+                  <el-form-item>
+                    <el-input
+                      type="textarea"
+                      rows="5"
+                      v-model="ruleForm.slug"
+                      placeholder="Product model"
+                    ></el-input>
+                  </el-form-item>
                 </div>
               </div>
             </div>

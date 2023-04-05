@@ -37,10 +37,20 @@
               align: 'right',
             }"
           >
-            <a slot="name" slot-scope="text" align="center" class="table_product_row">
-              <h6>{{ text?.ru }}</h6>
-              <span>{{ text.subtitle }}</span>
+            <a slot="info" slot-scope="text" align="center" class="table_product_row">
+              <h6>{{ text?.name.ru }}</h6>
+              <span>{{ text.keywords }}</span>
             </a>
+            <div
+              slot="options"
+              slot-scope="text"
+              align="center"
+              class="option-container"
+            >
+              <span class="option-items" v-for="(item, index) in text" :key="index">{{
+                item.name.ru ? item.name.ru : "-----"
+              }}</span>
+            </div>
             <div
               slot="categories"
               slot-scope="text"
@@ -104,12 +114,19 @@ export default {
       columns: [
         {
           title: "АТРИБУТЫ",
-          dataIndex: "name",
+          dataIndex: "info",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "name" },
+          scopedSlots: { customRender: "info" },
           className: "column-name",
-          key: "name",
+          key: "info",
           width: "30%",
+        },
+        {
+          title: "Параметры",
+          dataIndex: "options",
+          scopedSlots: { customRender: "options" },
+          className: "column-options",
+          key: "options",
         },
         {
           title: "Категории",
@@ -217,6 +234,10 @@ export default {
         return {
           ...item,
           key: item.id,
+          info: {
+            name: item.name,
+            keywords: item.keywords
+          }
         };
       });
     },

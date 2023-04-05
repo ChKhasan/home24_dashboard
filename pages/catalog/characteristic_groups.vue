@@ -7,7 +7,7 @@
     >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
-        @click="openAddModal"
+        @click="$router.push('/catalog/add_characteristic')"
       >
         <span class="svg-icon"
           ><svg

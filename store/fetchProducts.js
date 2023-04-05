@@ -19,9 +19,10 @@ export const actions = {
     );
     return res;
   },
-  async editProducts() {
-    const res = await this.$axios.$get(
-      `https://test.loftcity.uz/api/admin/products`
+  async editProducts({}, payload) {
+    const res = await this.$axios.$put(
+      `https://test.loftcity.uz/api/admin/products/${payload.id}`,
+      payload.data
     );
     return res;
   },

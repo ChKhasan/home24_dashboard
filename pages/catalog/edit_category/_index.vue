@@ -261,6 +261,42 @@
                   </div>
                 </div>
               </div>
+              <div class="form-container">
+                <div class="d-flex justify-content-between">
+                  <FormTitle title="SEO" />
+                </div>
+                <div class="form-block required">
+                  <div><label for="">Slug</label></div>
+                  <el-form-item>
+                    <el-input
+                      v-model="ruleForm.slug"
+                      placeholder="Product model"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+                <div class="form-block required">
+                  <div><label for="">Keywords</label></div>
+                  <el-form-item>
+                    <el-input
+                      type="textarea"
+                      rows="5"
+                      v-model="ruleForm.slug"
+                      placeholder="Product model"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+                <div class="form-block required mb-0">
+                  <div><label for="">Meta-desctiption</label></div>
+                  <el-form-item>
+                    <el-input
+                      type="textarea"
+                      rows="5"
+                      v-model="ruleForm.slug"
+                      placeholder="Product model"
+                    ></el-input>
+                  </el-form-item>
+                </div>
+              </div>
             </div>
           </el-form>
           <div class="category-img-grid">
@@ -486,7 +522,7 @@ export default {
           {
             required: true,
             message: "Category name is required",
-            trigger: ["change","blur"],
+            trigger: ["change", "blur"],
           },
         ],
 

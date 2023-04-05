@@ -50,6 +50,19 @@
                     </el-form-item>
                   </div>
                 </div>
+                <div class="form-block required">
+                  <div><label for="artibut_keyword">Description</label></div>
+                  <div class="w-100">
+                    <el-form-item prop="keywords">
+                      <el-input
+                        type="text"
+                        id="artibut_keyword"
+                        v-model="ruleForm.keywords"
+                        placeholder="Keywords"
+                      ></el-input>
+                    </el-form-item>
+                  </div>
+                </div>
                 <div class="list">
                   <drop-list
                     :items="ruleForm.characters"
@@ -312,7 +325,7 @@ export default {
           message: "Характеристика успешно добавлен",
           type: "success",
         });
-        this.$router.push("/catalog/characteristic");
+        this.$router.push("/catalog/characteristic_groups");
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -361,7 +374,7 @@ export default {
       }
     },
     toBack() {
-      this.$router.push("/catalog/characteristic");
+      this.$router.push("/catalog/characteristic_groups");
     },
     onInsert(event) {
       this.ruleForm.characters.splice(event.index, 0, event.data);
