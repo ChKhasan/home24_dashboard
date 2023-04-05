@@ -14,8 +14,10 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
-          <div class="d-flex align-items-between justify-content-between w-100">
+          <div class="prodduct-list-header-grid w-100 align-items-center">
             <SearchInput placeholder="Категория поиска" />
+            <div></div>
+            <StatusFilter />
           </div>
         </div>
         <div class="antd_table select-table">
@@ -116,6 +118,7 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
+import StatusFilter from "../../components/form/Status-filter.vue";
 const columns = [
   {
     title: "Категория",
@@ -225,7 +228,8 @@ export default {
     TitleBlock,
     SearchInput,
     LayoutHeaderBtn,
-  },
+    StatusFilter
+},
   methods: {
     cancel(e) {
       console.log(e);

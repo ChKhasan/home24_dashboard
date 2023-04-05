@@ -16,7 +16,7 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
-          <div class="d-flex justify-content-between w-100" style="grid-gap: 1.25rem">
+          <div class="prodduct-list-header-grid w-100" style="grid-gap: 1.25rem">
             <div>
               <SearchInput placeholder="Атрибуты поиска" />
             </div>
