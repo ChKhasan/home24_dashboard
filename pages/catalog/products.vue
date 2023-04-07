@@ -20,17 +20,20 @@
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
             <SearchInput placeholder="Поиск продукта" @changeSearch="changeSearch" />
-            <SearchInput placeholder="Поиск товара по бренду" @changeSearch="changeSearch" />
+            <SearchInput
+              placeholder="Поиск товара по бренду"
+              @changeSearch="changeSearch"
+            />
             <StatusFilter />
           </div>
         </div>
         <a-table
           :columns="columns"
           :data-source="data"
-          :pagination="pagination"
           :loading="loading"
+          :pagination="false"
+          :page-size="params.pageSize"
           align="center"
-          @change="handleTableChange"
           :row-selection="{
             selectedRowKeys: selectedRowKeys,
             onChange: onSelectChange,
@@ -73,6 +76,7 @@
           >
             {{ text }}
           </span>
+
           <span slot="id" slot-scope="text">
             <span class="action-btn" @click="editProduct(text)">
               <img :src="editIcon" alt="" />
@@ -90,6 +94,29 @@
             </a-popconfirm>
           </span>
         </a-table>
+        <div class="d-flex justify-content-between mt-4">
+          <el-select
+            v-model="params.pageSize"
+            class="table-page-size"
+            placeholder="Select"
+            @change="changePageSize"
+          >
+            <el-option
+              v-for="item in pageSizes"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <a-pagination
+          class="table-pagination"
+            :simple="false"
+            v-model.number="current"
+            :total="totalPage"
+            :page-size.sync="params.pageSize"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -104,11 +131,29 @@ export default {
   data() {
     return {
       page: 1,
+      current: 1,
+      pageSizes: [
+        {
+          value: 10,
+          label: "10",
+        },
+        {
+          value: 25,
+          label: "25",
+        },
+        {
+          value: 50,
+          label: "50",
+        },
+        {
+          value: 100,
+          label: "100",
+        },
+      ],
+      totalPage: 1,
       params: {
         page: 1,
-      },
-      pagination: {
-        pageSize: 16,
+        pageSize: 10,
       },
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
@@ -201,10 +246,8 @@ export default {
       this.products = await this.$store.dispatch("fetchProducts/getProducts", {
         ...this.$route.query,
       });
+      this.totalPage = this.products.products?.total;
       this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = this.products.products?.total;
       this.data = this.products.products.data.map((item) => {
         if (item.products[0].images.length > 0) {
           return {
@@ -235,21 +278,20 @@ export default {
         }
       });
     },
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      console.log(pagination.current);
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
+    async changePageSize(e) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
         await this.$router.replace({
           path: `/catalog/products`,
           query: {
-            page: pagination.current,
+            page: this.current,
+            per_page: e,
           },
         });
+        this.__GET_PRODUCTS();
       }
-      this.__GET_PRODUCTS();
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
     editProduct(id) {
       this.$router.push(`/catalog/edit_products/${id}`);
@@ -305,17 +347,31 @@ export default {
     },
   },
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
       await this.$router.replace({
         path: `/catalog/products`,
-        query: { page: this.params.page },
+        query: { page: this.params.page, per_page: this.params.pageSize },
       });
     }
-    this.pagination.current = this.$route.query.page * 1;
     this.__GET_PRODUCTS();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   watch: {
-    "pagination.current"() {
+    async current(val) {
+      if (this.$route.query.page != val) {
+        await this.$router.replace({
+          path: `/catalog/products`,
+          query: {
+            page: val,
+            per_page: this.params.pageSize,
+          },
+        });
+        this.__GET_PRODUCTS();
+      }
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },
@@ -328,3 +384,13 @@ export default {
   layout: "toolbar",
 };
 </script>
+<style lang="scss">
+.table-page-size {
+  input {
+    height: 34px;
+    width: 72px;
+    background: #f9f9f9;
+    border: none;
+  }
+}
+</style>

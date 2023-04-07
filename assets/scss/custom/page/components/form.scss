@@ -33,6 +33,10 @@
     color: #181c32;
     position: relative;
     white-space: nowrap;
+    padding-bottom: 0 !important;
+    &::before {
+      display: none;
+    }
   }
   .bottom_text {
     @include fontTTinterface(14px, 400);
@@ -93,11 +97,19 @@
     line-height: 18px;
     margin-bottom: 8px;
     color: #181c32;
+    padding-bottom: 0 !important;
     position: relative;
+    &::before {
+      display: none;
+    }
   }
 }
 .required {
   label {
+    padding-bottom: 0 !important;
+    &::before {
+      display: none;
+    }
     &::after {
       content: "*";
       position: absolute;

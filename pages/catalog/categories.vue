@@ -25,10 +25,9 @@
             :columns="columns"
             :data-source="categories"
             :expanded-row-keys.sync="expandedRowKeys"
-            :pagination="pagination"
+            :pagination="false"
             :current="2"
             :loading="loading"
-            @change="handleTableChange"
           >
             <div
               slot="dataName"
@@ -64,11 +63,11 @@
             >
               <img class="table-image select-img" v-if="text" :src="text" alt="" />
               <img
-                  class="table-image select-img"
-                  v-else
-                  src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
-                  alt=""
-                />
+                class="table-image select-img"
+                v-else
+                src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                alt=""
+              />
             </div>
             <span
               slot="is_active"
@@ -107,6 +106,29 @@
               <a-checkbox @change="onChangeCheckbox(text)" :checked="text == 1" />
             </span>
           </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="changePageSize"
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -170,11 +192,29 @@ export default {
   data() {
     return {
       page: 1,
+      current: 1,
+      pageSizes: [
+        {
+          value: 10,
+          label: "10",
+        },
+        {
+          value: 25,
+          label: "25",
+        },
+        {
+          value: 50,
+          label: "50",
+        },
+        {
+          value: 100,
+          label: "100",
+        },
+      ],
+      totalPage: 1,
       params: {
         page: 1,
-      },
-      pagination: {
-        pageSize: 16,
+        pageSize: 10,
       },
       loading: true,
       categories: [],
@@ -228,40 +268,35 @@ export default {
     TitleBlock,
     SearchInput,
     LayoutHeaderBtn,
-    StatusFilter
-},
+    StatusFilter,
+  },
   methods: {
     cancel(e) {
       console.log(e);
       this.$message.error("Click on No");
     },
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
+    async changePageSize(e) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
         await this.$router.replace({
           path: `/catalog/categories`,
           query: {
-            page: pagination.current,
+            page: this.current,
+            per_page: e,
           },
         });
+        this.__GET_CATEGORIES();
       }
-      this.loading = true;
-      this.__GET_CATEGORIES();
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
     async __GET_CATEGORIES() {
-      this.categories = await [];
+      this.loading = true;
       const data = await this.$store.dispatch("fetchCategories/getCategories", {
         ...this.$route.query,
       });
       this.loading = false;
-
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.categories?.total;
-
+      this.totalPage =  data.categories?.total;
       this.categories = data.categories?.data.map((item, index) => {
         let newChild = [];
         let newChild2 = [];
@@ -374,17 +409,31 @@ export default {
     },
   },
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
       await this.$router.replace({
         path: `/catalog/categories`,
-        query: { page: this.params.page },
+        query: { page: this.params.page, per_page: this.params.pageSize },
       });
     }
-    this.pagination.current = this.$route.query.page * 1;
     await this.__GET_CATEGORIES();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   watch: {
-    "pagination.current"() {
+    async current(val) {
+      if (this.$route.query.page != val) {
+        await this.$router.replace({
+          path: `/catalog/categories`,
+          query: {
+            page: val,
+            per_page: this.params.pageSize,
+          },
+        });
+        this.__GET_CATEGORIES();
+      }
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },

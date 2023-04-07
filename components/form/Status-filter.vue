@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="input status-select">
-    <el-select v-model="value" filterable placeholder="Select">
+    <el-select v-model="value" placeholder="Select">
       <el-option
         v-for="item in options"
         :key="item.value"

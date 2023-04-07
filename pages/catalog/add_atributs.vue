@@ -47,9 +47,8 @@
               <div class="form-container form-container-ltr">
                 <FormTitle title="Атрибут" />
                 <div class="form-block required">
-                  <div><label for="artibut_keyword">Description</label></div>
                   <div class="w-100">
-                    <el-form-item prop="keywords">
+                    <el-form-item prop="keywords" label="Description">
                       <el-input
                         type="text"
                         id="artibut_keyword"
@@ -61,10 +60,9 @@
                 </div>
                 <div class="atribut-input-grid">
                   <div class="form-block required">
-                    <div><label for="">Имя атрибута</label></div>
-                    <el-form-item :prop="`name_${itemLang.key}`">
+                    <el-form-item prop="name.ru" label="Имя атрибута">
                       <el-input
-                        v-model="ruleForm[`name_${itemLang.key}`]"
+                        v-model="ruleForm.name[itemLang.key]"
                         placeholder="Atribut Name"
                       ></el-input>
                     </el-form-item>
@@ -78,8 +76,7 @@
                       class="form-block required"
                       :class="{ 'multi-select-required': multiSelectError }"
                     >
-                      <div><label>Имя опции</label></div>
-                      <el-form-item label-position="top">
+                      <el-form-item label-position="top" label="Имя опции">
                         <drop-list
                           :items="ruleForm.optionsName"
                           @insert="onInsert"
@@ -128,53 +125,6 @@
                             <div class="item feedback" :key="data">{{ data }}</div>
                           </template>
                         </drop-list>
-                        <!-- <transition-group name="flip-list" tag="div">
-                          <div
-                            class="d-flex align-items-center"
-                            v-for="(item, i) in ruleForm.optionsName"
-                            :key="item.id"
-                          >
-                            <el-input
-                              class="w-100 mb-2"
-                              v-model="item.name"
-                              placeholder="Option name"
-                            />
-                            <div class="variant_btns mb-1 mt-0">
-                              <div
-                                class="variant-btn variant-btn-delete mx-2"
-                                @click="deleteElement(item.id)"
-                              >
-                                <svg
-                                  width="30"
-                                  height="30"
-                                  viewBox="0 0 30 30"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                                    stroke="#F65160"
-                                    stroke-width="1.5"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                  />
-                                </svg>
-                              </div>
-                              <div
-                                class="variant-btn variant-btn-check cursor_drag"
-                                draggable="true"
-                                @dragend="(e) => finishDrag(item, i, e)"
-                                @dragover="(e) => onDragOver(item, i, e)"
-                                @dragstart="(e) => startDrag(item, i, e)"
-                              >
-                                <a-icon
-                                  type="drag"
-                                  :style="{ color: '#3699FF', fontSize: '18px' }"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </transition-group> -->
                       </el-form-item>
                       <div class="d-flex justify-content-start">
                         <div class="create-inner-variant mt-0" @click="addElement()">
@@ -203,35 +153,17 @@
 import FormTitle from "../../components/Form-title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
-import AddModal from "../../components/modals/Add-modal.vue";
 import { Drag, DropList } from "vue-easy-dnd";
 
 export default {
   layout: "toolbar",
   data() {
     return {
-
       activeName: "Русский",
       multiSelectError: true,
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       addInnerValidatIcon: require("../../assets/svg/components/add-inner-validat-icon.svg?raw"),
-      groups: [],
-      modalTabData: [
-        {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
-          index: "uz",
-        },
-        {
-          label: "English",
-          index: "en",
-        },
-      ],
-      modalTab: "ru",
       lang: [
         {
           key: "ru",
@@ -255,14 +187,15 @@ export default {
             trigger: "change",
           },
         ],
-
-        name_ru: [
-          {
-            required: true,
-            message: "Atribut name is required",
-            trigger: "change",
-          },
-        ],
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Atribut name is required",
+              trigger: "change",
+            },
+          ],
+        },
         options: [
           {
             required: true,
@@ -271,30 +204,18 @@ export default {
           },
         ],
       },
-      rulesModal: {
-        name_ru: [
-          {
-            required: true,
-            message: "Group name is required",
-            trigger: "change",
-          },
-        ],
-      },
       ruleForm: {
         keywords: "",
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
+        name: {
+          ru: "",
+          uz: "",
+          en: ""
+        },
         options: [],
         optionsName: [{
           name: '',
           id: 1
         }]
-      },
-      atributGroup: {
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
       },
     };
   },
@@ -320,19 +241,10 @@ export default {
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           if(this.ruleForm.optionsName[0].name) {
-
             const data = {
               ...this.ruleForm,
-              name: {
-                ru: this.ruleForm.name_ru,
-                uz: this.ruleForm.name_uz,
-                en: this.ruleForm.name_en,
-              },
               options: this.ruleForm.optionsName.filter(item => item.name).map(item1 => item1.name)
             };
-            delete data["name_ru"];
-            delete data["name_uz"];
-            delete data["name_en"];
             delete data["optionsName"];
             this.__POST_ATRIBUTES(data);
           } else {
@@ -349,26 +261,6 @@ export default {
     headerbtnCallback() {
       this.$router.push("/catalog/atributs");
     },
-    show(name) {
-      this.$modal.show(name);
-    },
-    hide(name) {
-      this.$modal.hide(name);
-    },
-    getData() {
-      const newData = {
-        name: {
-          ru: this.atributGroup.name_ru,
-          uz: this.atributGroup.name_uz,
-          en: this.atributGroup.name_en,
-        },
-      };
-
-      this.$refs["atributGroup"].validate((valid) =>
-        valid ? this.__POST_GROUPS(newData) : false
-      );
-    },
-
     async __POST_ATRIBUTES(data) {
       try {
         await this.$store.dispatch("fetchAtributes/postAtributes", data);
@@ -404,60 +296,15 @@ export default {
           break;
       }
     },
-    async __GET_GROUPS() {
-      const data = await this.$store.dispatch("fetchAtributes/getGroups");
-      this.groups = data?.groups;
-      console.log(this.groups);
-    },
 
-    async __POST_GROUPS(data) {
-      try {
-        await this.$store.dispatch("fetchAtributes/postGroups", data);
-        this.$notify({
-          title: "Success",
-          message: "Группа успешно добавлен",
-          type: "success",
-        });
-        this.hide("add_atribute_group");
-        this.__GET_GROUPS();
-        this.atributGroup.name_ru = "";
-        this.atributGroup.name_uz = "";
-        this.atributGroup.name_en = "";
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    closeModal() {
-      this.hide("add_atribute_group");
-    },
   },
-  mounted() {
-    this.__GET_GROUPS();
-  },
+
   components: {
     FormTitle,
     TitleBlock,
     LayoutHeaderBtn,
-    AddModal,
-    Drag, DropList
+    Drag,
+     DropList
   },
 };
 </script>
-<style lang="css">
-ul[dnd-list],
-ul[dnd-list] > li {
-  position: relative;
-}
-.list > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.flip-list-move {
-  transition: transform 0.2s;
-}
-
-.over {
-  opacity: 0.6;
-}
-</style>

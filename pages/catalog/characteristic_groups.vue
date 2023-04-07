@@ -46,17 +46,11 @@
           <a-table
             :columns="columns"
             :data-source="groups"
-            :pagination="pagination"
+            :pagination="false"
             align="center"
             :loading="loading"
-            @change="handleTableChange"
           >
-            <span
-              slot="name"
-              slot-scope="text"
-              align="center"
-              class="table_product_row"
-            >
+            <span slot="name" slot-scope="text" align="center" class="table_product_row">
               <h6>{{ text?.ru }}</h6>
             </span>
 
@@ -80,6 +74,29 @@
               </a-popconfirm> -->
             </span>
           </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="changePageSize"
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -163,11 +180,29 @@ export default {
       modalTab: "ru",
       visible: false,
       page: 1,
+      current: 1,
+      pageSizes: [
+        {
+          value: 10,
+          label: "10",
+        },
+        {
+          value: 25,
+          label: "25",
+        },
+        {
+          value: 50,
+          label: "50",
+        },
+        {
+          value: 100,
+          label: "100",
+        },
+      ],
+      totalPage: 1,
       params: {
         page: 1,
-      },
-      pagination: {
-        pageSize: 16,
+        pageSize: 10,
       },
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
@@ -249,22 +284,22 @@ export default {
       this.$router.push("/catalog/add_products");
       console.log("errors");
     },
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
+    async changePageSize(e) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
         await this.$router.replace({
           path: `/catalog/characteristic_groups`,
           query: {
-            page: pagination.current,
+            page: this.current,
+            per_page: e,
           },
         });
+        this.__GET_GROUPS();
       }
-      this.loading = true;
-      this.__GET_GROUPS();
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
+
     getData() {
       const newData = {
         name: {
@@ -370,13 +405,12 @@ export default {
       }
     },
     async __GET_GROUPS() {
+      this.loading = true;
       const data = await this.$store.dispatch("fetchCharacters/getGroups", {
         ...this.$route.query,
       });
       this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.groups?.total;
+      this.totalPage = data.groups?.total;
       this.groups = data?.groups.map((item) => {
         return {
           ...item,
@@ -388,14 +422,34 @@ export default {
   },
 
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
       await this.$router.replace({
         path: `/catalog/characteristic_groups`,
-        query: { page: this.params.page },
+        query: { page: this.params.page, per_page: this.params.pageSize },
       });
     }
-    this.pagination.current = this.$route.query.page * 1;
     this.__GET_GROUPS();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
+  },
+  watch: {
+    async current(val) {
+      if (this.$route.query.page != val) {
+        await this.$router.replace({
+          path: `/catalog/characteristic_groups`,
+          query: {
+            page: val,
+            per_page: this.params.pageSize,
+          },
+        });
+        this.__GET_GROUPS();
+      }
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
   },
   components: {
     TitleBlock,

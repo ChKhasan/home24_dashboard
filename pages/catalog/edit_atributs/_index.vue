@@ -7,7 +7,6 @@
       ref="ruleForm"
       label-width="120px"
       class="demo-ruleForm"
-      action=""
     >
       <TitleBlock
         title="Атрибуты"
@@ -27,30 +26,7 @@
             type="submit"
             @click="submitForm('ruleForm')"
           >
-            <span class="svg-icon"
-              ><!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Files/File-plus.svg--><svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                version="1.1"
-              >
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                  <path
-                    d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                    fill="#000000"
-                    fill-rule="nonzero"
-                    opacity="0.3"
-                  ></path>
-                  <path
-                    d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                    fill="#000000"
-                  ></path>
-                </g></svg
-              ><!--end::Svg Icon--></span
-            >
+            <span class="svg-icon" v-html="addIcon"></span>
             Сохранить изменение
           </div>
         </div>
@@ -70,9 +46,7 @@
               <div class="form-container form-container-ltr">
                 <FormTitle title="Атрибут" />
                 <div class="form-block required">
-                  <div><label for="">Description</label></div>
-
-                  <el-form-item prop="keywords">
+                  <el-form-item prop="keywords" label="Description">
                     <el-input
                       type="text"
                       v-model="ruleForm.keywords"
@@ -82,10 +56,9 @@
                 </div>
                 <div class="atribut-input-grid">
                   <div class="form-block required">
-                    <div><label for="">Имя атрибута</label></div>
-                    <el-form-item :prop="`name_${itemLang.key}`">
+                    <el-form-item prop="name.ru" label="Имя атрибута">
                       <el-input
-                        v-model="ruleForm[`name_${itemLang.key}`]"
+                        v-model="ruleForm.name[itemLang.key]"
                         placeholder="Atribut Name"
                       ></el-input>
                     </el-form-item>
@@ -99,8 +72,7 @@
                       class="form-block required"
                       :class="{ 'multi-select-required': multiSelectError }"
                     >
-                      <div><label>Имя опции</label></div>
-                      <el-form-item label-position="top">
+                      <el-form-item label-position="top" label="Имя опции">
                         <drop-list
                           :items="ruleForm.optionsName"
                           @insert="onInsert"
@@ -164,7 +136,6 @@
                     </div>
                   </div>
                 </div>
-       
               </div>
             </el-tab-pane>
           </el-tabs>
@@ -174,12 +145,9 @@
   </div>
 </template>
 <script>
-import AddBtn from "../../../components/form/Add-btn.vue";
-import Title from "../../../components/Title.vue";
 import FormTitle from "../../../components/Form-title.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
-import AddModal from "../../../components/modals/Add-modal.vue";
 import { Drag, DropList } from "vue-easy-dnd";
 
 export default {
@@ -188,24 +156,9 @@ export default {
     return {
       activeName: "Русский",
       multiSelectError: true,
+      addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
-      groups: [],
       options: [],
-      modalTabData: [
-        {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
-          index: "uz",
-        },
-        {
-          label: "English",
-          index: "en",
-        },
-      ],
-      modalTab: "ru",
       lang: [
         {
           key: "ru",
@@ -229,13 +182,15 @@ export default {
           },
         ],
 
-        name_ru: [
-          {
-            required: true,
-            message: "Atribut name is required",
-            trigger: "change",
-          },
-        ],
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Atribut name is required",
+              trigger: "change",
+            },
+          ],
+        },
         options_option: [
           {
             required: true,
@@ -244,20 +199,13 @@ export default {
           },
         ],
       },
-      rulesModal: {
-        keywords: [
-          {
-            required: true,
-            message: "Atribut group is required",
-            trigger: "change",
-          },
-        ],
-      },
       ruleForm: {
         keywords: "",
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
         options: [],
         optionsName: [
           {
@@ -265,13 +213,6 @@ export default {
             elemId: 1,
           },
         ],
-      },
-      atributGroup: {
-        name: {
-          ru: "",
-          uz: "",
-          en: "",
-        },
       },
     };
   },
@@ -319,24 +260,14 @@ export default {
       const data = {
         ...this.ruleForm,
         options: newOptions,
-        name: {
-          ru: this.ruleForm.name_ru,
-          uz: this.ruleForm.name_uz,
-          en: this.ruleForm.name_en,
-        },
       };
-      delete data["name_ru"];
-      delete data["name_uz"];
-      delete data["name_en"];
       delete data["optionsName"];
       this.__EDIT_ATRIBUTES(data);
     },
     headerbtnCallback() {
       this.$router.push("/catalog/atributs");
     },
-    show(name) {
-      this.$modal.show(name);
-    },
+
     async __GET_ATRIBUT_BY_ID() {
       const data = await this.$store.dispatch(
         "fetchAtributes/getAtributesById",
@@ -345,9 +276,7 @@ export default {
       this.dataEditStart(data);
     },
     dataEditStart(data) {
-      this.ruleForm.name_ru = data.attribute.name.ru;
-      this.ruleForm.name_uz = data.attribute.name.uz;
-      this.ruleForm.name_en = data.attribute.name.en;
+      this.ruleForm.name = data.attribute.name;
       this.ruleForm.keywords = data.attribute.keywords;
       this.atribut_id = data.attribute.id;
       this.options = data.attribute.options;
@@ -359,15 +288,6 @@ export default {
         };
       });
     },
-    getData() {
-      this.$refs["atributGroup"].validate((valid) =>
-        valid ? this.__POST_GROUPS() : false
-      );
-    },
-    hide(name) {
-      this.$modal.hide(name);
-    },
-
     async __EDIT_ATRIBUTES(data) {
       try {
         await this.$store.dispatch("fetchAtributes/editAtributes", {
@@ -416,19 +336,11 @@ export default {
     this.__GET_ATRIBUT_BY_ID();
   },
   components: {
-    AddBtn,
-    Title,
     FormTitle,
     TitleBlock,
     LayoutHeaderBtn,
-    AddModal,
-    Drag, 
-    DropList
+    Drag,
+    DropList,
   },
 };
 </script>
-<style>
-.el-select-dropdown__empty {
-  display: none;
-}
-</style>

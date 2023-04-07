@@ -43,17 +43,15 @@
                 <FormTitle title="Характеристика" />
 
                 <div class="form-block required">
-                  <div><label for="character_group">Группа</label></div>
                   <div class="group-grid1" id="character_group">
-                    <el-form-item prop="group_id">
+                    <el-form-item prop="group_id" label="Группа">
                       <el-input placeholder="group" v-model="ruleForm.group_id" />
                     </el-form-item>
                   </div>
                 </div>
                 <div class="form-block required">
-                  <div><label for="artibut_keyword">Description</label></div>
                   <div class="w-100">
-                    <el-form-item prop="keywords">
+                    <el-form-item prop="keywords" label="Description">
                       <el-input
                         type="text"
                         id="artibut_keyword"
@@ -73,9 +71,9 @@
                       <drag class="item" :key="item.id">
                         <div class="character-input-grid pb-3">
                           <div class="form-block required mb-0">
-                            <el-form-item>
+                            <el-form-item prop="name.ru">
                               <el-input
-                                v-model="item[`name_${itemLang.key}`]"
+                                v-model="item.name[itemLang.key]"
                                 placeholder="Atribut Name"
                               ></el-input>
                             </el-form-item>
@@ -158,39 +156,16 @@
 </template>
 <script>
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
-import AddModal from "../../components/modals/Add-modal.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
 export default {
   layout: "toolbar",
   data() {
     return {
-      items: ["one", "two", "three", "four"],
-      over: {},
-      startLoc: 0,
-      dragging: false,
-      dragFrom: {},
       activeName: "Русский",
       multiSelectError: true,
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
-      addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       addInnerValidatIcon: require("../../assets/svg/components/add-inner-validat-icon.svg?raw"),
-      groups: [],
-      modalTabData: [
-        {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
-          index: "uz",
-        },
-        {
-          label: "English",
-          index: "en",
-        },
-      ],
-      modalTab: "ru",
       lang: [
         {
           key: "ru",
@@ -215,13 +190,15 @@ export default {
           },
         ],
 
-        name_ru: [
-          {
-            required: true,
-            message: "Characteristic name is required",
-            trigger: "change",
-          },
-        ],
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Characteristic name is required",
+              trigger: "change",
+            },
+          ],
+        },
         options: [
           {
             required: true,
@@ -230,35 +207,25 @@ export default {
           },
         ],
       },
-      rulesModal: {
-        name_ru: [
-          {
-            required: true,
-            message: "Characteristic group is required",
-            trigger: "change",
-          },
-        ],
-      },
       ruleForm: {
         group_id: null,
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
         options: [],
         characters: [
           {
             id: 1,
-            name_ru: "",
-            name_uz: "",
-            name_en: "",
+            name: {
+              ru: "",
+              uz: "",
+              en: "",
+            },
             options: [],
           },
         ],
-      },
-      characteristic: {
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
       },
     };
   },
@@ -278,44 +245,8 @@ export default {
     submitForm(ruleForm) {
       this.multiSelectError = false;
       this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-          const data = {
-            ...this.ruleForm,
-            name: {
-              ru: this.ruleForm.name_ru,
-              uz: this.ruleForm.name_uz,
-              en: this.ruleForm.name_en,
-            },
-          };
-          delete data["name_ru"];
-          delete data["name_uz"];
-          delete data["name_en"];
-          this.__POST_CHARACTERISTIC(data);
-        } else {
-          return false;
-        }
+        valid ? this.__POST_CHARACTERISTIC(this.ruleForm) : false;
       });
-    },
-    closeModal() {
-      this.hide("add_atribute_group");
-    },
-    show(name) {
-      this.$modal.show(name);
-    },
-    getData() {
-      const newData = {
-        name: {
-          ru: this.characteristic.name_ru,
-          uz: this.characteristic.name_uz,
-          en: this.characteristic.name_en,
-        },
-      };
-      this.$refs["characteristic"].validate((valid) =>
-        valid ? this.__POST_GROUPS(newData) : false
-      );
-    },
-    hide(name) {
-      this.$modal.hide(name);
     },
     async __POST_CHARACTERISTIC(data) {
       try {
@@ -330,10 +261,7 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    async __GET_GROUPS() {
-      const data = await this.$store.dispatch("fetchCharacters/getGroups");
-      this.groups = data?.groups;
-    },
+
     statusFunc(res) {
       switch (res.status) {
         case 422:
@@ -356,23 +284,7 @@ export default {
           break;
       }
     },
-    async __POST_GROUPS(data) {
-      try {
-        await this.$store.dispatch("fetchCharacters/postGroups", data);
-        this.$notify({
-          title: "Success",
-          message: "Группа успешно добавлен",
-          type: "success",
-        });
-        this.hide("add_atribute_group");
-        this.__GET_GROUPS();
-        this.characteristic.name_ru = "";
-        this.characteristic.name_uz = "";
-        this.characteristic.name_en = "";
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
+
     toBack() {
       this.$router.push("/catalog/characteristic_groups");
     },
@@ -380,68 +292,14 @@ export default {
       this.ruleForm.characters.splice(event.index, 0, event.data);
     },
   },
-  mounted() {
-    this.__GET_GROUPS();
-  },
   components: {
     TitleBlock,
     LayoutHeaderBtn,
-    AddModal,
     Drag,
     DropList,
   },
 };
 </script>
 <style lang="scss">
-.list > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.flip-list-move {
-  // transition: transform 0.2s;
-}
-
-.over {
-  opacity: 0.6;
-}
-
-html,
-body,
-#app,
-.v-application--wrap,
-.v-content,
-.v-content__wrap {
-  height: 100%;
-}
-
-.drop-in {
-  box-shadow: 0 0 10px rgba(0, 0, 255, 0.3);
-}
-.wrapper {
-  .list {
-    border: 1px solid black;
-    margin: 100px auto;
-    width: 200px;
-
-    .item {
-      padding: 20px;
-      margin: 10px;
-      background-color: rgb(220, 220, 255);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      &.feedback {
-        background-color: rgb(255, 220, 220);
-        border: 2px dashed black;
-      }
-
-      &.drag-image {
-        background-color: rgb(220, 255, 220);
-        transform: translate(-50%, -50%);
-      }
-    }
-  }
-}
+@import "../../assets/scss/custom/page/characteristic.scss";
 </style>

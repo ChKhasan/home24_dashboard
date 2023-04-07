@@ -50,17 +50,15 @@
 
                     <div class="category-input-grid">
                       <div class="form-block required mb-0">
-                        <div><label for="">Название категории</label></div>
-                        <el-form-item :prop="`name_ru`">
+                        <el-form-item :prop="`name.ru`" label="Название категории">
                           <el-input
-                            v-model="ruleForm[`name_${item.key}`]"
+                            v-model="ruleForm.name[item.key]"
                             placeholder="Product model"
                           ></el-input>
                         </el-form-item>
                       </div>
                       <div class="form-block required">
-                        <div><label for="">Выберите категорию</label></div>
-                        <el-form-item prop="choose_category">
+                        <el-form-item prop="choose_category" label="Выберите категорию">
                           <el-select
                             v-model="ruleForm.parent_id"
                             class="w-100"
@@ -267,8 +265,7 @@
                   <FormTitle title="SEO" />
                 </div>
                 <div class="form-block required">
-                  <div><label for="">Slug</label></div>
-                  <el-form-item>
+                  <el-form-item label="Slug">
                     <el-input
                       v-model="ruleForm.slug"
                       placeholder="Product model"
@@ -276,8 +273,7 @@
                   </el-form-item>
                 </div>
                 <div class="form-block required">
-                  <div><label for="">Keywords</label></div>
-                  <el-form-item>
+                  <el-form-item label="Keywords">
                     <el-input
                       type="textarea"
                       rows="5"
@@ -287,8 +283,7 @@
                   </el-form-item>
                 </div>
                 <div class="form-block required mb-0">
-                  <div><label for="">Meta-desctiption</label></div>
-                  <el-form-item>
+                  <el-form-item label="Meta-desctiption"> 
                     <el-input
                       type="textarea"
                       rows="5"
@@ -465,13 +460,15 @@ export default {
         },
       ],
       rules: {
-        name_ru: [
-          {
-            required: true,
-            message: "Category name is required",
-            trigger: "change",
-          },
-        ],
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Category name is required",
+              trigger: "change",
+            },
+          ],
+        },
         attributes: [
           {
             required: true,
@@ -496,9 +493,11 @@ export default {
           uz: "",
           en: "",
         },
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
         icon: "",
         img: "",
         attributes: [],
@@ -551,37 +550,12 @@ export default {
     onInsert(event, elem) {
       this[elem].splice(event.index, 0, event.data);
     },
-    startDrag(item, i, e) {
-      this.startLoc = e.clientY;
-      this.dragging = true;
-      this.dragFrom = item;
-    },
-    finishDrag(item, pos, e, name) {
-      this[name].splice(pos, 1);
-      this[name].splice(this.over.pos, 0, item);
-      this.over = {};
-    },
-    onDragOver(item, pos, e) {
-      const dir = this.startLoc < e.clientY ? "down" : "up";
-      setTimeout(() => {
-        this.over = { item, pos, dir };
-      }, 10);
-    },
-    reuqiredType() {},
     submitForm(ruleForm) {
       const data = {
         ...this.ruleForm,
-        name: {
-          ru: this.ruleForm.name_ru,
-          uz: this.ruleForm.name_uz,
-          en: this.ruleForm.name_en,
-        },
         attributes: this.attributes.map((item) => item.name),
         group_characteristics: this.group_characteristics.map((item) => item.name),
       };
-      delete data["name_ru"];
-      delete data["name_uz"];
-      delete data["name_en"];
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           if (!this.attributes[0].name || !this.group_characteristics[0].name) {
@@ -619,9 +593,7 @@ export default {
     deleteElement(type, id) {
       if (this[type].length > 1) this[type] = this[type].filter((item) => item.id != id);
     },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-    },
+
     handleCancel() {
       this.previewVisible = false;
     },
@@ -717,7 +689,6 @@ export default {
 };
 </script>
 <style lang="scss">
-/* you can make up upload button and sample style by using stylesheets */
 .category-img-grid {
   .ant-upload.ant-upload-select-picture-card {
     background: #f3f6f9;

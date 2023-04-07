@@ -20,10 +20,9 @@
           <a-table
             :columns="columns"
             :data-source="brands"
-            :pagination="pagination"
+            :pagination="false"
             align="center"
             :loading="loading"
-            @change="handleTableChange"
           >
             <a slot="img" slot-scope="text">
               <img v-if="text" class="table-image" :src="text" alt="" />
@@ -78,6 +77,29 @@
               </a-popconfirm>
             </span>
           </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="changePageSize"
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -169,13 +191,31 @@ export default {
   data() {
     return {
       page: 1,
+      current: 1,
+      pageSizes: [
+        {
+          value: 10,
+          label: "10",
+        },
+        {
+          value: 25,
+          label: "25",
+        },
+        {
+          value: 50,
+          label: "50",
+        },
+        {
+          value: 100,
+          label: "100",
+        },
+      ],
+      totalPage: 1,
       params: {
         page: 1,
+        pageSize: 10,
       },
       visible: false,
-      pagination: {
-        pageSize: 16,
-      },
       modalTab: "ru",
       modalTabData: [
         {
@@ -269,22 +309,22 @@ export default {
     handleOk(e) {
       this.visible = false;
     },
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
+    async changePageSize(e) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
         await this.$router.replace({
           path: `/catalog/brands`,
           query: {
-            page: pagination.current,
+            page: this.current,
+            per_page: e,
           },
         });
+        this.__GET_BRANDS();
       }
-      this.loading = true;
-      this.__GET_BRANDS();
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
+
     getData() {
       if (this.fileList.length > 0) {
         if (this.fileList[0].oldImg) {
@@ -386,13 +426,12 @@ export default {
       this.previewVisible = false;
     },
     async __GET_BRANDS() {
+      this.loading = true;
       const data = await this.$store.dispatch("fetchBrands/getBrands", {
         ...this.$route.query,
       });
       this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.brands?.total;
+      this.totalPage = data.brands?.total;
       this.brands = data.brands?.data;
       this.brands = this.brands.map((item, index) => {
         return {
@@ -463,17 +502,31 @@ export default {
   },
 
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
       await this.$router.replace({
         path: `/catalog/brands`,
-        query: { page: this.params.page },
+        query: { page: this.params.page, per_page: this.params.pageSize },
       });
     }
-    this.pagination.current = this.$route.query.page * 1;
     this.__GET_BRANDS();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   watch: {
-    "pagination.current"() {
+    async current(val) {
+      if (this.$route.query.page != val) {
+        await this.$router.replace({
+          path: `/catalog/brands`,
+          query: {
+            page: val,
+            per_page: this.params.pageSize,
+          },
+        });
+        this.__GET_BRANDS();
+      }
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },

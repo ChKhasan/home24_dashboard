@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <TitleBlock
-    title="Продукты"
+      title="Продукты"
       :breadbrumb="['эКоммерция', 'Каталог']"
       lastLink="Продукты"
     >
@@ -47,10 +47,9 @@
                       <FormTitle title="Добавить продукт" />
                     </div>
                     <div class="form-block required">
-                      <div><label for="">Имя</label></div>
-                      <el-form-item :prop="`name_ru`">
+                      <el-form-item prop="name.ru" label="Имя">
                         <el-input
-                          v-model="ruleForm[`name_${item.key}`]"
+                          v-model="ruleForm.name[item.key]"
                           placeholder="Product name"
                         ></el-input>
                       </el-form-item>
@@ -58,8 +57,7 @@
 
                     <div class="products-input-grid-3">
                       <div class="form-block">
-                        <div><label for="">Модель</label></div>
-                        <el-form-item prop="model">
+                        <el-form-item prop="model" label="Модель">
                           <el-input
                             v-model="ruleForm.model"
                             placeholder="Product model"
@@ -98,11 +96,6 @@
                     </el-form-item>
                   </div>
                   <div class="prducts-details-btns mb-2">
-                    <!-- <div
-                      class="outline-btn outline-light-green-btn"
-                      @click="searchBlock = true"
-                      v-html="searchIcon"
-                    ></div> -->
                     <div
                       class="outline-btn outline-light-green-btn"
                       :class="{ disabledBtn: lastCategory.length < 3 }"
@@ -285,10 +278,11 @@
                                 class="form-variant-block atribut_selects"
                                 v-for="(atribut, index) in atributes"
                               >
-                                <div>
-                                  <label>{{ atribut.name.ru }}</label>
-                                </div>
-                                <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
+                                <el-form-item
+                                  :prop="`at_${atribut.id}`"
+                                  class="mb-0"
+                                  :label="atribut.name.ru"
+                                >
                                   <el-select
                                     v-model="item.optionName[`at_${atribut.id}`]"
                                     class="w-100"
@@ -319,7 +313,6 @@
 
                             <div class="form-variant-block">
                               <div><label>Price</label></div>
-                              <!-- <a-input placeholder="a Price" v-model="item.price" /> -->
                               <el-input
                                 v-model="item.price"
                                 placeholder="Price"
@@ -414,9 +407,7 @@
                   action=""
                 >
                   <div class="form-block status-style">
-                    <div><label for="status">Статус</label></div>
-
-                    <el-form-item>
+                    <el-form-item label="Статус">
                       <el-select
                         id="status"
                         class="w-100"
@@ -508,8 +499,7 @@
         class="demo-ruleForm"
       >
         <div class="form-block required">
-          <div><label for="">Brand </label></div>
-          <el-form-item prop="name">
+          <el-form-item prop="name" label="Brand">
             <el-input placeholder="Product model" v-model="brandData.name"></el-input>
           </el-form-item>
         </div>
@@ -569,17 +559,15 @@
         class="demo-ruleForm"
       >
         <div class="form-block required">
-          <div><label for="">Название категории </label></div>
-          <el-form-item prop="name_ru">
+          <el-form-item prop="name.ru" label="Название категории">
             <el-input
               placeholder="Название категории "
-              v-model="ruleFormCategory.name_ru"
+              v-model="ruleFormCategory.name.ru"
             ></el-input>
           </el-form-item>
         </div>
         <div class="form-block">
-          <div><label for="">Выберите категорию</label></div>
-          <el-form-item>
+          <el-form-item label="Выберите категорию">
             <el-select
               class="w-100"
               v-model="ruleFormCategory.parent_id"
@@ -600,13 +588,12 @@
           </el-form-item>
         </div>
         <div class="form-block required">
-          <div><label for="">Информация о категории </label></div>
-          <el-form-item prop="desc_ru">
+          <el-form-item prop="desc.ru" label="Информация о категории">
             <el-input
               type="textarea"
               rows="5"
               placeholder="Description"
-              v-model="ruleFormCategory.desc_ru"
+              v-model="ruleFormCategory.desc.ru"
             ></el-input>
           </el-form-item>
         </div>
@@ -627,8 +614,7 @@
         </div>
 
         <div class="form-block">
-          <div><label for="">Атрибуты</label></div>
-          <el-form-item prop="attributes">
+          <el-form-item prop="attributes" label="Атрибуты">
             <el-select
               class="w-100"
               v-model="ruleFormCategory.attributes"
@@ -652,8 +638,7 @@
           </el-form-item>
         </div>
         <div class="form-block">
-          <div><label for="">Характеристическая группа</label></div>
-          <el-form-item prop="group_characteristics">
+          <el-form-item prop="group_characteristics" label="Характеристическая группа">
             <el-select
               class="w-100"
               v-model="ruleFormCategory.group_characteristics"
@@ -928,13 +913,15 @@ export default {
         },
       ],
       rules: {
-        name_ru: [
-          {
-            required: true,
-            message: "Product name is required",
-            trigger: "change",
-          },
-        ],
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Product name is required",
+              trigger: "change",
+            },
+          ],
+        },
         category_id: [
           {
             required: true,
@@ -945,9 +932,11 @@ export default {
       },
       categories: [],
       ruleForm: {
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
         model: "",
         desc: {
           ru: "",
@@ -1006,20 +995,24 @@ export default {
         character: false,
       },
       rulesCategory: {
-        desc_ru: [
-          {
-            required: true,
-            message: "Description is required",
-            trigger: "change",
-          },
-        ],
-        name_ru: [
-          {
-            required: true,
-            message: "Category name is required",
-            trigger: "change",
-          },
-        ],
+        desc: {
+          ru: [
+            {
+              required: true,
+              message: "Description is required",
+              trigger: "change",
+            },
+          ],
+        },
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Category name is required",
+              trigger: "change",
+            },
+          ],
+        },
         attributes: [
           {
             required: true,
@@ -1036,14 +1029,18 @@ export default {
         ],
       },
       ruleFormCategory: {
-        name_ru: "",
+        name: {
+          ru: "",
+        },
         img: null,
         parent_id: null,
         attributes: [],
         group_characteristics: [],
         is_popular: 0,
         is_active: 0,
-        desc_ru: "",
+        desc: {
+          ru: "",
+        },
       },
       fileListCategory: [],
       allAtributes: [],
@@ -1161,20 +1158,8 @@ export default {
       this.previewVisible = true;
     },
     categoryPost() {
-      const newData = {
-        ...this.ruleFormCategory,
-        name: {
-          ru: this.ruleFormCategory.name_ru,
-        },
-        desc: {
-          ru: this.ruleFormCategory.desc_ru,
-        },
-      };
-      // delete newData["name_ru"];
-      // delete newData["desc_ru"];
-      const { name_ru, desc_ru, ...rest } = newData;
       this.$refs["categoryData"].validate((valid) =>
-        valid ? this.__POST_CATEGORY(rest) : false
+        valid ? this.__POST_CATEGORY(this.ruleFormCategory) : false
       );
     },
     handleChangeCategory({ fileList }) {
@@ -1217,8 +1202,8 @@ export default {
         await this.$store.dispatch("fetchCategories/postCategories", res);
         this.notification("Success", "Категория успешно добавлен", "success");
         this.handleOk("category");
-        this.ruleFormCategory.name_ru = "";
-        this.ruleFormCategory.desc_ru = "";
+        this.ruleFormCategory.name.ru = "";
+        this.ruleFormCategory.desc.ru = "";
         this.ruleFormCategory.is_active = 0;
         this.ruleFormCategory.is_popular = 0;
         this.ruleFormCategory.parent_id = null;
@@ -1290,11 +1275,6 @@ export default {
     transformData() {
       const newData = {
         ...this.ruleForm,
-        name: {
-          ru: this.ruleForm.name_ru,
-          uz: this.ruleForm.name_uz,
-          en: this.ruleForm.name_en,
-        },
         products: this.ruleForm.products.map((item) => {
           const newVariation = item.variations.map((elem) => {
             return {
@@ -1313,8 +1293,7 @@ export default {
           };
         }),
       };
-      const { name_ru, name_en, name_uz, ...rest } = newData;
-      return rest;
+      return newData;
     },
     notificationError(title, message) {
       this.$notify.error({
@@ -1494,6 +1473,10 @@ export default {
 
       this.cascaderCategories = mapCategories(this.categories);
       this.cascaderCategories.unshift({
+        name: { ru: "Главная категория" },
+        id: null,
+      });
+      this.categoriesWidthChild.unshift({
         name: { ru: "Главная категория" },
         id: null,
       });

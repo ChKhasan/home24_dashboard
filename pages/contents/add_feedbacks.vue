@@ -34,14 +34,12 @@
             <FormTitle title="Feedback" />
 
             <div class="form-block required">
-              <div><label for="character_group">company</label></div>
-              <el-form-item prop="company">
+              <el-form-item prop="company" label="Company">
                 <el-input type="text" v-model="ruleForm.company" />
               </el-form-item>
             </div>
             <div class="form-block required">
-              <div><label for="">feedback</label></div>
-              <el-form-item prop="feedback">
+              <el-form-item prop="feedback" label="feedback">
                 <el-input
                   v-model="ruleForm.feedback"
                   placeholder="Atribut Name"
@@ -99,7 +97,6 @@
 </template>
 <script>
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
-import AddModal from "../../components/modals/Add-modal.vue";
 import TitleBlock from "../../components/Title-block.vue";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -216,7 +213,6 @@ export default {
   components: {
     TitleBlock,
     LayoutHeaderBtn,
-    AddModal,
   },
 };
 </script>

@@ -62,7 +62,7 @@
       :closable="false"
       @ok="handleOk"
     >
-    <div class="modal_tab mb-4">
+      <div class="modal_tab mb-4">
         <span
           v-for="(item, index) in modalTabData"
           :key="index"
@@ -86,23 +86,17 @@
           v-if="modalTab == item.index"
         >
           <div class="form-block required">
-            <div>
-              <label for="banner_link">Link</label>
-            </div>
-            <el-form-item prop="link_ru">
+            <el-form-item prop="link.ru" label="Link">
               <el-input
                 id="banner_link"
                 type="text"
                 placeholder="Link"
-                v-model="ruleForm[`link_${item.index}`]"
+                v-model="ruleForm.link[item.index]"
               ></el-input>
             </el-form-item>
           </div>
           <div class="form-block required mb-0">
-            <div>
-              <label for="banner_type">Type</label>
-            </div>
-            <el-form-item prop="type">
+            <el-form-item prop="type" label="Type">
               <el-select
                 v-model="ruleForm.type"
                 class="w-100"
@@ -210,9 +204,11 @@ export default {
           uz: "",
         },
         type: "",
-        link_ru: "",
-        link_uz: "",
-        link_en: "",
+        link: {
+          ru: "",
+          en: "",
+          uz: "",
+        },
       },
       columns: [
         {
@@ -263,14 +259,15 @@ export default {
       banners: [],
       types: {},
       rules: {
-        link_ru: [
-          {
-            required: true,
-            message: "Banner link is required",
-            trigger: "change",
-          },
-        ],
-
+        link: {
+          ru: [
+            {
+              required: true,
+              message: "Banner link is required",
+              trigger: "change",
+            },
+          ],
+        },
         type: [
           {
             required: true,
@@ -307,20 +304,11 @@ export default {
       this.__GET_BANNERS();
     },
     getData() {
-      const newData = {
-        ...this.ruleForm,
-        link: {
-          ru: this.ruleForm.link_ru,
-          uz: this.ruleForm.link_uz,
-          en: this.ruleForm.link_en,
-        },
-      };
-      delete newData["link_ru"];
-      delete newData["link_uz"];
-      delete newData["link_en"];
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != "" ? this.__EDIT_BANNERS(newData) : this.__POST_BANNERS(newData);
+          this.editId != ""
+            ? this.__EDIT_BANNERS(this.ruleForm)
+            : this.__POST_BANNERS(this.ruleForm);
         } else {
           return false;
         }
@@ -340,9 +328,7 @@ export default {
       const data = this.banners.find((item) => item.id == id);
       this.ruleForm = {
         img: data.sm_img,
-        link_ru: data.link.ru,
-        link_uz: data.link.uz,
-        link_en: data.link.en,
+        link: data.link,
         type: "main",
       };
       this.fileList = [
@@ -367,9 +353,9 @@ export default {
         uz: "",
         en: "",
       };
-      this.ruleForm.link_ru = "";
-      this.ruleForm.link_uz = "";
-      this.ruleForm.link_en = "";
+      this.ruleForm.link.ru = "";
+      this.ruleForm.link.uz = "";
+      this.ruleForm.link.en = "";
     },
     deletePost(id) {
       this.__DELETE_BANNERS(id);

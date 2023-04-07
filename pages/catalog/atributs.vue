@@ -26,10 +26,9 @@
           <a-table
             :columns="columns"
             :data-source="atributes"
-            :pagination="pagination"
+            :pagination="false"
             :loading="loading"
             align="center"
-            @change="handleTableChange"
             :row-selection="{
               selectedRowKeys: selectedRowKeys,
               onChange: onSelectChange,
@@ -77,6 +76,29 @@
               </a-popconfirm>
             </span>
           </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="changePageSize"
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -93,14 +115,31 @@ export default {
   data() {
     return {
       page: 1,
+      current: 1,
+      pageSizes: [
+        {
+          value: 10,
+          label: "10",
+        },
+        {
+          value: 25,
+          label: "25",
+        },
+        {
+          value: 50,
+          label: "50",
+        },
+        {
+          value: 100,
+          label: "100",
+        },
+      ],
+      totalPage: 1,
       params: {
         page: 1,
-      },
-      pagination: {
-        pageSize: 16,
+        pageSize: 10,
       },
       loading: true,
-      pageSize: 10,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
@@ -145,35 +184,39 @@ export default {
     };
   },
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
       await this.$router.replace({
         path: `/catalog/atributs`,
-        query: { page: this.params.page },
+        query: { page: this.params.page, per_page: this.params.pageSize },
       });
     }
-    this.pagination.current = this.$route.query.page * 1;
     this.__GET_ATRIBUTES();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   methods: {
     toAddProduct() {
       this.$router.push("/catalog/add_atributs");
     },
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
+    async changePageSize(e) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
         await this.$router.replace({
           path: `/catalog/atributs`,
           query: {
-            page: pagination.current,
+            page: this.current,
+            per_page: e,
           },
         });
+        this.__GET_ATRIBUTES();
       }
-      this.loading = true;
-      this.__GET_ATRIBUTES();
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
+
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
@@ -219,13 +262,12 @@ export default {
     },
     async __GET_ATRIBUTES() {
       try {
+        this.loading = true;
         const data = await this.$store.dispatch("fetchAtributes/getAtributes", {
           ...this.$route.query,
         });
         this.loading = false;
-        const pagination = { ...this.pagination };
-        this.pagination = pagination;
-        pagination.total = data.attributes?.total;
+        this.totalPage = data.attributes?.total;
         this.atributes = data.attributes?.data.map((item) => {
           return {
             ...item,
@@ -242,7 +284,17 @@ export default {
     },
   },
   watch: {
-    "pagination.current"() {
+    async current(val) {
+      if (this.$route.query.page != val) {
+        await this.$router.replace({
+          path: `/catalog/atributs`,
+          query: {
+            page: val,
+            per_page: this.params.pageSize,
+          },
+        });
+        this.__GET_ATRIBUTES();
+      }
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },

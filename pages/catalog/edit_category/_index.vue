@@ -50,17 +50,15 @@
 
                     <div class="category-input-grid">
                       <div class="form-block required mb-0">
-                        <div><label for="">Название категории</label></div>
-                        <el-form-item prop="name_ru">
+                        <el-form-item :prop="`name.ru`" label="Название категории">
                           <el-input
-                            v-model="ruleForm[`name_${item.key}`]"
+                            v-model="ruleForm.name[item.key]"
                             placeholder="Product model"
                           ></el-input>
                         </el-form-item>
                       </div>
                       <div class="form-block">
-                        <div><label for="">Выберите категорию</label></div>
-                        <el-form-item>
+                        <el-form-item label="Выберите категорию">
                           <el-select
                             v-model="ruleForm.parent_id"
                             class="w-100"
@@ -196,6 +194,7 @@
                                 @change="filterElement('group_characteristics')"
                                 default-first-option
                                 no-data-text="No characteristics"
+                                no-match-text="No characteristics"
                                 placeholder="Choose tags for your article"
                               >
                                 <el-option
@@ -262,8 +261,7 @@
                   <FormTitle title="SEO" />
                 </div>
                 <div class="form-block required">
-                  <div><label for="">Slug</label></div>
-                  <el-form-item>
+                  <el-form-item label="Slug">
                     <el-input
                       v-model="ruleForm.slug"
                       placeholder="Product model"
@@ -271,8 +269,7 @@
                   </el-form-item>
                 </div>
                 <div class="form-block required">
-                  <div><label for="">Keywords</label></div>
-                  <el-form-item>
+                  <el-form-item label="Keywords">
                     <el-input
                       type="textarea"
                       rows="5"
@@ -282,8 +279,7 @@
                   </el-form-item>
                 </div>
                 <div class="form-block required mb-0">
-                  <div><label for="">Meta-desctiption</label></div>
-                  <el-form-item>
+                  <el-form-item label="Meta-desctiption">
                     <el-input
                       type="textarea"
                       rows="5"
@@ -472,13 +468,15 @@ export default {
         },
       ],
       rules: {
-        name_ru: [
-          {
-            required: true,
-            message: "Category name is required",
-            trigger: ["change", "blur"],
-          },
-        ],
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Category name is required",
+              trigger: ["change", "blur"],
+            },
+          ],
+        },
 
         attributes: [
           {
@@ -504,9 +502,11 @@ export default {
           en: "",
         },
         is_active: 1,
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
         icon: null,
         img: null,
         attributes: [],
@@ -604,18 +604,9 @@ export default {
     submitForm(ruleForm) {
       const data = {
         ...this.ruleForm,
-        name: {
-          ru: this.ruleForm.name_ru,
-          uz: this.ruleForm.name_uz,
-          en: this.ruleForm.name_en,
-        },
         attributes: this.attributes.map((item) => item.name),
         group_characteristics: this.group_characteristics.map((item) => item.name),
       };
-      delete data["name_ru"];
-      delete data["name_uz"];
-      delete data["name_en"];
-
       if (this.fileList.img[0]?.oldImg) {
         data.img = this.fileList.img[0]?.url;
       }
@@ -659,12 +650,8 @@ export default {
       );
       this.slug = data.category.slug;
       this.categoryChild = data.category.children;
-      this.ruleForm.name_ru = data.category.name.ru;
-      this.ruleForm.name_uz = data.category.name.uz;
-      this.ruleForm.name_en = data.category.name.en;
-      this.ruleForm.desc.ru = data.category.desc.ru;
-      this.ruleForm.desc.uz = data.category.desc.uz;
-      this.ruleForm.desc.en = data.category.desc.en;
+      this.ruleForm.name = data.category.name;
+      this.ruleForm.desc = data.category.desc;
       this.ruleForm.is_active = data.category.is_active;
       this.attributes = data.category.attributes.map((item, index) => {
         return {

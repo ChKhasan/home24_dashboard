@@ -12,7 +12,10 @@ import {
   Radio,
   Icon,
   Input,
-  Spin
+  Spin,
+  Pagination,
+  Dropdown,
+  Menu
 } from "ant-design-vue";
 
 Vue.use(Button);
@@ -27,3 +30,7 @@ Vue.use(Radio);
 Vue.use(Icon);
 Vue.use(Input);
 Vue.use(Spin);
+Vue.use(Pagination);
+Vue.use(Dropdown);
+Vue.use(Menu);
+

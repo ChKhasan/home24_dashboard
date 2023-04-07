@@ -418,6 +418,49 @@
 .column-btns {
   padding-right: 0 !important;
 }
+.table-pagination {
+  .ant-pagination-item-active {
+    background: #009ef7;
+    color: #ffffff !important;
+    a {
+      pointer-events: none !important;
+    }
+    &:hover,
+    &:focus {
+      background: #009ef7 !important;
+      a {
+        color: #ffffff !important;
+      }
+    }
+  }
+  .ant-pagination-item {
+    border: none;
+    justify-content: center;
+    align-items: center;
+    a {
+      font-weight: 600;
+      pointer-events: none !important;
+    }
+    border-radius: 0.475rem;
+    font-weight: 500;
+    font-size: 14px;
+    transition: color 0.2s ease;
+    &:hover {
+      color: #009ef7;
+      background: #f9f9f9;
+    }
+  }
+}
+.ant-pagination-item-link {
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  &:hover {
+    color: #009ef7;
+    background: #f9f9f9 !important;
+  }
+}
 @media (max-width: 1440px) {
   .table_product_row {
     h6 {
