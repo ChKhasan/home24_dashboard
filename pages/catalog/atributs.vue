@@ -24,19 +24,18 @@
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columns"
+            :columns="columnAtribut"
             :data-source="atributes"
             :pagination="false"
             :loading="loading"
             align="center"
             :row-selection="{
               selectedRowKeys: selectedRowKeys,
-              onChange: onSelectChange,
               columnWidth: '40px',
               align: 'right',
             }"
           >
-            <a slot="info" slot-scope="text" align="center" class="table_product_row">
+            <a slot="info" slot-scope="text" >
               <h6>{{ text?.name.ru }}</h6>
               <span>{{ text.keywords }}</span>
             </a>
@@ -81,7 +80,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSize"
+              @change="changePageSizeGlobal(e, '/catalog/atributs', '__GET_ATRIBUTES')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -110,76 +109,21 @@ import HeaderBtn from "../../components/form/Header-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
 import SearchInput from "../../components/form/Search-input.vue";
+import global from "../../mixins/global";
+import status from "../../mixins/status";
+import columns from "../../mixins/columns";
+
 export default {
   layout: "toolbar",
+  mixins: [global, status, columns],
   data() {
     return {
-      page: 1,
-      current: 1,
-      pageSizes: [
-        {
-          value: 10,
-          label: "10",
-        },
-        {
-          value: 25,
-          label: "25",
-        },
-        {
-          value: 50,
-          label: "50",
-        },
-        {
-          value: 100,
-          label: "100",
-        },
-      ],
-      totalPage: 1,
-      params: {
-        page: 1,
-        pageSize: 10,
-      },
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       selectedRowKeys: [],
       atributes: [],
-      columns: [
-        {
-          title: "АТРИБУТЫ",
-          dataIndex: "info",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "info" },
-          className: "column-name",
-          key: "info",
-          width: "30%",
-        },
-        {
-          title: "Параметры",
-          dataIndex: "options",
-          scopedSlots: { customRender: "options" },
-          className: "column-options",
-          key: "options",
-        },
-        {
-          title: "Категории",
-          dataIndex: "categories",
-          scopedSlots: { customRender: "categories" },
-          className: "column-options",
-          key: "categories",
-        },
-
-        {
-          title: "ДЕЙСТВИЯ",
-          dataIndex: "id",
-          scopedSlots: { customRender: "id" },
-          className: "column-btns",
-          width: "100px",
-          key: "id",
-          align: "right",
-        },
-      ],
       data: [],
     };
   },
@@ -198,67 +142,13 @@ export default {
     this.params.pageSize = Number(this.$route.query.per_page);
   },
   methods: {
-    toAddProduct() {
-      this.$router.push("/catalog/add_atributs");
-    },
-    async changePageSize(e) {
-      this.current = 1;
-      if (this.$route.query.per_page != e) {
-        await this.$router.replace({
-          path: `/catalog/atributs`,
-          query: {
-            page: this.current,
-            per_page: e,
-          },
-        });
-        this.__GET_ATRIBUTES();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    },
-
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    cancel(e) {
-      console.log(e);
-      this.$message.error("Click on No");
-    },
     deleteAtribut(id) {
-      this.__DELETE_ATRIBUT(id);
-    },
-    async __DELETE_ATRIBUT(id) {
-      try {
-        const data = await this.$store.dispatch("fetchAtributes/deleteAtributes", id);
-        await this.$notify({
-          title: "Success",
-          message: "Атрибут был успешно удален",
-          type: "success",
-        });
-        this.__GET_ATRIBUTES();
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.notificationError("Error", "Указанные данные недействительны.");
-          break;
-        case 500:
-          this.notificationError("Error", "Cервер не работает");
-          break;
-        case 404:
-          this.notificationError("Error", res.data.errors);
-          break;
-      }
-    },
-    notificationError(title, message) {
-      this.$notify.error({
-        title: title,
-        message: message,
-      });
+      this.__DELETE_GLOBAL(
+        id,
+        "fetchAtributes/deleteAtributes",
+        "Атрибут был успешно удален",
+        "__GET_ATRIBUTES"
+      );
     },
     async __GET_ATRIBUTES() {
       try {

@@ -154,9 +154,11 @@ import FormTitle from "../../components/Form-title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import { Drag, DropList } from "vue-easy-dnd";
+import status from "../../mixins/status";
 
 export default {
   layout: "toolbar",
+  mixins: [status],
   data() {
     return {
       activeName: "Русский",
@@ -248,10 +250,7 @@ export default {
             delete data["optionsName"];
             this.__POST_ATRIBUTES(data);
           } else {
-            this.$notify.error({
-            title: "Error",
-            message: "Нет опции",
-          });
+            this.notificationError("Error","Нет опции")
           }
         } else {
           return false;
@@ -264,39 +263,12 @@ export default {
     async __POST_ATRIBUTES(data) {
       try {
         await this.$store.dispatch("fetchAtributes/postAtributes", data);
-        await this.$notify({
-          title: "Success",
-          message: "Атрибут успешно добавлен",
-          type: "success",
-        });
+        this.notification("Success","Атрибут успешно добавлен","success")
         this.$router.push("/catalog/atributs");
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
-          break;
-        case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
-          break;
-        case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
-          break;
-      }
-    },
-
   },
 
   components: {
@@ -304,7 +276,7 @@ export default {
     TitleBlock,
     LayoutHeaderBtn,
     Drag,
-     DropList
+    DropList
   },
 };
 </script>

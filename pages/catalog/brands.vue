@@ -18,7 +18,7 @@
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columns"
+            :columns="columnBrand"
             :data-source="brands"
             :pagination="false"
             align="center"
@@ -38,7 +38,6 @@
               slot="title"
               slot-scope="text"
               align="center"
-              class="table_product_row"
             >
               <h6>{{ text?.ru }}</h6>
             </span>
@@ -82,7 +81,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSize"
+              @change="changePageSizeGlobal(e, '/catalog/brands', '__GET_BRANDS')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -178,6 +177,10 @@ import SearchInput from "../../components/form/Search-input.vue";
 import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
+import global from "../../mixins/global";
+import status from "../../mixins/status";
+import columns from "../../mixins/columns";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -188,33 +191,9 @@ function getBase64(file) {
 }
 export default {
   // middleware: "auth",
+  mixins: [global, status, columns],
   data() {
     return {
-      page: 1,
-      current: 1,
-      pageSizes: [
-        {
-          value: 10,
-          label: "10",
-        },
-        {
-          value: 25,
-          label: "25",
-        },
-        {
-          value: 50,
-          label: "50",
-        },
-        {
-          value: 100,
-          label: "100",
-        },
-      ],
-      totalPage: 1,
-      params: {
-        page: 1,
-        pageSize: 10,
-      },
       visible: false,
       modalTab: "ru",
       modalTabData: [
@@ -243,48 +222,6 @@ export default {
         logo: "",
       },
       editImage: "",
-      columns: [
-        {
-          title: "ID",
-          dataIndex: "numberId",
-          key: "numberId",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "numberId" },
-          align: "left",
-          className: "column-name",
-          width: "60px",
-        },
-        {
-          title: "Бренд",
-          dataIndex: "lg_logo",
-          key: "lg_logo",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
-          align: "left",
-          className: "column-img",
-          colSpan: 2,
-          width: "45px",
-        },
-        {
-          dataIndex: "name",
-          key: "name",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "name" },
-          className: "column-name",
-          width: "30%",
-          colSpan: 0,
-        },
-
-        {
-          title: "действия",
-          key: "id",
-          dataIndex: "id",
-          scopedSlots: { customRender: "id" },
-          className: "column-btns",
-          //   width: "10%",
-          align: "right",
-        },
-      ],
       editId: "",
       previewVisible: false,
       previewImage: "",
@@ -309,22 +246,6 @@ export default {
     handleOk(e) {
       this.visible = false;
     },
-    async changePageSize(e) {
-      this.current = 1;
-      if (this.$route.query.per_page != e) {
-        await this.$router.replace({
-          path: `/catalog/brands`,
-          query: {
-            page: this.current,
-            per_page: e,
-          },
-        });
-        this.__GET_BRANDS();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    },
-
     getData() {
       if (this.fileList.length > 0) {
         if (this.fileList[0].oldImg) {
@@ -340,10 +261,6 @@ export default {
           return false;
         }
       });
-    },
-    cancel(e) {
-      console.log(e);
-      this.$message.error("Click on No");
     },
     showModal() {
       this.visible = true;
@@ -386,22 +303,13 @@ export default {
       this.__GET_BRANDS();
     },
     deletePost(id) {
-      this.__DELETE_BRANDS(id);
+      this.__DELETE_GLOBAL(
+        id,
+        "fetchBrands/deleteBrands",
+        "Бранд был успешно удален",
+        "__GET_BRANDS"
+      );
     },
-    async __DELETE_BRANDS(id) {
-      try {
-        const data = await this.$store.dispatch("fetchBrands/deleteBrands", id);
-        await this.$notify({
-          title: "Success",
-          message: "Бранд был успешно удален",
-          type: "success",
-        });
-        this.__GET_BRANDS();
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-
     async handlePreview(file) {
       if (!file.url && !file.preview) {
         file.preview = await getBase64(file.originFileObj);
@@ -445,11 +353,7 @@ export default {
     async __POST_BRANDS(res) {
       try {
         await this.$store.dispatch("fetchBrands/postBrands", res);
-        await this.$notify({
-          title: "Success",
-          message: "Бранд успешно добавлен",
-          type: "success",
-        });
+        this.notification("Success", "Бранд успешно добавлен", "success");
         this.handleOk();
         this.__GET_BRANDS();
         this.ruleForm.logo = "";
@@ -458,39 +362,13 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
-          break;
-        case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
-          break;
-        case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
-          break;
-      }
-    },
     async __EDIT_BRANDS(res) {
       try {
         await this.$store.dispatch("fetchBrands/editBrands", {
           id: this.editId,
           data: { ...res, slug: this.slug },
         });
-        this.$notify({
-          title: "Success",
-          message: "Пост успешно добавлен",
-          type: "success",
-        });
+        this.notification("Success", "Бранд успешно добавлен", "success");
         this.handleOk();
         this.__GET_BRANDS();
         this.ruleForm.logo = "";

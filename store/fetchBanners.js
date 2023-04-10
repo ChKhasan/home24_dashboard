@@ -1,8 +1,9 @@
 export const actions = {
-  async getBanners() {
+  async getBanners({}, payload) {
     try {
       const res = await this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/banners`
+        `https://test.loftcity.uz/api/admin/banners`,
+        { params: payload }
       );
       return res;
     } catch (e) {
@@ -20,15 +21,11 @@ export const actions = {
     }
   },
   async postBanners({}, data) {
-    try {
-      const res = await this.$axios.$post(
-        `https://test.loftcity.uz/api/admin/banners`,
-        data
-      );
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$post(
+      `https://test.loftcity.uz/api/admin/banners`,
+      data
+    );
+    return res;
   },
   async editBanners({}, payload) {
     try {

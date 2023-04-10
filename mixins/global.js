@@ -1,56 +1,60 @@
 export default {
   data() {
     return {
-      title: "Quill Editor",
-      items: [
+      page: 1,
+      current: 1,
+      pageSizes: [
         {
-          text: "Minton",
-          href: "/",
+          value: 10,
+          label: "10",
         },
         {
-          text: "Forms",
-          href: "/",
+          value: 25,
+          label: "25",
         },
         {
-          text: "Quill Editor",
-          active: true,
+          value: 50,
+          label: "50",
+        },
+        {
+          value: 100,
+          label: "100",
         },
       ],
-      editorOption: {
-        // Some Quill options...
-        theme: "snow",
-        modules: {
-          toolbar: [
-            [
-              {
-                size: [],
-              },
-            ],
-            ["bold", "italic", "underline", "strike"],
-
-            ["image"],
-            ["code-block"],
-          ],
-        },
-      },
-      option: {
-        theme: "bubble",
-        modules: {
-          toolbar: [
-            ["bold", "italic", "link"],
-            [
-              {
-                header: 1,
-              },
-              {
-                header: 2,
-              },
-              "blockquote",
-            ],
-          ],
-        },
+      totalPage: 1,
+      params: {
+        page: 1,
+        pageSize: 10,
       },
     };
   },
-  middleware: "router-auth",
+  methods: {
+    cancel(e) {
+      this.$message.error("Click on No");
+    },
+    async changePageSizeGlobal(e, link, data) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
+        await this.$router.replace({
+          path: link,
+          query: {
+            page: this.current,
+            per_page: e,
+          },
+        });
+        this[data]();
+      }
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    },
+    async __DELETE_GLOBAL(id, link, message, data) {
+      try {
+        await this.$store.dispatch(link, id);
+        this.notification("Success", message, "success");
+        this[data]();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+  },
 };

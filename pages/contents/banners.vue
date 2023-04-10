@@ -18,9 +18,8 @@
           <a-table
             :columns="columns"
             :data-source="banners"
-            :pagination="pagination"
+            :pagination="false"
             :loading="loading"
-            @change="handleTableChange"
           >
             <div slot="img" slot-scope="text">
               <img v-if="text?.ru" class="table-image" :src="text?.ru" alt="" />
@@ -53,6 +52,29 @@
               </a-popconfirm>
             </span>
           </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="changePageSize"
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -158,6 +180,8 @@
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
+import global from "../../mixins/global";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -168,14 +192,9 @@ function getBase64(file) {
 }
 export default {
   // middleware: "auth",
+  mixins: [global],
   data() {
     return {
-      params: {
-        page: 1,
-      },
-      pagination: {
-        pageSize: 16,
-      },
       loading: true,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
@@ -286,25 +305,31 @@ export default {
     handleOk() {
       this.visible = false;
     },
-
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
+    async changePageSize(e) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
         await this.$router.replace({
           path: `/contents/banners`,
           query: {
-            page: pagination.current,
+            page: this.current,
+            per_page: e,
           },
         });
+        this.__GET_BANNERS();
       }
-      this.loading = true;
-      this.__GET_BANNERS();
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
+
     getData() {
       this.$refs["ruleForm"].validate((valid) => {
+        if (this.ruleForm.img.ru == "") {
+          this.$notify.error({
+            title: "Error",
+            message: "Banner img is required",
+          });
+          return false;
+        }
         if (valid) {
           this.editId != ""
             ? this.__EDIT_BANNERS(this.ruleForm)
@@ -400,13 +425,12 @@ export default {
       this.previewVisible = false;
     },
     async __GET_BANNERS() {
+      this.loading = true;
       const data = await this.$store.dispatch("fetchBanners/getBanners", {
         ...this.$route.query,
       });
       this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.banners?.total;
+      this.totalPage = data.banners?.total;
       this.banners = data.banners?.data;
       this.banners = this.banners.map((item) => {
         return {
@@ -474,18 +498,32 @@ export default {
   },
 
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
       await this.$router.replace({
         path: `/contents/banners`,
-        query: { page: this.params.page },
+        query: { page: this.params.page, per_page: this.params.pageSize },
       });
     }
-    this.pagination.current = this.$route.query.page * 1;
     this.__GET_BANNERS();
     this.__GET_BANNERS_TYPES();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   watch: {
-    "pagination.current"() {
+    async current(val) {
+      if (this.$route.query.page != val) {
+        await this.$router.replace({
+          path: `/contents/banners`,
+          query: {
+            page: val,
+            per_page: this.params.pageSize,
+          },
+        });
+        this.__GET_BANNERS();
+      }
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },

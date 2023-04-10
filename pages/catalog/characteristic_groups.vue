@@ -44,13 +44,13 @@
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columns"
+            :columns="columnCharacteristic"
             :data-source="groups"
             :pagination="false"
             align="center"
             :loading="loading"
           >
-            <span slot="name" slot-scope="text" align="center" class="table_product_row">
+            <span slot="name" slot-scope="text" >
               <h6>{{ text?.ru }}</h6>
             </span>
 
@@ -172,38 +172,17 @@
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
+import global from "../../mixins/global";
+import status from "../../mixins/status";
+import columns from "../../mixins/columns";
 
 export default {
   // middleware: "auth",
+  mixins: [global, status, columns],
   data() {
     return {
       modalTab: "ru",
       visible: false,
-      page: 1,
-      current: 1,
-      pageSizes: [
-        {
-          value: 10,
-          label: "10",
-        },
-        {
-          value: 25,
-          label: "25",
-        },
-        {
-          value: 50,
-          label: "50",
-        },
-        {
-          value: 100,
-          label: "100",
-        },
-      ],
-      totalPage: 1,
-      params: {
-        page: 1,
-        pageSize: 10,
-      },
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
@@ -230,37 +209,6 @@ export default {
         name_en: "",
       },
       groups: [],
-      columns: [
-        {
-          title: "ID",
-          dataIndex: "numberId",
-          key: "numberId",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "numberId" },
-          align: "left",
-          className: "column-name",
-          width: "60px",
-        },
-        {
-          title: "Name",
-          dataIndex: "name",
-          key: "name",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "name" },
-          align: "left",
-          className: "column-name",
-        },
-
-        {
-          title: "действия",
-          key: "id",
-          dataIndex: "id",
-          scopedSlots: { customRender: "id" },
-          className: "column-btns",
-          width: "100px",
-          align: "right",
-        },
-      ],
       editId: "",
       rules: {
         name_ru: [

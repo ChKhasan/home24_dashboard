@@ -22,7 +22,7 @@
         </div>
         <div class="antd_table select-table">
           <a-table
-            :columns="columns"
+            :columns="columnCatgory"
             :data-source="categories"
             :expanded-row-keys.sync="expandedRowKeys"
             :pagination="false"
@@ -33,7 +33,7 @@
               slot="dataName"
               slot-scope="text"
               align="center"
-              class="table_product_row select-table-child"
+              class=" select-table-child"
             >
               <div>
                 <img
@@ -59,7 +59,7 @@
               slot="lg_icon"
               slot-scope="text"
               align="center"
-              class="table_product_row select-table-child"
+              class="select-table-child"
             >
               <img class="table-image select-img" v-if="text" :src="text" alt="" />
               <img
@@ -111,7 +111,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSize"
+              @change="changePageSizeGlobal(e, '/catalog/categories', '__GET_CATEGORIES')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -141,81 +141,16 @@ import TitleBlock from "../../components/Title-block.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import StatusFilter from "../../components/form/Status-filter.vue";
-const columns = [
-  {
-    title: "Категория",
-    dataIndex: "dataName",
-    key: "dataName",
-    className: "column-name",
-    slots: { title: "customTitle" },
-    scopedSlots: { customRender: "dataName" },
-    align: "left",
-  },
-  {
-    title: "Икона",
-    dataIndex: "lg_icon",
-    slots: { title: "customTitle" },
-    align: "center",
-    scopedSlots: { customRender: "lg_icon" },
-    key: "lg_icon",
-    width: "12%",
-  },
-  {
-    title: "ПОПУЛЯРНЫЙ",
-    dataIndex: "is_popular",
-    key: "is_popular",
-    align: "center",
-    scopedSlots: { customRender: "is_popular" },
-    width: "15%",
-  },
-  {
-    title: "Статус",
-    key: "is_active",
-    dataIndex: "is_active",
-    scopedSlots: { customRender: "is_active" },
-    className: "column-tags",
-    width: "10%",
-  },
-  {
-    title: "действия",
-    key: "id",
-    dataIndex: "id",
-    scopedSlots: { customRender: "id" },
-    className: "column-btns",
-    width: "100px",
-  },
-];
+import global from "../../mixins/global";
+import status from "../../mixins/status";
+import columns from "../../mixins/columns";
 
 export default {
   layout: "toolbar",
   // middleware: "auth",
+  mixins: [global, status, columns],
   data() {
     return {
-      page: 1,
-      current: 1,
-      pageSizes: [
-        {
-          value: 10,
-          label: "10",
-        },
-        {
-          value: 25,
-          label: "25",
-        },
-        {
-          value: 50,
-          label: "50",
-        },
-        {
-          value: 100,
-          label: "100",
-        },
-      ],
-      totalPage: 1,
-      params: {
-        page: 1,
-        pageSize: 10,
-      },
       loading: true,
       categories: [],
       options: [
@@ -253,8 +188,6 @@ export default {
         },
       ],
       formVal: "",
-
-      columns,
       expandedRowKeys: [],
       selectedRowKeys: [],
       allCheckbox: [],
@@ -271,32 +204,13 @@ export default {
     StatusFilter,
   },
   methods: {
-    cancel(e) {
-      console.log(e);
-      this.$message.error("Click on No");
-    },
-    async changePageSize(e) {
-      this.current = 1;
-      if (this.$route.query.per_page != e) {
-        await this.$router.replace({
-          path: `/catalog/categories`,
-          query: {
-            page: this.current,
-            per_page: e,
-          },
-        });
-        this.__GET_CATEGORIES();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    },
     async __GET_CATEGORIES() {
       this.loading = true;
       const data = await this.$store.dispatch("fetchCategories/getCategories", {
         ...this.$route.query,
       });
       this.loading = false;
-      this.totalPage =  data.categories?.total;
+      this.totalPage = data.categories?.total;
       this.categories = data.categories?.data.map((item, index) => {
         let newChild = [];
         let newChild2 = [];
@@ -359,45 +273,12 @@ export default {
       });
     },
     deleteCategory(id) {
-      this.__DELETE_CATEGORY(id);
-    },
-    async __DELETE_CATEGORY(id) {
-      try {
-        await this.$store.dispatch("fetchCategories/deleteCategories", id);
-        await this.$notify({
-          title: "Success",
-          message: "Категория был успешно удален",
-          type: "success",
-        });
-        this.__GET_CATEGORIES();
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
-          break;
-        case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
-          break;
-        case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
-          break;
-      }
-    },
-    toAddProduct() {
-      this.$router.push("/catalog/add_category");
+      this.__DELETE_GLOBAL(
+        id,
+        "fetchCategories/deleteCategories",
+        "Категория был успешно удален",
+        "__GET_CATEGORIES"
+      );
     },
     headerbtnCallback() {
       this.$router.push("/catalog/add_category");

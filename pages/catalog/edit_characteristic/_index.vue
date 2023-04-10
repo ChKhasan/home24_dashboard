@@ -32,7 +32,7 @@
           <div
             class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
           ></div>
-          <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
+          <el-tabs class="form_tabs" v-model="activeName">
             <el-tab-pane
               v-for="(itemLang, index) in lang"
               :label="itemLang.label"
@@ -158,8 +158,11 @@
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
+import status from "../../../mixins/status";
+
 export default {
   layout: "toolbar",
+  mixins: [status],
   data() {
     return {
       activeName: "Русский",
@@ -251,40 +254,12 @@ export default {
     async __POST_CHARACTERISTIC(data) {
       try {
         await this.$store.dispatch("fetchCharacters/postCharacteristics", data);
-        await this.$notify({
-          title: "Success",
-          message: "Характеристика успешно добавлен",
-          type: "success",
-        });
+        this.notification("Success","Характеристика успешно добавлен","success")
         this.$router.push("/catalog/characteristic_groups");
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
-          break;
-        case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
-          break;
-        case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
-          break;
-      }
-    },
-
     toBack() {
       this.$router.push("/catalog/characteristic_groups");
     },

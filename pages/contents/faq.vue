@@ -44,8 +44,6 @@
               @click="$router.push('/home/customer-info/123')"
               slot="question"
               slot-scope="text"
-              align="center"
-              class="table_product_row"
             >
               <h6>{{ text?.ru }}</h6>
             </span>

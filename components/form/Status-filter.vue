@@ -1,12 +1,15 @@
 <template lang="html">
   <div class="input status-select">
-    <el-select v-model="value" placeholder="Select">
+    <el-select
+      v-model="value"
+      placeholder="Status"
+      @change="($event) => $emit('changeStatus', $event)"
+    >
       <el-option
         v-for="item in options"
         :key="item.value"
         :label="item.label"
         :value="item.value"
-        :disabled="item.disabled"
       >
       </el-option>
     </el-select>
@@ -14,6 +17,7 @@
 </template>
 <script>
 export default {
+  props: {},
   data() {
     return {
       options: [
@@ -30,9 +34,8 @@ export default {
           label: "Inactive",
         },
       ],
-      value: 2,
+      value: "",
     };
   },
 };
 </script>
-<style lang=""></style>

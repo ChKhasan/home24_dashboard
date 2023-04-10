@@ -20,15 +20,30 @@
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
             <SearchInput placeholder="Поиск продукта" @changeSearch="changeSearch" />
-            <SearchInput
-              placeholder="Поиск товара по бренду"
-              @changeSearch="changeSearch"
-            />
-            <StatusFilter />
+            <div class="input status-select w-100">
+              <el-select v-model="brandSearch" placeholder="Сортировать" class="w-100">
+                <el-option
+                  class="w-100"
+                  v-for="item in brandSelect"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                  :disabled="item.disabled"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <StatusFilter @changeStatus="changeStatus" />
+            <a-button
+              type="primary"
+              class="d-flex align-items-center justify-content-center"
+              style="height: 38px"
+              ><a-icon type="reload"
+            /></a-button>
           </div>
         </div>
         <a-table
-          :columns="columns"
+          :columns="columnProduct"
           :data-source="data"
           :loading="loading"
           :pagination="false"
@@ -36,20 +51,33 @@
           align="center"
           :row-selection="{
             selectedRowKeys: selectedRowKeys,
-            onChange: onSelectChange,
             columnWidth: '40px',
             align: 'right',
           }"
         >
           <span slot="img" slot-scope="text">
-            <img v-if="text != null" class="table-image" :src="text" />
-            <img
+            <nuxt-img
+              format="webp"
+              v-if="text != null"
+              class="table-image"
+              :src="text"
+              alt="text"
+            />
+            <nuxt-img
+              format="webp"
               v-else
               class="table-image"
               src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+              alt="text"
             />
+            <!-- <img v-if="text != null" class="table-image" :src="text" /> -->
+            <!-- <img
+              v-else
+              class="table-image"
+              src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
+            /> -->
           </span>
-          <div slot="name" slot-scope="text" align="center" class="table_product_row">
+          <div slot="name" slot-scope="text">
             <h6>{{ text?.name?.ru }}</h6>
             <span>{{
               text?.category?.parent?.parent &&
@@ -78,8 +106,11 @@
           </span>
 
           <span slot="id" slot-scope="text">
-            <span class="action-btn" @click="editProduct(text)">
-              <img :src="editIcon" alt="" />
+            <span
+              class="action-btn"
+              @click="$router.push(`/catalog/edit_products/${text}`)"
+              v-html="editIcon"
+            >
             </span>
             <a-popconfirm
               title="Are you sure delete this product?"
@@ -88,9 +119,7 @@
               @confirm="deletePoduct(text)"
               @cancel="cancel"
             >
-              <span class="action-btn">
-                <img :src="deleteIcon" alt="" />
-              </span>
+              <span class="action-btn" v-html="deleteIcon"> </span>
             </a-popconfirm>
           </span>
         </a-table>
@@ -99,7 +128,7 @@
             v-model="params.pageSize"
             class="table-page-size"
             placeholder="Select"
-            @change="changePageSize"
+            @change="changePageSizeGlobal(e, '/catalog/products', '__GET_PRODUCTS')"
           >
             <el-option
               v-for="item in pageSizes"
@@ -110,7 +139,7 @@
             </el-option>
           </el-select>
           <a-pagination
-          class="table-pagination"
+            class="table-pagination"
             :simple="false"
             v-model.number="current"
             :total="totalPage"
@@ -125,116 +154,51 @@
 import SearchInput from "../../components/form/Search-input.vue";
 import StatusFilter from "../../components/form/Status-filter.vue";
 import TitleBlock from "../../components/Title-block.vue";
+import global from "../../mixins/global";
+import status from "../../mixins/status";
+import columns from "../../mixins/columns";
 
 export default {
   // middleware: "auth",
+  mixins: [global, status, columns],
   data() {
     return {
-      page: 1,
-      current: 1,
-      pageSizes: [
+      brandSelect: [
         {
-          value: 10,
-          label: "10",
+          value: 2,
+          label: "Samsung",
         },
         {
-          value: 25,
-          label: "25",
+          value: 3,
+          label: "Apple",
         },
         {
-          value: 50,
-          label: "50",
-        },
-        {
-          value: 100,
-          label: "100",
+          value: 0,
+          label: "HP",
         },
       ],
-      totalPage: 1,
-      params: {
-        page: 1,
-        pageSize: 10,
-      },
+      options: [
+        {
+          value: 2,
+          label: "All",
+        },
+        {
+          value: 1,
+          label: "Active",
+        },
+        {
+          value: 0,
+          label: "Inactive",
+        },
+      ],
+      brandSearch: "",
+      status: "",
       loading: true,
-      editIcon: require("../../assets/svg/components/edit-icon.svg"),
-      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      editIcon: require("../../assets/svg/components/edit-icon.svg?raw"),
+      deleteIcon: require("../../assets/svg/components/delete-icon.svg?raw"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
-
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
-      columns: [
-        {
-          title: "ПРОДУКТ",
-          dataIndex: "img",
-          key: "img",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
-          // width: "8%",
-          align: "left",
-          className: "column-img",
-          colSpan: 2,
-        },
-        {
-          dataIndex: "name",
-          key: "name",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "name" },
-          className: "column-name",
-          width: "30%",
-          colSpan: 0,
-        },
-        {
-          title: "Код",
-          dataIndex: "model",
-          scopedSlots: { customRender: "model" },
-          className: "column-code",
-          key: "model",
-          width: "10%",
-        },
-        {
-          title: "КОЛ-ВО",
-          dataIndex: "qty",
-          className: "column-qty",
-          scopedSlots: { customRender: "qty" },
-          key: "qty",
-          align: "center",
-          width: "10%",
-          sorter: (a, b) => a.qty - b.qty,
-        },
-        {
-          title: "ЦЕНА",
-          dataIndex: "price",
-          className: "column-price",
-          key: "price",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "price" },
-          width: "16%",
-          sorter: (a, b) => a.price - b.price,
-        },
-        {
-          title: "Статус",
-          key: "status",
-          dataIndex: "status",
-          scopedSlots: { customRender: "status" },
-          className: "column-tags",
-          filters: [
-            { text: "Active", value: "active" },
-            { text: "Inactive", value: "inactive" },
-          ],
-          onFilter: (value, record) => record.status.indexOf(value) === 0,
-          width: "16%",
-        },
-        {
-          title: "действия",
-          key: "id",
-          dataIndex: "id",
-          scopedSlots: { customRender: "id" },
-          className: "column-btns",
-          width: "10%",
-          align: "right",
-        },
-      ],
-
       products: [],
       data: [],
       searchProduct: "",
@@ -278,72 +242,21 @@ export default {
         }
       });
     },
-    async changePageSize(e) {
-      this.current = 1;
-      if (this.$route.query.per_page != e) {
-        await this.$router.replace({
-          path: `/catalog/products`,
-          query: {
-            page: this.current,
-            per_page: e,
-          },
-        });
-        this.__GET_PRODUCTS();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    },
-    editProduct(id) {
-      this.$router.push(`/catalog/edit_products/${id}`);
-    },
-
-    cancel(e) {
-      this.$message.error("Click on No");
-    },
-
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-
     deletePoduct(id) {
-      this.__DELETE_PRODUCTS(id);
+      this.__DELETE_GLOBAL(
+        id,
+        "fetchProducts/deleteProducts",
+        "Продукт был успешно удален",
+        "__GET_PRODUCTS"
+      );
     },
-    async __DELETE_PRODUCTS(id) {
-      try {
-        await this.$store.dispatch("fetchProducts/deleteProducts", id);
-        await this.$notify({
-          title: "Success",
-          message: "Продукт был успешно удален",
-          type: "success",
-        });
-        this.__GET_PRODUCTS();
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    notification(title, message, type) {
-      this.$notify({
-        title: title,
-        message: message,
-        type: type,
-      });
-    },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.notificationError("Error", "Указанные данные недействительны.");
-          break;
-        case 500:
-          this.notificationError("Error", "Cервер не работает");
-          break;
-        case 404:
-          this.notificationError("Error", res.data.errors);
-          break;
-      }
-    },
+
     changeSearch(val) {
       this.searchProduct = val.target.value;
+    },
+    changeStatus(val) {
+      // this.status = val;
+      console.log(val);
     },
   },
   async mounted() {
@@ -384,13 +297,4 @@ export default {
   layout: "toolbar",
 };
 </script>
-<style lang="scss">
-.table-page-size {
-  input {
-    height: 34px;
-    width: 72px;
-    background: #f9f9f9;
-    border: none;
-  }
-}
-</style>
+<style lang="scss"></style>

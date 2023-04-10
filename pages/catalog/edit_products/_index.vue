@@ -131,7 +131,6 @@
                           <quill-editor
                             style="min-height: 250px"
                             :options="editorOption"
-                            :value="ruleForm.desc[item.key]"
                             v-model="ruleForm.desc[item.key]"
                           /></div
                       ></el-tab-pane>
@@ -350,7 +349,7 @@
                               <div><label>Stat</label></div>
                               <span>
                                 <a-switch
-                                  :checked="item.status == 1"
+                                  :checked="item.status == 'active'"
                                   @change="
                                     ($event) =>
                                       $event
@@ -408,7 +407,12 @@
                   class="demo-ruleForm"
                   action=""
                 >
-                  <div class="form-block status-style">
+                  <div
+                    class="form-block status-style"
+                    :class="[
+                      ruleForm.is_active == 1 ? 'status-active' : 'status-inactive',
+                    ]"
+                  >
                     <el-form-item label="Статус">
                       <el-select
                         id="status"
@@ -851,6 +855,8 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import AddBrandModal from "../../../components/products/Add-brand-modal.vue";
 import AddCategoryModal from "../../../components/products/Add-category-modal.vue";
+import status from "../../../mixins/status";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -861,6 +867,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
+  mixins: [status],
   data() {
     return {
       productModal: {
@@ -1100,10 +1107,12 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
-    this.__GET_PRODUCT_BY_ID();
+    await this.__GET_PRODUCT_BY_ID();
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
     if (localStorage.getItem("lastCategory")) {
       this.lastCategory = JSON.parse(localStorage.getItem("lastCategory"));
     } else {
@@ -1206,13 +1215,6 @@ export default {
       checked
         ? (this.ruleFormCategory.is_active = 1)
         : (this.ruleFormCategory.is_active = 0);
-    },
-    notification(title, message, type) {
-      this.$notify({
-        title: title,
-        message: message,
-        type: type,
-      });
     },
     async __GET_GROUPS() {
       const data = await this.$store.dispatch("fetchCharacters/getGroups");
@@ -1320,12 +1322,6 @@ export default {
         }),
       };
       return newData;
-    },
-    notificationError(title, message) {
-      this.$notify.error({
-        title: title,
-        message: message,
-      });
     },
     reloadCategories() {
       this.cascader = JSON.parse(localStorage.getItem("lastCategory"));
@@ -1460,27 +1456,14 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.notificationError("Error", "Указанные данные недействительны.");
-          break;
-        case 500:
-          this.notificationError("Error", "Cервер не работает");
-          break;
-        case 404:
-          this.notificationError("Error", res.data.errors);
-          break;
-      }
-    },
     async __GET_BRANDS() {
-      const data = await this.$store.dispatch("fetchBrands/getBrands");
+      const data = await this.$store.dispatch("fetchBrands/getAllBrands");
       this.brands = [
         {
           name: "----",
           id: null,
         },
-        ...data?.brands.data,
+        ...data?.brands,
       ];
     },
     async __GET_CATEGORIES() {
@@ -1552,11 +1535,12 @@ export default {
         "fetchProducts/getProductsById",
         this.$route.params.index
       );
-      console.log(data);
       this.ruleForm.name = data.info.name;
-      this.ruleForm.desc = { ...data.info.desc };
+      this.ruleForm.desc = data.info.desc;
+
       this.ruleForm.brand_id = data.info.brand_id;
       this.ruleForm.model = data.info.products[0].model;
+      this.ruleForm.is_active = data.products[0].variations[0].status;
       if (data.info.category.parent?.parent?.id) {
         this.cascader.push(data.info.category.parent.parent.id);
         this.cascader.push(data.info.category.parent.id);
@@ -1623,7 +1607,6 @@ export default {
       });
       this.characterRequired = true;
       this.comments = data.comments;
-      console.log(this.ruleForm);
     },
     characterValueCopy() {
       var copyCharacter = {};

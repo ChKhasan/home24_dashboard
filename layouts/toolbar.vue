@@ -6,7 +6,7 @@
     >
       <div class="toolbar-aside">
         <div class="toolbar-logo">
-          <img src="../assets/svg/custom/toolbar/default-dark.svg" alt="" />
+          <img src="../assets/svg/custom/toolbar/default-dark.svg" alt="logo" />
           <div
             class="sidebar_toggle"
             @click="collapsedToggle"
@@ -148,7 +148,7 @@
             <div class="block d-flex align-items-center">
               <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link d-flex">
-                  <el-avatar shape="circle" size="medium" :src="squareUrl"></el-avatar>
+                  <el-avatar shape="circle" size="medium" :src="squareUrl" alt="avatar"></el-avatar>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="logout">Log Out</el-dropdown-item>

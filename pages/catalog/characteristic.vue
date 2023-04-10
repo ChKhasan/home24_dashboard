@@ -36,7 +36,7 @@
               align: 'right',
             }"
           >
-            <a slot="name" slot-scope="text" align="center" class="table_product_row">
+            <a slot="name" slot-scope="text" >
               <h6>{{ text?.ru }}</h6>
               <span>{{ text.subtitle }}</span>
             </a>

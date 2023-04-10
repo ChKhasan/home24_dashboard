@@ -44,6 +44,7 @@ export default {
     // "@nuxtjs/auth",
     "@nuxtjs/dotenv",
     "nuxt-precompress",
+    "@nuxt/image",
   ],
   ssr: false,
   build: {

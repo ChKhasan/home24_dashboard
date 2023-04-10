@@ -26,8 +26,6 @@
               @click="$router.push('/home/customer-info/123')"
               slot="name"
               slot-scope="text"
-              align="center"
-              class="table_product_row"
             >
               <h6>{{ text }}</h6>
             </span>

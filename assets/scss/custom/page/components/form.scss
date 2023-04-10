@@ -71,9 +71,22 @@
       position: absolute;
       width: 10px;
       height: 10px;
-      background: yellow;
       border-radius: 50%;
       right: -19px;
+    }
+  }
+}
+.status-active {
+  label {
+    &::after {
+      background: #50cd89;
+    }
+  }
+}
+.status-inactive {
+  label {
+    &::after {
+      background: #f1416c;
     }
   }
 }

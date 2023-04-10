@@ -15,29 +15,21 @@
           <a-table
             :columns="columns"
             :data-source="comments"
-            :pagination="pagination"
+            :pagination="false"
             :loading="loading"
-            @change="handleTableChange"
           >
             <div slot="img" slot-scope="text">
-              <img
-                class="table-image"
-                src="../../assets/images/image.png"
-                alt=""
-              />
+              <img class="table-image" src="../../assets/images/image.png" alt="" />
             </div>
             <span
               @click="$router.push('/home/customer-info/123')"
               slot="name"
               slot-scope="text"
-              align="center"
-              class="table_product_row"
             >
               <h6>{{ text }}</h6>
             </span>
             <span slot="customTitle"></span>
             <span slot="editId" slot-scope="text">
-         
               <a-popconfirm
                 title="Are you sure delete this comment?"
                 ok-text="Yes"
@@ -51,6 +43,29 @@
               </a-popconfirm>
             </span>
           </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="changePageSize"
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -59,17 +74,13 @@
 <script>
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
+import global from "../../mixins/global";
+
 export default {
   // middleware: "auth",
+  mixins: [global],
   data() {
     return {
-      page: 1,
-      params: {
-        page: 1,
-      },
-      pagination: {
-        pageSize: 16,
-      },
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
@@ -134,7 +145,7 @@ export default {
           dataIndex: "editId",
           scopedSlots: { customRender: "editId" },
           className: "column-btns",
-            width: "100px",
+          width: "100px",
           align: "right",
         },
       ],
@@ -149,30 +160,32 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
+    cancel(e) {
+      this.$message.error("Click on No");
+    },
+    async changePageSize(e) {
+      this.current = 1;
+      if (this.$route.query.per_page != e) {
         await this.$router.replace({
           path: `/contents/comments`,
           query: {
-            page: pagination.current,
+            page: this.current,
+            per_page: e,
           },
         });
+        this.__GET_COMMENTS();
       }
-      this.loading = true;
-      this.__GET_COMMENTS();
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
+
     async __GET_COMMENTS() {
+      this.loading = true;
       const data = await this.$store.dispatch("fetchComments/getComments", {
         ...this.$route.query,
       });
       this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.comments?.total;
+      this.totalPage = data.comments?.total;
       this.comments = data.comments?.data.map((item) => {
         return {
           ...item,
@@ -220,17 +233,31 @@ export default {
     },
   },
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
       await this.$router.replace({
         path: `/contents/comments`,
-        query: { page: this.params.page },
+        query: { page: this.params.page, per_page: this.params.pageSize },
       });
     }
-    this.pagination.current = this.$route.query.page * 1;
     this.__GET_COMMENTS();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   watch: {
-    "pagination.current"() {
+    async current(val) {
+      if (this.$route.query.page != val) {
+        await this.$router.replace({
+          path: `/contents/comments`,
+          query: {
+            page: val,
+            per_page: this.params.pageSize,
+          },
+        });
+        this.__GET_COMMENTS();
+      }
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },

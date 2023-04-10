@@ -406,7 +406,10 @@
                   class="demo-ruleForm"
                   action=""
                 >
-                  <div class="form-block status-style">
+                  <div
+                    class="form-block status-style"
+                    :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']"
+                  >
                     <el-form-item label="Статус">
                       <el-select
                         id="status"
@@ -838,6 +841,8 @@ import "quill/dist/quill.core.css";
 import { Drag, DropList } from "vue-easy-dnd";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import status from "../../mixins/status";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -848,6 +853,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
+  mixins: [status],
   data() {
     return {
       productModal: {
@@ -1182,13 +1188,6 @@ export default {
         ? (this.ruleFormCategory.is_active = 1)
         : (this.ruleFormCategory.is_active = 0);
     },
-    notification(title, message, type) {
-      this.$notify({
-        title: title,
-        message: message,
-        type: type,
-      });
-    },
     async __GET_GROUPS() {
       const data = await this.$store.dispatch("fetchCharacters/getGroups");
       this.allGroups = data?.groups;
@@ -1294,12 +1293,6 @@ export default {
         }),
       };
       return newData;
-    },
-    notificationError(title, message) {
-      this.$notify.error({
-        title: title,
-        message: message,
-      });
     },
     reloadCategories() {
       this.cascader = JSON.parse(localStorage.getItem("lastCategory"));
@@ -1421,19 +1414,6 @@ export default {
         localStorage.setItem("lastCategory", JSON.stringify(this.cascader));
       } catch (e) {
         this.statusFunc(e.response);
-      }
-    },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.notificationError("Error", "Указанные данные недействительны.");
-          break;
-        case 500:
-          this.notificationError("Error", "Cервер не работает");
-          break;
-        case 404:
-          this.notificationError("Error", res.data.errors);
-          break;
       }
     },
     async __GET_BRANDS() {
@@ -1607,7 +1587,6 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
-
 .list2 {
   display: flex;
   flex-wrap: wrap;

@@ -294,7 +294,7 @@
           <div class="category-img-grid">
             <div class="form-container">
               <FormTitle title="Параметры" />
-              <div class="form-block status-style">
+              <div class="form-block status-style" :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']">
                 <div><label>Статус</label></div>
                 <el-select
                   class="w-100"
@@ -396,6 +396,7 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { Drag, DropList } from "vue-easy-dnd";
+import status from "../../../mixins/status";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -407,6 +408,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
+  mixins: [status],
   data() {
     return {
       over: {},
@@ -702,25 +704,7 @@ export default {
         this.ruleForm.parent_id = null;
       }
     },
-    notificationError(title, message) {
-      this.$notify.error({
-        title: title,
-        message: message,
-      });
-    },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.notificationError("Error", "Указанные данные недействительны.");
-          break;
-        case 500:
-          this.notificationError("Error", "Cервер не работает");
-          break;
-        case 404:
-          this.notificationError("Error", res.data.errors);
-          break;
-      }
-    },
+
     async __GET_ATRIBUTES() {
       const data = await this.$store.dispatch("fetchAtributes/getAllAtributes");
       this.atributes = data.attributes;
