@@ -34,7 +34,7 @@
           ></div>
 
           <div class="form-container form-container-ltr">
-            <FormTitle title="Характеристика" />
+            <FormTitle title="Параметры" />
             <div class="translate-header character-translate-grid">
               <span class="translate-text d-flex align-items-center">#</span>
               <h5 class="translate-text">ЗНАЧЕНИЕ(RU)</h5>
@@ -73,7 +73,7 @@
                     ></el-input>
                   </el-form-item>
                 </div>
-                <div class="variant_btns mb-1 mt-0">
+                <!-- <div class="variant_btns mb-1 mt-0">
                   <div class="variant-btn variant-btn-delete mx-2 position-absolute">
                     <svg
                       width="30"
@@ -91,14 +91,14 @@
                       />
                     </svg>
                   </div>
-                </div>
+                </div> -->
               </div>
-              <div class="d-flex justify-content-start">
+              <!-- <div class="d-flex justify-content-start">
                 <div class="create-inner-variant mt-0" @click="addElement()">
                   <span v-html="addInnerValidatIcon"></span>
                   Добавить характеристику
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -192,6 +192,9 @@ export default {
       },
     };
   },
+  mounted() {
+    this.__GET_GROUPS();
+  },
   methods: {
     deleteElement(id) {
       if (this.ruleForm.attributes.length > 1)
@@ -211,14 +214,40 @@ export default {
     },
     submitForm(ruleForm) {
       this.multiSelectError = false;
-      console.log(this.ruleForm);
+      console.log(this.options);
+
       this.$refs[ruleForm].validate((valid) => {
-        // valid ? this.__POST_CHARACTERISTIC(this.ruleForm) : false;
+        valid ? this.__POST_CHARACTERISTIC({ options: this.options }) : false;
       });
+    },
+    async __GET_GROUPS() {
+      //   this.loading = true;
+      const data = await this.$store.dispatch("fetchCharacters/getOptions", {
+        ...this.$route.query,
+      });
+      console.log(data);
+      this.loading = false;
+      this.totalPage = data.options?.total;
+      const pageIndex = this.indexPage(
+        data?.options?.current_page,
+        data?.options?.per_page
+      );
+      console.log(data?.options?.current_page);
+      console.log(data?.options?.per_page);
+      this.options = data?.options.data.map((item, index) => {
+        return {
+          name: item.name,
+          id: item.id,
+          key: index + pageIndex,
+        };
+      });
+    },
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
     },
     async __POST_CHARACTERISTIC(data) {
       try {
-        await this.$store.dispatch("fetchCharacters/postCharacteristics", data);
+        await this.$store.dispatch("fetchCharacters/postOptions", data);
         this.notification("Success", "Характеристика успешно добавлен", "success");
         this.$router.push("/catalog/characteristic_groups");
       } catch (e) {
@@ -244,7 +273,7 @@ export default {
 @import "../../../assets/scss/custom/page/characteristic.scss";
 .character-translate-grid {
   display: grid;
-  grid-template-columns: 20px auto auto auto 40px;
+  grid-template-columns: 20px auto auto auto;
   grid-gap: 10px;
 }
 .translate-header {
