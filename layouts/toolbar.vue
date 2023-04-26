@@ -27,7 +27,7 @@
             <el-submenu index="1" class="home_menu">
               <div slot="title">
                 <span class="menu-icon" v-html="icons.catalogIcon"></span>
-                <p>Катало {{ activeRouterName }}г</p>
+                <p>Каталог</p>
               </div>
               <el-menu-item-group
                 v-for="(items, index) in toolbarMenu.category"
@@ -114,7 +114,7 @@
             <el-submenu index="6" class="home_menu">
               <div slot="title">
                 <span class="menu-icon" v-html="icons.settingsIcon"> </span>
-                <p>настройки {{ activeRouterName }}</p>
+                <p>настройки</p>
               </div>
 
               <el-submenu
