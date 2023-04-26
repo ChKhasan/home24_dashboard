@@ -10,6 +10,28 @@ export const actions = {
       return e.response;
     }
   },
+  async getOptions({}, payload) {
+    try {
+      const res = await this.$axios.$get(
+        `https://test.loftcity.uz/api/admin/characteristics_options`,
+        { params: payload }
+      );
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+  async postOptions({}, data) {
+    try {
+      const res = await this.$axios.$post(
+        `https://test.loftcity.uz/api/admin/characteristics_options/store_more`,
+        data
+      );
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
   async getCharacteristicsById({}, id) {
     try {
       const res = await this.$axios.$get(

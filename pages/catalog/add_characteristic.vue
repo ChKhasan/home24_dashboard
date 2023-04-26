@@ -44,12 +44,15 @@
 
                 <div class="form-block required">
                   <div class="group-grid1" id="character_group">
-                    <el-form-item prop="group_id" label="Группа">
-                      <el-input placeholder="group" v-model="ruleForm.group_id" />
+                    <el-form-item prop="group" label="Группа">
+                      <el-input
+                        placeholder="group"
+                        v-model="ruleForm.group[itemLang.key]"
+                      />
                     </el-form-item>
                   </div>
                 </div>
-                <div class="form-block required">
+                <!-- <div class="form-block required">
                   <div class="w-100">
                     <el-form-item prop="keywords" label="Description">
                       <el-input
@@ -60,18 +63,18 @@
                       ></el-input>
                     </el-form-item>
                   </div>
-                </div>
+                </div> -->
                 <div class="list">
                   <drop-list
-                    :items="ruleForm.characters"
+                    :items="ruleForm.attributes"
                     @insert="onInsert"
-                    @reorder="$event.apply(ruleForm.characters)"
+                    @reorder="$event.apply(ruleForm.attributes)"
                   >
                     <template v-slot:item="{ item }">
                       <drag class="item" :key="item.id">
                         <div class="character-input-grid pb-3">
                           <div class="form-block required mb-0">
-                            <el-form-item prop="name.ru">
+                            <el-form-item>
                               <el-input
                                 v-model="item.name[itemLang.key]"
                                 placeholder="Atribut Name"
@@ -85,7 +88,7 @@
                             <el-form-item label-position="top" prop="options">
                               <el-select
                                 class="w-100"
-                                v-model="ruleForm.options"
+                                v-model="item.options"
                                 popper-class="select-popper-hover"
                                 filterable
                                 multiple
@@ -185,40 +188,38 @@ export default {
       ],
       options: [],
       rules: {
-        group_id: [
-          {
-            required: true,
-            message: "Characteristic group is required",
-            trigger: "change",
-          },
-        ],
-
-        name: {
-          ru: [
-            {
-              required: true,
-              message: "Characteristic name is required",
-              trigger: "change",
-            },
-          ],
-        },
-        options: [
-          {
-            required: true,
-            message: "Characteristic name is required",
-            trigger: "change",
-          },
-        ],
+        // group: [
+        //   {
+        //     required: true,
+        //     message: "Characteristic group is required",
+        //     trigger: "change",
+        //   },
+        // ],
+        // name: {
+        //   ru: [
+        //     {
+        //       required: true,
+        //       message: "Characteristic name is required",
+        //       trigger: "change",
+        //     },
+        //   ],
+        // },
+        // options: [
+        //   {
+        //     required: true,
+        //     message: "Characteristic name is required",
+        //     trigger: "change",
+        //   },
+        // ],
       },
       ruleForm: {
-        group_id: null,
-        name: {
+        group: {
           ru: "",
           uz: "",
           en: "",
         },
         options: [],
-        characters: [
+        attributes: [
           {
             id: 1,
             name: {
@@ -234,21 +235,28 @@ export default {
   },
   methods: {
     deleteElement(id) {
-      if (this.ruleForm.characters.length > 1)
-        this.ruleForm.characters = this.ruleForm.characters.filter(
+      if (this.ruleForm.attributes.length > 1)
+        this.ruleForm.attributes = this.ruleForm.attributes.filter(
           (item) => item.id != id
         );
     },
     addElement() {
-      this.ruleForm.characters.push({
-        name: "",
-        id: Math.max(...this.ruleForm.characters.map((o) => o.id)) + 1,
+      this.ruleForm.attributes.push({
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
+        options: [],
+        id: Math.max(...this.ruleForm.attributes.map((o) => o.id)) + 1,
       });
     },
     submitForm(ruleForm) {
       this.multiSelectError = false;
+      console.log(this.ruleForm);
+      const { options, ...rest } = this.ruleForm;
       this.$refs[ruleForm].validate((valid) => {
-        valid ? this.__POST_CHARACTERISTIC(this.ruleForm) : false;
+        valid ? this.__POST_CHARACTERISTIC(rest) : false;
       });
     },
     async __POST_CHARACTERISTIC(data) {
@@ -264,7 +272,7 @@ export default {
       this.$router.push("/catalog/characteristic_groups");
     },
     onInsert(event) {
-      this.ruleForm.characters.splice(event.index, 0, event.data);
+      this.ruleForm.attributes.splice(event.index, 0, event.data);
     },
   },
   components: {

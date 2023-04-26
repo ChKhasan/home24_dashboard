@@ -86,7 +86,6 @@
         color: #fff !important;
         .menu-icon {
           svg {
-
             color: #fff;
           }
         }
@@ -135,13 +134,31 @@
     }
   }
 }
+.sub_menu {
+  .is-active {
+    color: #fff !important;
+    background: #2a2a3c !important;
+    pointer-events: none;
+    & > div > .menu-icon {
+      svg {
+        color: #fff;
+      }
+    }
+    .bullet-dot {
+      background: #fff;
+    }
+    & > i {
+      color: #fff !important;
+    }
+  }
+}
 .el-menu-item-group {
   .is-active {
     color: #fff !important;
     background: #2a2a3c !important;
+    pointer-events: none;
     & > div > .menu-icon {
       svg {
-
         color: #fff;
       }
     }
@@ -168,16 +185,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 25px;
+  padding: 0 15px;
   position: relative;
   transition: all 5s !important;
   background: transparent;
   border-bottom: 1px dashed #393945;
   height: 70px;
+  h3 {
+    display: block;
+    @include fontTTinterface(24px, 600);
+    font-style: normal;
+    line-height: 32px;
+    color: #fff;
+    margin-left: 13px;
+    margin-top: 3px;
+  }
   div {
-    svg {
-      transition: transform 0.3s ease;
-      transform: rotate(0);
+    .sidebar_toggle {
+      svg {
+        transition: transform 0.3s ease;
+        transform: rotate(0);
+      }
     }
   }
   img {
@@ -307,10 +335,15 @@
   .toolbar-logo {
     width: 75px;
     transition: width 0.3s ease !important;
+    h3 {
+      display: none;
+    }
     div {
-      svg {
-        transform: rotate(-180deg);
-        color: #009ef7;
+      .sidebar_toggle {
+        svg {
+          transform: rotate(-180deg);
+          color: #009ef7;
+        }
       }
     }
     img {
@@ -331,10 +364,14 @@
       }
       .toolbar-logo {
         width: 265px;
-
+        h3 {
+          display: block;
+        }
         div {
-          svg {
-            transform: rotate(-180deg);
+          .sidebar_toggle {
+            svg {
+              transform: rotate(-180deg);
+            }
           }
         }
         img {

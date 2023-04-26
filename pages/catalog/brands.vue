@@ -42,7 +42,7 @@
               <h6>{{ text?.ru }}</h6>
             </span>
             <div slot="desc" slot-scope="text" v-html="text?.ru"></div>
-            <span slot="numberId" slot-scope="text">#{{ text }}</span>
+            <span slot="key" slot-scope="text">#{{ text }}</span>
             <a slot="price" slot-scope="text">${{ text }}</a>
             <span slot="customTitle"></span>
 
@@ -153,7 +153,7 @@
         <div class="add_modal-footer d-flex justify-content-end">
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-            @click="closeModal"
+            @click="handleOk"
           >
             Cancel
           </div>
@@ -262,19 +262,12 @@ export default {
         }
       });
     },
-    showModal() {
-      this.visible = true;
-    },
-    handleOk(e) {
-      this.visible = false;
-    },
     deleteImg() {
       this.editImage = "";
     },
     openAddModal() {
       this.showModal();
       this.editId = "";
-      this.fileList = [];
     },
     editPost(id) {
       this.editId = id;
@@ -294,13 +287,6 @@ export default {
           url: this.ruleForm.lg_logo,
         },
       ];
-    },
-    closeModal() {
-      this.visible = false;
-      this.ruleForm.logo = "";
-      this.ruleForm.name = "";
-      this.editId = "";
-      this.__GET_BRANDS();
     },
     deletePost(id) {
       this.__DELETE_GLOBAL(
@@ -338,26 +324,30 @@ export default {
       const data = await this.$store.dispatch("fetchBrands/getBrands", {
         ...this.$route.query,
       });
+      this.brands = data.brands?.data;
       this.loading = false;
       this.totalPage = data.brands?.total;
-      this.brands = data.brands?.data;
+      const pageIndex = this.indexPage(
+        data?.brands?.current_page,
+        data?.brands?.per_page
+      );
       this.brands = this.brands.map((item, index) => {
         return {
           ...item,
           numberId: item.id,
-          key: index + 1,
+          key: index + pageIndex,
         };
       });
     },
-
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
+    },
     async __POST_BRANDS(res) {
       try {
         await this.$store.dispatch("fetchBrands/postBrands", res);
         this.notification("Success", "Бранд успешно добавлен", "success");
         this.handleOk();
         this.__GET_BRANDS();
-        this.ruleForm.logo = "";
-        this.ruleForm.name = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -371,42 +361,29 @@ export default {
         this.notification("Success", "Бранд успешно добавлен", "success");
         this.handleOk();
         this.__GET_BRANDS();
-        this.ruleForm.logo = "";
-        this.ruleForm.name = "";
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
+    emptyData() {
+      this.ruleForm.logo = "";
+      this.ruleForm.name = "";
+      this.editId = "";
+      this.fileList = [];
+    },
   },
 
   async mounted() {
-    if (
-      !Object.keys(this.$route.query).includes("page") ||
-      !Object.keys(this.$route.query).includes("per_page")
-    ) {
-      await this.$router.replace({
-        path: `/catalog/brands`,
-        query: { page: this.params.page, per_page: this.params.pageSize },
-      });
-    }
-    this.__GET_BRANDS();
-    this.current = Number(this.$route.query.page);
-    this.params.pageSize = Number(this.$route.query.per_page);
+    this.getFirstData("/catalog/brands", "__GET_BRANDS");
   },
   watch: {
     async current(val) {
-      if (this.$route.query.page != val) {
-        await this.$router.replace({
-          path: `/catalog/brands`,
-          query: {
-            page: val,
-            per_page: this.params.pageSize,
-          },
-        });
-        this.__GET_BRANDS();
+      this.changePagination(val, "/catalog/brands", "__GET_BRANDS");
+    },
+    visible(val) {
+      if (val == false) {
+        this.emptyData();
       }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
     },
   },
   components: {

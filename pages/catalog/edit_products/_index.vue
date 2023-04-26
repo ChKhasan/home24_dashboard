@@ -1138,7 +1138,6 @@ export default {
     },
     uploadDelete(id, imgId) {
       const product = this.findProductWithId(id);
-
       product.imagesData = product.imagesData.filter((item) => item.uid != imgId);
     },
 
@@ -1317,7 +1316,16 @@ export default {
           });
           return {
             variations: newVariation,
-            images: item.imagesData.map((item) => item.response.path),
+            images: item.imagesData.map((item) => {
+              return item.id
+                ? {
+                    id: item.id,
+                  }
+                : {
+                    id: 0,
+                    img: item.response.path,
+                  };
+            }),
           };
         }),
       };
@@ -1596,6 +1604,7 @@ export default {
               name: "image.png",
               status: "done",
               oldImg: true,
+              id: itemImg2.id,
               response: {
                 path: itemImg2.lg_img,
               },

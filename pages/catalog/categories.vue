@@ -33,7 +33,7 @@
               slot="dataName"
               slot-scope="text"
               align="center"
-              class=" select-table-child"
+              class="select-table-child"
             >
               <div>
                 <img
@@ -290,33 +290,11 @@ export default {
     },
   },
   async mounted() {
-    if (
-      !Object.keys(this.$route.query).includes("page") ||
-      !Object.keys(this.$route.query).includes("per_page")
-    ) {
-      await this.$router.replace({
-        path: `/catalog/categories`,
-        query: { page: this.params.page, per_page: this.params.pageSize },
-      });
-    }
-    await this.__GET_CATEGORIES();
-    this.current = Number(this.$route.query.page);
-    this.params.pageSize = Number(this.$route.query.per_page);
+    this.getFirstData("/catalog/categories", "__GET_CATEGORIES");
   },
   watch: {
     async current(val) {
-      if (this.$route.query.page != val) {
-        await this.$router.replace({
-          path: `/catalog/categories`,
-          query: {
-            page: val,
-            per_page: this.params.pageSize,
-          },
-        });
-        this.__GET_CATEGORIES();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+      this.changePagination(val, "/catalog/categories", "__GET_CATEGORIES");
     },
   },
 };

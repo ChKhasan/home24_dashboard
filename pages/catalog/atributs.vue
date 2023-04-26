@@ -35,7 +35,7 @@
               align: 'right',
             }"
           >
-            <a slot="info" slot-scope="text" >
+            <a slot="info" slot-scope="text">
               <h6>{{ text?.name.ru }}</h6>
               <span>{{ text.keywords }}</span>
             </a>
@@ -80,7 +80,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSizeGlobal(e, '/catalog/atributs', '__GET_ATRIBUTES')"
+              @change="$event => changePageSizeGlobal($event, '/catalog/atributs', '__GET_ATRIBUTES')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -127,20 +127,7 @@ export default {
       data: [],
     };
   },
-  async mounted() {
-    if (
-      !Object.keys(this.$route.query).includes("page") ||
-      !Object.keys(this.$route.query).includes("per_page")
-    ) {
-      await this.$router.replace({
-        path: `/catalog/atributs`,
-        query: { page: this.params.page, per_page: this.params.pageSize },
-      });
-    }
-    this.__GET_ATRIBUTES();
-    this.current = Number(this.$route.query.page);
-    this.params.pageSize = Number(this.$route.query.per_page);
-  },
+
   methods: {
     deleteAtribut(id) {
       this.__DELETE_GLOBAL(
@@ -173,20 +160,12 @@ export default {
       }
     },
   },
+  async mounted() {
+    this.getFirstData("/catalog/atributs", "__GET_ATRIBUTES");
+  },
   watch: {
     async current(val) {
-      if (this.$route.query.page != val) {
-        await this.$router.replace({
-          path: `/catalog/atributs`,
-          query: {
-            page: val,
-            per_page: this.params.pageSize,
-          },
-        });
-        this.__GET_ATRIBUTES();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+      this.changePagination(val, "/catalog/atributs", "__GET_ATRIBUTES");
     },
   },
   components: {

@@ -38,11 +38,11 @@ export default {
       ],
       columnBrand: [
         {
-          title: "ID",
-          dataIndex: "numberId",
-          key: "numberId",
+          title: "№",
+          dataIndex: "key",
+          key: "key",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "numberId" },
+          scopedSlots: { customRender: "key" },
           align: "left",
           className: "column-name",
           width: "60px",
@@ -124,11 +124,11 @@ export default {
       ],
       columnCharacteristic: [
         {
-          title: "ID",
-          dataIndex: "numberId",
-          key: "numberId",
+          title: "№",
+          dataIndex: "key",
+          key: "key",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "numberId" },
+          scopedSlots: { customRender: "key" },
           align: "left",
           className: "column-name",
           width: "60px",

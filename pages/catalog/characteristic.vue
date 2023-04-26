@@ -36,7 +36,7 @@
               align: 'right',
             }"
           >
-            <a slot="name" slot-scope="text" >
+            <a slot="name" slot-scope="text">
               <h6>{{ text?.ru }}</h6>
               <span>{{ text.subtitle }}</span>
             </a>
@@ -78,7 +78,7 @@
 import SearchInput from "../../components/form/Search-input.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
-
+import global from "../../mixins/global";
 export default {
   layout: "toolbar",
   data() {
@@ -128,14 +128,7 @@ export default {
     };
   },
   async mounted() {
-    if (!Object.keys(this.$route.query).includes("page")) {
-      await this.$router.replace({
-        path: `/catalog/characteristic`,
-        query: { page: this.params.page },
-      });
-    }
-    this.pagination.current = this.$route.query.page * 1;
-    this.__GET_CHARACTERISTIC();
+    this.getFirstData("/catalog/characteristic", "__GET_CHARACTERISTIC");
   },
   methods: {
     async handleTableChange(pagination, filters, sorter) {

@@ -6,7 +6,10 @@
     >
       <div class="toolbar-aside">
         <div class="toolbar-logo">
-          <img src="../assets/svg/custom/toolbar/default-dark.svg" alt="logo" />
+          <div class="d-flex">
+            <span v-html="icons.logoIcon"></span>
+            <h3>Admin panel</h3>
+          </div>
           <div
             class="sidebar_toggle"
             @click="collapsedToggle"
@@ -24,7 +27,7 @@
             <el-submenu index="1" class="home_menu">
               <div slot="title">
                 <span class="menu-icon" v-html="icons.catalogIcon"></span>
-                <p>Каталог</p>
+                <p>Катало {{ activeRouterName }}г</p>
               </div>
               <el-menu-item-group
                 v-for="(items, index) in toolbarMenu.category"
@@ -32,7 +35,10 @@
                 :class="{ disabled: items.disabled }"
                 :key="index"
               >
-                <nuxt-link :to="items.to">
+                <nuxt-link
+                  :to="items.to"
+                  :class="{ 'event-none': items.to == $route.path }"
+                >
                   <el-menu-item :index="items.index">
                     <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
@@ -108,13 +114,40 @@
             <el-submenu index="6" class="home_menu">
               <div slot="title">
                 <span class="menu-icon" v-html="icons.settingsIcon"> </span>
-                <p>настройки</p>
+                <p>настройки {{ activeRouterName }}</p>
               </div>
+
+              <el-submenu
+                index="7"
+                v-for="(items, index) in toolbarMenu.settings"
+                v-if="items.submenu"
+              >
+                <template slot="title">{{ items.name }}</template>
+                <el-menu-item-group
+                  class="toolbar-menu-products"
+                  v-for="(itemsIn, index) in items.data"
+                  :key="index"
+                  :class="{ disabled: items.disabled }"
+                  v-if="items.data"
+                >
+                  <nuxt-link :to="itemsIn.to" class="sub_menu">
+                    <el-menu-item
+                      :index="itemsIn.index"
+                      :class="{ 'is-active': itemsIn.to == $route.path }"
+                    >
+                      <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                      <p>{{ itemsIn.name }}</p></el-menu-item
+                    >
+                  </nuxt-link>
+                </el-menu-item-group>
+              </el-submenu>
+
               <el-menu-item-group
                 class="toolbar-menu-products"
                 v-for="(items, index) in toolbarMenu.settings"
                 :key="index"
                 :class="{ disabled: items.disabled }"
+                v-if="!items.submenu"
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
@@ -148,7 +181,12 @@
             <div class="block d-flex align-items-center">
               <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link d-flex">
-                  <el-avatar shape="circle" size="medium" :src="squareUrl" alt="avatar"></el-avatar>
+                  <el-avatar
+                    shape="circle"
+                    size="medium"
+                    :src="squareUrl"
+                    alt="avatar"
+                  ></el-avatar>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                   <el-dropdown-item command="logout">Log Out</el-dropdown-item>
@@ -189,6 +227,7 @@ export default {
         settingsIcon: require("../assets/svg/custom/toolbar/settingsIcon.svg?raw"),
         contentManagerIcon: require("../assets/svg/custom/toolbar/contentManagerIcon.svg?raw"),
         toolbarResIcon: require("../assets/svg/custom/toolbar/toolbarResIcon.svg?raw"),
+        logoIcon: require("../assets/svg/custom/toolbar/home24-logo.svg?raw"),
       },
       squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
       toolbarMenu: {
@@ -383,15 +422,29 @@ export default {
         ],
         settings: [
           {
+            name: "Характеристика",
+            disabled: false,
+            submenu: true,
+            data: [
+              {
+                index: "71",
+                name: "Параметры",
+                to: "/settings/charactristic/options",
+                path: "settings-charactristic-options",
+                disabled: false,
+              },
+            ],
+          },
+          {
             name: "Переводы",
-            index: "61",
-            to: "/contents/blog2",
-            path: "contents-blog2",
+            index: "62",
+            to: "/settings/translations",
+            path: "contents-translations",
             disabled: true,
           },
           {
             name: "Справочник",
-            index: "62",
+            index: "63",
             to: "/contents/banners2",
             path: "contents-banners2",
 
@@ -399,7 +452,7 @@ export default {
           },
           {
             name: "Общие данные",
-            index: "63",
+            index: "64",
             to: "/contents/comments2",
             path: "contents-comments2",
 
@@ -407,7 +460,7 @@ export default {
           },
           {
             name: "Пользователи",
-            index: "64",
+            index: "65",
             to: "/contents/banners2",
             path: "contents-banners2",
             disabled: true,
@@ -452,6 +505,8 @@ export default {
         this.defaultOpens = ["5"];
       } else if (routerName.includes("contents")) {
         this.defaultOpens = ["5"];
+      } else if (routerName.includes("charactristic")) {
+        this.defaultOpens = ["6", "7"];
       } else if (routerName.includes("settings")) {
         this.defaultOpens = ["6"];
       }
@@ -491,6 +546,8 @@ export default {
           this.defaultOpens = ["5"];
         } else if (oldVal.includes("contents")) {
           this.defaultOpens = ["5"];
+        } else if (oldVal.includes("charactristic")) {
+          this.defaultOpens = ["6", "7"];
         } else if (oldVal.includes("settings")) {
           this.defaultOpens = ["6"];
         }
@@ -506,5 +563,8 @@ export default {
   color: red !important;
   background: rgba(255, 0, 0, 0.02);
   pointer-events: none !important;
+}
+.event-none {
+  pointer-events: none;
 }
 </style>

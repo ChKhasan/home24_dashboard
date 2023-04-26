@@ -518,12 +518,16 @@ export default {
       this.loading = false;
       this.totalPage = data.posts?.total;
       this.posts = data.posts?.data;
-      this.posts = this.posts.map((item) => {
+      const pageIndex = this.indexPage(data?.posts?.current_page, data?.posts?.per_page);
+      this.posts = this.posts.map((item, index) => {
         return {
           ...item,
-          numberId: item.id,
+          numberId: index + pageIndex,
         };
       });
+    },
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
     },
     async __POST_POSTS(res) {
       try {

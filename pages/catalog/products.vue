@@ -128,7 +128,10 @@
             v-model="params.pageSize"
             class="table-page-size"
             placeholder="Select"
-            @change="changePageSizeGlobal(e, '/catalog/products', '__GET_PRODUCTS')"
+            @change="
+              ($event) =>
+                changePageSizeGlobal($event, '/catalog/products', '__GET_PRODUCTS')
+            "
           >
             <el-option
               v-for="item in pageSizes"
@@ -159,7 +162,6 @@ import status from "../../mixins/status";
 import columns from "../../mixins/columns";
 
 export default {
-  // middleware: "auth",
   mixins: [global, status, columns],
   data() {
     return {
@@ -250,43 +252,19 @@ export default {
         "__GET_PRODUCTS"
       );
     },
-
     changeSearch(val) {
       this.searchProduct = val.target.value;
     },
     changeStatus(val) {
       // this.status = val;
-      console.log(val);
     },
   },
   async mounted() {
-    if (
-      !Object.keys(this.$route.query).includes("page") ||
-      !Object.keys(this.$route.query).includes("per_page")
-    ) {
-      await this.$router.replace({
-        path: `/catalog/products`,
-        query: { page: this.params.page, per_page: this.params.pageSize },
-      });
-    }
-    this.__GET_PRODUCTS();
-    this.current = Number(this.$route.query.page);
-    this.params.pageSize = Number(this.$route.query.per_page);
+    this.getFirstData("/catalog/products", "__GET_PRODUCTS");
   },
   watch: {
     async current(val) {
-      if (this.$route.query.page != val) {
-        await this.$router.replace({
-          path: `/catalog/products`,
-          query: {
-            page: val,
-            per_page: this.params.pageSize,
-          },
-        });
-        this.__GET_PRODUCTS();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+      this.changePagination(val, "/catalog/products", "__GET_PRODUCTS");
     },
   },
   components: {
@@ -297,4 +275,3 @@ export default {
   layout: "toolbar",
 };
 </script>
-<style lang="scss"></style>

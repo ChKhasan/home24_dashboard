@@ -408,7 +408,9 @@
                 >
                   <div
                     class="form-block status-style"
-                    :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']"
+                    :class="[
+                      ruleForm.is_active == 1 ? 'status-active' : 'status-inactive',
+                    ]"
                   >
                     <el-form-item label="Статус">
                       <el-select

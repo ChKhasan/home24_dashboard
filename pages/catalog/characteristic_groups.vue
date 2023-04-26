@@ -9,29 +9,7 @@
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/catalog/add_characteristic')"
       >
-        <span class="svg-icon"
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            width="24px"
-            height="24px"
-            viewBox="0 0 24 24"
-            version="1.1"
-          >
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <polygon points="0 0 24 0 24 24 0 24"></polygon>
-              <path
-                d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                fill="#000000"
-                fill-rule="nonzero"
-                opacity="0.3"
-              ></path>
-              <path
-                d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                fill="#000000"
-              ></path>
-            </g></svg
-        ></span>
+        <span class="svg-icon" v-html="addIcon"></span>
         Добавить
       </div>
     </TitleBlock>
@@ -50,18 +28,18 @@
             align="center"
             :loading="loading"
           >
-            <span slot="name" slot-scope="text" >
+            <span slot="name" slot-scope="text">
               <h6>{{ text?.ru }}</h6>
             </span>
 
-            <span slot="numberId" slot-scope="text">#{{ text }}</span>
+            <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
-              <!-- <span class="action-btn" @click="editPost(text)">
+              <span class="action-btn" @click="editAction(text)">
                 <img :src="editIcon" alt="" />
-              </span> -->
-              <!-- <a-popconfirm
+              </span>
+              <a-popconfirm
                 title="Are you sure delete this group?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -71,7 +49,7 @@
                 <span class="action-btn">
                   <img :src="deleteIcon" alt="" />
                 </span>
-              </a-popconfirm> -->
+              </a-popconfirm>
             </span>
           </a-table>
           <div class="d-flex justify-content-between mt-4">
@@ -100,72 +78,6 @@
         </div>
       </div>
     </div>
-
-    <a-modal
-      v-model="visible"
-      :title="editId ? 'Изменить категорию' : 'Добавить категорию'"
-      :closable="false"
-      @ok="handleOk"
-    >
-      <div class="modal_tab mb-4">
-        <span
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          @click="modalTab = item.index"
-          :class="{ 'avtive-modalTab': modalTab == item.index }"
-        >
-          {{ item.label }}
-        </span>
-      </div>
-
-      <el-form
-        label-position="top"
-        :model="ruleForm"
-        :rules="rules"
-        ref="ruleForm"
-        label-width="120px"
-        class="demo-ruleForm"
-        action=""
-      >
-        <div
-          v-for="(item, index) in modalTabData"
-          :key="index"
-          v-if="modalTab == item.index"
-        >
-          <div class="form-block required">
-            <div>
-              <label for="">Group name</label>
-            </div>
-            <el-form-item prop="name_ru">
-              <el-input
-                type="text"
-                placeholder="Group name"
-                v-model="ruleForm[`name_${item.index}`]"
-              ></el-input>
-            </el-form-item>
-          </div>
-        </div>
-      </el-form>
-      <template slot="footer">
-        <div class="add_modal-footer d-flex justify-content-end">
-          <div
-            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-            @click="closeModal"
-          >
-            Cancel
-          </div>
-          <a-button
-            class="add-btn add-header-btn btn-primary"
-            @click="getData"
-            type="primary"
-            :loading="loadingBtn"
-          >
-            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
-          </a-button>
-        </div>
-      </template>
-    </a-modal>
   </div>
 </template>
 <script>
@@ -181,35 +93,11 @@ export default {
   mixins: [global, status, columns],
   data() {
     return {
-      modalTab: "ru",
-      visible: false,
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
-      tableData: [],
-      loadingBtn: false,
-      modalTabData: [
-        {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
-          index: "uz",
-        },
-        {
-          label: "English",
-          index: "en",
-        },
-      ],
-      ruleForm: {
-        name_ru: "",
-        name_uz: "",
-        name_en: "",
-      },
       groups: [],
-      editId: "",
       rules: {
         name_ru: [
           {
@@ -222,16 +110,6 @@ export default {
     };
   },
   methods: {
-    showModal() {
-      this.visible = true;
-    },
-    handleOk(e) {
-      this.visible = false;
-    },
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-      console.log("errors");
-    },
     async changePageSize(e) {
       this.current = 1;
       if (this.$route.query.per_page != e) {
@@ -248,56 +126,15 @@ export default {
       document.documentElement.scrollTop = 0;
     },
 
-    getData() {
-      const newData = {
-        name: {
-          ru: this.ruleForm.name_ru,
-          uz: this.ruleForm.name_uz,
-          en: this.ruleForm.name_en,
-        },
-      };
-      this.$refs["ruleForm"].validate((valid) => {
-        if (valid) {
-          this.editId != ""
-            ? this.__EDIT_FAQ_CATEGORIES(newData)
-            : this.__POST_CHARACTER_GROUP(newData);
-        } else {
-          return false;
-        }
-      });
-    },
     cancel(e) {
       console.log(e);
       this.$message.error("Click on No");
     },
-
-    openAddModal() {
-      this.showModal();
-      this.editId = "";
-    },
-    editPost(id) {
-      this.editId = id;
-      const data = this.groups.find((item) => item.id == id);
-      this.ruleForm = {
-        ...data,
-        name_ru: data.name.ru,
-        name_uz: data.name.uz,
-        name_en: data.name.en,
-      };
-      this.showModal();
-
-      // this.__GET_GROUPS_BY_ID(id);
-    },
-    closeModal() {
-      this.visible = false;
-      this.ruleForm.name_ru = "";
-      this.ruleForm.name_uz = "";
-      this.ruleForm.name_en = "";
-      this.editId = "";
-      this.__GET_GROUPS();
-    },
     deletePost(id) {
       this.__DELETE_CHARACTER_GROUP(id);
+    },
+    editAction(id) {
+      this.$router.push(`/catalog/edit_characteristic/${id}`);
     },
     async __DELETE_CHARACTER_GROUP(id) {
       try {
@@ -312,91 +149,38 @@ export default {
         this.statusFunc(e.response);
       }
     },
-
-    async __POST_CHARACTER_GROUP(res) {
-      try {
-        await this.$store.dispatch("fetchCharacters/postGroups", res);
-        await this.$notify({
-          title: "Success",
-          message: "Атрибут успешно добавлен",
-          type: "success",
-        });
-        this.handleOk();
-        this.__GET_GROUPS();
-        this.ruleForm.name_ru = "";
-        this.ruleForm.name_uz = "";
-        this.ruleForm.name_en = "";
-      } catch (e) {
-        this.statusFunc(e.response);
-      }
-    },
-    statusFunc(res) {
-      switch (res.status) {
-        case 422:
-          this.$notify.error({
-            title: "Error",
-            message: "Указанные данные недействительны.",
-          });
-          break;
-        case 500:
-          this.$notify.error({
-            title: "Error",
-            message: "Cервер не работает",
-          });
-          break;
-        case 404:
-          this.$notify.error({
-            title: "Error",
-            message: res.data.errors,
-          });
-          break;
-      }
-    },
     async __GET_GROUPS() {
       this.loading = true;
-      const data = await this.$store.dispatch("fetchCharacters/getGroups", {
+      const data = await this.$store.dispatch("fetchCharacters/getCharacteristics", {
         ...this.$route.query,
       });
       this.loading = false;
-      this.totalPage = data.groups?.total;
-      this.groups = data?.groups.map((item) => {
+      this.totalPage = data.characteristics?.total;
+      const pageIndex = this.indexPage(
+        data?.characteristics?.current_page,
+        data?.characteristics?.per_page
+      );
+      // console.log(data?.groups?.current_page);
+      // console.log(data?.groups?.per_page);
+      this.groups = data?.characteristics.data.map((item, index) => {
         return {
           ...item,
           numberId: item.id,
-          key: item.id,
+          key: index + pageIndex,
         };
       });
+    },
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
     },
   },
 
   async mounted() {
-    if (
-      !Object.keys(this.$route.query).includes("page") ||
-      !Object.keys(this.$route.query).includes("per_page")
-    ) {
-      await this.$router.replace({
-        path: `/catalog/characteristic_groups`,
-        query: { page: this.params.page, per_page: this.params.pageSize },
-      });
-    }
-    this.__GET_GROUPS();
-    this.current = Number(this.$route.query.page);
-    this.params.pageSize = Number(this.$route.query.per_page);
+    this.getFirstData("/catalog/characteristic_groups", "__GET_GROUPS");
   },
   watch: {
     async current(val) {
-      if (this.$route.query.page != val) {
-        await this.$router.replace({
-          path: `/catalog/characteristic_groups`,
-          query: {
-            page: val,
-            per_page: this.params.pageSize,
-          },
-        });
-        this.__GET_GROUPS();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
+      this.changePagination(val, "/catalog/characteristic_groups", "__GET_GROUPS");
     },
   },
   components: {

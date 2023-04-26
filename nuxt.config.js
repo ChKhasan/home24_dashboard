@@ -50,7 +50,11 @@ export default {
   build: {
     analyze: true,
   },
-
+  loadingIndicator: {
+    name: "chasing-dots",
+    color: "#1890ff",
+    background: "white",
+  },
   // auth: {
   //   strategies: {
   //     local: {
