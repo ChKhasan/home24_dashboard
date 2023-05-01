@@ -50,6 +50,7 @@
   .column-name {
     line-height: 18px !important;
     height: 18px;
+    text-transform: uppercase;
   }
 }
 
@@ -86,6 +87,11 @@
   }
 }
 .ant-table-tbody {
+  .column-price {
+    @include fontTTinterface(16px, 500);
+    line-height: 18px;
+    color: #181c32;
+  }
   .column-name {
     line-height: 16px;
     color: #181c32;
@@ -97,7 +103,7 @@
       line-height: 24px;
       color: #181c32;
       font-family: "TT Interfaces";
-      font-size: 14.04px;
+      font-size: 17px;
       font-weight: bold;
       font-style: normal;
       margin-bottom: 8px !important;
@@ -121,24 +127,28 @@
       text-align: start;
     }
   }
+  .column-code {
+    @include fontTTinterface(14px, 500);
+
+    h4 {
+      @include fontTTinterface(14px, 500);
+    }
+  }
 }
 .column-code {
-  @include fontTTinterface(16px, 500);
   line-height: 20px;
+  text-transform: uppercase;
   color: #a1a5bf;
   h4 {
-    @include fontTTinterface(16px, 500);
     line-height: 20px;
     color: #a1a5bf;
   }
 }
 .column-qty {
-  @include fontTTinterface(18px, 500);
   line-height: 24px;
   color: #181c32;
 }
 .column-price {
-  @include fontTTinterface(18px, 500);
   line-height: 24px;
   color: #181c32;
 }
@@ -159,11 +169,11 @@
   background: #e1f0ff;
 }
 .column-tags {
+  text-transform: uppercase;
   .tags-style {
     line-height: 17px;
-    text-transform: capitalize;
     border-radius: 8px;
-    @include fontTTinterface(14px, 500);
+    @include fontTTinterface(12px, 500);
     padding: 8px 24px;
   }
 }
@@ -185,6 +195,7 @@
   }
 }
 .column-btns {
+  text-transform: uppercase;
   span {
     .action-btn {
       background: #f3f6f9;
@@ -446,13 +457,24 @@
     .column-name {
       h6 {
         line-height: 21px;
-        font-size: 14.04px;
+        font-size: 15px;
         margin-bottom: 6px !important;
       }
       span {
         @include fontTTinterface(12px, 400);
         line-height: 16px;
-        text-align: start
+        text-align: start;
+      }
+    }
+    .column-price {
+      @include fontTTinterface(14.04px, 500);
+      line-height: 18px;
+      color: #181c32;
+    }
+    .column-code {
+      h4 {
+        @include fontTTinterface(12px, 500);
+        line-height: 18px;
       }
     }
   }
@@ -463,11 +485,7 @@
       line-height: 18px;
     }
   }
-  .column-price {
-    @include fontTTinterface(14.04px, 500);
-    line-height: 18px;
-    color: #181c32;
-  }
+
   .column-qty {
     @include fontTTinterface(14.04px, 500);
     line-height: 24px;
@@ -521,6 +539,15 @@
       height: 24px;
       &:last-child {
         margin-right: 0;
+      }
+    }
+  }
+  .ant-table-tbody {
+    .column-code {
+      @include fontTTinterface(12px, 500);
+
+      h4 {
+        @include fontTTinterface(12px, 500);
       }
     }
   }

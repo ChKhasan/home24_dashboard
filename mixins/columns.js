@@ -94,6 +94,7 @@ export default {
           slots: { title: "customTitle" },
           align: "center",
           scopedSlots: { customRender: "lg_icon" },
+          className: "column-name",
           key: "lg_icon",
           width: "12%",
         },

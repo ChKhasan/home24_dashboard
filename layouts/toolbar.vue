@@ -121,6 +121,7 @@
                 index="7"
                 v-for="(items, index) in toolbarMenu.settings"
                 v-if="items.submenu"
+                :key="index"
               >
                 <template slot="title">{{ items.name }}</template>
                 <el-menu-item-group
@@ -429,8 +430,8 @@ export default {
               {
                 index: "71",
                 name: "Параметры",
-                to: "/settings/charactristic/options",
-                path: "settings-charactristic-options",
+                to: "/settings/characteristics/options",
+                path: "settings-characteristics-options",
                 disabled: false,
               },
             ],

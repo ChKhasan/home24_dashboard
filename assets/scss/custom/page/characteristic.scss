@@ -45,3 +45,30 @@ body,
     }
   }
 }
+.character-translate-grid {
+  display: grid;
+  grid-template-columns: 20px auto auto auto;
+  grid-gap: 10px;
+}
+.translate-header {
+  padding: 1rem;
+  background: #f9fbfd;
+}
+.translate-body {
+  padding: 1rem;
+  padding-right: 0;
+}
+.translate-text {
+  line-height: 16px;
+  color: #a1a5bf;
+  font-family: "TT Interfaces";
+  font-size: 14.04px;
+  font-weight: 500;
+}
+.loading-data {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

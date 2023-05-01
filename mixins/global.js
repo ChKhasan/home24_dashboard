@@ -37,6 +37,7 @@ export default {
         await this.$router.replace({
           path: url,
           query: {
+            ...this.$route.query,
             page: val,
             per_page: this.params.pageSize,
           },
@@ -52,6 +53,7 @@ export default {
         await this.$router.replace({
           path: link,
           query: {
+            ...this.$route.query,
             page: this.current,
             per_page: e,
           },

@@ -15,9 +15,11 @@ import {
   Spin,
   Pagination,
   Dropdown,
-  Menu
+  Menu,
+  Empty
 } from "ant-design-vue";
 
+Vue.use(Empty);
 Vue.use(Button);
 Vue.use(Table);
 Vue.use(Cascader);

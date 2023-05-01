@@ -2,7 +2,7 @@
   <div class="input status-select">
     <el-select
       v-model="value"
-      placeholder="Status"
+      placeholder="Статус"
       @change="($event) => $emit('changeStatus', $event)"
     >
       <el-option
