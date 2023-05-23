@@ -8,7 +8,7 @@ export default {
     },
   },
   head: {
-    title: "Home24 admin panel",
+    title: "E-shop admin panel",
     htmlAttrs: {
       lang: "en",
     },
@@ -32,7 +32,7 @@ export default {
     init(axios) {
       axios.defaults.withCredentials = true;
     },
-    baseURL: "https://bombadmin.pythonanywhere.com",
+    baseURL: "https://test.loftcity.uz/api",
   },
   components: true,
 
