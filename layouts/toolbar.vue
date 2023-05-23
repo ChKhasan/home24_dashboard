@@ -7,7 +7,7 @@
       <div class="toolbar-aside">
         <div class="toolbar-logo">
           <div class="d-flex">
-            <span v-html="icons.logoIcon"></span>
+            <!-- <span v-html="icons.logoIcon"></span> -->
             <h3>Admin panel</h3>
           </div>
           <div

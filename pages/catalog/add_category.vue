@@ -558,6 +558,7 @@ export default {
         attributes: this.attributes.map((item) => item.name),
         group_characteristics: this.group_characteristics.map((item) => item.name),
       };
+      delete data['status']
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           if (!this.attributes[0].name || !this.group_characteristics[0].name) {

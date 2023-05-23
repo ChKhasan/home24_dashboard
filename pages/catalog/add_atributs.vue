@@ -87,7 +87,7 @@
                               <div class="d-flex align-items-center">
                                 <el-input
                                   class="w-100 mb-2"
-                                  v-model="item.name"
+                                  v-model="item.name[itemLang.key]"
                                   placeholder="Option name"
                                 />
                                 <div class="variant_btns mb-1 mt-0">
@@ -215,7 +215,12 @@ export default {
         },
         options: [],
         optionsName: [{
-          name: '',
+          name: {
+                ru: "",
+                uz: "",
+                en: ""
+            },
+            position: 1,
           id: 1
         }]
       },
@@ -228,7 +233,12 @@ export default {
     },
     addElement() {
       this.ruleForm.optionsName.push({
-        name: "",
+        name: {
+                ru: "",
+                uz: "",
+                en: ""
+            },
+            position: 1,
         id: Math.max(...this.ruleForm.optionsName.map((o) => o.id)) + 1,
       });
     },
@@ -245,7 +255,12 @@ export default {
           if(this.ruleForm.optionsName[0].name) {
             const data = {
               ...this.ruleForm,
-              options: this.ruleForm.optionsName.filter(item => item.name).map(item1 => item1.name)
+              options: this.ruleForm.optionsName.map((item,index) => {
+                return {
+                  position: index + 1,
+                  name: item.name
+                }
+              })
             };
             delete data["optionsName"];
             this.__POST_ATRIBUTES(data);

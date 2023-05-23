@@ -18,7 +18,7 @@ export default {
       { hid: "description", name: "description", content: "" },
       { name: "format-detection", content: "telephone=no" },
     ],
-    link: [{ rel: "icon", type: "image/jpg", href: "/logo.jpg" }],
+    // link: [{ rel: "icon", type: "image/jpg", href: "/logo.jpg" }],
   },
   css: ["~/assets/scss/app.scss", "~/assets/fonts/stylesheet.css"],
 

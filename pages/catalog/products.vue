@@ -102,7 +102,7 @@
               tag_rejected: text == 'inactive',
             }"
           >
-            {{ text == "active" ? "АКТИВНЫЙ" : "НЕАКТИВНЫЙ" }}
+            {{ text == "active" ? "Активный " : "Неактивный" }}
           </span>
 
           <span slot="id" slot-scope="text">

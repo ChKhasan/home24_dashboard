@@ -174,6 +174,7 @@ export default {
       loading: false,
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
+
       lang: [
         {
           key: "ru",
@@ -267,9 +268,6 @@ export default {
         });
         this.__GET_GROUPS();
       }
-    },
-    replaceRouter(query) {
-      this.$router.replace({ path: "/settings/characteristics/options", query: query });
     },
     async changeSearch(val) {
       this.searchVal = val.target.value;

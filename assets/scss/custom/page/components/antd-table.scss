@@ -52,6 +52,23 @@
     height: 18px;
     text-transform: uppercase;
   }
+  .column-name,
+  .column-price,
+  .column-code,
+  .column-qty,
+  .column-btns,
+  .column-options,
+  .column-img,
+  .column-tags {
+    font-family: "TT Interfaces";
+    font-style: normal;
+    background-color: #fff;
+    font-weight: 600 !important;
+    color: #b5b5c3 !important;
+    font-size: 14px !important;
+    text-transform: uppercase;
+    letter-spacing: 1.3px;
+  }
 }
 
 .ant-checkbox-wrapper:hover .ant-checkbox-inner,
@@ -129,29 +146,25 @@
   }
   .column-code {
     @include fontTTinterface(14px, 500);
-
+    line-height: 20px;
+    text-transform: uppercase;
+    color: #a1a5bf;
     h4 {
       @include fontTTinterface(14px, 500);
+      line-height: 20px;
+      color: #a1a5bf;
     }
   }
-}
-.column-code {
-  line-height: 20px;
-  text-transform: uppercase;
-  color: #a1a5bf;
-  h4 {
-    line-height: 20px;
-    color: #a1a5bf;
+  .column-qty {
+    line-height: 24px;
+    color: #181c32;
+  }
+  .column-price {
+    line-height: 24px;
+    color: #181c32;
   }
 }
-.column-qty {
-  line-height: 24px;
-  color: #181c32;
-}
-.column-price {
-  line-height: 24px;
-  color: #181c32;
-}
+
 .tag_success {
   background: #c9f7f5;
   color: #18b3bd;
@@ -169,12 +182,18 @@
   background: #e1f0ff;
 }
 .column-tags {
-  text-transform: uppercase;
+  text-transform: capitalize;
   .tags-style {
-    line-height: 17px;
-    border-radius: 8px;
-    @include fontTTinterface(12px, 500);
-    padding: 8px 24px;
+    line-height: 0.6px;
+    border-radius: 5.46px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    font-family: "TT Interfaces";
+    font-size: 11.7px;
+    font-weight: 500;
+    padding: 0 9.75px;
+    text-transform: capitalize;
   }
 }
 .table_actions {
@@ -399,13 +418,7 @@
 .select-img {
   margin-right: 16px;
 }
-.select-table {
-  .ant-table-thead {
-    .column-name {
-      // padding-left: 40px !important;
-    }
-  }
-}
+
 .column-btns {
   padding-right: 0 !important;
 }
@@ -453,6 +466,18 @@
   }
 }
 @media (max-width: 1440px) {
+  .ant-table-thead {
+    .column-name,
+    .column-price,
+    .column-code,
+    .column-qty,
+    .column-btns,
+    .column-options,
+    .column-img,
+    .column-tags {
+      font-size: 11.7px !important;
+    }
+  }
   .ant-table-tbody {
     .column-name {
       h6 {
@@ -472,83 +497,57 @@
       color: #181c32;
     }
     .column-code {
-      h4 {
-        @include fontTTinterface(12px, 500);
-        line-height: 18px;
-      }
-    }
-  }
-
-  .column-code {
-    h4 {
-      @include fontTTinterface(14px, 500);
-      line-height: 18px;
-    }
-  }
-
-  .column-qty {
-    @include fontTTinterface(14.04px, 500);
-    line-height: 24px;
-    color: #181c32;
-  }
-  .column-tags {
-    .tags-style {
-      line-height: 16px;
-      @include fontTTinterface(11.7px, 500);
-      padding: 4px 9.75px;
-      border-radius: 5.46px;
-      height: 24px;
-    }
-  }
-  .ant-table-thead > tr > th,
-  .ant-table-tbody > tr > td {
-    padding: 9.7px 9.7px 9.7px 0 !important;
-  }
-  .ant-table-column-title {
-    @include fontTTinterface(11.7px, 600);
-    line-height: 18px !important;
-    text-transform: uppercase;
-    color: #6c7b9a;
-  }
-  .column-btns {
-    span {
-      .action-btn {
-        background: #f3f6f9;
-        border-radius: 5.46px;
-        width: 30px;
-        height: 30px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        img {
-          width: 20px;
-          height: 20px;
-        }
-      }
-    }
-  }
-  .column-options {
-    .option-items {
-      padding: 4px 9.75px;
-      background: #eff2f5;
-      border-radius: 5.75px;
-      @include fontTTinterface(11.7px, 500);
-      margin-right: 5px;
-      margin-bottom: 5px;
-      height: 24px;
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-  }
-  .ant-table-tbody {
-    .column-code {
       @include fontTTinterface(12px, 500);
 
       h4 {
         @include fontTTinterface(12px, 500);
       }
     }
+    .column-qty {
+      @include fontTTinterface(14.04px, 500);
+      line-height: 24px;
+      color: #181c32;
+    }
+    .column-tags {
+      .tags-style {
+        font-size: 11.7px;
+      }
+    }
+    .column-btns {
+      span {
+        .action-btn {
+          background: #f3f6f9;
+          border-radius: 5.46px;
+          width: 30px;
+          height: 30px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          img {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+    .column-options {
+      .option-items {
+        padding: 4px 9.75px;
+        background: #eff2f5;
+        border-radius: 5.75px;
+        @include fontTTinterface(11.7px, 500);
+        margin-right: 5px;
+        margin-bottom: 5px;
+        height: 24px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    padding: 9.7px 9.7px 9.7px 0 !important;
   }
 }
