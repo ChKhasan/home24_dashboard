@@ -558,22 +558,20 @@ export default {
     submitForm(ruleForm) {
       const data = {
         ...this.ruleForm,
-        attributes: this.attributes.map((item) => item.name).filter((item) => item.name),
-        group_characteristics: this.group_characteristics
-          .map((item) => item.name)
-          .filter((item) => item.name),
+        attributes: this.attributes.map((item) => item.name),
+        group_characteristics: this.group_characteristics.map((item) => item.name),
       };
+
       delete data["status"];
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          this.__POST_CATEGORIES(data);
-
-          // if (!this.attributes[0].name || !this.group_characteristics[0].name) {
-          //   !this.attributes[0].name
-          //     ? this.notificationError("Error", "Вы не добавили атрибут")
-          //     : this.notificationError("Error", "Вы не добавили группу");
-          // } else {
-          // }
+          if (!this.attributes[0].name || !this.group_characteristics[0].name) {
+            !this.attributes[0].name
+              ? this.notificationError("Error", "Вы не добавили атрибут")
+              : this.notificationError("Error", "Вы не добавили группу");
+          } else {
+            this.__POST_CATEGORIES(data);
+          }
         } else {
           return false;
         }
