@@ -975,6 +975,7 @@ export default {
             variations: [
               {
                 id: 1,
+                indexId: 0,
                 options: [],
                 optionName: {},
                 characteristics: [],
@@ -1262,6 +1263,7 @@ export default {
           ? this.$refs.ruleFormAtributes.length
           : 0;
         const atributValid = artibutReqiured.length == atr;
+        console.log(newData);
         if (!valid && !atributValid) return false;
         this.characterRequired
           ? this.__POST_PRODUCTS(newData)
@@ -1304,7 +1306,7 @@ export default {
         products: this.ruleForm.products.map((item) => {
           const newVariation = item.variations.map((elem) => {
             return {
-              id: elem.id,
+              id: elem.indexId,
               options: elem.options,
               price: Number.parseFloat(elem.price).toFixed(2) * 1,
               is_default: elem.is_default,
@@ -1381,6 +1383,7 @@ export default {
       const options = { ...this.atributNames };
       product.variations.push({
         id: product.variations.at(-1).id + 1,
+        indexId: 0,
         options: [1],
         price: 0,
         is_default: 0,
@@ -1420,6 +1423,7 @@ export default {
       const newVariations = [
         {
           id: 1,
+          indexId: 0,
           options: [1],
           price: 0,
           is_default: 1,
@@ -1561,7 +1565,7 @@ export default {
       this.__GET_CATEGORY_BY_ID(data.info.category.id);
       this.ruleForm.products = data.products.map((item, productIndex) => {
         let characterNames = {};
-        const variat = item.variations.map((variant) => {
+        const variat = item.variations.map((variant, index) => {
           let atribut = {};
           let charac = {};
           variant.attribute_options.forEach((artibutItem) => {
@@ -1583,7 +1587,8 @@ export default {
           let options = variant.attribute_options.map((atrOp) => atrOp.id);
           let characteristics = variant.characteristic_options.map((charOp) => charOp.id);
           return {
-            id: variant.id,
+            id: index + 1,
+            indexId: variant.id,
             options: [...options],
             optionName: atribut,
             characteristics: [...characteristics],
