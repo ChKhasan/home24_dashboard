@@ -1548,7 +1548,7 @@ export default {
 
       this.ruleForm.brand_id = data.info.brand_id;
       this.ruleForm.model = data.info.products[0].model;
-      this.ruleForm.is_active = data.products[0].variations[0].status;
+      this.ruleForm.is_active = data.info?.is_active;
       if (data.info.category.parent?.parent?.id) {
         this.cascader.push(data.info.category.parent.parent.id);
         this.cascader.push(data.info.category.parent.id);

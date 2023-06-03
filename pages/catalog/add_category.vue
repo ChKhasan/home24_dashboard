@@ -298,7 +298,10 @@
           <div class="category-img-grid">
             <div class="form-container">
               <FormTitle title="Параметры" />
-              <div class="form-block status-style" :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']">
+              <div
+                class="form-block status-style"
+                :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']"
+              >
                 <div><label>Статус</label></div>
                 <el-select
                   class="w-100"
@@ -555,19 +558,22 @@ export default {
     submitForm(ruleForm) {
       const data = {
         ...this.ruleForm,
-        attributes: this.attributes.map((item) => item.name),
-        group_characteristics: this.group_characteristics.map((item) => item.name),
+        attributes: this.attributes.map((item) => item.name).filter((item) => item.name),
+        group_characteristics: this.group_characteristics
+          .map((item) => item.name)
+          .filter((item) => item.name),
       };
-      delete data['status']
+      delete data["status"];
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
-          if (!this.attributes[0].name || !this.group_characteristics[0].name) {
-            !this.attributes[0].name
-              ? this.notificationError("Error", "Вы не добавили атрибут")
-              : this.notificationError("Error", "Вы не добавили группу");
-          } else {
-            this.__POST_CATEGORIES(data);
-          }
+          this.__POST_CATEGORIES(data);
+
+          // if (!this.attributes[0].name || !this.group_characteristics[0].name) {
+          //   !this.attributes[0].name
+          //     ? this.notificationError("Error", "Вы не добавили атрибут")
+          //     : this.notificationError("Error", "Вы не добавили группу");
+          // } else {
+          // }
         } else {
           return false;
         }
