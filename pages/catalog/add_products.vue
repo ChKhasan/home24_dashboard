@@ -288,7 +288,7 @@
                                     class="w-100"
                                     default-first-option
                                     popper-class="select-popper-hover"
-                                    placeholder="265 gb"
+                                    placeholder="Параметры"
                                     @change="
                                       atributOptionsChange({
                                         productId: element.id,

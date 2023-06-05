@@ -272,7 +272,7 @@ export default {
           dataIndex: "btns",
           scopedSlots: { customRender: "btns" },
           className: "column-btns",
-          width: "80px",
+          width: "100px",
           align: "center",
         },
       ],
