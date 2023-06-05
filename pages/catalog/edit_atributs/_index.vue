@@ -245,15 +245,23 @@ export default {
         this.ruleForm.group_id = this.group_id;
       }
       const newOptionsNames = this.options.map((item) => (item.name = item.name.ru));
-      console.log(newOptionsNames);
-      const newOptions = this.ruleForm.optionsName.map((item) => {
-        console.log(item);
+      const newOptions = this.ruleForm.optionsName.map((item,index) => {
         if (newOptionsNames.includes(item.name)) {
-          return this.options.find((item2) => item2.name == item.name);
+          let opt = this.options.find((item2) => item2.name == item.name);
+          console.log(opt);
+          return {
+            ...opt,
+            name: {
+              ru: opt.name,
+            },
+          };
         } else {
           return {
             id: 0,
-            name: item.name,
+            name: {
+              ru: item.name,
+            },
+            position: index + 1
           };
         }
       });

@@ -104,6 +104,7 @@ export default {
           key: "is_popular",
           align: "center",
           scopedSlots: { customRender: "is_popular" },
+          className: "column-tags",
           width: "15%",
         },
         {
