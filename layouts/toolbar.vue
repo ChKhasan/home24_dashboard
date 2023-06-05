@@ -284,7 +284,6 @@ export default {
             index: "21",
             to: "/orders/all-orders",
             path: "orders-all-orders",
-
             disabled: false,
           },
           {
@@ -340,6 +339,13 @@ export default {
             index: "28",
             to: "/orders/canceled-orders",
             path: "orders-canceled-orders",
+            disabled: false,
+          },
+          {
+            name: "Заявки",
+            index: "29",
+            to: "/orders/applications",
+            path: "orders-applications",
             disabled: false,
           },
         ],
