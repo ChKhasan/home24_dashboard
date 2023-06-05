@@ -22,7 +22,7 @@
           </div>
         </div>
         <a-table
-          :columns="columnProduct"
+          :columns="columnProductClick"
           :data-source="data"
           :loading="loading"
           :pagination="false"

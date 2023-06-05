@@ -227,7 +227,7 @@ export default {
           align: "right",
         },
       ],
-      columnProduct: [
+      columnProductClick: [
         {
         
           slots: { title: "customTitle" },
