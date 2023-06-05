@@ -19,27 +19,10 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
-            <SearchInput placeholder="Поиск продукта" @changeSearch="changeSearch" />
-            <div class="input status-select w-100">
-              <el-select v-model="brandSearch" placeholder="Сортировать" class="w-100">
-                <el-option
-                  class="w-100"
-                  v-for="item in brandSelect"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                  :disabled="item.disabled"
-                >
-                </el-option>
-              </el-select>
-            </div>
-            <StatusFilter @changeStatus="changeStatus" />
-            <a-button
-              type="primary"
-              class="d-flex align-items-center justify-content-center"
-              style="height: 38px"
-              ><a-icon type="reload"
-            /></a-button>
+            <SearchInput placeholder="Поиск" @changeSearch="changeSearch" />
+           <span></span>
+           <span></span>
+           <span></span>
           </div>
         </div>
         <a-table

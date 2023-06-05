@@ -229,20 +229,21 @@ export default {
       ],
       columnProduct: [
         {
-          title: "PRODUCT",
+        
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
           className: "column-name",
           width: "55px",
-          colSpan: 2,
+          colSpan: 0,
         },
         {
+          title: "PRODUCT",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "product" },
           align: "left",
           className: "column-name",
-          colSpan: 0,
+          colSpan: 2,
         },
         {
           title: "ИМЯ",
@@ -266,8 +267,7 @@ export default {
           dataIndex: "phone_number",
           scopedSlots: { customRender: "phone_number" },
           className: "column-price",
-          key: "model",
-          width: "10%",
+          key: "phone_number",
         },
         {
           title: "действия",
@@ -275,7 +275,7 @@ export default {
           dataIndex: "id",
           scopedSlots: { customRender: "id" },
           className: "column-btns",
-          width: "10%",
+          width: "100px",
           align: "right",
         },
       ],
