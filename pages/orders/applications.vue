@@ -51,7 +51,7 @@
             />
           </span>
           <div slot="created_at" slot-scope="text">
-            {{ moment(text).format("DD/MM/YYYY hh:mm") }}
+            {{ moment(text).format("DD/MM/YYYY,  hh:mm") }}
           </div>
           <div slot="product" slot-scope="text">
             <h6>{{ text.product?.info?.name?.ru }}</h6>
