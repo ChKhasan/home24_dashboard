@@ -6,7 +6,10 @@
       lastLink="Продукты"
     >
       <div class="d-flex">
-        <div class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3">
+        <div
+          class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+          @click="$router.go(-1)"
+        >
           Отмена
         </div>
         <a-button
