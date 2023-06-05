@@ -6,13 +6,13 @@
       lastLink="Заявки"
     >
       <div class="d-flex">
-        <div
+        <!-- <div
           class="add-btn add-header-btn add-header-btn-padding btn-primary"
           @click="$router.push('/catalog/add_products')"
         >
           <span class="svg-icon" v-html="addIcon"></span>
           Добавить продукт
-        </div>
+        </div> -->
       </div>
     </TitleBlock>
     <div class="container_xl app-container">
