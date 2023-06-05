@@ -2,7 +2,7 @@
   <div>
     <TitleBlock
       title="Категории"
-      :breadbrumb="['эКоммерция', 'Каталог']"
+      :breadbrumb="['Каталог']"
       lastLink="Категории"
     >
       <LayoutHeaderBtn

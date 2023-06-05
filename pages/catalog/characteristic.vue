@@ -2,7 +2,7 @@
   <div>
     <TitleBlock
       title="Характеристика"
-      :breadbrumb="['эКоммерция', 'Каталог']"
+      :breadbrumb="['Каталог']"
       lastLink="Характеристика"
     >
       <div

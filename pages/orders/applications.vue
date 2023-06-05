@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Заявки"
-      :breadbrumb="['эКоммерция', 'Заказы']"
-      lastLink="Заявки"
-    >
+    <TitleBlock title="Заявки" :breadbrumb="['Заказы']" lastLink="Заявки">
       <div class="d-flex">
         <!-- <div
           class="add-btn add-header-btn add-header-btn-padding btn-primary"
@@ -20,9 +16,9 @@
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
             <SearchInput placeholder="Поиск" @changeSearch="changeSearch" />
-           <span></span>
-           <span></span>
-           <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
         </div>
         <a-table
@@ -55,7 +51,7 @@
             />
           </span>
           <div slot="created_at" slot-scope="text">
-          {{ moment(text).format('DD/MM/YYYY') }}
+            {{ moment(text).format("DD/MM/YYYY hh:mm") }}
           </div>
           <div slot="product" slot-scope="text">
             <h6>{{ text.product?.info?.name?.ru }}</h6>
@@ -68,6 +64,7 @@
                 text?.category?.name?.ru
             }}</span>
           </div>
+          <span slot="phone_number" slot-scope="text"> {{ `+${text}` }}</span>
           <span slot="customTitle"></span>
 
           <span
@@ -83,7 +80,6 @@
           </span>
 
           <span slot="id" slot-scope="text">
-            
             <a-popconfirm
               title="Are you sure delete this application ?"
               ok-text="Yes"
@@ -132,7 +128,7 @@ import TitleBlock from "../../components/Title-block.vue";
 import global from "../../mixins/global";
 import status from "../../mixins/status";
 import columns from "../../mixins/columns";
-import moment from 'moment';
+import moment from "moment";
 
 export default {
   mixins: [global, status, columns],

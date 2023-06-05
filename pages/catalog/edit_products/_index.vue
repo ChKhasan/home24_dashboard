@@ -2,7 +2,7 @@
   <div>
     <TitleBlock
       title="Продукты"
-      :breadbrumb="['эКоммерция', 'Каталог']"
+      :breadbrumb="['Каталог']"
       lastLink="Продукты"
     >
       <div class="d-flex">

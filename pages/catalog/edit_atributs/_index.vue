@@ -10,7 +10,7 @@
     >
       <TitleBlock
         title="Атрибуты"
-        :breadbrumb="['эКоммерция', 'Каталог']"
+        :breadbrumb="['Каталог']"
         lastLink="Атрибуты"
       >
         <div class="d-flex">
