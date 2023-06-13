@@ -504,6 +504,7 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch("getShowCasesStore");
+    this.toolbarMenu.showcases = [];
     this.$store.state.showcases.forEach((elem, index) => {
       this.toolbarMenu.showcases.push({
         name: elem?.name?.ru,
