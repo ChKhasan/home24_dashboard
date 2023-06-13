@@ -46,6 +46,25 @@
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="8" class="home_menu">
+              <div slot="title">
+                <span class="menu-icon" v-html="icons.orderIcon"> </span>
+                <p>Витрины</p>
+              </div>
+              <el-menu-item-group
+                v-for="(items, index) in toolbarMenu.showcases"
+                class="toolbar-menu-products"
+                :key="index"
+                :class="{ disabled: items.disabled }"
+              >
+                <nuxt-link :to="items.to">
+                  <el-menu-item :index="items.index">
+                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                    <p>{{ items.name }}</p></el-menu-item
+                  >
+                </nuxt-link>
+              </el-menu-item-group>
+            </el-submenu>
             <el-submenu index="2" class="home_menu">
               <div slot="title">
                 <span class="menu-icon" v-html="icons.orderIcon"> </span>
@@ -270,14 +289,8 @@ export default {
 
             disabled: false,
           },
-          // {
-          //   name: "Группа характеристика",
-          //   index: "16",
-          //   to: "/catalog/characteristic_groups",
-          //   path: "catalog-characteristic_groups",
-          //   disabled: false,
-          // },
         ],
+        showcases: [],
         orders: [
           {
             name: "Все заказы (0)",
@@ -446,31 +459,38 @@ export default {
             name: "Переводы",
             index: "62",
             to: "/settings/translations",
-            path: "contents-translations",
+            path: "settings-translations",
             disabled: true,
           },
           {
             name: "Справочник",
             index: "63",
-            to: "/contents/banners2",
-            path: "contents-banners2",
+            to: "/settings/banners2",
+            path: "settings-banners2",
 
             disabled: true,
           },
           {
             name: "Общие данные",
             index: "64",
-            to: "/contents/comments2",
-            path: "contents-comments2",
+            to: "/settings/comments2",
+            path: "settings-comments2",
 
             disabled: true,
           },
           {
             name: "Пользователи",
             index: "65",
-            to: "/contents/banners2",
-            path: "contents-banners2",
+            to: "/settings/banners2",
+            path: "settings-banners2",
             disabled: true,
+          },
+          {
+            name: "Регионы",
+            index: "66",
+            to: "/settings/regions",
+            path: "settings-regions",
+            disabled: false,
           },
         ],
       },
@@ -482,11 +502,21 @@ export default {
       return this.$route.name;
     },
   },
-  mounted() {
+  async mounted() {
+    await this.$store.dispatch("getShowCasesStore");
+    this.$store.state.showcases.forEach((elem, index) => {
+      this.toolbarMenu.showcases.push({
+        name: elem?.name?.ru,
+        index: `${81 + index}`,
+        to: `/showcases/case/${elem.id}`,
+        path: `showcases-case-${elem.id}`,
+        disabled: false,
+      });
+    });
     this.handleOpen();
     this.handleClose();
     this.activeOpens();
-    this.checkToolbar(this.$route.name);
+    this.checkToolbar(this.$route.path);
   },
 
   methods: {
@@ -514,6 +544,8 @@ export default {
         this.defaultOpens = ["5"];
       } else if (routerName.includes("charactristic")) {
         this.defaultOpens = ["6", "7"];
+      } else if (routerName.includes("showcases")) {
+        this.defaultOpens = ["8"];
       } else if (routerName.includes("settings")) {
         this.defaultOpens = ["6"];
       }
@@ -528,11 +560,12 @@ export default {
       this.collapsed = !this.collapsed;
     },
     checkToolbar(newVal) {
+      console.log(newVal);
       const toolBarNames = Object.keys(this.toolbarMenu);
       toolBarNames.forEach((elem) => {
         this.toolbarMenu[elem].forEach((item) => {
           switch (newVal) {
-            case item.path:
+            case item.to:
               this.activeRouterName = item.index;
               break;
           }
@@ -541,6 +574,18 @@ export default {
     },
   },
   watch: {
+    "$store.state.changeShowcases"(val) {
+      this.toolbarMenu.showcases = [];
+      this.$store.state.showcases.forEach((elem, index) => {
+        this.toolbarMenu.showcases.push({
+          name: elem?.name?.ru,
+          index: `${81 + index}`,
+          to: `/showcases/case/${elem.id}`,
+          path: `showcases-case-${elem.id}`,
+          disabled: false,
+        });
+      });
+    },
     routerName(oldVal, newVal) {
       if (oldVal !== newVal) {
         if (oldVal.includes("catalog")) {
@@ -555,6 +600,8 @@ export default {
           this.defaultOpens = ["5"];
         } else if (oldVal.includes("charactristic")) {
           this.defaultOpens = ["6", "7"];
+        } else if (oldVal.includes("showcases")) {
+          this.defaultOpens = ["8"];
         } else if (oldVal.includes("settings")) {
           this.defaultOpens = ["6"];
         }

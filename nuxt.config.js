@@ -32,7 +32,7 @@ export default {
     init(axios) {
       axios.defaults.withCredentials = true;
     },
-    baseURL: "https://test.loftcity.uz/api",
+    baseURL: "https://test.loftcity.uz/api/admin",
   },
   components: true,
 

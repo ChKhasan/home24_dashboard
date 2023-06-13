@@ -229,7 +229,6 @@ export default {
       ],
       columnProductClick: [
         {
-        
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           align: "left",
@@ -269,6 +268,37 @@ export default {
           className: "column-price",
           key: "phone_number",
         },
+        {
+          title: "действия",
+          key: "id",
+          dataIndex: "id",
+          scopedSlots: { customRender: "id" },
+          className: "column-btns",
+          width: "100px",
+          align: "right",
+        },
+      ],
+      columnRegions: [
+        {
+          title: "№",
+          dataIndex: "key",
+          key: "key",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "key" },
+          align: "left",
+          className: "column-name",
+          width: "60px",
+        },
+
+        {
+          title: "Name",
+          dataIndex: "name",
+          key: "name",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "name" },
+          className: "column-name",
+        },
+
         {
           title: "действия",
           key: "id",

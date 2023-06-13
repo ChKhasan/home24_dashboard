@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Атрибуты"
-      :breadbrumb="['Каталог']"
-      lastLink="Атрибуты"
-    >
+    <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/catalog/add_atributs')"
@@ -16,10 +12,24 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
-          <div class="prodduct-list-header-grid w-100" style="grid-gap: 1.25rem">
-            <div>
-              <SearchInput placeholder="Атрибуты поиска" />
-            </div>
+          <div class="prodduct-list-header-grid w-100 align-items-center" style="grid-gap: 1.25rem">
+            <!-- <div> -->
+              <SearchInput
+                placeholder="Атрибуты поиска"
+                @changeSearch="
+                  changeSearch($event, '/catalog/atributs', '__GET_ATRIBUTES')
+                "
+              />
+            <!-- </div> -->
+            <span></span>
+            <span></span>
+            <a-button
+              @click="clearQuery('/catalog/atributs', '__GET_ATRIBUTES')"
+              type="primary"
+              class="d-flex align-items-center justify-content-center"
+              style="height: 38px"
+              ><a-icon type="reload"
+            /></a-button>
           </div>
         </div>
         <div class="antd_table product_table">
@@ -80,7 +90,10 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="$event => changePageSizeGlobal($event, '/catalog/atributs', '__GET_ATRIBUTES')"
+              @change="
+                ($event) =>
+                  changePageSizeGlobal($event, '/catalog/atributs', '__GET_ATRIBUTES')
+              "
             >
               <el-option
                 v-for="item in pageSizes"

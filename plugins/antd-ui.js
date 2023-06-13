@@ -16,9 +16,11 @@ import {
   Pagination,
   Dropdown,
   Menu,
-  Empty
+  Empty,
+  Select
 } from "ant-design-vue";
 
+Vue.use(Select);
 Vue.use(Empty);
 Vue.use(Button);
 Vue.use(Table);

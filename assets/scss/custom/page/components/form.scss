@@ -257,3 +257,42 @@
     }
   }
 }
+.form_tab {
+  display: inline-flex;
+  position: relative;
+  transition: transform 0.3s;
+  float: left;
+  z-index: 2;
+}
+.form_tab > div {
+  display: inline-flex;
+  border-radius: 8.125px 8.125px 0 0;
+  background: #fff;
+  padding: 10px;
+  white-space: nowrap;
+  position: relative;
+  transition: transform 0.3s;
+  float: left;
+  z-index: 2;
+}
+.form_tab span {
+  padding: 7px 14px;
+  margin-right: 0;
+  border-right: 1px solid #e4e6ef;
+  font-family: "TT Interfaces";
+  font-weight: 500;
+  font-size: 16px;
+  font-style: normal;
+  height: auto;
+  line-height: 16px;
+  color: #a1a5bf;
+  cursor: pointer;
+}
+.form_tab span:last-child {
+  border-right: 0px solid transparent;
+}
+.avtive-formTabModal {
+  color: #fff !important;
+  background: #3699ff !important;
+  border-radius: 5px;
+}

@@ -6,9 +6,9 @@ export const actions = {
     );
     return res;
   },
-    async getAllBrands() {
+  async getAllBrands() {
     const res = await this.$axios.$get(
-      `https://test.loftcity.uz/api/admin/brands/all`,
+      `https://test.loftcity.uz/api/admin/brands/all`
     );
     return res;
   },
@@ -55,4 +55,5 @@ export const actions = {
     );
     return res;
   },
+
 };
