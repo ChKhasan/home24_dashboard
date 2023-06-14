@@ -48,9 +48,17 @@
                       </li>
                       <li class="column-btns d-flex justify-content-center">
                         <span>
-                          <span class="action-btn" @click="tableActions(item.id)">
-                            <img :src="deleteIcon" alt="" />
-                          </span>
+                          <a-popconfirm
+                            title="Are you sure delete this row?"
+                            ok-text="Yes"
+                            cancel-text="No"
+                            @confirm="tableActions(item.id)"
+                            @cancel="cancel"
+                          >
+                            <span class="action-btn">
+                              <img :src="deleteIcon" alt="" />
+                            </span>
+                          </a-popconfirm>
                         </span>
                       </li>
                     </ul>
@@ -107,24 +115,22 @@
               <label for="">Продукт </label>
             </div>
             <el-form-item class="w-100">
-              <el-select
-                class="w-100"
-                v-model="newProduct"
-                filterable
-                remote
-                reserve-keyword
-                placeholder="Please enter a keyword"
-                :remote-method="remoteMethod"
-                :loading="loading"
+              <a-select
+                mode="multiple"
+                label-in-value
+                :value="value"
+                placeholder="Select users"
+                style="width: 100%"
+                :filter-option="false"
+                :not-found-content="fetching ? undefined : null"
+                @search="fetchUser"
+                @change="handleChange"
               >
-                <el-option
-                  v-for="item in options"
-                  :key="item.id"
-                  :label="item.name.ru"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
+                <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+                <a-select-option v-for="d in options" :key="d.id">
+                  {{ d.name.ru }}
+                </a-select-option>
+              </a-select>
             </el-form-item>
           </div>
         </div>
@@ -157,13 +163,17 @@ import TitleBlock from "../../../components/Title-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
 import FormTitle from "../../../components/Form-title.vue";
 import status from "../../../mixins/status";
-
+import global from "../../../mixins/global";
+import debounce from "lodash/debounce";
 export default {
   layout: "toolbar",
-  mixins: [status],
-
+  mixins: [status, global],
   data() {
+    this.lastFetchId = 0;
+    this.fetchUser = debounce(this.fetchUser, 800);
     return {
+      value: [],
+      fetching: false,
       delayTime: 0,
       spinning: false,
       caseId: this.$route.params.index,
@@ -174,8 +184,6 @@ export default {
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       products: [],
       showcase: {},
-      value: "",
-      data: "",
       ruleForm: {
         name: {
           ru: "",
@@ -242,16 +250,12 @@ export default {
       this.__EDIT_SHOWCASES(this.ruleForm);
     },
     getData() {
-      if (Object.keys(this.newProduct).length > 0) {
-        let newProduct = {
-          id: this.newProduct,
-          position:
-            this.ruleForm.products.length > 0
-              ? Math.max(...this.ruleForm.products.map((o) => o.position)) + 1
-              : 1,
+      this.ruleForm.products = this.value.map((item, index) => {
+        return {
+          id: item.key,
+          position: index + 1,
         };
-        this.ruleForm.products.push(newProduct);
-      }
+      });
       this.$refs.ruleFormShowCase.validate((valid) => {
         valid ? this.__EDIT_SHOWCASES(this.ruleForm) : false;
       });
@@ -259,25 +263,6 @@ export default {
     handleOk(e) {
       this.visible = false;
     },
-    async remoteMethod(query) {
-      if (query !== "" && query.length > 2) {
-        this.loading = await true;
-        const data = await this.$store.dispatch("fetchProducts/getProducts", {
-          search: query,
-        });
-        this.loading = false;
-        if (this.ruleForm.products.length > 0) {
-          this.options = data?.products?.data.filter((item) => {
-            return this.ruleForm.products.find((elem) => elem.id != item);
-          });
-        } else {
-          this.options = data?.products?.data;
-        }
-      } else {
-        this.options = [];
-      }
-    },
-
     async __GET_SHOWCASES(id) {
       try {
         this.spinning = true;
@@ -291,6 +276,12 @@ export default {
             position: item.pivot.position,
           };
         });
+        this.value = this.products.map((item) => {
+          return {
+            key: item.pivot.product_id,
+            label: item.slug,
+          };
+        });
         this.spinning = false;
       } catch (e) {
         this.statusFunc(e.response);
@@ -302,7 +293,10 @@ export default {
           id: this.caseId,
           data: dataForm,
         });
-        await this.$store.dispatch("getShowCasesStore",!this.$store.state.changeShowcases);
+        await this.$store.dispatch(
+          "getShowCasesStore",
+          !this.$store.state.changeShowcases
+        );
         this.__GET_SHOWCASES(this.caseId);
 
         this.visible = false;
@@ -319,6 +313,26 @@ export default {
     onInsert(event) {
       this.products.splice(event.index, 0, event.data);
     },
+    async fetchUser(value) {
+      this.lastFetchId += 1;
+      const fetchId = this.lastFetchId;
+      this.options = [];
+      if (value.length > 2) {
+        this.fetching = true;
+        const data = await this.$store.dispatch("fetchProducts/getProducts", {
+          search: value,
+        });
+        this.options = data?.products?.data;
+        this.fetching = false;
+      }
+    },
+    handleChange(value) {
+      Object.assign(this, {
+        value,
+        options: [],
+        fetching: false,
+      });
+    },
   },
   watch: {
     newProduct(val) {
@@ -326,10 +340,11 @@ export default {
     },
     visible(val) {
       if (!val) {
-        this.newProduct = {};
-        this.options = [];
+        Object.assign(this, {
+          newProduct: {},
+          options: [],
+        });
       }
-      console.log(this.options);
     },
   },
   components: { TitleBlock, SearchInput, AddBtn, Drag, DropList, FormTitle },

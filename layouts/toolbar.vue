@@ -286,7 +286,13 @@ export default {
             index: "15",
             to: "/catalog/brands",
             path: "catalog-brands",
-
+            disabled: false,
+          },
+          {
+            name: "Значки",
+            index: "16",
+            to: "/catalog/badges",
+            path: "catalog-badges",
             disabled: false,
           },
         ],

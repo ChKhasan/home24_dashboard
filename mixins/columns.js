@@ -309,6 +309,43 @@ export default {
           align: "right",
         },
       ],
+      columnBadges: [
+        {
+          title: "№",
+          dataIndex: "key",
+          key: "key",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "key" },
+          align: "left",
+          className: "column-name",
+          width: "60px",
+        },
+        {
+          title: "Badges",
+          dataIndex: "name",
+          key: "name",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "name" },
+          className: "column-name",
+        },
+        {
+          title: "Date",
+          dataIndex: "created_at",
+          key: "created_at",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "created_at" },
+          className: "column-name",
+        },
+        {
+          title: "действия",
+          key: "id",
+          dataIndex: "id",
+          scopedSlots: { customRender: "id" },
+          className: "column-btns",
+          width: "100px",
+          align: "right",
+        },
+      ],
     };
   },
 };

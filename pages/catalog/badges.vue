@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Бренды" :breadbrumb="['Контент сайта']" lastLink="Бренды">
+    <TitleBlock title="Значки" :breadbrumb="['Контент сайта']" lastLink="Значки">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -13,52 +13,23 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Бренды" />
+            <FormTitle title="Значки" />
           </div>
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columnBrand"
-            :data-source="brands"
+            :columns="columnBadges"
+            :data-source="badges"
             :pagination="false"
             align="center"
             :loading="loading"
           >
-            <a slot="img" slot-scope="text">
-              <img v-if="text" class="table-image" :src="text" alt="" />
-              <img
-                v-else
-                class="table-image"
-                src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
-                alt=""
-              />
-            </a>
-            <span
-              @click="$router.push('/home/customer-info/123')"
-              slot="title"
-              slot-scope="text"
-              align="center"
-            >
+            <span slot="name" slot-scope="text" align="center">
               <h6>{{ text?.ru }}</h6>
             </span>
-            <div slot="desc" slot-scope="text" v-html="text?.ru"></div>
             <span slot="key" slot-scope="text">#{{ text }}</span>
-            <a slot="price" slot-scope="text">${{ text }}</a>
-            <span slot="customTitle"></span>
+            <span slot="created_at" slot-scope="text">{{ text }}</span>
 
-            <span
-              slot="tags"
-              slot-scope="tags"
-              class="tags-style"
-              :class="{
-                tag_success: tags == 'Success',
-                tag_inProgress: tags == 'in progress',
-                tag_approved: tags == 'Approved',
-                tag_rejected: tags == 'rejected',
-              }"
-            >
-              {{ tags }}
-            </span>
             <span slot="id" slot-scope="text">
               <span class="action-btn" @click="editPost(text)">
                 <img :src="editIcon" alt="" />
@@ -81,7 +52,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSizeGlobal(e, '/catalog/brands', '__GET_BRANDS')"
+              @change="changePageSizeGlobal(e, '/catalog/badges', '__GET_BADGES')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -102,9 +73,10 @@
         </div>
       </div>
     </div>
+
     <a-modal
       v-model="visible"
-      :title="editId ? 'Изменения бренда' : 'Добавить бренда'"
+      :title="editId ? 'Изменения' : 'Добавить'"
       :closable="false"
       @ok="handleOk"
     >
@@ -117,44 +89,55 @@
         class="demo-ruleForm"
         action=""
       >
-        <div>
+        <div class="modal_tab mb-4">
+          <span
+            v-for="(item, index) in modalTabData"
+            :key="index"
+            @click="modalTab = item.index"
+            :class="{ 'avtive-modalTab': modalTab == item.index }"
+          >
+            {{ item.label }}
+          </span>
+        </div>
+        <div
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          v-if="modalTab == item.index"
+        >
           <div class="form-block required">
             <div>
-              <label for="">Бренд </label>
+              <label for="">Значок </label>
             </div>
-            <el-form-item prop="name">
+            <el-form-item prop="name.ru">
               <el-input
                 type="text"
                 placeholder="Зоговолок"
-                v-model="ruleForm.name"
+                v-model="ruleForm.name[item.index]"
               ></el-input>
             </el-form-item>
           </div>
-          <div class="d-flex flex-row form-block mt-3 mb-0">
-            <span>
-              <a-switch
-                default-checked
-                @checked="is_top == 1"
-                @change="is_top == 1 ? (is_top = 0) : (is_top = 1)"
-            /></span>
-            <label class="mx-3">Популярные бренды </label>
-          </div>
-          <div class="clearfix variant-img mt-0">
-            <a-upload
-              action="https://test.loftcity.uz/api/admin/files/upload"
-              list-type="picture-card"
-              :file-list="fileList"
-              @preview="handlePreview"
-              @change="handleChange"
-            >
-              <div v-if="fileList.length < 1">
-                <span v-html="addImgIcon"></span>
-                <div class="ant-upload-text">Добавить изображение</div>
-              </div>
-            </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-              <img alt="example" style="width: 100%" :src="previewImage" />
-            </a-modal>
+          <div class="form-block required">
+            <div>
+              <label for="">Продукты </label>
+            </div>
+            <el-form-item>
+              <a-select
+                mode="multiple"
+                label-in-value
+                :value="value"
+                placeholder="Select users"
+                style="width: 100%"
+                :filter-option="false"
+                :not-found-content="fetching ? undefined : null"
+                @search="fetchUser"
+                @change="handleChange"
+              >
+                <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+                <a-select-option v-for="d in data" :key="d.id">
+                  {{ d.name.ru }}
+                </a-select-option>
+              </a-select>
+            </el-form-item>
           </div>
         </div>
       </el-form>
@@ -170,9 +153,8 @@
             class="add-btn add-header-btn btn-primary"
             @click="getData"
             type="primary"
-            :loading="loadingBtn"
           >
-            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            <span class="svg-icon" v-html="addIcon"></span>
             Save
           </a-button>
         </div>
@@ -189,20 +171,19 @@ import FormTitle from "../../components/Form-title.vue";
 import global from "../../mixins/global";
 import status from "../../mixins/status";
 import columns from "../../mixins/columns";
-
-function getBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-}
+import debounce from "lodash/debounce";
 export default {
   // middleware: "auth",
   mixins: [global, status, columns],
   data() {
+    this.lastFetchId = 0;
+    this.fetchUser = debounce(this.fetchUser, 800);
     return {
+      data: [],
+      value: [],
+      fetching: false,
+      mockData: [],
+      targetKeys: [],
       visible: false,
       modalTab: "ru",
       modalTabData: [
@@ -223,29 +204,27 @@ export default {
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
-      selectedRowKeys: [], // Check here to configure the default column
       loading: true,
-      loadingBtn: false,
       ruleForm: {
-        name: "",
-        logo: "",
-        is_top: 0,
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
       },
-      editImage: "",
       editId: "",
-      previewVisible: false,
-      previewImage: "",
-      fileList: [],
-      brands: [],
+      badges: [],
       formData: {},
       rules: {
-        name: [
-          {
-            required: true,
-            message: "Blog title is required",
-            trigger: "blur",
-          },
-        ],
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "This filed is required",
+              trigger: "change",
+            },
+          ],
+        },
       },
     };
   },
@@ -257,23 +236,15 @@ export default {
       this.visible = false;
     },
     getData() {
-      if (this.fileList.length > 0) {
-        if (this.fileList[0].oldImg) {
-          this.ruleForm.logo = this.fileList[0].url;
-        }
-      }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editId != ""
-            ? this.__EDIT_BRANDS(this.ruleForm)
-            : this.__POST_BRANDS(this.ruleForm);
+            ? this.__EDIT_BADGES(this.ruleForm)
+            : this.__POST_BADGES(this.ruleForm);
         } else {
           return false;
         }
       });
-    },
-    deleteImg() {
-      this.editImage = "";
     },
     openAddModal() {
       this.showModal();
@@ -281,7 +252,7 @@ export default {
     },
     editPost(id) {
       this.editId = id;
-      const data = this.brands.find((item) => item.id == id);
+      const data = this.badges.find((item) => item.id == id);
       this.slug = data.slug;
       this.ruleForm = {
         ...data,
@@ -301,47 +272,24 @@ export default {
     deletePost(id) {
       this.__DELETE_GLOBAL(
         id,
-        "fetchBrands/deleteBrands",
+        "fetchBadges/deleteBadges",
         "Бранд был успешно удален",
-        "__GET_BRANDS"
+        "__GET_BADGES"
       );
     },
-    async handlePreview(file) {
-      if (!file.url && !file.preview) {
-        file.preview = await getBase64(file.originFileObj);
-      }
-      this.previewImage = file.url || file.preview;
-      this.previewVisible = true;
-    },
-
-    handleChange({ fileList }) {
-      this.fileList = fileList;
-      this.loadingBtn = true;
-      if (fileList[0]?.response?.path) {
-        this.loadingBtn = false;
-        this.ruleForm.logo = fileList[0]?.response?.path;
-      }
-      if (fileList.length == 0) {
-        this.loadingBtn = false;
-      }
-    },
-
-    handleCancel() {
-      this.previewVisible = false;
-    },
-    async __GET_BRANDS() {
+    async __GET_BADGES() {
       this.loading = true;
-      const data = await this.$store.dispatch("fetchBrands/getBrands", {
+      const data = await this.$store.dispatch("fetchBadges/getBadges", {
         ...this.$route.query,
       });
-      this.brands = data.brands?.data;
+      this.badges = data.badges?.data;
       this.loading = false;
-      this.totalPage = data.brands?.total;
+      this.totalPage = data.badges?.total;
       const pageIndex = this.indexPage(
-        data?.brands?.current_page,
-        data?.brands?.per_page
+        data?.badges?.current_page,
+        data?.badges?.per_page
       );
-      this.brands = this.brands.map((item, index) => {
+      this.badges = this.badges.map((item, index) => {
         return {
           ...item,
           numberId: item.id,
@@ -352,25 +300,25 @@ export default {
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
     },
-    async __POST_BRANDS(res) {
+    async __POST_BADGES(res) {
       try {
-        await this.$store.dispatch("fetchBrands/postBrands", res);
-        this.notification("Success", "Бранд успешно добавлен", "success");
+        await this.$store.dispatch("fetchBadges/postBadges", res);
+        this.notification("Success", "Успешно добавлен", "success");
         this.handleOk();
-        this.__GET_BRANDS();
+        this.__GET_BADGES();
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    async __EDIT_BRANDS(res) {
+    async __EDIT_BADGES(res) {
       try {
-        await this.$store.dispatch("fetchBrands/editBrands", {
+        await this.$store.dispatch("fetchBadges/editBadges", {
           id: this.editId,
           data: { ...res, slug: this.slug },
         });
-        this.notification("Success", "Бранд успешно добавлен", "success");
+        this.notification("Success", "Успешно добавлен", "success");
         this.handleOk();
-        this.__GET_BRANDS();
+        this.__GET_BADGES();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -381,14 +329,34 @@ export default {
       this.editId = "";
       this.fileList = [];
     },
+
+    async fetchUser(value) {
+      console.log("fetching user", value);
+      this.lastFetchId += 1;
+      const fetchId = this.lastFetchId;
+      this.data = [];
+      this.fetching = true;
+      const data = await this.$store.dispatch("fetchProducts/getProducts", {
+        search: value,
+      });
+      this.data = data?.products?.data;
+      this.fetching = false;
+    },
+    handleChange(value) {
+      Object.assign(this, {
+        value,
+        data: [],
+        fetching: false,
+      });
+    },
   },
 
   async mounted() {
-    this.getFirstData("/catalog/brands", "__GET_BRANDS");
+    this.getFirstData("/catalog/badges", "__GET_BADGES");
   },
   watch: {
     async current(val) {
-      this.changePagination(val, "/catalog/brands", "__GET_BRANDS");
+      this.changePagination(val, "/catalog/badges", "__GET_BADGES");
     },
     visible(val) {
       if (val == false) {

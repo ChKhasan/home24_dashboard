@@ -17,9 +17,11 @@ import {
   Dropdown,
   Menu,
   Empty,
-  Select
+  Select,
+  Transfer,
 } from "ant-design-vue";
 
+Vue.use(Transfer);
 Vue.use(Select);
 Vue.use(Empty);
 Vue.use(Button);
@@ -37,4 +39,3 @@ Vue.use(Spin);
 Vue.use(Pagination);
 Vue.use(Dropdown);
 Vue.use(Menu);
-
