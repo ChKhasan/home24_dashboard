@@ -128,7 +128,7 @@ export default {
 
     cancel(e) {
       console.log(e);
-      this.$message.error("Click on No");
+      // this.$message.error("Click on No");
     },
     deletePost(id) {
       this.__DELETE_CHARACTER_GROUP(id);

@@ -271,7 +271,6 @@ export default {
             index: "13",
             to: "/catalog/atributs",
             path: "catalog-atributs",
-
             disabled: false,
           },
           {
@@ -293,6 +292,13 @@ export default {
             index: "16",
             to: "/catalog/badges",
             path: "catalog-badges",
+            disabled: false,
+          },
+          {
+            name: "Скидка",
+            index: "17",
+            to: "/catalog/discount",
+            path: "catalog-discount",
             disabled: false,
           },
         ],

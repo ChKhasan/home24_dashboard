@@ -116,7 +116,7 @@
               ></el-input>
             </el-form-item>
           </div>
-          <div class="form-block required">
+          <div class="form-block required" v-if="editId">
             <div>
               <label for="">Продукты </label>
             </div>
@@ -138,6 +138,26 @@
                 </a-select-option>
               </a-select>
             </el-form-item>
+          </div>
+          <div class="d-flex">
+            <div class="form-block" v-if="editId">
+              <div>
+                <label for="">Background color </label>
+              </div>
+              <el-color-picker
+                popper-class="badges-color-picker"
+                v-model="ruleForm.background_color"
+              ></el-color-picker>
+            </div>
+            <div class="form-block mx-5" v-if="editId">
+              <div>
+                <label for="">Text color </label>
+              </div>
+              <el-color-picker
+                popper-class="badges-color-picker"
+                v-model="ruleForm.text_color"
+              ></el-color-picker>
+            </div>
           </div>
         </div>
       </el-form>
@@ -180,6 +200,7 @@ export default {
     this.fetchUser = debounce(this.fetchUser, 800);
     return {
       data: [],
+      color1: "#409EFF",
       value: [],
       fetching: false,
       mockData: [],
@@ -211,6 +232,9 @@ export default {
           uz: "",
           en: "",
         },
+        products: [],
+        background_color: "#1F8A70",
+        text_color: "#ffffff",
       },
       editId: "",
       badges: [],
@@ -236,6 +260,19 @@ export default {
       this.visible = false;
     },
     getData() {
+      const data = {
+        ...this.ruleForm,
+        background_color: this.ruleForm.background_color
+          ? this.ruleForm.background_color
+          : "#1F8A70",
+        text_color: this.ruleForm.text_color ? this.ruleForm.text_color : "#ffffff",
+      };
+      if (!this.editId) {
+        delete data.products;
+        delete data.text_color;
+        delete data.background_color;
+      }
+      console.log(this.ruleForm);
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editId != ""
@@ -250,24 +287,11 @@ export default {
       this.showModal();
       this.editId = "";
     },
-    editPost(id) {
+    async editPost(id) {
       this.editId = id;
       const data = this.badges.find((item) => item.id == id);
-      this.slug = data.slug;
-      this.ruleForm = {
-        ...data,
-        log: data.lg_logo,
-      };
+      await this.__SHOW_BADGES(id);
       this.showModal();
-      this.fileList = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: this.ruleForm.lg_logo,
-        },
-      ];
     },
     deletePost(id) {
       this.__DELETE_GLOBAL(
@@ -276,6 +300,21 @@ export default {
         "Бранд был успешно удален",
         "__GET_BADGES"
       );
+    },
+    async __SHOW_BADGES(id) {
+      this.loading = true;
+      const data = await this.$store.dispatch("fetchBadges/showBadges", id);
+      this.ruleForm.name = data?.badge?.name;
+      this.ruleForm.background_color = data?.badge?.background_color;
+      this.ruleForm.text_color = data?.badge?.text_color;
+      this.ruleForm.products = data?.badge?.products.map((item) => item.id);
+      this.value = data?.badge?.products.map((item) => {
+        return {
+          key: item.id,
+          label: item.info.name.ru,
+        };
+      });
+      this.loading = false;
     },
     async __GET_BADGES() {
       this.loading = true;
@@ -324,10 +363,13 @@ export default {
       }
     },
     emptyData() {
-      this.ruleForm.logo = "";
-      this.ruleForm.name = "";
-      this.editId = "";
-      this.fileList = [];
+      (this.ruleForm.name = {
+        ru: "",
+        uz: "",
+        en: "",
+      }),
+        (this.ruleForm.products = []),
+        (this.editId = "");
     },
 
     async fetchUser(value) {
@@ -343,6 +385,7 @@ export default {
       this.fetching = false;
     },
     handleChange(value) {
+      this.ruleForm.products = value.map((item) => item.key);
       Object.assign(this, {
         value,
         data: [],
@@ -414,5 +457,26 @@ export default {
       }
     }
   }
+}
+.badges-color-picker .el-color-dropdown__link-btn {
+  display: none;
+}
+.badges-color-picker .el-color-dropdown__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.badges-color-picker.el-color-dropdown__link-btn::after {
+  content: "Clear";
+  position: absolute;
+}
+.badges-color-picker .el-color-dropdown__btn::after {
+  content: "OK";
+  position: absolute;
+}
+.badges-color-picker .el-color-dropdown__btn span,
+.badges-color-picker .el-color-dropdown__link-btn span {
+  opacity: 0;
 }
 </style>

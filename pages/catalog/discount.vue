@@ -1,0 +1,182 @@
+<template lang="html">
+  <div>
+    <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
+      <div
+        class="add-btn add-header-btn add-header-btn-padding btn-primary"
+        @click="$router.push('/catalog/add_discount')"
+      >
+        <span class="svg-icon" v-html="addIcon"></span>
+        Добавить
+      </div>
+    </TitleBlock>
+    <div class="container_xl app-container">
+      <div class="card_block py-5">
+        <div class="d-flex justify-content-between align-items-center card_header">
+          <div
+            class="prodduct-list-header-grid w-100 align-items-center"
+            style="grid-gap: 1.25rem"
+          >
+            <!-- <div> -->
+            <SearchInput
+              placeholder="Атрибуты поиска"
+              @changeSearch="changeSearch($event, '/catalog/discount', '__GET_DISCOUNT')"
+            />
+            <!-- </div> -->
+            <span></span>
+            <span></span>
+            <a-button
+              @click="clearQuery('/catalog/discount', '__GET_DISCOUNT')"
+              type="primary"
+              class="d-flex align-items-center justify-content-center"
+              style="height: 38px"
+              ><a-icon type="reload"
+            /></a-button>
+          </div>
+        </div>
+        <div class="antd_table product_table">
+          <a-table
+            :columns="columnDiscount"
+            :data-source="atributes"
+            :pagination="false"
+            :loading="loading"
+            align="center"
+          >
+            <span slot="key" slot-scope="text">#{{ text }}</span>
+            <span slot="title" slot-scope="text">
+              <h6>{{ text?.ru }}</h6>
+            </span>
+            <span slot="desc" slot-scope="text">
+              {{ text?.ru }}
+            </span>
+            <span slot="id" slot-scope="text">
+              <span
+                class="action-btn"
+                @click="$router.push(`/catalog/edit_discount/${text}`)"
+              >
+                <img :src="editIcon" alt="" />
+              </span>
+              <a-popconfirm
+                title="Are you sure delete this atribut?"
+                ok-text="Yes"
+                cancel-text="No"
+                @confirm="deleteAtribut(text)"
+                @cancel="cancel"
+              >
+                <span class="action-btn">
+                  <img :src="deleteIcon" alt="" />
+                </span>
+              </a-popconfirm>
+            </span>
+          </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="
+                ($event) =>
+                  changePageSizeGlobal($event, '/catalog/discount', '__GET_DISCOUNT')
+              "
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+import AddBtn from "../../components/form/Add-btn.vue";
+import HeaderBtn from "../../components/form/Header-btn.vue";
+import TitleBlock from "../../components/Title-block.vue";
+import Title from "../../components/Title.vue";
+import SearchInput from "../../components/form/Search-input.vue";
+import global from "../../mixins/global";
+import status from "../../mixins/status";
+import columns from "../../mixins/columns";
+
+export default {
+  layout: "toolbar",
+  mixins: [global, status, columns],
+  data() {
+    return {
+      loading: true,
+      editIcon: require("../../assets/svg/components/edit-icon.svg"),
+      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+      selectedRowKeys: [],
+      atributes: [],
+      data: [],
+    };
+  },
+  async mounted() {
+    this.getFirstData("/catalog/discount", "__GET_DISCOUNT");
+    
+  },
+  methods: {
+    deleteAtribut(id) {
+      this.__DELETE_GLOBAL(
+        id,
+        "fetchDiscount/deleteDiscount",
+        "Успешно удален",
+        "__GET_DISCOUNT"
+      );
+    },
+    async __GET_DISCOUNT() {
+      try {
+        this.loading = true;
+        const data = await this.$store.dispatch("fetchDiscount/getDiscount", {
+          ...this.$route.query,
+        });
+        this.loading = false;
+        this.totalPage = data.discounts?.total;
+        const pageIndex = this.indexPage(
+          data?.discounts?.current_page,
+          data?.discounts?.per_page
+        );
+        this.atributes = data.discounts?.data.map((item, index) => {
+          return {
+            ...item,
+            key: index + pageIndex,
+          };
+        });
+        console.log(this.atributes);
+      } catch (e) {
+        this.statusFunc(e);
+      }
+    },
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
+    },
+   
+  },
+
+  watch: {
+    async current(val) {
+      this.changePagination(val, "/catalog/discount", "__GET_DISCOUNT");
+    },
+  },
+  components: {
+    AddBtn,
+    Title,
+    SearchInput,
+    HeaderBtn,
+    TitleBlock,
+  },
+};
+// 246
+</script>

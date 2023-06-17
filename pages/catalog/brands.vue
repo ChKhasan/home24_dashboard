@@ -17,6 +17,7 @@
           </div>
         </div>
         <div class="antd_table product_table">
+        
           <a-table
             :columns="columnBrand"
             :data-source="brands"
@@ -133,9 +134,10 @@
           <div class="d-flex flex-row form-block mt-3 mb-0">
             <span>
               <a-switch
-                default-checked
-                @checked="is_top == 1"
-                @change="is_top == 1 ? (is_top = 0) : (is_top = 1)"
+                :checked="ruleForm.is_top == 1"
+                @change="
+                  ruleForm.is_top == 1 ? (ruleForm.is_top = 0) : (ruleForm.is_top = 1)
+                "
             /></span>
             <label class="mx-3">Популярные бренды </label>
           </div>
@@ -189,7 +191,6 @@ import FormTitle from "../../components/Form-title.vue";
 import global from "../../mixins/global";
 import status from "../../mixins/status";
 import columns from "../../mixins/columns";
-
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -242,14 +243,15 @@ export default {
         name: [
           {
             required: true,
-            message: "Blog title is required",
-            trigger: "blur",
+            message: "This field is required",
+            trigger: "change",
           },
         ],
       },
     };
   },
   methods: {
+
     showModal() {
       this.visible = true;
     },
@@ -262,11 +264,14 @@ export default {
           this.ruleForm.logo = this.fileList[0].url;
         }
       }
+      const data = {
+        name: this.ruleForm.name,
+        logo: this.ruleForm.logo,
+        is_top: this.ruleForm.is_top,
+      };
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_BRANDS(this.ruleForm)
-            : this.__POST_BRANDS(this.ruleForm);
+          this.editId != "" ? this.__EDIT_BRANDS(data) : this.__POST_BRANDS(data);
         } else {
           return false;
         }
@@ -285,18 +290,21 @@ export default {
       this.slug = data.slug;
       this.ruleForm = {
         ...data,
-        log: data.lg_logo,
+        logo: data.lg_logo,
       };
       this.showModal();
-      this.fileList = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: this.ruleForm.lg_logo,
-        },
-      ];
+      if (this.ruleForm.lg_logo) {
+        this.fileList = [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            oldImg: true,
+            url: this.ruleForm.lg_logo,
+          },
+        ];
+      }
+      console.log(this.ruleForm);
     },
     deletePost(id) {
       this.__DELETE_GLOBAL(
@@ -320,6 +328,8 @@ export default {
       if (fileList[0]?.response?.path) {
         this.loadingBtn = false;
         this.ruleForm.logo = fileList[0]?.response?.path;
+      } else {
+        this.ruleForm.logo = "";
       }
       if (fileList.length == 0) {
         this.loadingBtn = false;
@@ -387,6 +397,9 @@ export default {
     this.getFirstData("/catalog/brands", "__GET_BRANDS");
   },
   watch: {
+    "ruleForm.is_top"(val) {
+      console.log(val);
+    },
     async current(val) {
       this.changePagination(val, "/catalog/brands", "__GET_BRANDS");
     },

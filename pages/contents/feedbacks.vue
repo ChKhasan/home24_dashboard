@@ -239,11 +239,11 @@ export default {
       });
     },
     cancel(e) {
-      this.$message.error("Click on No");
+      // this.$message.error("Click on No");
     },
     openAddModal() {
       this.fileList = [];
-      this.editId = "";
+      this.editId = "";ttt
       this.ruleForm.type = "";
       this.$router.push("/contents/add_feedbacks");
     },

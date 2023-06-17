@@ -19,8 +19,10 @@ import {
   Empty,
   Select,
   Transfer,
+  DatePicker,
 } from "ant-design-vue";
 
+Vue.use(DatePicker);
 Vue.use(Transfer);
 Vue.use(Select);
 Vue.use(Empty);

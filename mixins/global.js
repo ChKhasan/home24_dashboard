@@ -58,7 +58,7 @@ export default {
       }
     },
     cancel(e) {
-      this.$message.error("Click on No");
+      // this.$message.error("Click on No");
     },
     async changePagination(val, url, dataFunc) {
       if (this.$route.query.page != val) {

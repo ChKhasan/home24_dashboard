@@ -340,7 +340,7 @@ export default {
       });
     },
     cancel(e) {
-      this.$message.error("Click on No");
+      // this.$message.error("Click on No");
     },
     openAddModal() {
       this.fileList = [];

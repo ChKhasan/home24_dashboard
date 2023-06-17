@@ -161,7 +161,7 @@ export default {
       this.$modal.hide(name);
     },
     cancel(e) {
-      this.$message.error("Click on No");
+      // this.$message.error("Click on No");
     },
     async changePageSize(e) {
       this.current = 1;

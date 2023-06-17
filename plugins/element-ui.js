@@ -37,6 +37,7 @@ import {
   Cascader,
   Aside,
   Main,
+  ColorPicker,
 } from "element-ui";
 // ElementUI.Select.computed.readonly = function () {
 //   const isIE = !this.$isServer && !Number.isNaN(Number(document.documentMode));
@@ -76,5 +77,6 @@ Vue.use(CollapseItem);
 Vue.use(Cascader);
 Vue.use(Aside);
 Vue.use(Main);
+Vue.use(ColorPicker);
 
 Vue.use(ElementUI);

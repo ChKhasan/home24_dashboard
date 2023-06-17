@@ -155,7 +155,7 @@ export default {
       this.__DELETE_CHARACTERISTIC(id);
     },
     cancel(e) {
-      this.$message.error("Click on No");
+      // this.$message.error("Click on No");
     },
     async __DELETE_CHARACTERISTIC(id) {
       try {

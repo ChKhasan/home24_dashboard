@@ -7,8 +7,16 @@ export const actions = {
     const res = await this.$axios.$post(`/product_badges`, data);
     return res;
   },
+
   async editBadges({}, payload) {
-    const res = await this.$axios.$put(`/product_badges/${payload.id}`, payload.data);
+    const res = await this.$axios.$put(
+      `/product_badges/${payload.id}`,
+      payload.data
+    );
+    return res;
+  },
+  async showBadges({}, id) {
+    const res = await this.$axios.$get(`/product_badges/${id}`);
     return res;
   },
   async deleteBadges({}, id) {

@@ -346,6 +346,43 @@ export default {
           align: "right",
         },
       ],
+      columnDiscount: [
+        {
+          title: "№",
+          dataIndex: "key",
+          key: "key",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "key" },
+          align: "left",
+          className: "column-name",
+          width: "60px",
+        },
+        {
+          title: "Title",
+          dataIndex: "title",
+          key: "title",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "title" },
+          className: "column-name",
+        },
+        {
+          title: "Desc",
+          dataIndex: "desc",
+          key: "desc",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "desc" },
+          className: "column-name",
+        },
+        {
+          title: "действия",
+          key: "id",
+          dataIndex: "id",
+          scopedSlots: { customRender: "id" },
+          className: "column-btns",
+          width: "100px",
+          align: "right",
+        },
+      ],
     };
   },
 };
