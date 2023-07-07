@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Продукты"
-      :breadbrumb="['Каталог']"
-      lastLink="Продукты"
-    >
+    <TitleBlock title="Продукты" :breadbrumb="['Каталог']" lastLink="Продукты">
       <div class="d-flex">
         <div class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3">
           Отмена
@@ -743,7 +739,7 @@
                 v-for="variations in product.variations"
               >
                 <div class="ch-product-img">
-                  <img v-if="product.images.length > 0" :src="product.images[0]" alt="" />
+                  <img v-if="product.imagesData.length > 0" :src="product.imagesData[0]?.response?.path" alt="" />
                   <img
                     v-else
                     src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
@@ -1454,10 +1450,9 @@ export default {
       };
 
       this.cascaderCategories = mapCategories(this.categories);
-      this.cascaderCategories.unshift({
-        name: { ru: "Главная категория" },
-        id: null,
-      });
+      this.cascaderCategories = this.cascaderCategories.filter((item) => item.children);
+      console.log(this.cascaderCategories);
+
       this.categoriesWidthChild.unshift({
         name: { ru: "Главная категория" },
         id: null,
