@@ -49,6 +49,7 @@
         color: #a1a5bf;
         min-width: 238px;
         width: 238px;
+        position: relative;
         // border-bottom: 1px solid #e4e6ef;
         // border-right: 1px solid #e4e6ef;
         display: flex;
@@ -89,7 +90,7 @@
 .character-save-btn {
   padding-top: 10px;
   padding-bottom: 10px;
-  
+
   @include fontTTinterface(14px, 600);
   line-height: 18px;
   display: inline-flex;
@@ -150,11 +151,10 @@
 .character_modal-header_btn {
   width: 280px;
   display: grid;
-  grid-template-columns: repeat(2,1fr);
+  grid-template-columns: repeat(2, 1fr);
   align-items: center;
   grid-gap: 10px;
   padding-right: 10px;
-
 }
 .character_modal-header {
   display: inline-flex;
@@ -222,6 +222,16 @@
 .character_form {
   height: 100%;
   width: 100%;
+  input {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border-width: 0.5px !important;
+    border: 0;
+    border-bottom: 0.5px solid #dcdfe6;
+    border-right: 0.5px solid #dcdfe6;
+    padding-left: 10px;
+  }
   .el-input {
     height: 100%;
   }
@@ -295,7 +305,7 @@
   }
 }
 .character_scroll_span {
-  overflow-x: scroll;
+  // overflow-x: scroll;
   width: 100%;
   display: flex;
   &::-webkit-scrollbar {

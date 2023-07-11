@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Категории"
-      :breadbrumb="['Каталог']"
-      lastLink="Категории"
-    >
+    <TitleBlock title="Категории" :breadbrumb="['Каталог']" lastLink="Категории">
       <div class="d-flex">
         <span class="mx-3">
           <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
@@ -294,7 +290,10 @@
           <div class="category-img-grid">
             <div class="form-container">
               <FormTitle title="Параметры" />
-              <div class="form-block status-style" :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']">
+              <div
+                class="form-block status-style"
+                :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']"
+              >
                 <div><label>Статус</label></div>
                 <el-select
                   class="w-100"
@@ -652,8 +651,16 @@ export default {
       );
       this.slug = data.category.slug;
       this.categoryChild = data.category.children;
-      this.ruleForm.name = data.category.name;
-      this.ruleForm.desc = data.category.desc;
+      this.ruleForm.name.ru = data.category.name.ru;
+      this.ruleForm.name.uz = data.category.name.uz ? data.category.name.uz : "";
+      this.ruleForm.name.en = data.category.name.en ? data.category.name.en : "";
+      this.ruleForm.desc = data.category.desc
+        ? data.category.desc
+        : {
+            ru: "",
+            uz: "",
+            en: "",
+          };
       this.ruleForm.is_active = data.category.is_active;
       this.attributes = data.category.attributes.map((item, index) => {
         return {

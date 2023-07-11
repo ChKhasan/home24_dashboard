@@ -739,7 +739,11 @@
                 v-for="variations in product.variations"
               >
                 <div class="ch-product-img">
-                  <img v-if="product.imagesData.length > 0" :src="product.imagesData[0]?.response?.path" alt="" />
+                  <img
+                    v-if="product.imagesData.length > 0"
+                    :src="product.imagesData[0]?.response?.path"
+                    alt=""
+                  />
                   <img
                     v-else
                     src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
@@ -797,16 +801,37 @@
                         action=""
                       >
                         <el-form-item :prop="`char_${characters.id}`">
+                          <input
+                            v-model="
+                              variations.characteristicsValues[`char_${characters.id}`]
+                            "
+                            @focus="onFocus(characters.id)"
+                            type="text"
+                            @input="($event) => onChangeCharacter($event)"
+                          />
+                          <!-- <a-input-group compact>
+                     
+                            <a-auto-complete
+                              :data-source="characters.options"
+                              style="width: 200px"
+                              placeholder="Email"
+                              @change="handleChange"
+                            />
+                          </a-input-group> -->
                           <el-select
                             v-model="
                               variations.characteristicsValues[`char_${characters.id}`]
                             "
+                            :allowClear="true"
                             popper-class="select-popper-hover"
                             filterable
                             allow-create
-                            default-first-option
                             placeholder="Select category"
                             no-data-text="no-category"
+                            @search="onChangeCharacter"
+                            @deselect="onChangeCharacter"
+                            @inputKeydown="onChangeCharacter"
+                            @change="onChangeCharacter"
                           >
                             <el-option
                               v-for="optionsItem in characters.options"
@@ -818,6 +843,25 @@
                           </el-select>
                         </el-form-item>
                       </el-form>
+                      <!-- {{ focusEvent == characters.id }}
+                      <div
+                        class="characterstic-dropdown"
+                        v-if="
+                          focusEvent == characters.id &&
+                          variations.characteristicsValues[`char_${characters.id}`]
+                        "
+                      >
+                        <ul class="el-select-dropdown__list">
+                          <li
+                            class="el-select-dropdown__item"
+                            v-for="optionsItem in characters.options"
+                            :key="optionsItem.id"
+                            @click="currentCharacter(optionsItem.id)"
+                          >
+                            {{ optionsItem?.name?.ru }}
+                          </li>
+                        </ul>
+                      </div> -->
                     </div>
                   </span>
                 </span>
@@ -1066,6 +1110,8 @@ export default {
       },
       categoriesWidthChild: [],
       loadingBtn: false,
+      dataSource: [],
+      focusEvent: null,
     };
   },
   computed: {
@@ -1091,6 +1137,9 @@ export default {
     },
   },
   mounted() {
+    window.addEventListener("click", () => {
+      this.focusEvent = null;
+    });
     this.__GET_BRANDS();
     this.__GET_CATEGORIES();
     if (localStorage.getItem("lastCategory")) {
@@ -1100,6 +1149,16 @@ export default {
     }
   },
   methods: {
+    onChangeCharacter() {
+      this.focusEvent = this.focusEvent1;
+    },
+    currentCharacter(id) {
+      console.log(id);
+    },
+    onFocus(id) {
+      this.focusEvent = id;
+      this.focusEvent1 = id;
+    },
     fullScreen(id, val) {
       this.productModal = {
         [`product_modal${id}`]: val,
@@ -1220,6 +1279,7 @@ export default {
     },
     // products
     submitForm(ruleForm) {
+      
       const newData = this.transformData();
       let artibutReqiured = [];
       if (this.$refs.ruleFormAtributes) {
@@ -1618,5 +1678,16 @@ export default {
 }
 .product_list {
   transition: 0.2s;
+}
+.characterstic-dropdown {
+  top: 100%;
+  position: absolute;
+  z-index: 1001;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  margin: 5px 0;
 }
 </style>

@@ -20,8 +20,10 @@ import {
   Select,
   Transfer,
   DatePicker,
+  AutoComplete,
 } from "ant-design-vue";
 
+Vue.use(AutoComplete);
 Vue.use(DatePicker);
 Vue.use(Transfer);
 Vue.use(Select);

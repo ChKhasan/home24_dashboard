@@ -1,10 +1,9 @@
 export const actions = {
   async getFaqsCategories({}, payload) {
     try {
-      const res = await this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/faqs_categories`,
-        { params: payload }
-      );
+      const res = await this.$axios.$get(`/faqs_categories`, {
+        params: payload,
+      });
       return res;
     } catch (e) {
       return e.response;
@@ -12,9 +11,7 @@ export const actions = {
   },
   async getFaqsCategoriesById({}, id) {
     try {
-      const res = await this.$axios.$get(
-        `https://test.loftcity.uz/api/admin/faqs_categories/${id}`
-      );
+      const res = await this.$axios.$get(`/faqs_categories/${id}`);
       return res;
     } catch (e) {
       return e.response;
@@ -22,10 +19,7 @@ export const actions = {
   },
   async postFaqsCategories({}, data) {
     try {
-      const res = await this.$axios.$post(
-        `https://test.loftcity.uz/api/admin/faqs_categories`,
-        data
-      );
+      const res = await this.$axios.$post(`/faqs_categories`, data);
       return res;
     } catch (e) {
       return e.response;
@@ -34,7 +28,7 @@ export const actions = {
   async editFaqsCategories({}, payload) {
     try {
       const res = await this.$axios.$put(
-        `https://test.loftcity.uz/api/admin/faqs_categories/${payload.id}`,
+        `/faqs_categories/${payload.id}`,
         payload.data
       );
       return res;
@@ -44,25 +38,18 @@ export const actions = {
   },
   async deleteFaqsCategories({}, id) {
     try {
-      const res = await this.$axios.$delete(
-        `https://test.loftcity.uz/api/admin/faqs_categories/${id}`
-      );
+      const res = await this.$axios.$delete(`/faqs_categories/${id}`);
       return res;
     } catch (e) {
       return e.response;
     }
   },
   async postGroups({}, data) {
-    const res = await this.$axios.$post(
-      `https://test.loftcity.uz/api/admin/faqs_categories_groups`,
-      data
-    );
+    const res = await this.$axios.$post(`/faqs_categories_groups`, data);
     return res;
   },
   async getGroups() {
-    const res = await this.$axios.$get(
-      `https://test.loftcity.uz/api/admin/faqs_categories_groups/all`
-    );
+    const res = await this.$axios.$get(`/faqs_categories_groups/all`);
     return res;
   },
 };
