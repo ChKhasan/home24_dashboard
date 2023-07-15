@@ -21,8 +21,10 @@ import {
   Transfer,
   DatePicker,
   AutoComplete,
+  Popover
 } from "ant-design-vue";
 
+Vue.use(Popover);
 Vue.use(AutoComplete);
 Vue.use(DatePicker);
 Vue.use(Transfer);

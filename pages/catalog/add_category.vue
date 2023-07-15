@@ -336,7 +336,7 @@
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
-                    action="https://test.loftcity.uz/api/admin/files/upload"
+                    action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                     :file-list="fileList.img"
                     @preview="handlePreview"
                     @change="($event) => handleChange($event, 'img')"
@@ -364,7 +364,7 @@
                 <div><label for="">Добавить значок продукта</label></div>
                 <div class="clearfix">
                   <a-upload
-                    action="https://test.loftcity.uz/api/admin/files/upload"
+                    action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                     list-type="picture-card"
                     :file-list="fileList.icon"
                     @preview="handlePreview"

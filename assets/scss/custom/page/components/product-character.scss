@@ -29,6 +29,7 @@
           background: #f5f8fa;
           input {
             background: #f5f8fa;
+            color: #000;
           }
         }
       }
@@ -58,7 +59,7 @@
         input {
           @include fontTTinterface(14px, 400);
           line-height: 24px;
-
+          color: #000;
           // border: none;
           &:focus {
             outline: none;

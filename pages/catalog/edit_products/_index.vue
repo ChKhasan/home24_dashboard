@@ -227,7 +227,7 @@
                         </drop-list>
                       </div>
                       <a-upload
-                        action="https://test.loftcity.uz/api/admin/files/upload"
+                        action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                         list-type="picture-card"
                         :multiple="true"
                         :showUploadList="false"
@@ -511,7 +511,7 @@
         </div>
         <div class="clearfix variant-img">
           <a-upload
-            action="https://test.loftcity.uz/api/admin/files/upload"
+            action="https://api.e-shop.ndc.uz/api/admin/files/upload"
             list-type="picture-card"
             :file-list="fileListBrand"
             @preview="handlePreview"
@@ -671,7 +671,7 @@
           <div><label for="">Изображение</label></div>
           <div class="clearfix variant-img pt-0">
             <a-upload
-              action="https://test.loftcity.uz/api/admin/files/upload"
+              action="https://api.e-shop.ndc.uz/api/admin/files/upload"
               list-type="picture-card"
               :file-list="fileListCategory"
               @preview="handlePreview"
@@ -814,7 +814,13 @@
                             },
                           ]"
                         >
-                          <el-select
+                          <input
+                            type="text"
+                            v-model="
+                              variations.characteristicsValues[`char_${characters.id}`]
+                            "
+                          />
+                          <!-- <el-select
                             v-model="
                               variations.characteristicsValues[`char_${characters.id}`]
                             "
@@ -832,7 +838,7 @@
                               :value="optionsItem.id"
                             >
                             </el-option>
-                          </el-select>
+                          </el-select> -->
                         </el-form-item>
                       </el-form>
                     </div>
@@ -1315,7 +1321,9 @@ export default {
               is_default: elem.is_default,
               is_popular: elem.is_popular,
               product_of_the_day: elem.product_of_the_day,
-              characteristics: [...Object.values(elem.characteristicsValues)],
+              characteristics: Object.values(elem.characteristicsValues).map(
+                (charItem, index) => (index % 5) + 6
+              ),
               status: elem.status,
             };
           });

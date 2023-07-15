@@ -144,7 +144,7 @@
 
           <div class="clearfix variant-img">
             <a-upload
-              action="https://test.loftcity.uz/api/admin/files/upload"
+              action="https://api.e-shop.ndc.uz/api/admin/files/upload"
               list-type="picture-card"
               :file-list="fileList"
               @preview="handlePreview"

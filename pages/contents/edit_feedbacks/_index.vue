@@ -52,7 +52,7 @@
               <div><label for="">Logo</label></div>
               <div class="clearfix variant-img">
                 <a-upload
-                  action="https://test.loftcity.uz/api/admin/files/upload"
+                  action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                   list-type="picture-card"
                   :file-list="fileList1"
                   @preview="handlePreview"
@@ -72,7 +72,7 @@
               <div><label for="">Изображение</label></div>
               <div class="clearfix variant-img">
                 <a-upload
-                  action="https://test.loftcity.uz/api/admin/files/upload"
+                  action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                   list-type="picture-card"
                   :file-list="fileList"
                   :multiple="true"

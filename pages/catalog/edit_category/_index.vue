@@ -328,7 +328,7 @@
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
-                    action="https://test.loftcity.uz/api/admin/files/upload"
+                    action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                     :file-list="fileList.img"
                     @preview="handlePreview"
                     @change="($event) => handleChange($event, 'img')"
@@ -358,7 +358,7 @@
                 <div class="clearfix">
                   <a-upload
                     list-type="picture-card"
-                    action="https://test.loftcity.uz/api/admin/files/upload"
+                    action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                     :file-list="fileList.icon"
                     @preview="handlePreview"
                     @change="($event) => handleChange($event, 'icon')"
