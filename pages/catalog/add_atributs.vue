@@ -24,7 +24,7 @@
             @click="submitForm('ruleForm')"
           >
             <span class="svg-icon" v-html="addIcon"></span>
-            Add Product
+            Добавить атрибут
           </div>
         </div>
       </TitleBlock>
