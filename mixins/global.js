@@ -5,8 +5,8 @@ export default {
       current: 1,
       pageSizes: [
         {
-          value: 10,
-          label: "10",
+          value: 16,
+          label: "16",
         },
         {
           value: 25,
@@ -24,7 +24,7 @@ export default {
       totalPage: 1,
       params: {
         page: 1,
-        pageSize: 10,
+        pageSize: 16,
       },
       searchVal: "",
       value: "",

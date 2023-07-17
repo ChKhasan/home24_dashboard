@@ -340,7 +340,6 @@ export default {
             index: "25",
             to: "/orders/delivery-orders",
             path: "orders-delivery-orders",
-
             disabled: false,
           },
           {
@@ -426,7 +425,6 @@ export default {
             index: "54",
             to: "/contents/banners2",
             path: "contents-banners2",
-
             disabled: true,
           },
           {
@@ -434,7 +432,6 @@ export default {
             index: "55",
             to: "/contents/faq",
             path: "contents-faq",
-
             disabled: false,
           },
           {
@@ -449,6 +446,13 @@ export default {
             index: "57",
             to: "/contents/feedbacks",
             path: "contents-feedbacks",
+            disabled: false,
+          },
+          {
+            name: "Топ меню",
+            index: "58",
+            to: "/contents/top-menu",
+            path: "contents-top-menu",
             disabled: false,
           },
         ],
