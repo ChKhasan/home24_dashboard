@@ -24,7 +24,7 @@
             @click="submitForm('ruleFormDiscount')"
           >
             <span class="svg-icon" v-html="addIcon"></span>
-            Add Product
+            Добавить продукт
           </div>
         </div>
       </TitleBlock>
@@ -84,7 +84,9 @@
                     </div>
                     <div class="form-block mt-3">
                       <el-form-item
-                        :label="ruleForm.type == 'product' ? 'Продукты' : 'Бренды'"
+                        :label="
+                          ruleForm.type == 'product' ? 'Продукты' : 'Бренды'
+                        "
                         prop="ids"
                       >
                         <a-select
@@ -92,7 +94,9 @@
                           label-in-value
                           :value="value"
                           :placeholder="
-                            ruleForm.type == 'product' ? 'Продукты...' : 'Бренды...'
+                            ruleForm.type == 'product'
+                              ? 'Продукты...'
+                              : 'Бренды...'
                           "
                           style="width: 100%"
                           :filter-option="false"
@@ -100,7 +104,11 @@
                           @search="fetchUser"
                           @change="handleChange"
                         >
-                          <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+                          <a-spin
+                            v-if="fetching"
+                            slot="notFoundContent"
+                            size="small"
+                          />
                           <a-select-option v-for="d in data" :key="d.id">
                             {{ d.name.ru }}
                           </a-select-option>
@@ -117,7 +125,9 @@
                 <FormTitle title="Параметры" />
                 <div
                   class="form-block status-style"
-                  :class="[ruleForm.status == 1 ? 'status-active' : 'status-inactive']"
+                  :class="[
+                    ruleForm.status == 1 ? 'status-active' : 'status-inactive',
+                  ]"
                 >
                   <div><label>Статус</label></div>
                   <el-select
@@ -188,11 +198,11 @@ export default {
       status: [
         {
           value: 1,
-          label: "Active",
+          label: "Активный",
         },
         {
           value: 0,
-          label: "Inactive",
+          label: "Неактивный",
         },
       ],
       discountType: [
@@ -223,7 +233,7 @@ export default {
         name: [
           {
             required: true,
-            message: "This filed is required",
+            message: "Это поле обязательна",
             trigger: "change",
           },
         ],
@@ -231,7 +241,7 @@ export default {
           ru: [
           {
             required: true,
-            message: "This filed is required",
+            message: "Это поле обязательна",
             trigger: "change",
           },
         ]
@@ -239,14 +249,14 @@ export default {
         start: [
           {
             required: true,
-            message: "This filed is required",
+            message: "Это поле обязательна",
             trigger: "change",
           },
         ],
         ids:  [
           {
             required: true,
-            message: "This filed is required",
+            message: "Это поле обязательна",
             trigger: "change",
           },
         ],
@@ -254,7 +264,7 @@ export default {
           ru: [
           {
             required: true,
-            message: "This filed is required",
+            message: "Это поле обязательна",
             trigger: "change",
           },
         ],

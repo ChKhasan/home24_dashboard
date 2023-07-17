@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Регионы" :breadbrumb="['Контент сайта']" lastLink="Регионы">
+    <TitleBlock
+      title="Регионы"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Регионы"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -11,7 +15,9 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div class="d-flex justify-content-between align-items-center card_header">
+        <div
+          class="d-flex justify-content-between align-items-center card_header"
+        >
           <div
             class="prodduct-list-header-grid w-100 align-items-center"
             style="grid-gap: 1.25rem"
@@ -19,7 +25,9 @@
             <!-- <div> -->
             <SearchInput
               placeholder="Поиск"
-              @changeSearch="changeSearch($event, '/settings/regions', '__GET_LOCATIONS')"
+              @changeSearch="
+                changeSearch($event, '/settings/regions', '__GET_LOCATIONS')
+              "
             />
             <!-- </div> -->
             <span></span>
@@ -54,7 +62,7 @@
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                title="Are you sure delete this row?"
+                title="Вы действительно хотите удалить?"
                 ok-text="Yes"
                 cancel-text="No"
                 @confirm="deletePost(text)"
@@ -71,7 +79,9 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSizeGlobal(e, '/settings/regions', '__GET_LOCATIONS')"
+              @change="
+                changePageSizeGlobal(e, '/settings/regions', '__GET_LOCATIONS')
+              "
             >
               <el-option
                 v-for="item in pageSizes"
@@ -148,7 +158,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="handleOk"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -157,7 +167,7 @@
             :loading="loadingBtn"
           >
             <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -215,7 +225,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "This field is required",
+              message: "Это поле обязательна",
               trigger: "change",
             },
           ],

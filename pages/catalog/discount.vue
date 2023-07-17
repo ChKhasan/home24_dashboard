@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
+    <TitleBlock title="Скидки" :breadbrumb="['Каталог']" lastLink="Атрибуты">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/catalog/add_discount')"
@@ -11,15 +11,20 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div class="d-flex justify-content-between align-items-center card_header">
+        <div
+          class="d-flex justify-content-between align-items-center card_header"
+        >
           <div
             class="prodduct-list-header-grid w-100 align-items-center"
             style="grid-gap: 1.25rem"
           >
             <!-- <div> -->
             <SearchInput
-              placeholder="Атрибуты поиска"
-              @changeSearch="changeSearch($event, '/catalog/discount', '__GET_DISCOUNT')"
+              placeholder="
+              Поиск"
+              @changeSearch="
+                changeSearch($event, '/catalog/discount', '__GET_DISCOUNT')
+              "
             />
             <!-- </div> -->
             <span></span>
@@ -75,7 +80,11 @@
               placeholder="Select"
               @change="
                 ($event) =>
-                  changePageSizeGlobal($event, '/catalog/discount', '__GET_DISCOUNT')
+                  changePageSizeGlobal(
+                    $event,
+                    '/catalog/discount',
+                    '__GET_DISCOUNT'
+                  )
               "
             >
               <el-option
@@ -125,7 +134,6 @@ export default {
   },
   async mounted() {
     this.getFirstData("/catalog/discount", "__GET_DISCOUNT");
-    
   },
   methods: {
     deleteAtribut(id) {
@@ -162,7 +170,6 @@ export default {
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
     },
-   
   },
 
   watch: {

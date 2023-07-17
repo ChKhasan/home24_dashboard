@@ -76,7 +76,6 @@
     </div>
     <a-modal
       v-model="visible"
-      
       :title="editId ? 'Изменить' : 'Добавить'"
       :closable="false"
       @ok="handleOk"
@@ -107,14 +106,14 @@
         >
           <div class="form-block required">
             <div>
-              <label for="fad_category_select">Categories</label>
+              <label for="fad_category_select">Категория</label>
             </div>
             <el-form-item prop="category_id">
               <el-select
                 id="fad_category_select"
                 class="w-100"
                 v-model="ruleForm.category_id"
-                placeholder="faq category"
+                placeholder="Категория"
                 no-data-text="No category"
               >
                 <el-option
@@ -129,7 +128,7 @@
           </div>
           <div class="form-block required">
             <div>
-              <label for="faq_question">Question</label>
+              <label for="faq_question">Вопрос</label>
             </div>
             <el-form-item prop="question_ru">
               <el-input
@@ -142,13 +141,13 @@
           </div>
           <div class="form-block required">
             <div>
-              <label for="faq_answar">Answer</label>
+              <label for="faq_answar">Ответ</label>
             </div>
             <el-form-item prop="answer_ru">
               <el-input
                 id="faq_answar"
                 type="text"
-                placeholder="Answer"
+                placeholder="Ответ"
                 v-model="ruleForm[`answer_${item.index}`]"
               ></el-input>
             </el-form-item>
@@ -161,7 +160,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="closeModal"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -170,7 +169,7 @@
             :loading="loadingBtn"
           >
             <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -233,7 +232,7 @@ export default {
           width: "60px",
         },
         {
-          title: "question",
+          title: "Вопрос",
           dataIndex: "question",
           key: "question",
           slots: { title: "customTitle" },
@@ -242,7 +241,7 @@ export default {
           className: "column-name",
         },
         {
-          title: "answer",
+          title: "Ответ",
 
           dataIndex: "answer",
           key: "answer",
@@ -252,7 +251,7 @@ export default {
           //   width: "30%",
         },
         {
-          title: "category",
+          title: "Категория",
           dataIndex: "category",
           scopedSlots: { customRender: "category" },
           className: "column-code",
@@ -340,7 +339,9 @@ export default {
       };
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != "" ? this.__EDIT_FAQS(newData) : this.__POST_FAQS(newData);
+          this.editId != ""
+            ? this.__EDIT_FAQS(newData)
+            : this.__POST_FAQS(newData);
         } else {
           return false;
         }
@@ -418,7 +419,9 @@ export default {
       });
     },
     async __GET_FAQ_CATEGORIES() {
-      const data = await this.$store.dispatch("fetchFaqCategories/getFaqsCategories");
+      const data = await this.$store.dispatch(
+        "fetchFaqCategories/getFaqsCategories"
+      );
       this.categories = data.categories?.data;
       this.categories = this.categories.map((item) => {
         return {

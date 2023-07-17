@@ -13,7 +13,9 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div class="d-flex justify-content-between align-items-center card_header">
+        <div
+          class="d-flex justify-content-between align-items-center card_header"
+        >
           <div class="prodduct-list-header-grid w-100 align-items-center">
             <SearchInput placeholder="Поиск" @changeSearch="changeSearch" />
             <span></span>
@@ -98,7 +100,11 @@
             placeholder="Select"
             @change="
               ($event) =>
-                changePageSizeGlobal($event, '/orders/applications', '__GET_PRODUCTS')
+                changePageSizeGlobal(
+                  $event,
+                  '/orders/applications',
+                  '__GET_PRODUCTS'
+                )
             "
           >
             <el-option
@@ -155,11 +161,11 @@ export default {
         },
         {
           value: 1,
-          label: "Active",
+          label: "Активен",
         },
         {
           value: 0,
-          label: "Inactive",
+          label: "Неактивен",
         },
       ],
       brandSearch: "",
@@ -179,9 +185,12 @@ export default {
     moment,
     async __GET_PRODUCTS() {
       this.loading = true;
-      this.products = await this.$store.dispatch("fetchApplications/getOneClickOrders", {
-        ...this.$route.query,
-      });
+      this.products = await this.$store.dispatch(
+        "fetchApplications/getOneClickOrders",
+        {
+          ...this.$route.query,
+        }
+      );
       console.log(this.products);
       this.totalPage = this.products.products?.total;
       this.loading = false;

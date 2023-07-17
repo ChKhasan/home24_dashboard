@@ -155,7 +155,11 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <a-modal
+              :visible="previewVisible"
+              :footer="null"
+              @cancel="handleCancel"
+            >
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -167,7 +171,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="closeModal"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -176,7 +180,7 @@
             :loading="loadingBtn"
           >
             <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -420,7 +424,9 @@ export default {
       }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != "" ? this.__EDIT_POSTS(newData) : this.__POST_POSTS(newData);
+          this.editId != ""
+            ? this.__EDIT_POSTS(newData)
+            : this.__POST_POSTS(newData);
         } else {
           return false;
         }
@@ -518,7 +524,10 @@ export default {
       this.loading = false;
       this.totalPage = data.posts?.total;
       this.posts = data.posts?.data;
-      const pageIndex = this.indexPage(data?.posts?.current_page, data?.posts?.per_page);
+      const pageIndex = this.indexPage(
+        data?.posts?.current_page,
+        data?.posts?.per_page
+      );
       this.posts = this.posts.map((item, index) => {
         return {
           ...item,

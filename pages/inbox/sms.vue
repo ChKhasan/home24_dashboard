@@ -54,7 +54,7 @@
                   ></path>
                 </g></svg
             ></span>
-            Add Product
+            Добавить продукт
           </div>
         </div>
       </TitleBlock>
@@ -76,11 +76,11 @@
               </el-form-item>
             </div>
             <div class="form-block">
-              <div><label for="">Пользовательи </label></div>
+              <div><label for="">Пользователь </label></div>
               <el-form-item prop="character_name">
                 <el-input
                   v-model="ruleForm.character_name"
-                  placeholder="Product model"
+                  placeholder="Пользователь"
                 ></el-input>
               </el-form-item>
             </div>
@@ -104,9 +104,7 @@
               </el-form-item>
             </div>
             <div class="d-flex justify-content-end">
-              <div class="form-btn form-outline-transparent mx-3">
-                Отмена
-              </div>
+              <div class="form-btn form-outline-transparent mx-3">Отмена</div>
               <div
                 type="submit"
                 class="form-btn form-btn-primary"

@@ -40,7 +40,9 @@
                   :class="{ 'event-none': items.to == $route.path }"
                 >
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -59,7 +61,9 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -78,7 +82,9 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -97,7 +103,9 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -124,7 +132,9 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -155,7 +165,9 @@
                       :index="itemsIn.index"
                       :class="{ 'is-active': itemsIn.to == $route.path }"
                     >
-                      <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                      <span class="menu-bullet"
+                        ><span class="bullet-dot"></span
+                      ></span>
                       <p>{{ itemsIn.name }}</p></el-menu-item
                     >
                   </nuxt-link>
@@ -171,7 +183,9 @@
               >
                 <nuxt-link :to="items.to">
                   <el-menu-item :index="items.index">
-                    <span class="menu-bullet"><span class="bullet-dot"></span></span>
+                    <span class="menu-bullet"
+                      ><span class="bullet-dot"></span
+                    ></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
                 </nuxt-link>
@@ -180,7 +194,10 @@
             <el-menu-item-group class="home_menu toolbar-menu-products">
               <nuxt-link to="/home/content-manager">
                 <el-menu-item index="70">
-                  <span class="menu-icon" v-html="icons.contentManagerIcon"></span>
+                  <span
+                    class="menu-icon"
+                    v-html="icons.contentManagerIcon"
+                  ></span>
                   <p class="not-ul-menu">Контент-менеджеры</p></el-menu-item
                 >
               </nuxt-link>
@@ -249,7 +266,8 @@ export default {
         toolbarResIcon: require("../assets/svg/custom/toolbar/toolbarResIcon.svg?raw"),
         logoIcon: require("../assets/svg/custom/toolbar/home24-logo.svg?raw"),
       },
-      squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+      squareUrl:
+        "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
       toolbarMenu: {
         category: [
           {
@@ -442,7 +460,7 @@ export default {
             disabled: false,
           },
           {
-            name: "Feedbacks",
+            name: "Отзывы",
             index: "57",
             to: "/contents/feedbacks",
             path: "contents-feedbacks",

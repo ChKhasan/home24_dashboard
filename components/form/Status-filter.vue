@@ -27,11 +27,11 @@ export default {
         },
         {
           value: 1,
-          label: "Active",
+          label: "Активный",
         },
         {
           value: 0,
-          label: "Inactive",
+          label: "Неактивный",
         },
       ],
       value: "",

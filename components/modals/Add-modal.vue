@@ -7,7 +7,7 @@
           class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
           @click="execute2"
         >
-          Cancel
+          Отмена
         </div>
         <a-button
           class="add-btn add-header-btn btn-primary"

@@ -9,7 +9,11 @@
       class="demo-ruleForm"
       action=""
     >
-      <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
+      <TitleBlock
+        title="Атрибуты"
+        :breadbrumb="['Каталог']"
+        lastLink="Атрибуты"
+      >
         <div class="d-flex">
           <span class="mx-3">
             <LayoutHeaderBtn
@@ -44,12 +48,12 @@
                 <FormTitle title="Атрибут" />
                 <div class="form-block required">
                   <div class="w-100">
-                    <el-form-item prop="keywords" label="Description">
+                    <el-form-item prop="keywords" label="Описание">
                       <el-input
                         type="text"
                         id="artibut_keyword"
                         v-model="ruleForm.keywords"
-                        placeholder="Keywords"
+                        placeholder="Описание"
                       ></el-input>
                     </el-form-item>
                   </div>
@@ -59,7 +63,7 @@
                     <el-form-item prop="name.ru" label="Имя атрибута">
                       <el-input
                         v-model="ruleForm.name[itemLang.key]"
-                        placeholder="Atribut Name"
+                        placeholder="Название атрибута"
                       ></el-input>
                     </el-form-item>
                     <span class="bottom_text"
@@ -88,7 +92,7 @@
                                 <el-input
                                   class="w-100 mb-2"
                                   v-model="item.name[itemLang.key]"
-                                  placeholder="Option name"
+                                  placeholder="Имя опции"
                                 />
                                 <div class="variant_btns mb-1 mt-0">
                                   <div
@@ -111,10 +115,15 @@
                                       />
                                     </svg>
                                   </div>
-                                  <div class="variant-btn variant-btn-check cursor_drag">
+                                  <div
+                                    class="variant-btn variant-btn-check cursor_drag"
+                                  >
                                     <a-icon
                                       type="drag"
-                                      :style="{ color: '#3699FF', fontSize: '18px' }"
+                                      :style="{
+                                        color: '#3699FF',
+                                        fontSize: '18px',
+                                      }"
                                     />
                                   </div>
                                 </div>
@@ -122,7 +131,9 @@
                             </drag>
                           </template>
                           <template v-slot:feedback="{ data }">
-                            <div class="item feedback" :key="data">{{ data }}</div>
+                            <div class="item feedback" :key="data">
+                              {{ data }}
+                            </div>
                           </template>
                         </drop-list>
                       </el-form-item>
@@ -140,7 +151,9 @@
                           >
                             <template v-slot:item="{ item }">
                               <drag class="item" :key="item.id">
-                                <div class="d-flex align-items-center color_picker">
+                                <div
+                                  class="d-flex align-items-center color_picker"
+                                >
                                   <el-color-picker
                                     popper-class="badges-color-picker"
                                     v-model="item.name[itemLang.key]"
@@ -169,18 +182,29 @@
                               </drag>
                             </template>
                             <template v-slot:feedback="{ data }">
-                              <div class="item feedback" :key="data">{{ data }}</div>
+                              <div class="item feedback" :key="data">
+                                {{ data }}
+                              </div>
                             </template>
                           </drop-list>
                         </el-form-item>
-                        <div class="variant_btns mb-1 mt-0" @click="addElement()">
+                        <div
+                          class="variant_btns mb-1 mt-0"
+                          @click="addElement()"
+                        >
                           <div class="variant-btn variant-btn-check">
                             <span v-html="addInnerValidatIcon"></span>
                           </div>
                         </div>
                       </div>
-                      <div class="d-flex justify-content-start" v-if="colorPickerHide">
-                        <div class="create-inner-variant mt-0" @click="addElement()">
+                      <div
+                        class="d-flex justify-content-start"
+                        v-if="colorPickerHide"
+                      >
+                        <div
+                          class="create-inner-variant mt-0"
+                          @click="addElement()"
+                        >
                           <span v-html="addInnerValidatIcon"></span>
                           Добавить опции
                         </div>
@@ -193,9 +217,9 @@
                         >
                       </span>
                       <span class="bottom_text"
-                        >Установите список ключевых слов, с которыми связана категория.
-                        Разделяйте ключевые слова, добавляя запятую между каждым ключевое
-                        слово.</span
+                        >Установите список ключевых слов, с которыми связана
+                        категория. Разделяйте ключевые слова, добавляя запятую
+                        между каждым ключевое слово.</span
                       >
                     </div>
                   </div>
@@ -246,7 +270,7 @@ export default {
         group_id: [
           {
             required: true,
-            message: "Atribut group is required",
+            message: "Группа атрибутов обязательна",
             trigger: "change",
           },
         ],
@@ -254,7 +278,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "Atribut name is required",
+              message: "Название атрибута обзятелен",
               trigger: "change",
             },
           ],
@@ -262,7 +286,7 @@ export default {
         options: [
           {
             required: true,
-            message: "Atribut name is required",
+            message: "Название атрибута обзятелен",
             trigger: "change",
           },
         ],

@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Значки" :breadbrumb="['Контент сайта']" lastLink="Значки">
+    <TitleBlock
+      title="Значки"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Значки"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -52,7 +56,9 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSizeGlobal(e, '/catalog/badges', '__GET_BADGES')"
+              @change="
+                changePageSizeGlobal(e, '/catalog/badges', '__GET_BADGES')
+              "
             >
               <el-option
                 v-for="item in pageSizes"
@@ -125,7 +131,7 @@
                 mode="multiple"
                 label-in-value
                 :value="value"
-                placeholder="Select users"
+                placeholder="Продукты"
                 style="width: 100%"
                 :filter-option="false"
                 :not-found-content="fetching ? undefined : null"
@@ -142,7 +148,7 @@
           <div class="d-flex">
             <div class="form-block">
               <div>
-                <label for="">Background color </label>
+                <label for="">Цвет фона </label>
               </div>
               <el-color-picker
                 popper-class="badges-color-picker"
@@ -151,7 +157,7 @@
             </div>
             <div class="form-block mx-5">
               <div>
-                <label for="">Text color </label>
+                <label for="">Цвет текста </label>
               </div>
               <el-color-picker
                 popper-class="badges-color-picker"
@@ -167,7 +173,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="handleOk"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -175,7 +181,7 @@
             type="primary"
           >
             <span class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -244,7 +250,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "This filed is required",
+              message: "Это поле обязательна",
               trigger: "change",
             },
           ],
@@ -265,7 +271,9 @@ export default {
         background_color: this.ruleForm.background_color
           ? this.ruleForm.background_color
           : "#1F8A70",
-        text_color: this.ruleForm.text_color ? this.ruleForm.text_color : "#ffffff",
+        text_color: this.ruleForm.text_color
+          ? this.ruleForm.text_color
+          : "#ffffff",
       };
       if (!this.editId) {
         delete data.products;

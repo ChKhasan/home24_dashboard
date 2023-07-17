@@ -186,7 +186,7 @@ export default {
           width: "60px",
         },
         {
-          title: "title",
+          title: "Загаловок",
           dataIndex: "title",
           key: "title",
           slots: { title: "customTitle" },
@@ -196,7 +196,7 @@ export default {
           width: "30%",
         },
         {
-          title: "faqs",
+          title: "ЧаВо",
           dataIndex: "faqs",
           key: "faqs",
           slots: { title: "customTitle" },
