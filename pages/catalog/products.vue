@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Продукты"
-      :breadbrumb="['Каталог']"
-      lastLink="Продукты"
-    >
+    <TitleBlock title="Продукты" :breadbrumb="['Каталог']" lastLink="Продукты">
       <div class="d-flex">
         <div
           class="add-btn add-header-btn add-header-btn-padding btn-primary"
@@ -17,11 +13,20 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div class="d-flex justify-content-between align-items-center card_header">
+        <div
+          class="d-flex justify-content-between align-items-center card_header"
+        >
           <div class="prodduct-list-header-grid w-100 align-items-center">
-            <SearchInput placeholder="Поиск продукта" @changeSearch="changeSearch" />
+            <SearchInput
+              placeholder="Поиск продукта"
+              @changeSearch="changeSearch"
+            />
             <div class="input status-select w-100">
-              <el-select v-model="brandSearch" placeholder="Сортировать" class="w-100">
+              <el-select
+                v-model="brandSearch"
+                placeholder="Сортировать"
+                class="w-100"
+              >
                 <el-option
                   class="w-100"
                   v-for="item in brandSelect"
@@ -90,7 +95,9 @@
           </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
-          <a slot="price" slot-scope="text">{{ text ? `${text}` : "------" }}</a>
+          <a slot="price" slot-scope="text">{{
+            text ? `${text}` : "------"
+          }}</a>
           <span slot="customTitle"></span>
 
           <span
@@ -98,8 +105,8 @@
             slot-scope="text"
             class="tags-style"
             :class="{
-              tag_success: text == 'active',
-              tag_rejected: text == 'inactive',
+              tag_success: text == 'Активный',
+              tag_rejected: text == 'Неактивный',
             }"
           >
             {{ text == "active" ? "Активный " : "Неактивный" }}
@@ -130,7 +137,11 @@
             placeholder="Select"
             @change="
               ($event) =>
-                changePageSizeGlobal($event, '/catalog/products', '__GET_PRODUCTS')
+                changePageSizeGlobal(
+                  $event,
+                  '/catalog/products',
+                  '__GET_PRODUCTS'
+                )
             "
           >
             <el-option
@@ -186,11 +197,11 @@ export default {
         },
         {
           value: 1,
-          label: "Active",
+          label: "Активный",
         },
         {
           value: 0,
-          label: "Inactive",
+          label: "Неактивный",
         },
       ],
       brandSearch: "",

@@ -35,8 +35,8 @@
               filterable
               :loading="brands.length < 1"
               loading-text="Loading..."
-              no-data-text="No data"
-              no-match-text="No data"
+              no-data-text="Не найдено"
+              no-match-text="Не найдено"
               placeholder="Выберите категорию"
             >
               <el-option
@@ -55,7 +55,7 @@
             <el-input
               type="textarea"
               rows="5"
-              placeholder="Description"
+              placeholder="Описание"
               v-model="ruleFormCategory.desc_ru"
             ></el-input>
           </el-form-item>
@@ -85,8 +85,8 @@
               allow-create
               :loading="brands.length < 1"
               loading-text="Loading..."
-              no-data-text="No data"
-              no-match-text="No data"
+              no-data-text="Не найдено"
+              no-match-text="Не найдено"
               multiple
               placeholder="Atibut"
               @focus="__GET_ATRIBUTES"
@@ -111,9 +111,9 @@
               :loading="brands.length < 1"
               loading-text="Loading..."
               multiple
-              no-data-text="No data"
-              no-match-text="No data"
-              placeholder="Group"
+              no-data-text="Не найдено"
+              no-match-text="Не найдено"
+              placeholder="Группа"
               @focus="__GET_GROUPS"
             >
               <el-option
@@ -140,7 +140,11 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <a-modal
+              :visible="previewVisible"
+              :footer="null"
+              @cancel="handleCancel"
+            >
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -182,28 +186,28 @@ export default {
         desc_ru: [
           {
             required: true,
-            message: "Description is required",
+            message: "Описание обязательна",
             trigger: "change",
           },
         ],
         name_ru: [
           {
             required: true,
-            message: "Category name is required",
+            message: "Категория обязательна",
             trigger: "change",
           },
         ],
         attributes: [
           {
             required: true,
-            message: "attributes name is required",
+            message: "Атрибут обязателен",
             trigger: "change",
           },
         ],
         group_characteristics: [
           {
             required: true,
-            message: "attributes name is required",
+            message: "Атрибут обязателен",
             trigger: "change",
           },
         ],
@@ -284,7 +288,10 @@ export default {
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
+        const data = await this.$store.dispatch(
+          "uploadFile/uploadFile",
+          formData
+        );
         return data.path;
       } catch (e) {
         this.statusFunc(e.response);

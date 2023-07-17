@@ -184,9 +184,7 @@
                   stroke-linejoin="round"
                 />
               </svg>
-              <div class="ant-upload-text">
-                Upload image
-              </div>
+              <div class="ant-upload-text">Upload image</div>
             </div>
           </a-upload>
           <a-modal
@@ -194,7 +192,7 @@
             :footer="null"
             @cancel="handleCancel"
           >
-            <img alt="example" style="width: 100%;" :src="previewImage" />
+            <img alt="example" style="width: 100%" :src="previewImage" />
           </a-modal>
         </div>
       </el-form>
@@ -299,7 +297,7 @@ export default {
         },
         {
           value: "Inactive",
-          label: "Inactive",
+          label: "Неактивен",
         },
       ],
       value: "",

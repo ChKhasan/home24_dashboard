@@ -15,7 +15,11 @@
       >
         <div class="d-flex">
           <span class="mx-3">
-            <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
+            <LayoutHeaderBtn
+              name="Отмена"
+              :headerbtnCallback="toBack"
+              :light="true"
+            />
           </span>
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
@@ -46,7 +50,7 @@
                   <div class="group-grid1" id="character_group">
                     <el-form-item prop="group" label="Группа">
                       <el-input
-                        placeholder="group"
+                        placeholder="Группа"
                         v-model="ruleForm.group[itemLang.key]"
                       />
                     </el-form-item>
@@ -77,13 +81,15 @@
                             <el-form-item>
                               <el-input
                                 v-model="item.name[itemLang.key]"
-                                placeholder="Atribut Name"
+                                placeholder="Название атрибута"
                               ></el-input>
                             </el-form-item>
                           </div>
                           <div
                             class="form-block mb-0"
-                            :class="{ 'multi-select-required': multiSelectError }"
+                            :class="{
+                              'multi-select-required': multiSelectError,
+                            }"
                           >
                             <el-form-item label-position="top" prop="options">
                               <el-select
@@ -95,7 +101,7 @@
                                 allow-create
                                 default-first-option
                                 no-data-text="No options"
-                                placeholder="Option name"
+                                placeholder="Название опции"
                               >
                                 <el-option
                                   v-for="(option, index) in item.optionsLast"
@@ -128,7 +134,9 @@
                                 />
                               </svg>
                             </div>
-                            <div class="variant-btn variant-btn-check cursor_drag">
+                            <div
+                              class="variant-btn variant-btn-check cursor_drag"
+                            >
                               <a-icon
                                 type="drag"
                                 :style="{ color: '#3699FF', fontSize: '18px' }"
@@ -143,7 +151,10 @@
                     </template>
                   </drop-list>
                   <div class="d-flex justify-content-start">
-                    <div class="create-inner-variant mt-0" @click="addElement()">
+                    <div
+                      class="create-inner-variant mt-0"
+                      @click="addElement()"
+                    >
                       <span v-html="addInnerValidatIcon"></span>
                       Добавить характеристику
                     </div>
@@ -264,7 +275,8 @@ export default {
           en: "",
         },
         options: [],
-        indexId: Math.max(...this.ruleForm.attributes.map((o) => o.indexId)) + 1,
+        indexId:
+          Math.max(...this.ruleForm.attributes.map((o) => o.indexId)) + 1,
         id: 0,
       });
     },
@@ -325,7 +337,11 @@ export default {
           id: this.$route.params.index,
           data: data,
         });
-        this.notification("Success","Характеристика успешно изменена","success");
+        this.notification(
+          "Success",
+          "Характеристика успешно изменена",
+          "success"
+        );
         this.$router.push("/catalog/characteristic_groups");
       } catch (e) {
         this.statusFunc(e.response);

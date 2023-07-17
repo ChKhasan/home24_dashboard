@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Бренды" :breadbrumb="['Контент сайта']" lastLink="Бренды">
+    <TitleBlock
+      title="Бренды"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Бренды"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -17,7 +21,6 @@
           </div>
         </div>
         <div class="antd_table product_table">
-        
           <a-table
             :columns="columnBrand"
             :data-source="brands"
@@ -82,7 +85,9 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSizeGlobal(e, '/catalog/brands', '__GET_BRANDS')"
+              @change="
+                changePageSizeGlobal(e, '/catalog/brands', '__GET_BRANDS')
+              "
             >
               <el-option
                 v-for="item in pageSizes"
@@ -136,7 +141,9 @@
               <a-switch
                 :checked="ruleForm.is_top == 1"
                 @change="
-                  ruleForm.is_top == 1 ? (ruleForm.is_top = 0) : (ruleForm.is_top = 1)
+                  ruleForm.is_top == 1
+                    ? (ruleForm.is_top = 0)
+                    : (ruleForm.is_top = 1)
                 "
             /></span>
             <label class="mx-3">Популярные бренды </label>
@@ -154,7 +161,11 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <a-modal
+              :visible="previewVisible"
+              :footer="null"
+              @cancel="handleCancel"
+            >
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -166,7 +177,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="handleOk"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -175,7 +186,7 @@
             :loading="loadingBtn"
           >
             <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -243,7 +254,7 @@ export default {
         name: [
           {
             required: true,
-            message: "This field is required",
+            message: "Это поле обязательна",
             trigger: "change",
           },
         ],
@@ -251,7 +262,6 @@ export default {
     };
   },
   methods: {
-
     showModal() {
       this.visible = true;
     },
@@ -271,7 +281,9 @@ export default {
       };
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != "" ? this.__EDIT_BRANDS(data) : this.__POST_BRANDS(data);
+          this.editId != ""
+            ? this.__EDIT_BRANDS(data)
+            : this.__POST_BRANDS(data);
         } else {
           return false;
         }

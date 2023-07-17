@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
     <TitleBlock
-      title="Группа характеристика"
+      title="Группа характеристик"
       :breadbrumb="['Каталог']"
-      lastLink="Группа характеристика"
+      lastLink="Группа характеристик"
     >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
@@ -17,7 +17,7 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Группа характеристика" />
+            <FormTitle title="Группа характеристик" />
           </div>
         </div>
         <div class="antd_table product_table">
@@ -138,10 +138,13 @@ export default {
     },
     async __DELETE_CHARACTER_GROUP(id) {
       try {
-        const data = await this.$store.dispatch("fetchCharacters/deleteGroups", id);
+        const data = await this.$store.dispatch(
+          "fetchCharacters/deleteGroups",
+          id
+        );
         await this.$notify({
           title: "Success",
-          message: "Группа был успешно удален",
+          message: "Группа был успешно удалена",
           type: "success",
         });
         this.__GET_GROUPS();
@@ -151,9 +154,12 @@ export default {
     },
     async __GET_GROUPS() {
       this.loading = true;
-      const data = await this.$store.dispatch("fetchCharacters/getCharacteristics", {
-        ...this.$route.query,
-      });
+      const data = await this.$store.dispatch(
+        "fetchCharacters/getCharacteristics",
+        {
+          ...this.$route.query,
+        }
+      );
       this.loading = false;
       this.totalPage = data.characteristics?.total;
       const pageIndex = this.indexPage(
@@ -180,7 +186,11 @@ export default {
   },
   watch: {
     async current(val) {
-      this.changePagination(val, "/catalog/characteristic_groups", "__GET_GROUPS");
+      this.changePagination(
+        val,
+        "/catalog/characteristic_groups",
+        "__GET_GROUPS"
+      );
     },
   },
   components: {

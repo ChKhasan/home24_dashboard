@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Баннеры" :breadbrumb="['Контент сайта']" lastLink="Баннеры">
+    <TitleBlock
+      title="Баннеры"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Баннеры"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -108,28 +112,33 @@
           v-if="modalTab == item.index"
         >
           <div class="form-block required">
-            <el-form-item prop="link.ru" label="Link">
+            <el-form-item prop="link.ru" label="Ссылка">
               <el-input
                 id="banner_link"
                 type="text"
-                placeholder="Link"
+                placeholder="Ссылка"
                 v-model="ruleForm.link[item.index]"
               ></el-input>
             </el-form-item>
           </div>
           <div class="form-block required mb-0">
-            <el-form-item prop="type" label="Type">
+            <el-form-item prop="type" label="Тип">
               <el-select
                 v-model="ruleForm.type"
                 class="w-100"
                 filterable
-                placeholder="Banner type"
+                placeholder="Тип баннера"
                 loading-text="Loading..."
                 no-match-text="no category"
                 no-data-text="No Category"
                 default-first-option
               >
-                <el-option v-for="item in types" :key="item" :label="item" :value="item">
+                <el-option
+                  v-for="item in types"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
@@ -148,7 +157,11 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <a-modal
+              :visible="previewVisible"
+              :footer="null"
+              @cancel="handleCancel"
+            >
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -160,7 +173,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="closeModal"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -169,7 +182,7 @@
             :loading="loadingBtn"
           >
             <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -241,7 +254,7 @@ export default {
           width: "60px",
         },
         {
-          title: "Image",
+          title: "Рисунок",
           dataIndex: "sm_img",
           key: "sm_img",
           slots: { title: "customTitle" },
@@ -250,7 +263,7 @@ export default {
           className: "column-img",
         },
         {
-          title: "Link",
+          title: "Ссылка",
           dataIndex: "link",
           key: "link",
           slots: { title: "customTitle" },

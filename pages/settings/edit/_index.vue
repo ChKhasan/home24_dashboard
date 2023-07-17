@@ -8,10 +8,18 @@
       label-width="120px"
       class="demo-ruleForm"
     >
-      <TitleBlock title="Регионы" :breadbrumb="['Настройки']" lastLink="Регионы">
+      <TitleBlock
+        title="Регионы"
+        :breadbrumb="['Настройки']"
+        lastLink="Регионы"
+      >
         <div class="d-flex">
           <span class="mx-3">
-            <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
+            <LayoutHeaderBtn
+              name="Отмена"
+              :headerbtnCallback="toBack"
+              :light="true"
+            />
           </span>
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
@@ -43,13 +51,16 @@
                     <div class="group-grid1" id="character_group">
                       <el-form-item prop="group" label="Группа">
                         <el-input
-                          placeholder="group"
+                          placeholder="Группа"
                           v-model="ruleForm.name[itemLang.key]"
                         />
                       </el-form-item>
                     </div>
                   </div>
-                  <FormTitle title="Районы" v-if="ruleForm.districts.length > 0" />
+                  <FormTitle
+                    title="Районы"
+                    v-if="ruleForm.districts.length > 0"
+                  />
 
                   <div class="d-flex flex-column">
                     <div
@@ -59,7 +70,7 @@
                       <el-form-item class="w-100">
                         <el-input
                           v-model="dists.name[itemLang.key]"
-                          placeholder="Atribut Name"
+                          placeholder="Название атрибута"
                         ></el-input>
                       </el-form-item>
                       <div
@@ -85,7 +96,10 @@
                     </div>
 
                     <div class="d-flex justify-content-start">
-                      <div class="create-inner-variant mt-0" @click="addElement()">
+                      <div
+                        class="create-inner-variant mt-0"
+                        @click="addElement()"
+                      >
                         <span v-html="addInnerValidatIcon"></span>
                         Добавить
                       </div>
@@ -135,7 +149,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "This field is required",
+              message: "Это поле обязательна",
               trigger: "change",
             },
           ],
@@ -185,7 +199,9 @@ export default {
       });
     },
     submitForm(ruleForm) {
-      this.ruleForm.districts = this.ruleForm.districts.filter((item) => item.name.ru);
+      this.ruleForm.districts = this.ruleForm.districts.filter(
+        (item) => item.name.ru
+      );
       this.$refs[ruleForm].validate((valid) => {
         valid ? this.__PUT_REGIONS(this.ruleForm) : false;
       });
@@ -193,7 +209,10 @@ export default {
     async __GET_REGIONS_BY_ID(id) {
       try {
         this.spinning = true;
-        const data = await this.$store.dispatch("fetchRegions/getRegionsById", id);
+        const data = await this.$store.dispatch(
+          "fetchRegions/getRegionsById",
+          id
+        );
         this.ruleForm.name = data?.region?.name;
         this.ruleForm.districts = data?.region?.districts.map((item, index) => {
           return {

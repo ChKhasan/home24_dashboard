@@ -136,7 +136,7 @@ export default {
           width: "60px",
         },
         {
-          title: "Name",
+          title: "Название",
           dataIndex: "name",
           key: "name",
           slots: { title: "customTitle" },
@@ -146,7 +146,7 @@ export default {
         },
 
         {
-          title: "действия",
+          title: "Действия",
           key: "id",
           dataIndex: "id",
           scopedSlots: { customRender: "id" },
@@ -211,8 +211,8 @@ export default {
           scopedSlots: { customRender: "status" },
           className: "column-tags",
           filters: [
-            { text: "Active", value: "active" },
-            { text: "Inactive", value: "inactive" },
+            { text: "Активный", value: "active" },
+            { text: "Неактивный", value: "inactive" },
           ],
           onFilter: (value, record) => record.status.indexOf(value) === 0,
           width: "16%",
@@ -237,7 +237,7 @@ export default {
           colSpan: 0,
         },
         {
-          title: "PRODUCT",
+          title: "Продукт",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "product" },
           align: "left",
@@ -291,7 +291,7 @@ export default {
         },
 
         {
-          title: "Name",
+          title: "Имя",
           dataIndex: "name",
           key: "name",
           slots: { title: "customTitle" },
@@ -321,7 +321,7 @@ export default {
           width: "60px",
         },
         {
-          title: "Badges",
+          title: "Значки",
           dataIndex: "name",
           key: "name",
           slots: { title: "customTitle" },
@@ -329,7 +329,7 @@ export default {
           className: "column-name",
         },
         {
-          title: "Date",
+          title: "Дата",
           dataIndex: "created_at",
           key: "created_at",
           slots: { title: "customTitle" },
@@ -358,7 +358,7 @@ export default {
           width: "60px",
         },
         {
-          title: "Title",
+          title: "Загаловок",
           dataIndex: "title",
           key: "title",
           slots: { title: "customTitle" },
@@ -366,7 +366,7 @@ export default {
           className: "column-name",
         },
         {
-          title: "Desc",
+          title: "Описание",
           dataIndex: "desc",
           key: "desc",
           slots: { title: "customTitle" },

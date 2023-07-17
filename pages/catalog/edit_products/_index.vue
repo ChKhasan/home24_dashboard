@@ -49,7 +49,7 @@
                       <el-form-item prop="name.ru" label="Имя">
                         <el-input
                           v-model="ruleForm.name[item.key]"
-                          placeholder="Product name"
+                          placeholder="Имя продукта"
                         ></el-input>
                       </el-form-item>
                     </div>
@@ -59,7 +59,7 @@
                         <el-form-item prop="model" label="Модель">
                           <el-input
                             v-model="ruleForm.model"
-                            placeholder="Product model"
+                            placeholder="Модель продукта"
                           ></el-input>
                         </el-form-item>
                       </div>
@@ -74,7 +74,9 @@
                 <div class="d-flex align-items-end">
                   <div class="form-block mb-0 w-100 required">
                     <div><label>Категория</label></div>
-                    <span class="bottom_text mt-0 mb-1">Добавить товар в категорию</span>
+                    <span class="bottom_text mt-0 mb-1"
+                      >Добавить товар в категорию</span
+                    >
                     <el-form-item>
                       <a-cascader
                         :options="cascaderCategories"
@@ -83,7 +85,7 @@
                         class="category-select w-100"
                         popper-class="select-popper-hover"
                         v-model="cascader"
-                        placeholder="Please select"
+                        placeholder="Выберите категорию"
                         @change="onChange"
                         :fieldNames="{
                           label: 'label',
@@ -138,7 +140,9 @@
                           <h5 class="variant-img-title mb-4 mt-2">
                             Добавить характеристику
                           </h5>
-                          <a-button type="primary" @click="showModal('character')"
+                          <a-button
+                            type="primary"
+                            @click="showModal('character')"
                             >Редактировать характеристику
                           </a-button>
                         </div>
@@ -155,7 +159,8 @@
                   v-for="element in ruleForm.products"
                   :key="element.id"
                   :class="{
-                    'variant-modal': productModal[`product_modal${element.id}`] == true,
+                    'variant-modal':
+                      productModal[`product_modal${element.id}`] == true,
                   }"
                 >
                   <div class="d-flex justify-content-between variant-header">
@@ -207,8 +212,13 @@
                                   <span @click="uploadSHow(item)">
                                     <a-icon class="upload_icons" type="eye" />
                                   </span>
-                                  <span @click="uploadDelete(element.id, item.uid)">
-                                    <a-icon class="upload_icons" type="delete" />
+                                  <span
+                                    @click="uploadDelete(element.id, item.uid)"
+                                  >
+                                    <a-icon
+                                      class="upload_icons"
+                                      type="delete"
+                                    />
                                   </span>
                                 </div>
                                 <img
@@ -222,7 +232,9 @@
                           </template>
 
                           <template v-slot:feedback="{ data }">
-                            <div class="item feedback" :key="data">{{ data }}</div>
+                            <div class="item feedback" :key="data">
+                              {{ data }}
+                            </div>
                           </template>
                         </drop-list>
                       </div>
@@ -233,11 +245,15 @@
                         :showUploadList="false"
                         :file-list="element.imagesData"
                         @preview="handlePreview"
-                        @change="($event) => handleChangeVatiant($event, element.id)"
+                        @change="
+                          ($event) => handleChangeVatiant($event, element.id)
+                        "
                       >
                         <div v-if="fileList.length < 50">
                           <span v-html="addImgIcon"></span>
-                          <div class="ant-upload-text">Добавить изображение</div>
+                          <div class="ant-upload-text">
+                            Добавить изображение
+                          </div>
                         </div>
                       </a-upload>
                       <a-modal
@@ -245,7 +261,11 @@
                         :footer="null"
                         @cancel="handleCancel"
                       >
-                        <img alt="example" style="width: 100%" :src="previewImage" />
+                        <img
+                          alt="example"
+                          style="width: 100%"
+                          :src="previewImage"
+                        />
                       </a-modal>
                     </div>
                     <p class="variant-img-text">
@@ -261,7 +281,10 @@
                         v-for="item in element.variations"
                         :key="item.id"
                       >
-                        <div class="product_variant_block" v-if="atributes.length > 0">
+                        <div
+                          class="product_variant_block"
+                          v-if="atributes.length > 0"
+                        >
                           <div class="variant-grid-4 w-100">
                             <el-form
                               label-position="top"
@@ -279,9 +302,14 @@
                                 <div>
                                   <label>{{ atribut.name.ru }}</label>
                                 </div>
-                                <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
+                                <el-form-item
+                                  :prop="`at_${atribut.id}`"
+                                  class="mb-0"
+                                >
                                   <el-select
-                                    v-model="item.optionName[`at_${atribut.id}`]"
+                                    v-model="
+                                      item.optionName[`at_${atribut.id}`]
+                                    "
                                     class="w-100"
                                     default-first-option
                                     popper-class="select-popper-hover"
@@ -370,7 +398,9 @@
                               class="variant-btn variant-btn-check"
                               @click="onChangeVariants(element.id, item.id)"
                             >
-                              <a-radio :checked="item.is_default == 1"></a-radio>
+                              <a-radio
+                                :checked="item.is_default == 1"
+                              ></a-radio>
                             </div>
                           </div>
                         </div>
@@ -378,8 +408,14 @@
                     </transition-group>
                     <!-- Validations -->
                   </div>
-                  <div class="d-flex justify-content-start" v-if="atributes.length > 0">
-                    <div class="create-inner-variant" @click="addValidation(element.id)">
+                  <div
+                    class="d-flex justify-content-start"
+                    v-if="atributes.length > 0"
+                  >
+                    <div
+                      class="create-inner-variant"
+                      @click="addValidation(element.id)"
+                    >
                       <span v-html="addInnerValidatIcon"></span>
                       Добавит внутренний варизаци
                     </div>
@@ -387,7 +423,10 @@
                 </div>
               </transition-group>
               <div>
-                <div class="add-variant create-inner-variant mt-0" @click="addProduct">
+                <div
+                  class="add-variant create-inner-variant mt-0"
+                  @click="addProduct"
+                >
                   <span v-html="addInnerValidatIcon"></span>
                   Добавит варизаци
                 </div>
@@ -409,7 +448,9 @@
                   <div
                     class="form-block status-style"
                     :class="[
-                      ruleForm.is_active == 1 ? 'status-active' : 'status-inactive',
+                      ruleForm.is_active == 1
+                        ? 'status-active'
+                        : 'status-inactive',
                     ]"
                   >
                     <el-form-item label="Статус">
@@ -506,7 +547,10 @@
         <div class="form-block required">
           <div><label for="">Brand </label></div>
           <el-form-item prop="name">
-            <el-input placeholder="Product model" v-model="brandData.name"></el-input>
+            <el-input
+              placeholder="Модель продукта"
+              v-model="brandData.name"
+            ></el-input>
           </el-form-item>
         </div>
         <div class="clearfix variant-img">
@@ -522,7 +566,11 @@
               <div class="ant-upload-text">Добавить изображение</div>
             </div>
           </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+          <a-modal
+            :visible="previewVisible"
+            :footer="null"
+            @cancel="handleCancel"
+          >
             <img alt="example" style="width: 100%" :src="previewImage" />
           </a-modal>
         </div>
@@ -533,7 +581,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="handleOk('brand')"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -542,7 +590,7 @@
             :loading="loadingBtn"
           >
             <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -579,8 +627,8 @@
               v-model="ruleFormCategory.parent_id"
               filterable
               loading-text="Loading..."
-              no-data-text="No data"
-              no-match-text="No data"
+              no-data-text="Не найдено"
+              no-match-text="Не найдено"
               placeholder="Выберите категорию"
             >
               <el-option
@@ -598,7 +646,7 @@
             <el-input
               type="textarea"
               rows="5"
-              placeholder="Description"
+              placeholder="Описание"
               v-model="ruleFormCategory.desc.ru"
             ></el-input>
           </el-form-item>
@@ -627,8 +675,8 @@
               allow-create
               :loading="brands.length < 1"
               loading-text="Loading..."
-              no-data-text="No data"
-              no-match-text="No data"
+              no-data-text="Не найдено"
+              no-match-text="Не найдено"
               multiple
               placeholder="Atibut"
               @focus="__GET_ATRIBUTES"
@@ -644,7 +692,10 @@
           </el-form-item>
         </div>
         <div class="form-block">
-          <el-form-item prop="group_characteristics" label="Характеристическая группа">
+          <el-form-item
+            prop="group_characteristics"
+            label="Характеристическая группа"
+          >
             <el-select
               class="w-100"
               v-model="ruleFormCategory.group_characteristics"
@@ -652,9 +703,9 @@
               :loading="brands.length < 1"
               loading-text="Loading..."
               multiple
-              no-data-text="No data"
-              no-match-text="No data"
-              placeholder="Group"
+              no-data-text="Не найдено"
+              no-match-text="Не найдено"
+              placeholder="Группа"
               @focus="__GET_GROUPS"
             >
               <el-option
@@ -682,7 +733,11 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <a-modal
+              :visible="previewVisible"
+              :footer="null"
+              @cancel="handleCancel"
+            >
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -694,7 +749,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="handleOk('category')"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -703,7 +758,7 @@
             :loading="loadingBtn"
           >
             <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -817,7 +872,9 @@
                           <input
                             type="text"
                             v-model="
-                              variations.characteristicsValues[`char_${characters.id}`]
+                              variations.characteristicsValues[
+                                `char_${characters.id}`
+                              ]
                             "
                           />
                           <!-- <el-select
@@ -934,11 +991,11 @@ export default {
       options: [
         {
           value: 1,
-          label: "Active",
+          label: "Активный",
         },
         {
           value: 0,
-          label: "Inactive",
+          label: "Неактивный",
         },
       ],
       rules: {
@@ -946,7 +1003,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "Product name is required",
+              message: "Название продукта обязательна",
               trigger: "change",
             },
           ],
@@ -954,7 +1011,7 @@ export default {
         category_id: [
           {
             required: true,
-            message: "Category is required",
+            message: "Категория обязательна",
             trigger: "change",
           },
         ],
@@ -1001,11 +1058,11 @@ export default {
       },
       validateStatus: [
         {
-          label: "Active",
+          label: "Активен",
           value: "active",
         },
         {
-          label: "Inactive",
+          label: "Неактивен",
           value: "inactive",
         },
       ],
@@ -1029,7 +1086,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "Description is required",
+              message: "Описание обязательна",
               trigger: "change",
             },
           ],
@@ -1038,7 +1095,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "Category name is required",
+              message: "Категория обязательна",
               trigger: "change",
             },
           ],
@@ -1046,14 +1103,14 @@ export default {
         attributes: [
           {
             required: true,
-            message: "attributes name is required",
+            message: "Атрибут обязателен",
             trigger: "change",
           },
         ],
         group_characteristics: [
           {
             required: true,
-            message: "attributes name is required",
+            message: "Атрибут обязателен",
             trigger: "change",
           },
         ],
@@ -1087,7 +1144,7 @@ export default {
         name: [
           {
             required: true,
-            message: "Brand name is required",
+            message: "Название бренда обязательна",
             trigger: "blur",
           },
         ],
@@ -1109,8 +1166,10 @@ export default {
           (item) => item.id == this.lastCategory[2]
         );
         findCategory?.label && allCategories.push(findCategory?.label);
-        findChildCategory?.label && allCategories.push(findChildCategory?.label);
-        findChild2Category?.label && allCategories.push(findChild2Category?.label);
+        findChildCategory?.label &&
+          allCategories.push(findChildCategory?.label);
+        findChild2Category?.label &&
+          allCategories.push(findChild2Category?.label);
       }
       if (allCategories.length == 3) {
         return allCategories.join("/");
@@ -1148,7 +1207,9 @@ export default {
     },
     uploadDelete(id, imgId) {
       const product = this.findProductWithId(id);
-      product.imagesData = product.imagesData.filter((item) => item.uid != imgId);
+      product.imagesData = product.imagesData.filter(
+        (item) => item.uid != imgId
+      );
     },
 
     onInsert(event, id) {
@@ -1157,7 +1218,9 @@ export default {
         .images.splice(event.index, 0, event.data);
     },
     getData() {
-      this.$refs["brandData"].validate((valid) => (valid ? this.__POST_BRAND() : false));
+      this.$refs["brandData"].validate((valid) =>
+        valid ? this.__POST_BRAND() : false
+      );
     },
     handleChangeBrand({ fileList }) {
       this.fileListBrand = fileList;
@@ -1276,7 +1339,11 @@ export default {
         if (!valid && !atributValid) return false;
         this.characterRequired
           ? this.__POST_PRODUCTS(newData)
-          : this.notification("Success", "Вы не добавили характеристику", "error");
+          : this.notification(
+              "Success",
+              "Вы не добавили характеристику",
+              "error"
+            );
       });
     },
     onChange(value, selectedOptions) {
@@ -1286,10 +1353,12 @@ export default {
     filter(inputValue, path) {
       return (
         path.some(
-          (option) => option.label.toUpperCase().indexOf(inputValue.toUpperCase()) > -1
+          (option) =>
+            option.label.toUpperCase().indexOf(inputValue.toUpperCase()) > -1
         ) ||
         path.some(
-          (option) => option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+          (option) =>
+            option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
         )
       );
     },
@@ -1357,7 +1426,8 @@ export default {
       this.$refs.characterScrollItems.forEach((item) => {
         item.scrollLeft = this.$refs.productScroll.scrollLeft;
       });
-      this.$refs.characterScroll.scrollLeft = this.$refs.productScroll.scrollLeft;
+      this.$refs.characterScroll.scrollLeft =
+        this.$refs.productScroll.scrollLeft;
     },
 
     async handleChangeVatiant({ fileList }, id) {
@@ -1373,9 +1443,9 @@ export default {
       const product = this.findProductWithId(obj.productId);
       product.variations.find((varId) => varId.id == obj.variantId).options[
         obj.index
-      ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
-        `at_${obj.id}`
-      ];
+      ] = product.variations.find(
+        (varId) => varId.id == obj.variantId
+      ).optionName[`at_${obj.id}`];
     },
     handleCancel() {
       this.previewVisible = false;
@@ -1422,9 +1492,13 @@ export default {
     deleteValidation(variantId, innerVarId) {
       const product = this.findProductWithId(variantId);
       if (product.variations.length > 1) {
-        product.variations = product.variations.filter((item) => item.id != innerVarId);
+        product.variations = product.variations.filter(
+          (item) => item.id != innerVarId
+        );
       }
-      const checkDefault = product.variations.filter((item) => item.is_default == 1);
+      const checkDefault = product.variations.filter(
+        (item) => item.is_default == 1
+      );
       if (checkDefault.length == 0) {
         product.variations[0].is_default = 1;
       }
@@ -1525,7 +1599,9 @@ export default {
           return item;
         }
       });
-      this.cascaderCategories = this.cascaderCategories.filter((item) => item.children);
+      this.cascaderCategories = this.cascaderCategories.filter(
+        (item) => item.children
+      );
       this.categories.unshift({
         name: {
           ru: "Главная категория",
@@ -1534,7 +1610,10 @@ export default {
       });
     },
     async __GET_CATEGORY_BY_ID(id) {
-      const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
+      const data = await this.$store.dispatch(
+        "fetchCategories/getCategoriesById",
+        id
+      );
       const category = data.category;
       this.atributes = category.attributes;
       this.character_group = category.characteristic_groups;
@@ -1542,7 +1621,7 @@ export default {
         this.rulesAtributes[`at_${element.id}`] = [
           {
             required: true,
-            message: "Atribut is required",
+            message: "Атрибут обязателен",
             trigger: "change",
           },
         ];
@@ -1553,7 +1632,7 @@ export default {
           this.rulesCharacter[`char_${elem.id}`] = [
             {
               required: true,
-              message: "Brand name is required",
+              message: "Название бренда обязательна",
               trigger: "change",
             },
           ];
@@ -1587,7 +1666,10 @@ export default {
           let atribut = {};
           let charac = {};
           variant.attribute_options.forEach((artibutItem) => {
-            atribut = { ...atribut, [`at_${artibutItem.attribute_id}`]: artibutItem.id };
+            atribut = {
+              ...atribut,
+              [`at_${artibutItem.attribute_id}`]: artibutItem.id,
+            };
           });
           variant.characteristic_options.forEach((characItem) => {
             charac = {
@@ -1597,13 +1679,15 @@ export default {
             this.rulesCharacter[`char_${characItem.characteristic_id}`] = [
               {
                 required: true,
-                message: "Brand name is required",
+                message: "Название бренда обязательна",
                 trigger: "change",
               },
             ];
           });
           let options = variant.attribute_options.map((atrOp) => atrOp.id);
-          let characteristics = variant.characteristic_options.map((charOp) => charOp.id);
+          let characteristics = variant.characteristic_options.map(
+            (charOp) => charOp.id
+          );
           return {
             id: index + 1,
             indexId: variant.id,

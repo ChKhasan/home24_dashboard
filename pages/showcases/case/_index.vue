@@ -16,13 +16,17 @@
     <a-spin :spinning="spinning" :delay="delayTime">
       <div class="container_xl app-container mb-5">
         <div class="card_block py-5">
-          <div class="d-flex align-items-between justify-content-between w-100 pt-4 pb-4">
+          <div
+            class="d-flex align-items-between justify-content-between w-100 pt-4 pb-4"
+          >
             <FormTitle :title="showcase?.name?.ru" />
           </div>
           <div class="show-cases-table product_table">
             <div class="show-cases-header ant-table-thead">
               <ul>
-                <li class="column-name table-drag"><span v-html="tableDrag"></span></li>
+                <li class="column-name table-drag">
+                  <span v-html="tableDrag"></span>
+                </li>
                 <li class="column-name">ПРОДУКТЫ</li>
                 <li class="column-name">ДЕЙСТВИЯ</li>
               </ul>
@@ -41,7 +45,10 @@
                       </li>
                       <li class="column-name">
                         <span class="drag-img"
-                          ><img :src="item?.images[0]?.sm_img" class="table-image" alt=""
+                          ><img
+                            :src="item?.images[0]?.sm_img"
+                            class="table-image"
+                            alt=""
                         /></span>
                         {{ item?.slug }}
                         {{ item?.pivot?.position }}
@@ -73,7 +80,12 @@
         </div>
       </div>
     </a-spin>
-    <a-modal v-model="visible" title="Редактировать" :closable="false" @ok="handleOk">
+    <a-modal
+      v-model="visible"
+      title="Редактировать"
+      :closable="false"
+      @ok="handleOk"
+    >
       <el-form
         label-position="top"
         :model="ruleForm"
@@ -119,7 +131,7 @@
                 mode="multiple"
                 label-in-value
                 :value="value"
-                placeholder="Select users"
+                placeholder="Продукты"
                 style="width: 100%"
                 :filter-option="false"
                 :not-found-content="fetching ? undefined : null"
@@ -141,7 +153,7 @@
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
             @click="handleOk"
           >
-            Cancel
+            Отмена
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
@@ -149,7 +161,7 @@
             type="primary"
           >
             <span class="svg-icon" v-html="addIcon"></span>
-            Save
+            Сохранить
           </a-button>
         </div>
       </template>
@@ -207,7 +219,7 @@ export default {
           ru: [
             {
               required: true,
-              message: "This field is required",
+              message: "Это поле обязательна",
               trigger: "change",
             },
           ],
@@ -266,7 +278,10 @@ export default {
     async __GET_SHOWCASES(id) {
       try {
         this.spinning = true;
-        const data = await this.$store.dispatch("fetchShowCases/getShowCasesById", id);
+        const data = await this.$store.dispatch(
+          "fetchShowCases/getShowCasesById",
+          id
+        );
         this.showcase = { ...data?.showcase };
         this.ruleForm.name = { ...data?.showcase?.name };
         this.products = data?.showcase?.products;
@@ -289,10 +304,13 @@ export default {
     },
     async __EDIT_SHOWCASES(dataForm) {
       try {
-        const data = await this.$store.dispatch("fetchShowCases/editShowCases", {
-          id: this.caseId,
-          data: dataForm,
-        });
+        const data = await this.$store.dispatch(
+          "fetchShowCases/editShowCases",
+          {
+            id: this.caseId,
+            data: dataForm,
+          }
+        );
         await this.$store.dispatch(
           "getShowCasesStore",
           !this.$store.state.changeShowcases

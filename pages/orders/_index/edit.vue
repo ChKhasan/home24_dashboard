@@ -54,7 +54,7 @@
                   ></path>
                 </g></svg
             ></span>
-            Add Product
+            Добавить продукт
           </div>
         </div>
       </TitleBlock>
@@ -165,20 +165,26 @@
                 <div class="form-block">
                   <div><label for="character_group">Почтовый код</label></div>
                   <el-form-item prop="character_group">
-                   <el-input type="text" v-model="ruleForm.postNumber" placeholder="Почтовый код"/>
+                    <el-input
+                      type="text"
+                      v-model="ruleForm.postNumber"
+                      placeholder="Почтовый код"
+                    />
                   </el-form-item>
                 </div>
               </div>
               <div class="form-block">
                 <div><label for="">Полный адрес </label></div>
                 <el-form-item prop="character_name">
-                  <el-input type="textarea" rows="6" v-modal="ruleForm.fullAdress"></el-input>
+                  <el-input
+                    type="textarea"
+                    rows="6"
+                    v-modal="ruleForm.fullAdress"
+                  ></el-input>
                 </el-form-item>
               </div>
               <div class="d-flex justify-content-end">
-                <div class="form-btn form-outline-transparent mx-3">
-                  Отмена
-                </div>
+                <div class="form-btn form-outline-transparent mx-3">Отмена</div>
                 <div
                   type="submit"
                   class="form-btn form-btn-primary"
@@ -254,7 +260,7 @@ export default {
         postNumber: "",
         area: "",
         region: "",
-        fullAdress: ""
+        fullAdress: "",
       },
       count: 10,
       rows: [

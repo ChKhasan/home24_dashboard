@@ -1,6 +1,10 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Баннеры" :breadbrumb="['Контент сайта']" lastLink="Баннеры">
+    <TitleBlock
+      title="Отзывы"
+      :breadbrumb="['Контент сайта']"
+      lastLink="Отзывы"
+    >
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -12,7 +16,7 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
-          <FormTitle title="Баннеры" />
+          <FormTitle title="Отзывы" />
         </div>
         <div class="antd_table product_table">
           <a-table
@@ -130,7 +134,7 @@ export default {
           width: "60px",
         },
         {
-          title: "Image",
+          title: "Картинка",
           dataIndex: "images",
           key: "images",
           slots: { title: "customTitle" },
@@ -139,7 +143,7 @@ export default {
           className: "column-img",
         },
         {
-          title: "company",
+          title: "Компания",
           dataIndex: "company",
           key: "company",
           slots: { title: "customTitle" },
@@ -149,7 +153,7 @@ export default {
           align: "center",
         },
         {
-          title: "Link",
+          title: "Ссылка",
           dataIndex: "feedback",
           key: "feedback",
           slots: { title: "customTitle" },
@@ -232,7 +236,9 @@ export default {
       delete newData["link_en"];
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != "" ? this.__EDIT_BANNERS(newData) : this.__POST_BANNERS(newData);
+          this.editId != ""
+            ? this.__EDIT_BANNERS(newData)
+            : this.__POST_BANNERS(newData);
         } else {
           return false;
         }
@@ -243,7 +249,8 @@ export default {
     },
     openAddModal() {
       this.fileList = [];
-      this.editId = "";ttt
+      this.editId = "";
+      ttt;
       this.ruleForm.type = "";
       this.$router.push("/contents/add_feedbacks");
     },
@@ -304,7 +311,10 @@ export default {
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
+        const data = await this.$store.dispatch(
+          "uploadFile/uploadFile",
+          formData
+        );
         return data.path;
       } catch (e) {
         this.statusFunc(e.response);

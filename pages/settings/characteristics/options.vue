@@ -15,7 +15,11 @@
       >
         <div class="d-flex">
           <span class="mx-3">
-            <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
+            <LayoutHeaderBtn
+              name="Отмена"
+              :headerbtnCallback="toBack"
+              :light="true"
+            />
           </span>
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
@@ -32,7 +36,10 @@
           <div class="form-container form-container-ltr">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="prodduct-list-header-grid w-100 align-items-center">
-                <SearchInput placeholder="Поиск продукта" @changeSearch="changeSearch" />
+                <SearchInput
+                  placeholder="Поиск продукта"
+                  @changeSearch="changeSearch"
+                />
                 <div class="input status-select w-100"></div>
                 <span></span>
                 <a-button
@@ -66,7 +73,7 @@
                   <el-form-item>
                     <el-input
                       v-model="option.name.ru"
-                      placeholder="Atribut Name"
+                      placeholder="Название атрибута"
                     ></el-input>
                   </el-form-item>
                 </div>
@@ -74,7 +81,7 @@
                   <el-form-item label-position="top" prop="options">
                     <el-input
                       v-model="option.name.en"
-                      placeholder="Atribut Name"
+                      placeholder="Название атрибута"
                     ></el-input>
                   </el-form-item>
                 </div>
@@ -82,7 +89,7 @@
                   <el-form-item label-position="top" prop="options">
                     <el-input
                       v-model="option.name.uz"
-                      placeholder="Atribut Name"
+                      placeholder="Название атрибута"
                     ></el-input>
                   </el-form-item>
                 </div>
@@ -116,10 +123,15 @@
             </div>
             <div v-else class="loading-data">
               <a-empty :description="false">
-                <a-button type="primary" @click="clearQuery">To back </a-button></a-empty
+                <a-button type="primary" @click="clearQuery"
+                  >Назад
+                </a-button></a-empty
               >
             </div>
-            <div class="d-flex justify-content-between mt-4" v-if="options.length > 0">
+            <div
+              class="d-flex justify-content-between mt-4"
+              v-if="options.length > 0"
+            >
               <el-select
                 v-model="params.pageSize"
                 class="table-page-size"
@@ -326,7 +338,11 @@ export default {
     async __POST_CHARACTERISTIC(data) {
       try {
         await this.$store.dispatch("fetchCharacters/postOptions", data);
-        this.notification("Success", "Характеристика успешно добавлен", "success");
+        this.notification(
+          "Success",
+          "Характеристика успешно добавлен",
+          "success"
+        );
         this.$router.push("/settings/characteristics/options");
       } catch (e) {
         this.statusFunc(e.response);
@@ -341,7 +357,11 @@ export default {
   },
   watch: {
     async current(val) {
-      this.changePagination(val, "/settings/characteristics/options", "__GET_GROUPS");
+      this.changePagination(
+        val,
+        "/settings/characteristics/options",
+        "__GET_GROUPS"
+      );
     },
   },
   components: {

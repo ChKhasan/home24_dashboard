@@ -340,7 +340,7 @@
   position: relative;
   .el-cascader-menu__empty-text {
     &::before {
-      content: "No data";
+      content: "Не найдено";
       position: absolute;
     }
   }
