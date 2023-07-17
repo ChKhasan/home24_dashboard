@@ -346,7 +346,20 @@ export default {
       }
     },
   },
-
+  watch: {
+    colorPickerHide() {
+      this.ruleForm.optionsName = [{
+          name: {
+                ru: "",
+                uz: "",
+                en: ""
+            },
+            position: 1,
+          id: 1
+        }]
+      console.log(this.ruleForm);
+    },
+  },
   components: {
     FormTitle,
     TitleBlock,
