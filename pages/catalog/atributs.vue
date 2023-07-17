@@ -12,14 +12,15 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
-          <div class="prodduct-list-header-grid w-100 align-items-center" style="grid-gap: 1.25rem">
+          <div
+            class="prodduct-list-header-grid w-100 align-items-center"
+            style="grid-gap: 1.25rem"
+          >
             <!-- <div> -->
-              <SearchInput
-                placeholder="Атрибуты поиска"
-                @changeSearch="
-                  changeSearch($event, '/catalog/atributs', '__GET_ATRIBUTES')
-                "
-              />
+            <SearchInput
+              placeholder="Атрибуты поиска"
+              @changeSearch="changeSearch($event, '/catalog/atributs', '__GET_ATRIBUTES')"
+            />
             <!-- </div> -->
             <span></span>
             <span></span>

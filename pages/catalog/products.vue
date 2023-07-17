@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Продукты"
-      :breadbrumb="['Каталог']"
-      lastLink="Продукты"
-    >
+    <TitleBlock title="Продукты" :breadbrumb="['Каталог']" lastLink="Продукты">
       <div class="d-flex">
         <div
           class="add-btn add-header-btn add-header-btn-padding btn-primary"
@@ -54,17 +50,10 @@
             columnWidth: '40px',
             align: 'right',
           }"
-        >
+          >{{ text }}
           <span slot="img" slot-scope="text">
-            <nuxt-img
-              format="webp"
-              v-if="text != null"
-              class="table-image"
-              :src="text"
-              alt="text"
-            />
-            <nuxt-img
-              format="webp"
+            <img v-if="text" class="table-image" :src="text" alt="text" />
+            <img
               v-else
               class="table-image"
               src="../../assets/images/photo_2023-03-04_13-28-58.jpg"
