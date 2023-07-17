@@ -49,7 +49,7 @@
                         <el-form-item :prop="`name.ru`" label="Название категории">
                           <el-input
                             v-model="ruleForm.name[item.key]"
-                            placeholder="Product model"
+                            placeholder="Название категории..."
                           ></el-input>
                         </el-form-item>
                       </div>

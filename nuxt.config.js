@@ -124,7 +124,7 @@ export default {
     },
   },
   server: {
-    port: 8000, // default: 3000
-    host: "localhost", // default: localhost
+    port: 8000,
+    host: "localhost",
   },
 };

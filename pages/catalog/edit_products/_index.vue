@@ -1321,8 +1321,13 @@ export default {
               is_default: elem.is_default,
               is_popular: elem.is_popular,
               product_of_the_day: elem.product_of_the_day,
-              characteristics: Object.values(elem.characteristicsValues).map(
-                (charItem, index) => (index % 5) + 6
+              characteristics: Object.keys(elem.characteristicsValues).map(
+                (charItem, index) => {
+                  return {
+                    characteristic_id: Number(charItem.split("_")[1]),
+                    name: elem.characteristicsValues[charItem],
+                  };
+                }
               ),
               status: elem.status,
             };

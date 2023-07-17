@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Категории"
-      :breadbrumb="['Каталог']"
-      lastLink="Категории"
-    >
+    <TitleBlock title="Категории" :breadbrumb="['Каталог']" lastLink="Категории">
       <div class="d-flex">
         <span class="mx-3">
           <LayoutHeaderBtn
@@ -53,7 +49,7 @@
                         <el-form-item :prop="`name.ru`" label="Название категории">
                           <el-input
                             v-model="ruleForm.name[item.key]"
-                            placeholder="Product model"
+                            placeholder="Название категории..."
                           ></el-input>
                         </el-form-item>
                       </div>

@@ -238,7 +238,7 @@
             <!-- Product right details -->
           </div>
           <!-- Product Variants -->
-          <transition-group name="el-zoom-in-top" tag="ul">
+          <transition-group name="el-zoom-in-top" tag="ul" v-if="atributes.length > 0">
             <div
               class="form-container product_list"
               v-for="element in ruleForm.products"
@@ -510,7 +510,11 @@
             </div>
           </transition-group>
           <div>
-            <div class="add-variant create-inner-variant mt-0" @click="addProduct">
+            <div
+              class="add-variant create-inner-variant mt-0"
+              @click="addProduct"
+              v-if="atributes.length > 0"
+            >
               <span v-html="addInnerValidatIcon"></span>
               Добавит варизаци
             </div>
@@ -1326,8 +1330,13 @@ export default {
               is_default: elem.is_default,
               is_popular: elem.is_popular,
               product_of_the_day: elem.product_of_the_day,
-              characteristics: Object.values(elem.characteristicsValues).map(
-                (charItem, index) => (index % 5) + 6
+              characteristics: Object.keys(elem.characteristicsValues).map(
+                (charItem, index) => {
+                  return {
+                    characteristic_id: Number(charItem.split("_")[1]),
+                    name: elem.characteristicsValues[charItem],
+                  };
+                }
               ),
               status: elem.status,
             };
