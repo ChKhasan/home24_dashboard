@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Топ меню" :breadbrumb="['Контент сайта']" lastLink="Топ меню">
+    <TitleBlock title="Aкции" :breadbrumb="['Маркетинг']" lastLink="Aкции">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
-        @click="$router.push('/contents/top-menu/add')"
+        @click="$router.push('/inbox/promotions/add')"
       >
         <span class="svg-icon" v-html="addIcon"></span>
         Изменять
@@ -13,7 +13,7 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Топ меню" />
+            <FormTitle title="Aкции" />
           </div>
         </div>
         <div class="antd_table product_table">

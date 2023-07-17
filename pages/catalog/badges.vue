@@ -466,25 +466,5 @@ export default {
     }
   }
 }
-.badges-color-picker .el-color-dropdown__link-btn {
-  display: none;
-}
-.badges-color-picker .el-color-dropdown__btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.badges-color-picker.el-color-dropdown__link-btn::after {
-  content: "Clear";
-  position: absolute;
-}
-.badges-color-picker .el-color-dropdown__btn::after {
-  content: "OK";
-  position: absolute;
-}
-.badges-color-picker .el-color-dropdown__btn span,
-.badges-color-picker .el-color-dropdown__link-btn span {
-  opacity: 0;
-}
+
 </style>
