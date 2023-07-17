@@ -135,15 +135,15 @@
                             class="drop__list"
                           >
                             <template v-slot:item="{ item }">
-                              <drag class="item" :key="item.id">
+                              <drag class="item" :key="item.elemId">
                                 <div class="d-flex align-items-center color_picker">
                                   <el-color-picker
                                     popper-class="badges-color-picker"
-                                    v-model="item.name[itemLang.key]"
+                                    v-model="item.name"
                                   ></el-color-picker>
                                   <div
                                     class="variant-btn variant-btn-delete color_picker_delete mx-2"
-                                    @click="deleteElement(item.id)"
+                                    @click="deleteElement(item.elemId)"
                                   >
                                     <svg
                                       width="30"
@@ -175,7 +175,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="d-flex justify-content-start">
+                      <div class="d-flex justify-content-start" v-if="colorPickerHide">
                         <div class="create-inner-variant mt-0" @click="addElement()">
                           <span v-html="addInnerValidatIcon"></span>
                           Добавить опции
@@ -349,6 +349,7 @@ export default {
           elemId: index + 1,
         };
       });
+      this.colorPickerHide = !data.attribute.name.ru.toUpperCase().includes("ЦВЕТ");
     },
     async __EDIT_ATRIBUTES(data) {
       try {
@@ -398,20 +399,20 @@ export default {
     this.__GET_ATRIBUT_BY_ID();
   },
   watch: {
-    colorPickerHide() {
-      this.ruleForm.optionsName = [
-        {
-          name: {
-            ru: "",
-            uz: "",
-            en: "",
-          },
-          position: 1,
-          id: 1,
-        },
-      ];
-      console.log(this.ruleForm);
-    },
+    // colorPickerHide() {
+    //   this.ruleForm.optionsName = [
+    //     {
+    //       name: {
+    //         ru: "",
+    //         uz: "",
+    //         en: "",
+    //       },
+    //       position: 1,
+    //       id: 1,
+    //     },
+    //   ];
+    //   console.log(this.ruleForm);
+    // },
   },
   components: {
     FormTitle,
@@ -422,3 +423,29 @@ export default {
   },
 };
 </script>
+<style lang="css">
+.color_picker_delete {
+  position: absolute;
+  width: 20px !important;
+  height: 20px;
+  border-radius: 4px;
+  top: -10px;
+  right: -17px;
+  display: none;
+}
+.color_picker {
+  width: 40px;
+  position: relative;
+}
+.color_picker:hover .color_picker_delete {
+  display: flex;
+}
+.drop__list {
+  display: flex;
+  margin-right: 10px;
+  gap: 10px;
+}
+.bottom_text label::after {
+  display: none;
+}
+</style>
