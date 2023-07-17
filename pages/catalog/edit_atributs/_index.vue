@@ -8,11 +8,7 @@
       label-width="120px"
       class="demo-ruleForm"
     >
-      <TitleBlock
-        title="Атрибуты"
-        :breadbrumb="['Каталог']"
-        lastLink="Атрибуты"
-      >
+      <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
         <div class="d-flex">
           <span class="mx-3">
             <LayoutHeaderBtn
@@ -72,7 +68,11 @@
                       class="form-block required"
                       :class="{ 'multi-select-required': multiSelectError }"
                     >
-                      <el-form-item label-position="top" label="Имя опции">
+                      <el-form-item
+                        label-position="top"
+                        label="Имя опции"
+                        v-if="colorPickerHide"
+                      >
                         <drop-list
                           :items="ruleForm.optionsName"
                           @insert="onInsert"
@@ -122,6 +122,59 @@
                           </template>
                         </drop-list>
                       </el-form-item>
+                      <div class="d-flex color" v-else>
+                        <el-form-item
+                          label-position="top"
+                          label="Имя цветa"
+                          style="width: auto"
+                        >
+                          <drop-list
+                            :items="ruleForm.optionsName"
+                            @insert="onInsert"
+                            @reorder="$event.apply(ruleForm.optionsName)"
+                            class="drop__list"
+                          >
+                            <template v-slot:item="{ item }">
+                              <drag class="item" :key="item.id">
+                                <div class="d-flex align-items-center color_picker">
+                                  <el-color-picker
+                                    popper-class="badges-color-picker"
+                                    v-model="item.name[itemLang.key]"
+                                  ></el-color-picker>
+                                  <div
+                                    class="variant-btn variant-btn-delete color_picker_delete mx-2"
+                                    @click="deleteElement(item.id)"
+                                  >
+                                    <svg
+                                      width="30"
+                                      height="30"
+                                      viewBox="0 0 30 30"
+                                      fill="none"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                                        stroke="#F65160"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                      />
+                                    </svg>
+                                  </div>
+                                </div>
+                              </drag>
+                            </template>
+                            <template v-slot:feedback="{ data }">
+                              <div class="item feedback" :key="data">{{ data }}</div>
+                            </template>
+                          </drop-list>
+                        </el-form-item>
+                        <div class="variant_btns mb-1 mt-0" @click="addElement()">
+                          <div class="variant-btn variant-btn-check">
+                            <span v-html="addInnerValidatIcon"></span>
+                          </div>
+                        </div>
+                      </div>
                       <div class="d-flex justify-content-start">
                         <div class="create-inner-variant mt-0" @click="addElement()">
                           <span v-html="addInnerValidatIcon"></span>
@@ -154,6 +207,7 @@ export default {
   layout: "toolbar",
   data() {
     return {
+      colorPickerHide: true,
       activeName: "Русский",
       multiSelectError: true,
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
@@ -245,7 +299,7 @@ export default {
         this.ruleForm.group_id = this.group_id;
       }
       const newOptionsNames = this.options.map((item) => (item.name = item.name.ru));
-      const newOptions = this.ruleForm.optionsName.map((item,index) => {
+      const newOptions = this.ruleForm.optionsName.map((item, index) => {
         if (newOptionsNames.includes(item.name)) {
           let opt = this.options.find((item2) => item2.name == item.name);
           console.log(opt);
@@ -261,7 +315,7 @@ export default {
             name: {
               ru: item.name,
             },
-            position: index + 1
+            position: index + 1,
           };
         }
       });

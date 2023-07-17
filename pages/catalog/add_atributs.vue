@@ -221,7 +221,7 @@ export default {
   mixins: [status],
   data() {
     return {
-      colorPickerHide: false,
+      colorPickerHide: true,
       activeName: "Русский",
       multiSelectError: true,
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
