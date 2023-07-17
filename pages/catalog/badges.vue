@@ -140,7 +140,7 @@
             </el-form-item>
           </div>
           <div class="d-flex">
-            <div class="form-block" v-if="editId">
+            <div class="form-block">
               <div>
                 <label for="">Background color </label>
               </div>
@@ -149,7 +149,7 @@
                 v-model="ruleForm.background_color"
               ></el-color-picker>
             </div>
-            <div class="form-block mx-5" v-if="editId">
+            <div class="form-block mx-5">
               <div>
                 <label for="">Text color </label>
               </div>
