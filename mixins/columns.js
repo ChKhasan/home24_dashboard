@@ -177,6 +177,14 @@ export default {
           colSpan: 0,
         },
         {
+          title: "Карегория",
+          dataIndex: "category",
+          scopedSlots: { customRender: "category" },
+          className: "column-code",
+          key: "category",
+          width: "10%",
+        },
+        {
           title: "Код",
           dataIndex: "model",
           scopedSlots: { customRender: "model" },

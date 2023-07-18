@@ -263,7 +263,7 @@
                         v-for="item in element.variations"
                         :key="item.id"
                       >
-                        <div class="product_variant_block" v-if="atributes.length > 0">
+                        <div class="product_variant_block">
                           <div class="variant-grid-4 w-100">
                             <el-form
                               label-position="top"
@@ -275,6 +275,7 @@
                               action=""
                             >
                               <div
+                                v-if="atributes.length > 0"
                                 class="form-variant-block atribut_selects"
                                 v-for="(atribut, index) in atributes"
                               >
@@ -318,6 +319,30 @@
                                 type="number"
                               ></el-input>
                             </div>
+                            <el-form-item
+                              prop="attributes"
+                              label="Aкции "
+                              class="form-variant-block"
+                            >
+                              <el-select
+                                class="w-100"
+                                allow-create
+                                :loading="brands.length < 1"
+                                loading-text="Loading..."
+                                no-data-text="Не найдено"
+                                no-match-text="Не найдено"
+                                multiple
+                                placeholder="Atibut"
+                              >
+                                <el-option
+                                  v-for="item in allAtributes"
+                                  :key="item?.id"
+                                  :label="item?.name?.ru"
+                                  :value="item?.id"
+                                >
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
                             <div class="form-block">
                               <div><label>Popular</label></div>
                               <span>
@@ -361,26 +386,6 @@
                               </span>
                             </div>
                           </div>
-                          <el-form-item prop="attributes">
-                            <el-select
-                              class="w-100"
-                              allow-create
-                              :loading="brands.length < 1"
-                              loading-text="Loading..."
-                              no-data-text="Не найдено"
-                              no-match-text="Не найдено"
-                              multiple
-                              placeholder="Atibut"
-                            >
-                              <el-option
-                                v-for="item in allAtributes"
-                                :key="item?.id"
-                                :label="item?.name?.ru"
-                                :value="item?.id"
-                              >
-                              </el-option>
-                            </el-select>
-                          </el-form-item>
                           <div class="variant_btns mb-1">
                             <div
                               class="variant-btn variant-btn-delete mx-2"

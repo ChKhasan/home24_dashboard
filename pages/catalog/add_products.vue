@@ -1692,6 +1692,7 @@ export default {
   width: 100%;
   height: 100vh;
   overflow-y: scroll;
+  margin-top: 0;
 }
 .product_list {
   transition: 0.2s;
