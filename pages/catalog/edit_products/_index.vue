@@ -1613,49 +1613,44 @@ export default {
       this.__GET_CATEGORY_BY_ID(data.info.category.id);
       this.ruleForm.products = data.products.map((item, productIndex) => {
         let characterNames = {};
-        let variat = [];
-        if (item.variations) {
-          const variat = item.variations.map((variant, index) => {
-            let atribut = {};
-            let charac = {};
-            variant.attribute_options.forEach((artibutItem) => {
-              atribut = {
-                ...atribut,
-                [`at_${artibutItem.attribute_id}`]: artibutItem.id,
-              };
-            });
-            variant.characteristic_options.forEach((characItem) => {
-              charac = {
-                ...charac,
-                [`char_${characItem.characteristic_id}`]: characItem.id,
-              };
-              this.rulesCharacter[`char_${characItem.characteristic_id}`] = [
-                {
-                  required: true,
-                  message: "Название бренда обязательна",
-                  trigger: "change",
-                },
-              ];
-            });
-            let options = variant.attribute_options.map((atrOp) => atrOp.id);
-            let characteristics = variant.characteristic_options.map(
-              (charOp) => charOp.id
-            );
-            return {
-              id: index + 1,
-              indexId: variant.id,
-              options: [...options],
-              optionName: atribut,
-              characteristics: [...characteristics],
-              characteristicsValues: charac,
-              price: variant.price,
-              is_default: 1,
-              is_popular: variant.is_popular,
-              product_of_the_day: variant.product_of_the_day,
-              status: variant.status,
+        const variat = item.variations.map((variant, index) => {
+          let atribut = {};
+          let charac = {};
+          variant.attribute_options.forEach((artibutItem) => {
+            atribut = {
+              ...atribut,
+              [`at_${artibutItem.attribute_id}`]: artibutItem.id,
             };
           });
-        }
+          variant.characteristic_options.forEach((characItem) => {
+            charac = {
+              ...charac,
+              [`char_${characItem.characteristic_id}`]: characItem.id,
+            };
+            this.rulesCharacter[`char_${characItem.characteristic_id}`] = [
+              {
+                required: true,
+                message: "Название бренда обязательна",
+                trigger: "change",
+              },
+            ];
+          });
+          let options = variant.attribute_options.map((atrOp) => atrOp.id);
+          let characteristics = variant.characteristic_options.map((charOp) => charOp.id);
+          return {
+            id: index + 1,
+            indexId: variant.id,
+            options: [...options],
+            optionName: atribut,
+            characteristics: [...characteristics],
+            characteristicsValues: charac,
+            price: variant.price,
+            is_default: 1,
+            is_popular: variant.is_popular,
+            product_of_the_day: variant.product_of_the_day,
+            status: variant.status,
+          };
+        });
         return {
           id: productIndex + 1,
           images: item.images.map((itemImg) => itemImg.lg_img),
@@ -1672,24 +1667,7 @@ export default {
               url: itemImg2.lg_img,
             };
           }),
-          variations:
-            variat.length > 0
-              ? variat
-              : [
-                  {
-                    id: 1,
-                    indexId: 0,
-                    options: [],
-                    optionName: {},
-                    characteristics: [],
-                    characteristicsValues: {},
-                    price: 0,
-                    is_default: 1,
-                    is_popular: 0,
-                    product_of_the_day: 0,
-                    status: "active",
-                  },
-                ],
+          variations: variat,
         };
       });
       this.characterRequired = true;
