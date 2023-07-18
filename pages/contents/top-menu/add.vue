@@ -36,7 +36,7 @@
               :key="index"
             >
               <div class="form-container form-container-ltr">
-                <FormTitle title="Top bar" />
+                <FormTitle title="Верхняя панель" />
                 <div class="list">
                   <drop-list
                     :items="ruleForm.attributes"
@@ -48,13 +48,13 @@
                         <div class="top-menu-input-grid pb-3">
                           <el-form-item
                             class="form-block required mb-0 w-100 align-items-start"
-                            label="Category"
+                            label="Категория или акция"
                           >
                             <a-select
                               mode="multiple"
                               label-in-value
                               :value="value"
-                              placeholder="Select users"
+                              placeholder="Поиск..."
                               style="width: 100%"
                               :filter-option="false"
                               :not-found-content="fetching ? undefined : null"
@@ -72,12 +72,12 @@
                             </a-select>
                           </el-form-item>
                           <el-form-item
-                            label="Short name"
+                            label="Короткое имя"
                             class="mb-0 form-block required w-100 align-items-start"
                           >
                             <el-input
                               v-model="item.name[itemLang.key]"
-                              placeholder="Atribut Name"
+                              placeholder="Короткое имя..."
                             ></el-input>
                           </el-form-item>
                           <el-form-item
@@ -86,26 +86,18 @@
                           >
                             <el-input
                               v-model="item.name[itemLang.key]"
-                              placeholder="Atribut Name"
+                              placeholder="Svg..."
                             ></el-input>
                           </el-form-item>
-                          <div
-                            class="mb-0 form-block"
-                            label="color start"
-                            style="line-height: 40px"
-                          >
-                            <label for="">color start</label>
+                          <div class="mb-0 form-block" style="line-height: 40px">
+                            <label for="">Цвет 1</label>
                             <el-color-picker
                               popper-class="badges-color-picker"
                               v-model="ruleForm.background_color"
                             ></el-color-picker>
                           </div>
-                          <div
-                            class="mb-0 form-block"
-                            label="color end"
-                            style="line-height: 40px"
-                          >
-                            <label for="">color end</label>
+                          <div class="mb-0 form-block" style="line-height: 40px">
+                            <label for="">Цвет 2</label>
                             <el-color-picker
                               popper-class="badges-color-picker"
                               v-model="ruleForm.background_color"

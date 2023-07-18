@@ -1,9 +1,9 @@
 <template lang="html">
   <div>
-    <TitleBlock title="Скидки" :breadbrumb="['Каталог']" lastLink="Атрибуты">
+    <TitleBlock title="Скидки" :breadbrumb="['Маркетинг']" lastLink="Скидки">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
-        @click="$router.push('/catalog/add_discount')"
+        @click="$router.push('/inbox/add_discount')"
       >
         <span class="svg-icon" v-html="addIcon"></span>
         Добавить
@@ -11,26 +11,19 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header"
-        >
+        <div class="d-flex justify-content-between align-items-center card_header">
           <div
             class="prodduct-list-header-grid w-100 align-items-center"
             style="grid-gap: 1.25rem"
           >
-            <!-- <div> -->
             <SearchInput
-              placeholder="
-              Поиск"
-              @changeSearch="
-                changeSearch($event, '/catalog/discount', '__GET_DISCOUNT')
-              "
+              placeholder="Поиск"
+              @changeSearch="changeSearch($event, '/inbox/discount', '__GET_DISCOUNT')"
             />
-            <!-- </div> -->
             <span></span>
             <span></span>
             <a-button
-              @click="clearQuery('/catalog/discount', '__GET_DISCOUNT')"
+              @click="clearQuery('/inbox/discount', '__GET_DISCOUNT')"
               type="primary"
               class="d-flex align-items-center justify-content-center"
               style="height: 38px"
@@ -41,13 +34,13 @@
         <div class="antd_table product_table">
           <a-table
             :columns="columnDiscount"
-            :data-source="atributes"
+            :data-source="discounts"
             :pagination="false"
             :loading="loading"
             align="center"
           >
             <span slot="key" slot-scope="text">#{{ text }}</span>
-            <span slot="title" slot-scope="text">
+            <span slot="name" slot-scope="text">
               <h6>{{ text?.ru }}</h6>
             </span>
             <span slot="desc" slot-scope="text">
@@ -56,7 +49,7 @@
             <span slot="id" slot-scope="text">
               <span
                 class="action-btn"
-                @click="$router.push(`/catalog/edit_discount/${text}`)"
+                @click="$router.push(`/inbox/edit_discount/${text}`)"
               >
                 <img :src="editIcon" alt="" />
               </span>
@@ -80,11 +73,7 @@
               placeholder="Select"
               @change="
                 ($event) =>
-                  changePageSizeGlobal(
-                    $event,
-                    '/catalog/discount',
-                    '__GET_DISCOUNT'
-                  )
+                  changePageSizeGlobal($event, '/inbox/discount', '__GET_DISCOUNT')
               "
             >
               <el-option
@@ -109,10 +98,7 @@
   </div>
 </template>
 <script>
-import AddBtn from "../../components/form/Add-btn.vue";
-import HeaderBtn from "../../components/form/Header-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
-import Title from "../../components/Title.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import global from "../../mixins/global";
 import status from "../../mixins/status";
@@ -128,12 +114,12 @@ export default {
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       selectedRowKeys: [],
-      atributes: [],
+      discounts: [],
       data: [],
     };
   },
   async mounted() {
-    this.getFirstData("/catalog/discount", "__GET_DISCOUNT");
+    this.getFirstData("/inbox/discount", "__GET_DISCOUNT");
   },
   methods: {
     deleteAtribut(id) {
@@ -156,13 +142,13 @@ export default {
           data?.discounts?.current_page,
           data?.discounts?.per_page
         );
-        this.atributes = data.discounts?.data.map((item, index) => {
+        this.discounts = data.discounts?.data.map((item, index) => {
           return {
             ...item,
             key: index + pageIndex,
           };
         });
-        console.log(this.atributes);
+        console.log(this.discounts);
       } catch (e) {
         this.statusFunc(e);
       }
@@ -174,14 +160,11 @@ export default {
 
   watch: {
     async current(val) {
-      this.changePagination(val, "/catalog/discount", "__GET_DISCOUNT");
+      this.changePagination(val, "/inbox/discount", "__GET_DISCOUNT");
     },
   },
   components: {
-    AddBtn,
-    Title,
     SearchInput,
-    HeaderBtn,
     TitleBlock,
   },
 };

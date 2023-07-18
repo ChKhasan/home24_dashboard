@@ -9,7 +9,7 @@
       class="demo-ruleForm"
       action=""
     >
-      <TitleBlock title="Скидка" :breadbrumb="['Каталог']" lastLink="Скидка">
+      <TitleBlock title="Скидка" :breadbrumb="['Маркетинг']" lastLink="Скидка">
         <div class="d-flex">
           <span class="mx-3">
             <LayoutHeaderBtn
@@ -24,7 +24,7 @@
             @click="submitForm('ruleFormDiscount')"
           >
             <span class="svg-icon" v-html="addIcon"></span>
-            Добавить продукт
+            Добавить
           </div>
         </div>
       </TitleBlock>
@@ -84,9 +84,7 @@
                     </div>
                     <div class="form-block mt-3">
                       <el-form-item
-                        :label="
-                          ruleForm.type == 'product' ? 'Продукты' : 'Бренды'
-                        "
+                        :label="ruleForm.type == 'product' ? 'Продукты' : 'Бренды'"
                         prop="ids"
                       >
                         <a-select
@@ -94,9 +92,7 @@
                           label-in-value
                           :value="value"
                           :placeholder="
-                            ruleForm.type == 'product'
-                              ? 'Продукты...'
-                              : 'Бренды...'
+                            ruleForm.type == 'product' ? 'Продукты...' : 'Бренды...'
                           "
                           style="width: 100%"
                           :filter-option="false"
@@ -104,11 +100,7 @@
                           @search="fetchUser"
                           @change="handleChange"
                         >
-                          <a-spin
-                            v-if="fetching"
-                            slot="notFoundContent"
-                            size="small"
-                          />
+                          <a-spin v-if="fetching" slot="notFoundContent" size="small" />
                           <a-select-option v-for="d in data" :key="d.id">
                             {{ d.name.ru }}
                           </a-select-option>
@@ -125,9 +117,7 @@
                 <FormTitle title="Параметры" />
                 <div
                   class="form-block status-style"
-                  :class="[
-                    ruleForm.status == 1 ? 'status-active' : 'status-inactive',
-                  ]"
+                  :class="[ruleForm.status == 1 ? 'status-active' : 'status-inactive']"
                 >
                   <div><label>Статус</label></div>
                   <el-select
@@ -313,13 +303,13 @@ export default {
       });
     },
     headerbtnCallback() {
-      this.$router.push("/catalog/atributs");
+      this.$router.push("/inbox/discount");
     },
     async __POST_Discount(data) {
       try {
         await this.$store.dispatch("fetchDiscount/postDiscount", data);
-        this.notification("Success","Атрибут успешно добавлен","success")
-        this.$router.push("/catalog/atributs");
+        this.notification("Success","Успешно добавлен","success")
+        this.$router.push("/inbox/discount");
       } catch (e) {
         this.statusFunc(e.response);
       }

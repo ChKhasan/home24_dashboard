@@ -294,13 +294,6 @@ export default {
             path: "catalog-badges",
             disabled: false,
           },
-          {
-            name: "Скидка",
-            index: "17",
-            to: "/catalog/discount",
-            path: "catalog-discount",
-            disabled: false,
-          },
         ],
         showcases: [],
         orders: [
@@ -377,9 +370,9 @@ export default {
           {
             name: "Скидки",
             index: "31",
-            to: "/inbox/sms",
-            path: "inbox-sms",
-            disabled: true,
+            to: "/inbox/discount",
+            path: "inbox-discount",
+            disabled: false,
           },
           {
             name: "По Email",

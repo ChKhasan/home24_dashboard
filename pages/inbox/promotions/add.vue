@@ -54,7 +54,7 @@
                         </el-form-item>
                       </div>
                       <div class="form-block required">
-                        <el-form-item prop="choose_category" label="Короткое название">
+                        <el-form-item prop="short_name.ru" label="Короткое название">
                           <el-input
                             v-model="ruleForm.name[item.key]"
                             placeholder="Короткое название..."
@@ -102,13 +102,13 @@
                 </div>
 
                 <div class="d-flex">
-                  <el-form-item class="mb-0 form-block mr-3" label="color start">
+                  <el-form-item class="mb-0 form-block mr-3" label="Цвет 1">
                     <el-color-picker
                       popper-class="badges-color-picker"
                       v-model="ruleForm.position"
                     ></el-color-picker>
                   </el-form-item>
-                  <el-form-item class="mb-0 form-block" label="color end">
+                  <el-form-item class="mb-0 form-block" label="Цвет 2">
                     <el-color-picker
                       popper-class="badges-color-picker"
                       v-model="ruleForm.position"
@@ -208,14 +208,6 @@ export default {
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addImgIcon: require("../../../assets/svg/components/add-img-icon.svg?raw"),
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
-      categories: [
-        {
-          name: {
-            ru: "Главная категория ",
-          },
-          id: null,
-        },
-      ],
       fileList: {
         img: [],
         icon: [],
@@ -249,29 +241,22 @@ export default {
           ru: [
             {
               required: true,
-              message: "Название категории обязательна",
+              message: "This field is required",
               trigger: "change",
             },
           ],
         },
-        attributes: [
-          {
-            required: true,
-            message: "Атрибуты обязательны",
-            trigger: "change",
-          },
-        ],
-        group_characteristics: [
-          {
-            required: true,
-            message: "Группа характеристик обязательна",
-            trigger: "change",
-          },
-        ],
+        short_name: {
+          ru: [
+            {
+              required: true,
+              message: "This field is required",
+              trigger: "change",
+            },
+          ],
+        },
       },
       ruleForm: {
-        parent_id: null,
-        is_popular: 0,
         status: "active",
         desc: {
           ru: "",
@@ -279,6 +264,11 @@ export default {
           en: "",
         },
         name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
+        short_name: {
           ru: "",
           uz: "",
           en: "",
@@ -333,25 +323,9 @@ export default {
   },
   methods: {
     submitForm(ruleForm) {
-      const data = {
-        ...this.ruleForm,
-        attributes: this.attributes.map((item) => item.name),
-        group_characteristics: this.group_characteristics.map((item) => item.name),
-      };
-
-      delete data["status"];
+      console.log(this.ruleForm);
       this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-          if (!this.attributes[0].name || !this.group_characteristics[0].name) {
-            !this.attributes[0].name
-              ? this.notificationError("Error", "Вы не добавили атрибут")
-              : this.notificationError("Error", "Вы не добавили группу");
-          } else {
-            this.__POST_CATEGORIES(data);
-          }
-        } else {
-          return false;
-        }
+        valid ? this.__POST_PROMOTIONS(data) : false;
       });
     },
     handleCancel() {
@@ -383,27 +357,8 @@ export default {
     toBack() {
       this.$router.push("/inbox/promotions");
     },
-    async __GET_CATEGORIES() {
-      const data = await this.$store.dispatch("fetchCategories/getCategories");
-      data.categories?.data.forEach((item) => {
-        if (item.children.length > 0) {
-          this.categories = [...this.categories, item, ...item.children];
-        } else {
-          this.categories = [...this.categories, item];
-        }
-      });
-    },
-    async __GET_ATRIBUTES() {
-      const data = await this.$store.dispatch("fetchAtributes/getAtributes");
-      this.atributes = data.attributes?.data;
-      this.allAtributes = data.attributes?.data;
-    },
-    async __GET_GROUPS() {
-      const data = await this.$store.dispatch("fetchCharacters/getGroups");
-      this.groups = data?.groups;
-      this.allGroups = data?.groups;
-    },
-    async __POST_CATEGORIES(res) {
+
+    async __POST_PROMOTIONS(res) {
       try {
         await this.$store.dispatch("fetchCategories/postCategories", res);
         this.notification("Success", "Категория успешно добавлен", "success");
@@ -413,11 +368,7 @@ export default {
       }
     },
   },
-  mounted() {
-    this.__GET_CATEGORIES();
-    this.__GET_ATRIBUTES();
-    this.__GET_GROUPS();
-  },
+
   components: {
     FormTitle,
     TitleBlock,

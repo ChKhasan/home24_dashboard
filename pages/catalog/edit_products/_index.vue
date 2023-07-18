@@ -147,278 +147,6 @@
                   </div>
                 </el-tab-pane>
               </el-tabs>
-              <!-- Product Variants -->
-
-              <transition-group name="el-zoom-in-top" tag="ul">
-                <div
-                  class="form-container product_list"
-                  v-for="element in ruleForm.products"
-                  :key="element.id"
-                  :class="{
-                    'variant-modal': productModal[`product_modal${element.id}`] == true,
-                  }"
-                >
-                  <div class="d-flex justify-content-between variant-header">
-                    <h4 class="variant-title">Вариация №{{ element.id }}</h4>
-                    <div class="d-flex">
-                      <div
-                        class="variant-btn variant-btn-check"
-                        v-if="productModal[`product_modal${element.id}`]"
-                        @click="fullScreen(element.id, false)"
-                      >
-                        <a-icon
-                          type="fullscreen-exit"
-                          :style="{ color: '#3699FF', fontSize: '18px' }"
-                        />
-                      </div>
-                      <div
-                        v-else
-                        class="variant-btn variant-btn-check mx-3"
-                        @click="fullScreen(element.id, true)"
-                      >
-                        <a-icon
-                          type="fullscreen"
-                          :style="{ color: '#3699FF', fontSize: '18px' }"
-                        />
-                      </div>
-                      <div
-                        v-if="!productModal[`product_modal${element.id}`]"
-                        class="variant-btn variant-btn-delete"
-                        @click="deleteProduct(element.id)"
-                        v-html="removeIcon"
-                      ></div>
-                    </div>
-                  </div>
-                  <div class="variant-img-container">
-                    <h5 class="variant-img-title">Изображение товара</h5>
-
-                    <div class="variant-img">
-                      <div class="list2">
-                        <drop-list
-                          :items="element.imagesData"
-                          class="item-upload"
-                          @insert="($event) => onInsert($event, element.id)"
-                          @reorder="$event.apply(element.imagesData)"
-                        >
-                          <template v-slot:item="{ item }">
-                            <drag :key="item.uid">
-                              <div class="upload-card">
-                                <div class="upload_actions">
-                                  <span @click="uploadSHow(item)">
-                                    <a-icon class="upload_icons" type="eye" />
-                                  </span>
-                                  <span @click="uploadDelete(element.id, item.uid)">
-                                    <a-icon class="upload_icons" type="delete" />
-                                  </span>
-                                </div>
-                                <img
-                                  v-if="item?.response?.path"
-                                  :src="item?.response?.path"
-                                  alt=""
-                                />
-                                <a-spin tip="Uploading..." v-else> </a-spin>
-                              </div>
-                            </drag>
-                          </template>
-
-                          <template v-slot:feedback="{ data }">
-                            <div class="item feedback" :key="data">
-                              {{ data }}
-                            </div>
-                          </template>
-                        </drop-list>
-                      </div>
-                      <a-upload
-                        action="https://api.e-shop.ndc.uz/api/admin/files/upload"
-                        list-type="picture-card"
-                        :multiple="true"
-                        :showUploadList="false"
-                        :file-list="element.imagesData"
-                        @preview="handlePreview"
-                        @change="($event) => handleChangeVatiant($event, element.id)"
-                      >
-                        <div v-if="fileList.length < 50">
-                          <span v-html="addImgIcon"></span>
-                          <div class="ant-upload-text">Добавить изображение</div>
-                        </div>
-                      </a-upload>
-                      <a-modal
-                        v-model="previewVisible"
-                        :footer="null"
-                        @cancel="handleCancel"
-                      >
-                        <img alt="example" style="width: 100%" :src="previewImage" />
-                      </a-modal>
-                    </div>
-                    <p class="variant-img-text">
-                      Изображение товар
-                      <span>Первое изображение товара является главной.</span>
-                    </p>
-                  </div>
-                  <div>
-                    <!-- Validations -->
-                    <transition-group name="el-zoom-in-top" tag="ul">
-                      <div
-                        class="product-variant"
-                        v-for="item in element.variations"
-                        :key="item.id"
-                      >
-                        <div class="product_variant_block">
-                          <div class="variant-grid-4 w-100">
-                            <el-form
-                              label-position="top"
-                              :model="item.optionName"
-                              :rules="rulesAtributes"
-                              ref="ruleFormAtributes"
-                              label-width="120px"
-                              class="demo-ruleForm d-flex"
-                              action=""
-                            >
-                              <div
-                                v-if="atributes.length > 0"
-                                class="form-variant-block atribut_selects"
-                                v-for="(atribut, index) in atributes"
-                              >
-                                <div>
-                                  <label>{{ atribut.name.ru }}</label>
-                                </div>
-                                <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
-                                  <el-select
-                                    v-model="item.optionName[`at_${atribut.id}`]"
-                                    class="w-100"
-                                    default-first-option
-                                    popper-class="select-popper-hover"
-                                    placeholder="Параметры"
-                                    @change="
-                                      atributOptions({
-                                        productId: element.id,
-                                        variantId: item.id,
-                                        index: index,
-                                        name: atribut.name.ru,
-                                        id: atribut.id,
-                                      })
-                                    "
-                                  >
-                                    <el-option
-                                      v-for="optionElement in atribut.options"
-                                      :key="optionElement.id"
-                                      :label="optionElement.name.ru"
-                                      :value="optionElement.id"
-                                    >
-                                    </el-option>
-                                  </el-select>
-                                </el-form-item>
-                              </div>
-                            </el-form>
-
-                            <div class="form-variant-block">
-                              <div><label>Price</label></div>
-                              <el-input
-                                v-model="item.price"
-                                placeholder="Price"
-                                type="number"
-                              ></el-input>
-                            </div>
-                            <el-form-item
-                              prop="attributes"
-                              label="Aкции "
-                              class="form-variant-block"
-                            >
-                              <el-select
-                                class="w-100"
-                                allow-create
-                                :loading="brands.length < 1"
-                                loading-text="Loading..."
-                                no-data-text="Не найдено"
-                                no-match-text="Не найдено"
-                                multiple
-                                placeholder="Atibut"
-                              >
-                                <el-option
-                                  v-for="item in allAtributes"
-                                  :key="item?.id"
-                                  :label="item?.name?.ru"
-                                  :value="item?.id"
-                                >
-                                </el-option>
-                              </el-select>
-                            </el-form-item>
-                            <div class="form-block">
-                              <div><label>Popular</label></div>
-                              <span>
-                                <a-switch
-                                  :checked="item.is_popular == 1"
-                                  @change="
-                                    ($event) =>
-                                      $event
-                                        ? (item.is_popular = 1)
-                                        : (item.is_popular = 0)
-                                  "
-                                />
-                              </span>
-                            </div>
-                            <div class="form-block mx-2">
-                              <div><label>Pr of day</label></div>
-                              <span>
-                                <a-switch
-                                  :checked="item.product_of_the_day == 1"
-                                  @change="
-                                    ($event) =>
-                                      $event
-                                        ? (item.product_of_the_day = 1)
-                                        : (item.product_of_the_day = 0)
-                                  "
-                                />
-                              </span>
-                            </div>
-                            <div class="form-block">
-                              <div><label>Stat</label></div>
-                              <span>
-                                <a-switch
-                                  :checked="item.status == 'active'"
-                                  @change="
-                                    ($event) =>
-                                      $event
-                                        ? (item.status = 'active')
-                                        : (item.status = 'inactive')
-                                  "
-                                />
-                              </span>
-                            </div>
-                          </div>
-                          <div class="variant_btns mb-1">
-                            <div
-                              class="variant-btn variant-btn-delete mx-2"
-                              @click="deleteValidation(element.id, item.id)"
-                              v-html="removeIcon"
-                            ></div>
-                            <div
-                              class="variant-btn variant-btn-check"
-                              @click="onChangeVariants(element.id, item.id)"
-                            >
-                              <a-radio :checked="item.is_default == 1"></a-radio>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </transition-group>
-                    <!-- Validations -->
-                  </div>
-                  <div class="d-flex justify-content-start" v-if="atributes.length > 0">
-                    <div class="create-inner-variant" @click="addValidation(element.id)">
-                      <span v-html="addInnerValidatIcon"></span>
-                      Добавит внутренний варизаци
-                    </div>
-                  </div>
-                </div>
-              </transition-group>
-              <div>
-                <div class="add-variant create-inner-variant mt-0" @click="addProduct">
-                  <span v-html="addInnerValidatIcon"></span>
-                  Добавит варизаци
-                </div>
-              </div>
-              <!-- Product Variants -->
             </div>
             <!-- Product right details -->
             <div class="products-img-grid">
@@ -511,6 +239,279 @@
             </div>
             <!-- Product right details -->
           </div>
+          <!-- Product Variants -->
+
+          <transition-group name="el-zoom-in-top" tag="ul">
+            <div
+              class="form-container product_list"
+              v-for="element in ruleForm.products"
+              :key="element.id"
+              :class="{
+                'variant-modal': productModal[`product_modal${element.id}`] == true,
+              }"
+            >
+              <div class="d-flex justify-content-between variant-header">
+                <h4 class="variant-title">Вариация №{{ element.id }}</h4>
+                <div class="d-flex">
+                  <div
+                    class="variant-btn variant-btn-check"
+                    v-if="productModal[`product_modal${element.id}`]"
+                    @click="fullScreen(element.id, false)"
+                  >
+                    <a-icon
+                      type="fullscreen-exit"
+                      :style="{ color: '#3699FF', fontSize: '18px' }"
+                    />
+                  </div>
+                  <div
+                    v-else
+                    class="variant-btn variant-btn-check mx-3"
+                    @click="fullScreen(element.id, true)"
+                  >
+                    <a-icon
+                      type="fullscreen"
+                      :style="{ color: '#3699FF', fontSize: '18px' }"
+                    />
+                  </div>
+                  <div
+                    v-if="!productModal[`product_modal${element.id}`]"
+                    class="variant-btn variant-btn-delete"
+                    @click="deleteProduct(element.id)"
+                    v-html="removeIcon"
+                  ></div>
+                </div>
+              </div>
+              <div class="variant-img-container">
+                <h5 class="variant-img-title">Изображение товара</h5>
+
+                <div class="variant-img">
+                  <div class="list2">
+                    <drop-list
+                      :items="element.imagesData"
+                      class="item-upload"
+                      @insert="($event) => onInsert($event, element.id)"
+                      @reorder="$event.apply(element.imagesData)"
+                    >
+                      <template v-slot:item="{ item }">
+                        <drag :key="item.uid">
+                          <div class="upload-card">
+                            <div class="upload_actions">
+                              <span @click="uploadSHow(item)">
+                                <a-icon class="upload_icons" type="eye" />
+                              </span>
+                              <span @click="uploadDelete(element.id, item.uid)">
+                                <a-icon class="upload_icons" type="delete" />
+                              </span>
+                            </div>
+                            <img
+                              v-if="item?.response?.path"
+                              :src="item?.response?.path"
+                              alt=""
+                            />
+                            <a-spin tip="Uploading..." v-else> </a-spin>
+                          </div>
+                        </drag>
+                      </template>
+
+                      <template v-slot:feedback="{ data }">
+                        <div class="item feedback" :key="data">
+                          {{ data }}
+                        </div>
+                      </template>
+                    </drop-list>
+                  </div>
+                  <a-upload
+                    action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                    list-type="picture-card"
+                    :multiple="true"
+                    :showUploadList="false"
+                    :file-list="element.imagesData"
+                    @preview="handlePreview"
+                    @change="($event) => handleChangeVatiant($event, element.id)"
+                  >
+                    <div v-if="fileList.length < 50">
+                      <span v-html="addImgIcon"></span>
+                      <div class="ant-upload-text">Добавить изображение</div>
+                    </div>
+                  </a-upload>
+                  <a-modal v-model="previewVisible" :footer="null" @cancel="handleCancel">
+                    <img alt="example" style="width: 100%" :src="previewImage" />
+                  </a-modal>
+                </div>
+                <p class="variant-img-text">
+                  Изображение товар
+                  <span>Первое изображение товара является главной.</span>
+                </p>
+              </div>
+              <div>
+                <!-- Validations -->
+                <transition-group name="el-zoom-in-top" tag="ul">
+                  <div
+                    class="product-variant"
+                    v-for="item in element.variations"
+                    :key="item.id"
+                  >
+                    <div class="product_variant_block">
+                      <div class="variant-grid-4 w-100">
+                        <el-form
+                          label-position="top"
+                          :model="item.optionName"
+                          :rules="rulesAtributes"
+                          ref="ruleFormAtributes"
+                          label-width="120px"
+                          class="demo-ruleForm d-flex"
+                          action=""
+                        >
+                          <div
+                            v-if="atributes.length > 0"
+                            class="form-variant-block atribut_selects"
+                            v-for="(atribut, index) in atributes"
+                          >
+                            <div>
+                              <label>{{ atribut.name.ru }}</label>
+                            </div>
+                            <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
+                              <el-select
+                                v-model="item.optionName[`at_${atribut.id}`]"
+                                class="w-100"
+                                default-first-option
+                                popper-class="select-popper-hover"
+                                placeholder="Параметры"
+                                @change="
+                                  atributOptions({
+                                    productId: element.id,
+                                    variantId: item.id,
+                                    index: index,
+                                    name: atribut.name.ru,
+                                    id: atribut.id,
+                                  })
+                                "
+                              >
+                                <el-option
+                                  v-for="optionElement in atribut.options"
+                                  :key="optionElement.id"
+                                  :label="optionElement.name.ru"
+                                  :value="optionElement.id"
+                                >
+                                </el-option>
+                              </el-select>
+                            </el-form-item>
+                          </div>
+                        </el-form>
+
+                        <div class="form-variant-block">
+                          <div><label>Price</label></div>
+                          <el-input
+                            v-model="item.price"
+                            placeholder="Price"
+                            type="number"
+                          ></el-input>
+                        </div>
+                        <el-form-item
+                          prop="attributes"
+                          label="Aкции "
+                          class="form-variant-block"
+                        >
+                          <el-select
+                            class="w-100"
+                            allow-create
+                            :loading="brands.length < 1"
+                            loading-text="Loading..."
+                            no-data-text="Не найдено"
+                            no-match-text="Не найдено"
+                            multiple
+                            placeholder="Aкции..."
+                          >
+                            <el-option
+                              v-for="item in allAtributes"
+                              :key="item?.id"
+                              :label="item?.name?.ru"
+                              :value="item?.id"
+                            >
+                            </el-option>
+                          </el-select>
+                        </el-form-item>
+                        <el-form-item
+                          prop="attributes"
+                          label="Поиск продуктов "
+                          class="form-variant-block"
+                        >
+                          <a-input placeholder="Поиск..." />
+                        </el-form-item>
+                        <div class="form-block">
+                          <div><label>Popular</label></div>
+                          <span>
+                            <a-switch
+                              :checked="item.is_popular == 1"
+                              @change="
+                                ($event) =>
+                                  $event ? (item.is_popular = 1) : (item.is_popular = 0)
+                              "
+                            />
+                          </span>
+                        </div>
+                        <div class="form-block mx-2">
+                          <div><label>Pr of day</label></div>
+                          <span>
+                            <a-switch
+                              :checked="item.product_of_the_day == 1"
+                              @change="
+                                ($event) =>
+                                  $event
+                                    ? (item.product_of_the_day = 1)
+                                    : (item.product_of_the_day = 0)
+                              "
+                            />
+                          </span>
+                        </div>
+                        <div class="form-block">
+                          <div><label>Stat</label></div>
+                          <span>
+                            <a-switch
+                              :checked="item.status == 'active'"
+                              @change="
+                                ($event) =>
+                                  $event
+                                    ? (item.status = 'active')
+                                    : (item.status = 'inactive')
+                              "
+                            />
+                          </span>
+                        </div>
+                      </div>
+                      <div class="variant_btns mb-1">
+                        <div
+                          class="variant-btn variant-btn-delete mx-2"
+                          @click="deleteValidation(element.id, item.id)"
+                          v-html="removeIcon"
+                        ></div>
+                        <div
+                          class="variant-btn variant-btn-check"
+                          @click="onChangeVariants(element.id, item.id)"
+                        >
+                          <a-radio :checked="item.is_default == 1"></a-radio>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </transition-group>
+                <!-- Validations -->
+              </div>
+              <div class="d-flex justify-content-start" v-if="atributes.length > 0">
+                <div class="create-inner-variant" @click="addValidation(element.id)">
+                  <span v-html="addInnerValidatIcon"></span>
+                  Добавит внутренний варизаци
+                </div>
+              </div>
+            </div>
+          </transition-group>
+          <div>
+            <div class="add-variant create-inner-variant mt-0" @click="addProduct">
+              <span v-html="addInnerValidatIcon"></span>
+              Добавит варизаци
+            </div>
+          </div>
+          <!-- Product Variants -->
         </el-form>
       </div>
     </div>

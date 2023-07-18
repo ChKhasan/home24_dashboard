@@ -39,12 +39,6 @@
             :data-source="atributes"
             :pagination="false"
             :loading="loading"
-            align="center"
-            :row-selection="{
-              selectedRowKeys: selectedRowKeys,
-              columnWidth: '40px',
-              align: 'right',
-            }"
           >
             <a slot="info" slot-scope="text">
               <h6>{{ text?.name.ru }}</h6>

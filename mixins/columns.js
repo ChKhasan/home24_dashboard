@@ -362,7 +362,7 @@ export default {
           dataIndex: "title",
           key: "title",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "title" },
+          scopedSlots: { customRender: "name" },
           className: "column-name",
         },
         {
