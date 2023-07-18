@@ -68,20 +68,18 @@
           </span>
           <div slot="name" slot-scope="text">
             <h6>{{ text?.name?.ru }}</h6>
-            <span>{{
-              text?.category?.parent?.parent &&
-              text?.category?.parent?.parent?.name?.ru +
-                "/" +
-                text?.category?.parent?.name?.ru +
-                "/" +
-                text?.category?.name?.ru
-            }}</span>
+            <span
+              >{{
+                text?.category?.parent?.parent &&
+                text?.category?.parent?.parent?.name?.ru + "/"
+              }}{{
+                text?.category?.parent?.name && text?.category?.parent?.name?.ru + "/"
+              }}
+              {{ text?.category?.name && text?.category?.name?.ru }}</span
+            >
           </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
-          <h4 slot="category" slot-scope="text">
-            {{ text ? text?.name?.ru : "------" }}
-          </h4>
           <a slot="price" slot-scope="text">{{ text ? `${text}` : "------" }}</a>
           <span slot="customTitle"></span>
 
@@ -90,8 +88,8 @@
             slot-scope="text"
             class="tags-style"
             :class="{
-              tag_success: text == 'Активный',
-              tag_rejected: text == 'Неактивный',
+              tag_success: text == 'active',
+              tag_rejected: text == 'inactive',
             }"
           >
             {{ text == "active" ? "Активный " : "Неактивный" }}

@@ -1783,19 +1783,7 @@ export default {
   transition: transform 0.2s !important;
   transition: 0.2s !important;
 }
-.variant-modal {
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  border-radius: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 3000;
-  width: 100%;
-  height: 100vh;
-  overflow-y: scroll;
-}
+
 .product_list {
   transition: 0.2s;
 }
