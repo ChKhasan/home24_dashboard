@@ -1606,6 +1606,8 @@ export default {
       } else if (data.info.category.parent?.id) {
         this.cascader.push(data.info.category.parent.id);
         this.cascader.push(data.info.category.id);
+      } else {
+        this.cascader.push(data.info.category.id);
       }
       this.ruleForm.category_id = data.info.category.id;
       this.__GET_CATEGORY_BY_ID(data.info.category.id);
