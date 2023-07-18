@@ -15,7 +15,7 @@
           :loading="uploadLoading"
         >
           <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"></span>
-          Добавить категорию
+          Добавить акцию
         </a-button>
       </div>
     </TitleBlock>
@@ -147,7 +147,7 @@
                   <div><label>Svg</label></div>
                   <el-input v-model="ruleForm.icon_svg" placeholder="Svg"></el-input>
                 </div>
-                <div class="form-block">
+                <div class="form-block mb-0">
                   <div><label>Добавить значок</label></div>
                   <div class="clearfix">
                     <a-upload
@@ -381,7 +381,7 @@ export default {
       }
     },
     toBack() {
-      this.$router.push("/catalog/categories");
+      this.$router.push("/inbox/promotions");
     },
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
