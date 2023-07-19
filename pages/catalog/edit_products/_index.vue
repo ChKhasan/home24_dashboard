@@ -402,6 +402,7 @@
                         <div class="form-variant-block">
                           <div><label>Price</label></div>
                           <el-input
+                            disabled
                             v-model="item.price"
                             placeholder="Price"
                             type="number"
