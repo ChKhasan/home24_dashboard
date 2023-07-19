@@ -15,7 +15,12 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
-            <SearchInput placeholder="Поиск продукта" @changeSearch="changeSearch" />
+            <SearchInput
+              placeholder="Поиск продукта"
+              @changeSearch="
+                ($event) => changeSearch($event, '/catalog/products', '__GET_PRODUCTS')
+              "
+            />
             <div class="input status-select w-100">
               <el-select v-model="brandSearch" placeholder="Сортировать" class="w-100">
                 <el-option
@@ -31,6 +36,7 @@
             </div>
             <StatusFilter @changeStatus="changeStatus" />
             <a-button
+              @click="clearQuery('/catalog/products', '__GET_PRODUCTS')"
               type="primary"
               class="d-flex align-items-center justify-content-center"
               style="height: 38px"
@@ -241,9 +247,6 @@ export default {
         "Продукт был успешно удален",
         "__GET_PRODUCTS"
       );
-    },
-    changeSearch(val) {
-      this.searchProduct = val.target.value;
     },
     changeStatus(val) {
       // this.status = val;
