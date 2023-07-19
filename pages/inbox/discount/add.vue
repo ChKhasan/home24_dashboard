@@ -46,24 +46,24 @@
                     <div class="d-flex justify-content-between">
                       <FormTitle title="Добавить скидку" />
                     </div>
-                    <div class="form-block required">
-                      <el-form-item label="Заголовок" prop="title.ru">
-                        <el-input
-                          v-model="ruleForm.title[item.key]"
-                          placeholder="Заголовок..."
-                        ></el-input>
-                      </el-form-item>
-                    </div>
-                    <div class="form-block required">
-                      <el-form-item label="Описание" prop="desc.ru">
-                        <el-input
-                          type="textarea"
-                          rows="5"
-                          v-model="ruleForm.desc[item.key]"
-                          placeholder="Описание..."
-                        ></el-input>
-                      </el-form-item>
-                    </div>
+                    <el-form-item
+                      label="Заголовок"
+                      prop="title.ru"
+                      class="form-block required d-flex align-items-start"
+                    >
+                      <el-input
+                        v-model="ruleForm.title[item.key]"
+                        placeholder="Заголовок..."
+                      ></el-input>
+                    </el-form-item>
+                    <el-form-item label="Описание" class="form-block">
+                      <el-input
+                        type="textarea"
+                        rows="5"
+                        v-model="ruleForm.desc[item.key]"
+                        placeholder="Описание..."
+                      ></el-input>
+                    </el-form-item>
                     <div class="discount-grid-input">
                       <div class="form-block required mb-0">
                         <el-form-item label="Процент">
@@ -81,37 +81,95 @@
                           ></el-input>
                         </el-form-item>
                       </div>
-                    </div>
-                    <div class="form-block mt-3">
-                      <el-form-item
-                        :label="ruleForm.type == 'product' ? 'Продукты' : 'Бренды'"
-                        prop="ids"
+                      <div
+                        class="add-btn add-header-btn add-header-btn-padding btn-primary mb-1"
+                        type="submit"
+                        @click="submitForm('ruleFormDiscount')"
                       >
-                        <a-select
-                          mode="multiple"
-                          label-in-value
-                          :value="value"
-                          :placeholder="
-                            ruleForm.type == 'product' ? 'Продукты...' : 'Бренды...'
-                          "
-                          style="width: 100%"
-                          :filter-option="false"
-                          :not-found-content="fetching ? undefined : null"
-                          @search="fetchUser"
-                          @change="handleChange"
-                        >
-                          <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-                          <a-select-option v-for="d in data" :key="d.id">
-                            {{ d.name.ru }}
-                          </a-select-option>
-                        </a-select>
-                      </el-form-item>
+                        Save
+                      </div>
                     </div>
                   </div>
                 </el-tab-pane>
               </el-tabs>
+
+              <div class="form-container">
+                <div class="d-flex justify-content-between">
+                  <FormTitle title="Продукты" />
+                </div>
+
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 2fr 1fr 1fr auto;
+                    grid-gap: 10px;
+                  "
+                  class="mb-3"
+                  v-for="product in products"
+                  :key="product.id"
+                >
+                  <el-form-item
+                    class="form-block mb-0"
+                    :label="ruleForm.type == 'product' ? 'Продукты' : 'Бренды'"
+                    prop="ids"
+                  >
+                    <a-select
+                      mode="multiple"
+                      label-in-value
+                      :value="value"
+                      :placeholder="
+                        ruleForm.type == 'product' ? 'Продукты...' : 'Бренды...'
+                      "
+                      style="width: 100%"
+                      :filter-option="false"
+                      :not-found-content="fetching ? undefined : null"
+                      @search="fetchUser"
+                      @change="handleChange"
+                    >
+                      <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+                      <a-select-option v-for="d in data" :key="d.id">
+                        {{ d.name.ru }}
+                      </a-select-option>
+                    </a-select>
+                  </el-form-item>
+                  <el-form-item label="price" class="form-block mb-0">
+                    <el-input placeholder="Price..." />
+                  </el-form-item>
+                  <el-form-item label="price" class="form-block mb-0">
+                    <el-input placeholder="Price..." />
+                  </el-form-item>
+                  <div class="variant_btns mb-1 mt-0">
+                    <div
+                      class="variant-btn variant-btn-delete mx-2"
+                      @click="deleteElement(product.id)"
+                    >
+                      <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 30 30"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                          stroke="#F65160"
+                          stroke-width="1.5"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="add-variant create-inner-variant" @click="addProduct">
+                  <span v-html="addInnerValidatIcon"></span>
+                  Добавит варизаци
+                </div>
+              </div>
+
               <div class="category-character-grid"></div>
             </div>
+
             <div class="category-img-grid">
               <div class="form-container">
                 <FormTitle title="Параметры" />
@@ -135,24 +193,7 @@
                     </el-option>
                   </el-select>
                 </div>
-                <div class="form-block">
-                  <div><label>Тип скидки</label></div>
-                  <el-select
-                    class="w-100"
-                    placeholder="Status"
-                    default-first-option
-                    v-model="ruleForm.type"
-                  >
-                    <el-option
-                      v-for="item in discountType"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    >
-                    </el-option>
-                  </el-select>
-                </div>
-                <div class="form-block">
+                <div class="form-block mb-0">
                   <el-form-item label="Дата" prop="start">
                     <a-range-picker @change="onChange" />
                   </el-form-item>
@@ -167,11 +208,11 @@
 </template>
 <script lang="js">
 
-import FormTitle from "../../components/Form-title.vue";
-import TitleBlock from "../../components/Title-block.vue";
-import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
+import FormTitle from "../../../components/Form-title.vue";
+import TitleBlock from "../../../components/Title-block.vue";
+import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import { Drag, DropList } from "vue-easy-dnd";
-import status from "../../mixins/status";
+import status from "../../../mixins/status";
 import debounce from "lodash/debounce";
 export default {
   layout: "toolbar",
@@ -184,7 +225,8 @@ export default {
       data: [],
       fetching: false,
       activeName: "Русский",
-      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+      addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
+      addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       status: [
         {
           value: 1,
@@ -279,11 +321,27 @@ export default {
     end: "",
     status: 1
       },
+      products: [
+        {
+          id: 1
+        }
+      ]
     };
   },
 
   methods: {
-    onChange(date, dateString) {
+    addProduct() {
+      this.products.push({
+        id: Math.max(...this.products.map((o) => o.id)) + 1,
+      });
+    },
+    deleteElement(id) {
+      if (this.products.length > 1)
+        this.products = this.products.filter(
+          (item) => item.id != id
+        );
+    },
+     onChange(date, dateString) {
       if(dateString[0] == dateString[1]) {
         this.ruleForm.start = dateString[0]
         this.ruleForm.end = null
@@ -369,7 +427,8 @@ watch: {
 <style lang="css">
 .discount-grid-input {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr 1fr auto;
   grid-gap: 20px;
+  align-items: flex-end;
 }
 </style>

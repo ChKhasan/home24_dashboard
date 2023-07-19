@@ -41,23 +41,178 @@
                 >
                   <div class="form-container form-container-ltr">
                     <div class="d-flex justify-content-between">
-                      <FormTitle title="Добавить акцию" />
+                      <FormTitle title="Этикетка" />
+                      <div
+                        class="test_label"
+                        v-if="ruleForm.short_name[item.key].length > 0"
+                      >
+                        <div
+                          :style="`background: linear-gradient(250deg, ${ruleForm.color_end} 0%, ${ruleForm.color_start} 100%);color: ${ruleForm.color_text}`"
+                        >
+                          <span v-html="ruleForm.icon_svg"></span
+                          >{{ ruleForm.short_name[item.key] }}
+                        </div>
+                      </div>
                     </div>
 
                     <div class="category-input-grid">
-                      <div class="form-block required mb-0">
+                      <div class="d-flex" style="gap: 10px">
+                        <el-form-item
+                          class="form-block w-100"
+                          prop="short_name.ru"
+                          style="max-width: 400px"
+                          label="Короткое название"
+                        >
+                          <el-input
+                            v-model="ruleForm.short_name[item.key]"
+                            placeholder="Короткое название..."
+                          ></el-input>
+                        </el-form-item>
+                        <div class="form-block mb-2" style="min-width: 300px">
+                          <div><label>Svg</label></div>
+                          <el-input
+                            v-model="ruleForm.icon_svg"
+                            placeholder="Svg"
+                          ></el-input>
+                        </div>
+                        <div class="d-flex">
+                          <el-form-item class="mb-0 form-block" label="Цвет 1">
+                            <el-color-picker
+                              popper-class="badges-color-picker"
+                              v-model="ruleForm.color_start"
+                            ></el-color-picker>
+                          </el-form-item>
+                          <el-form-item class="mb-0 form-block mx-3" label="Цвет 2">
+                            <el-color-picker
+                              popper-class="badges-color-picker"
+                              v-model="ruleForm.color_end"
+                            ></el-color-picker>
+                          </el-form-item>
+                          <el-form-item class="mb-0 form-block" label="Цвет для текста">
+                            <el-color-picker
+                              popper-class="badges-color-picker"
+                              v-model="ruleForm.color_text"
+                            ></el-color-picker>
+                          </el-form-item>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <FormTitle title="Этикетка для продуктов" />
+                    </div>
+
+                    <div class="category-input-grid">
+                      <el-tabs class="desc_tab" v-model="activeDesc">
+                        <el-tab-pane label="С текстом" name="input">
+                          <div class="d-flex">
+                            <el-form-item
+                              class="form-block w-100"
+                              prop="short_name.ru"
+                              style="max-width: 400px"
+                              label="Короткое название"
+                            >
+                              <el-input
+                                v-model="ruleForm.short_name[item.key]"
+                                placeholder="Короткое название..."
+                              ></el-input>
+                            </el-form-item>
+                            <div class="d-flex">
+                              <el-form-item
+                                class="mb-0 form-block mx-3"
+                                label="Цвет для фона"
+                              >
+                                <el-color-picker
+                                  popper-class="badges-color-picker"
+                                  v-model="ruleForm.position"
+                                ></el-color-picker>
+                              </el-form-item>
+                              <el-form-item
+                                class="mb-0 form-block"
+                                label="Цвет для текста"
+                              >
+                                <el-color-picker
+                                  popper-class="badges-color-picker"
+                                  v-model="ruleForm.position"
+                                ></el-color-picker>
+                              </el-form-item>
+                            </div></div
+                        ></el-tab-pane>
+                        <el-tab-pane label="С значком" name="upload">
+                          <div class="d-flex">
+                            <div
+                              class="form-block mb-2"
+                              style="min-width: 300px"
+                              v-if="iconType"
+                            >
+                              <div><label>Svg</label></div>
+                              <el-input
+                                v-model="ruleForm.icon_svg"
+                                placeholder="Svg"
+                              ></el-input>
+                            </div>
+                            <div class="form-block mb-0" v-else>
+                              <div><label>Добавить значок</label></div>
+                              <div class="clearfix mb-0">
+                                <a-upload
+                                  class="icon_upload"
+                                  action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                                  list-type="picture-card"
+                                  :file-list="fileList.icon"
+                                  @preview="handlePreview"
+                                  @change="($event) => handleChange($event, 'icon')"
+                                >
+                                  <div
+                                    v-if="fileList.icon.length < 1"
+                                    class="d-flex align-items-center"
+                                  >
+                                    <span v-html="addImgIcon"></span>
+                                    <div class="ant-upload-text mx-2 mt-0">Icon</div>
+                                  </div>
+                                </a-upload>
+                                <a-modal
+                                  :visible="previewVisible"
+                                  :footer="null"
+                                  @cancel="handleCancel"
+                                >
+                                  <img
+                                    alt="example"
+                                    style="width: 100%"
+                                    :src="previewImage"
+                                  />
+                                </a-modal>
+                              </div>
+                            </div>
+                          </div>
+                          <a-switch
+                            checked-children="Svg"
+                            un-checked-children="Icon"
+                            @change="($event) => (iconType = $event)"
+                            v-model="iconType"
+                          />
+                        </el-tab-pane>
+                      </el-tabs>
+                    </div>
+                  </div>
+                </el-tab-pane>
+              </el-tabs>
+              <el-tabs class="form_tabs" v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane
+                  v-for="(item, index) in lang"
+                  :label="item.label"
+                  :name="item.label"
+                  :key="index"
+                >
+                  <div class="form-container form-container-ltr">
+                    <div class="d-flex justify-content-between">
+                      <FormTitle title="Полная информация" />
+                    </div>
+
+                    <div class="category-input-grid">
+                      <div class="form-block required">
                         <el-form-item :prop="`name.ru`" label="Полное название">
                           <el-input
                             v-model="ruleForm.name[item.key]"
                             placeholder="Полное название..."
-                          ></el-input>
-                        </el-form-item>
-                      </div>
-                      <div class="form-block required">
-                        <el-form-item prop="short_name.ru" label="Короткое название">
-                          <el-input
-                            v-model="ruleForm.name[item.key]"
-                            placeholder="Короткое название..."
                           ></el-input>
                         </el-form-item>
                       </div>
@@ -101,20 +256,6 @@
                   </el-select>
                 </div>
 
-                <div class="d-flex">
-                  <el-form-item class="mb-0 form-block mr-3" label="Цвет 1">
-                    <el-color-picker
-                      popper-class="badges-color-picker"
-                      v-model="ruleForm.position"
-                    ></el-color-picker>
-                  </el-form-item>
-                  <el-form-item class="mb-0 form-block" label="Цвет 2">
-                    <el-color-picker
-                      popper-class="badges-color-picker"
-                      v-model="ruleForm.position"
-                    ></el-color-picker>
-                  </el-form-item>
-                </div>
                 <el-form-item class="form-block" label="Дата" prop="start">
                   <a-range-picker @change="onChangeDate" />
                 </el-form-item>
@@ -129,35 +270,6 @@
                       @change="($event) => handleChange($event, 'img')"
                     >
                       <div v-if="fileList.img.length < 1">
-                        <span v-html="addImgIcon"></span>
-                        <div class="ant-upload-text">Добавить изображение</div>
-                        <span class="upload-resize">(678 x 784)</span>
-                      </div>
-                    </a-upload>
-                    <a-modal
-                      :visible="previewVisible"
-                      :footer="null"
-                      @cancel="handleCancel"
-                    >
-                      <img alt="example" style="width: 100%" :src="previewImage" />
-                    </a-modal>
-                  </div>
-                </div>
-                <div class="form-block">
-                  <div><label>Svg</label></div>
-                  <el-input v-model="ruleForm.icon_svg" placeholder="Svg"></el-input>
-                </div>
-                <div class="form-block mb-0">
-                  <div><label>Добавить значок</label></div>
-                  <div class="clearfix">
-                    <a-upload
-                      action="https://api.e-shop.ndc.uz/api/admin/files/upload"
-                      list-type="picture-card"
-                      :file-list="fileList.icon"
-                      @preview="handlePreview"
-                      @change="($event) => handleChange($event, 'icon')"
-                    >
-                      <div v-if="fileList.icon.length < 1">
                         <span v-html="addImgIcon"></span>
                         <div class="ant-upload-text">Добавить изображение</div>
                         <span class="upload-resize">(678 x 784)</span>
@@ -187,8 +299,6 @@ import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import InputBlock from "../../../components/form/Input-block.vue";
-import { Drag, DropList } from "vue-easy-dnd";
 import status from "../../../mixins/status";
 
 function getBase64(file) {
@@ -204,10 +314,11 @@ export default {
   mixins: [status],
   data() {
     return {
+      iconType: false,
+      activeDesc: "input",
       activeName: "Русский",
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addImgIcon: require("../../../assets/svg/components/add-img-icon.svg?raw"),
-      addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       fileList: {
         img: [],
         icon: [],
@@ -257,6 +368,9 @@ export default {
         },
       },
       ruleForm: {
+        color_start: "",
+        color_end: "",
+        color_text: "",
         status: "active",
         desc: {
           ru: "",
@@ -373,9 +487,6 @@ export default {
     FormTitle,
     TitleBlock,
     LayoutHeaderBtn,
-    InputBlock,
-    Drag,
-    DropList,
   },
 };
 </script>
@@ -440,34 +551,23 @@ export default {
   }
 }
 
-.list > div {
+.icon_upload .ant-upload-select-picture-card {
+  height: 30px;
+}
+.test_label div {
   display: flex;
-  flex-direction: column;
+  border-radius: 5px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  clip-path: polygon(10% 0, 100% 1%, 90% 100%, 0% 100%);
+  padding: 1px 20px;
+  line-height: 17.089px; /* 142.407% */
+  align-items: center;
+}
+.test_label span svg {
+  margin-right: 6px;
 }
 
-.flip-list {
-  transition: all 0.4s;
-  display: grid;
-  grid-gap: 24px;
-}
-.flip-list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.flip-list-enter {
-  opacity: 0;
-  transform: translateY(-30px);
-}
-.flip-list-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-.item {
-  transition: transform 0.2s;
-}
-
-.over {
-  opacity: 0.6;
-}
 // 820
 </style>

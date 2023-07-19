@@ -3,7 +3,7 @@
     <TitleBlock title="Скидки" :breadbrumb="['Маркетинг']" lastLink="Скидки">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
-        @click="$router.push('/inbox/add_discount')"
+        @click="$router.push('/inbox/discount/add')"
       >
         <span class="svg-icon" v-html="addIcon"></span>
         Добавить
@@ -98,11 +98,11 @@
   </div>
 </template>
 <script>
-import TitleBlock from "../../components/Title-block.vue";
-import SearchInput from "../../components/form/Search-input.vue";
-import global from "../../mixins/global";
-import status from "../../mixins/status";
-import columns from "../../mixins/columns";
+import TitleBlock from "../../../components/Title-block.vue";
+import SearchInput from "../../../components/form/Search-input.vue";
+import global from "../../../mixins/global";
+import status from "../../../mixins/status";
+import columns from "../../../mixins/columns";
 
 export default {
   layout: "toolbar",
@@ -110,9 +110,9 @@ export default {
   data() {
     return {
       loading: true,
-      editIcon: require("../../assets/svg/components/edit-icon.svg"),
-      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+      editIcon: require("../../../assets/svg/components/edit-icon.svg"),
+      deleteIcon: require("../../../assets/svg/components/delete-icon.svg"),
+      addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       selectedRowKeys: [],
       discounts: [],
       data: [],
@@ -156,6 +156,7 @@ export default {
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
     },
+   
   },
 
   watch: {

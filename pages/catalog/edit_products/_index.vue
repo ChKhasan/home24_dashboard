@@ -1654,20 +1654,22 @@ export default {
         });
         return {
           id: productIndex + 1,
-          images: item.images.map((itemImg) => itemImg.lg_img),
-          imagesData: item.images.map((itemImg2, index) => {
-            return {
-              uid: (index + 1) * -1,
-              name: "image.png",
-              status: "done",
-              oldImg: true,
-              id: itemImg2.id,
-              response: {
-                path: itemImg2.lg_img,
-              },
-              url: itemImg2.lg_img,
-            };
-          }),
+          images: item.images ? item.images.map((itemImg) => itemImg.lg_img) : [],
+          imagesData: item.images
+            ? item.images.map((itemImg2, index) => {
+                return {
+                  uid: (index + 1) * -1,
+                  name: "image.png",
+                  status: "done",
+                  oldImg: true,
+                  id: itemImg2.id,
+                  response: {
+                    path: itemImg2.lg_img,
+                  },
+                  url: itemImg2.lg_img,
+                };
+              })
+            : [],
           variations: variat,
         };
       });

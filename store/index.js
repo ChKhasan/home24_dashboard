@@ -11,8 +11,8 @@ export const mutations = {
 };
 
 export const actions = {
-  async getShowCasesStore({ commit }, payload) {
-    const res = await this.$axios.$get(`/showcases/all`);
-    commit("showcases", { data: res?.showcases, change: payload });
-  },
+  // async getShowCasesStore({ commit }, payload) {
+  //   const res = await this.$axios.$get(`/showcases/all`);
+  //   commit("showcases", { data: res?.showcases, change: payload });
+  // },
 };
