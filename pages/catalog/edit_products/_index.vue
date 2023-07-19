@@ -436,10 +436,21 @@
                           label="Поиск продуктов "
                           class="form-variant-block"
                         >
-                          <a-input placeholder="Поиск..." />
+                          <el-input placeholder="Поиск..." />
                         </el-form-item>
                         <div class="form-block">
-                          <div><label>Popular</label></div>
+                          <div>
+                            <label
+                              >Pop
+                              <a-popover placement="top">
+                                <template slot="content">
+                                  <span>Популярные продукты</span>
+                                </template>
+
+                                <span class="nav-info">?</span>
+                              </a-popover></label
+                            >
+                          </div>
                           <span>
                             <a-switch
                               :checked="item.is_popular == 1"
@@ -451,7 +462,17 @@
                           </span>
                         </div>
                         <div class="form-block mx-2">
-                          <div><label>Pr of day</label></div>
+                          <div>
+                            <label
+                              >POD
+                              <a-popover placement="top">
+                                <template slot="content">
+                                  <span>Продукт дня</span>
+                                </template>
+                                <span class="nav-info">?</span>
+                              </a-popover></label
+                            >
+                          </div>
                           <span>
                             <a-switch
                               :checked="item.product_of_the_day == 1"
@@ -465,7 +486,17 @@
                           </span>
                         </div>
                         <div class="form-block">
-                          <div><label>Stat</label></div>
+                          <div>
+                            <label
+                              >Stat
+                              <a-popover placement="top">
+                                <template slot="content">
+                                  <span>Status</span>
+                                </template>
+                                <span class="nav-info">?</span>
+                              </a-popover></label
+                            >
+                          </div>
                           <span>
                             <a-switch
                               :checked="item.status == 'active'"

@@ -103,3 +103,15 @@ ul {
   overflow-y: scroll;
   margin-top: 0;
 }
+.nav-info {
+  width: 19px;
+  height: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ededed;
+  border-radius: 50%;
+  color: #a5a5a5;
+  margin-left: 6px;
+  cursor: pointer;
+}

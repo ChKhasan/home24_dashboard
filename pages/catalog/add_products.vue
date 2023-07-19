@@ -431,7 +431,7 @@
                           label="Поиск продуктов "
                           class="form-variant-block"
                         >
-                          <a-input placeholder="Поиск..." />
+                          <el-input placeholder="Поиск..." />
                         </el-form-item>
                         <div class="form-block">
                           <div>
@@ -439,10 +439,6 @@
                               >Pop
                               <a-popover placement="top">
                                 <template slot="content">
-                                  <p>Content</p>
-                                  <p>Content</p>
-                                </template>
-                                <template slot="title">
                                   <span>Популярные продукты</span>
                                 </template>
                                 <span class="nav-info">?</span>
@@ -464,10 +460,6 @@
                               >POD
                               <a-popover placement="top">
                                 <template slot="content">
-                                  <p>Content</p>
-                                  <p>Content</p>
-                                </template>
-                                <template slot="title">
                                   <span>Продукт дня</span>
                                 </template>
                                 <span class="nav-info">?</span>
@@ -491,10 +483,6 @@
                               >Stat
                               <a-popover placement="top">
                                 <template slot="content">
-                                  <p>Content</p>
-                                  <p>Content</p>
-                                </template>
-                                <template slot="title">
                                   <span>Status</span>
                                 </template>
                                 <span class="nav-info">?</span>
@@ -1708,17 +1696,5 @@ export default {
 // }
 .product_list {
   transition: 0.2s;
-}
-.nav-info {
-  width: 19px;
-  height: 19px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ededed;
-  border-radius: 50%;
-  color: #a5a5a5;
-  margin-left: 6px;
-  cursor: pointer;
 }
 </style>
