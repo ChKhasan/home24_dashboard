@@ -18,18 +18,25 @@
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columnCharacteristic"
+            :columns="columnPromotions"
             :data-source="groups"
             :pagination="false"
             align="center"
             :loading="loading"
           >
+            <span slot="banner" slot-scope="text">
+              <img v-if="text" class="table-image" :src="text" alt="text" />
+              <img
+                v-else
+                class="table-image"
+                src="../../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                alt="text"
+              />
+            </span>
             <span slot="name" slot-scope="text">
               <h6>{{ text?.ru }}</h6>
             </span>
-
             <span slot="key" slot-scope="text">#{{ text }}</span>
-            <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
               <span class="action-btn" @click="editAction(text)">
@@ -129,11 +136,11 @@ export default {
       this.__DELETE_CHARACTER_GROUP(id);
     },
     editAction(id) {
-      this.$router.push(`/catalog/edit_characteristic/${id}`);
+      this.$router.push(`/inbox/promotions/${id}`);
     },
     async __DELETE_CHARACTER_GROUP(id) {
       try {
-        const data = await this.$store.dispatch("fetchCharacters/deleteGroups", id);
+        const data = await this.$store.dispatch("fetchPromotions/deleteGroups", id);
         await this.$notify({
           title: "Success",
           message: "Группа был успешно удален",
@@ -146,18 +153,16 @@ export default {
     },
     async __GET_GROUPS() {
       this.loading = true;
-      const data = await this.$store.dispatch("fetchCharacters/getCharacteristics", {
+      const data = await this.$store.dispatch("fetchPromotions/getPromotions", {
         ...this.$route.query,
       });
       this.loading = false;
-      this.totalPage = data.characteristics?.total;
+      this.totalPage = data.promotions?.total;
       const pageIndex = this.indexPage(
-        data?.characteristics?.current_page,
-        data?.characteristics?.per_page
+        data?.promotions?.current_page,
+        data?.promotions?.per_page
       );
-      // console.log(data?.groups?.current_page);
-      // console.log(data?.groups?.per_page);
-      this.groups = data?.characteristics.data.map((item, index) => {
+      this.groups = data?.promotions.data.map((item, index) => {
         return {
           ...item,
           numberId: item.id,
@@ -171,7 +176,7 @@ export default {
   },
 
   async mounted() {
-    // this.getFirstData("/catalog/characteristic_groups", "__GET_GROUPS");
+    this.getFirstData("/inbox/promotions", "__GET_GROUPS");
   },
   watch: {
     async current(val) {

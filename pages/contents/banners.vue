@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Баннеры"
-      :breadbrumb="['Контент сайта']"
-      lastLink="Баннеры"
-    >
+    <TitleBlock title="Баннеры" :breadbrumb="['Контент сайта']" lastLink="Баннеры">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -133,12 +129,7 @@
                 no-data-text="No Category"
                 default-first-option
               >
-                <el-option
-                  v-for="item in types"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
+                <el-option v-for="item in types" :key="item" :label="item" :value="item">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -157,11 +148,7 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -272,7 +259,16 @@ export default {
           width: "30%",
           align: "center",
         },
-
+        {
+          title: "Тип",
+          dataIndex: "type",
+          key: "type",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "type" },
+          className: "column-name",
+          width: "30%",
+          align: "center",
+        },
         {
           title: "действия",
           key: "id",
@@ -367,7 +363,7 @@ export default {
       this.ruleForm = {
         img: data.sm_img,
         link: data.link,
-        type: "main",
+        type: data.type,
       };
       this.fileList = [
         {

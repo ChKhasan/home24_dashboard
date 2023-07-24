@@ -59,7 +59,8 @@
   .column-btns,
   .column-options,
   .column-img,
-  .column-tags {
+  .column-tags,
+  .column-date {
     font-family: "TT Interfaces";
     font-style: normal;
     background-color: #fff;
@@ -165,6 +166,14 @@
   .column-qty {
     line-height: 24px;
     color: #181c32;
+  }
+  .column-date {
+    color: #3699ff;
+    font-family: "TT Interfaces";
+    font-size: 14.04px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 18px;
   }
   .column-price {
     line-height: 24px;

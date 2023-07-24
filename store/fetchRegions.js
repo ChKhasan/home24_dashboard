@@ -38,4 +38,16 @@ export const actions = {
     const res = await this.$axios.$get(`/regions/types`);
     return res;
   },
+  async postRegionsGroup({}, data) {
+    const res = await this.$axios.$post(`/region_groups`, data);
+    return res;
+  },
+  async getRegionsGroups({}, payload) {
+    try {
+      const res = await this.$axios.$get(`/region_groups`, { params: payload });
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
 };

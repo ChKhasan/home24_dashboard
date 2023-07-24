@@ -494,6 +494,16 @@ export default {
         this.statusFunc(e.response);
       }
     },
+    async __GET_PROMOTIONS_BY_ID() {
+      const data = await this.$store.dispatch(
+        "fetchPromotions/getPromotionsById",
+        this.$route.params.id
+      );
+      console.log("asdasdasd",data);
+    },
+  },
+  mounted() {
+    this.__GET_PROMOTIONS_BY_ID();
   },
   watch: {
     activeLabelType(val) {
