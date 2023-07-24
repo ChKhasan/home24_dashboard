@@ -115,3 +115,9 @@ ul {
   margin-left: 6px;
   cursor: pointer;
 }
+.select-placeholder
+  .ant-select-selection--single
+  .ant-select-selection__rendered
+  .ant-select-selection__placeholder {
+  display: block !important;
+}

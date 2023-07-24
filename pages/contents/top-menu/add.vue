@@ -2,7 +2,7 @@
   <div>
     <el-form
       label-position="top"
-      :model="ruleForm"
+      :model="ruleForm1"
       :rules="rules"
       ref="ruleForm"
       label-width="120px"
@@ -39,34 +39,35 @@
                 <FormTitle title="Верхняя панель" />
                 <div class="list">
                   <drop-list
-                    :items="ruleForm.attributes"
+                    :items="ruleForm"
                     @insert="onInsert"
-                    @reorder="$event.apply(ruleForm.attributes)"
+                    @reorder="$event.apply(ruleForm)"
                   >
                     <template v-slot:item="{ item }">
-                      <drag :key="item.id">
+                      <drag :key="item.indexId">
                         <div class="top-menu-input-grid pb-3">
                           <el-form-item
                             class="form-block required mb-0 w-100 align-items-start"
                             label="Категория или акция"
                           >
                             <a-select
-                              mode="multiple"
-                              label-in-value
-                              :value="value"
-                              placeholder="Поиск..."
+                              show-search
+                              v-model="item.category_id"
+                              placeholder="input search text"
                               style="width: 100%"
+                              :default-active-first-option="false"
+                              :show-arrow="false"
                               :filter-option="false"
                               :not-found-content="fetching ? undefined : null"
-                              @search="fetchUser"
-                              @change="handleChange"
+                              @search="handleSearch"
+                              @change="($event) => handleChange($event, item.indexId)"
                             >
                               <a-spin
                                 v-if="fetching"
                                 slot="notFoundContent"
                                 size="small"
                               />
-                              <a-select-option v-for="d in data" :key="d.id">
+                              <a-select-option v-for="d in categories" :key="d.id">
                                 {{ d.name.ru }}
                               </a-select-option>
                             </a-select>
@@ -85,7 +86,7 @@
                             class="form-block required mb-0 w-100 align-items-start"
                           >
                             <el-input
-                              v-model="item.name[itemLang.key]"
+                              v-model="item.icon_svg"
                               placeholder="Svg..."
                             ></el-input>
                           </el-form-item>
@@ -93,21 +94,28 @@
                             <label for="">Цвет 1</label>
                             <el-color-picker
                               popper-class="badges-color-picker"
-                              v-model="ruleForm.background_color"
+                              v-model="item.color1"
                             ></el-color-picker>
                           </div>
                           <div class="mb-0 form-block" style="line-height: 40px">
                             <label for="">Цвет 2</label>
                             <el-color-picker
                               popper-class="badges-color-picker"
-                              v-model="ruleForm.background_color"
+                              v-model="item.color2"
+                            ></el-color-picker>
+                          </div>
+                          <div class="mb-0 form-block" style="line-height: 40px">
+                            <label for="">Цвет текста</label>
+                            <el-color-picker
+                              popper-class="badges-color-picker"
+                              v-model="item.text_color"
                             ></el-color-picker>
                           </div>
 
                           <div class="variant_btns mb-1 mt-0">
                             <div
                               class="variant-btn variant-btn-delete mx-2"
-                              @click="deleteElement(item.id)"
+                              @click="deleteElement(item.indexId)"
                             >
                               <svg
                                 width="30"
@@ -169,6 +177,9 @@ export default {
     return {
       activeName: "Русский",
       multiSelectError: true,
+      fetching: false,
+      categories: [],
+      data: [],
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       lang: [
@@ -211,67 +222,111 @@ export default {
         //   },
         // ],
       },
-      ruleForm: {
-        group: {
-          ru: "",
-          uz: "",
-          en: "",
-        },
-        options: [],
-        attributes: [
-          {
-            id: 1,
-            name: {
-              ru: "",
-              uz: "",
-              en: "",
-            },
-            options: [],
+      ruleForm1: {},
+      ruleForm: [
+        {
+          indexId: 1,
+          name: {
+            ru: "",
+            uz: "",
+            en: "",
           },
-        ],
-      },
+          promotion_id: null,
+          category_id: null,
+          icon: null,
+          icon_svg: "",
+          text_color: "",
+          color1: "",
+          color2: "",
+        },
+      ],
     };
+  },
+  mounted() {
+    this.__GET_TOP_MENU();
   },
   methods: {
     deleteElement(id) {
-      if (this.ruleForm.attributes.length > 1)
-        this.ruleForm.attributes = this.ruleForm.attributes.filter(
-          (item) => item.id != id
-        );
+      if (this.ruleForm.length > 1)
+        this.ruleForm = this.ruleForm.filter((item) => item.indexId != id);
     },
     addElement() {
-      this.ruleForm.attributes.push({
+      this.ruleForm.push({
         name: {
           ru: "",
           uz: "",
           en: "",
         },
-        options: [],
-        id: Math.max(...this.ruleForm.attributes.map((o) => o.id)) + 1,
+        promotion_id: null,
+        category_id: "",
+        icon: null,
+        icon_svg: "",
+        text_color: "",
+        color1: "",
+        color2: "",
+        indexId: Math.max(...this.ruleForm.map((o) => o.indexId)) + 1,
       });
     },
     submitForm(ruleForm) {
-      this.multiSelectError = false;
-      console.log(this.ruleForm);
-      const { options, ...rest } = this.ruleForm;
+      const data = {
+        bars: this.ruleForm.map((item) => {
+          const { indexId, ...rest } = item;
+          return rest;
+        }),
+      };
       this.$refs[ruleForm].validate((valid) => {
-        valid ? this.__POST_CHARACTERISTIC(rest) : false;
+        valid ? this.__POST_TOP_MENU(data) : false;
       });
     },
-    async __POST_CHARACTERISTIC(data) {
+    async handleSearch(value) {
+      console.log(value);
+      this.fetching = true;
+      const categoriesData = await this.$store.dispatch("fetchCategories/getCategories", {
+        search: value,
+      });
+      this.categories = categoriesData?.categories.data;
+      this.fetching = false;
+
+      console.log(this.categories);
+    },
+    handleChange(value, id) {
+      console.log(value);
+      let obj = this.ruleForm.find((item) => item.indexId == id);
+      obj.category_id = value;
+      console.log(obj);
+    },
+    async __POST_TOP_MENU(data) {
       try {
-        await this.$store.dispatch("fetchCharacters/postCharacteristics", data);
-        this.notification("Success", "Характеристика успешно добавлен", "success");
-        this.$router.push("/catalog/characteristic_groups");
+        await this.$store.dispatch("fetchTopBars/postTopBars", data);
+        this.notification("Success", "Успешно добавлен", "success");
+        this.$router.push("/contents/top-menu");
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    async __GET_TOP_MENU() {
+      try {
+        const data = await this.$store.dispatch("fetchTopBars/getTopBars");
+        console.log(data);
+        this.ruleForm = data?.bars?.data.map((item, index) => {
+          return {
+            ...item,
+            indexId: index + 1,
+          };
+        });
+        this.categories = data?.bars?.data
+          .map((item, index) => item.category)
+          .filter((elem) => elem);
+        console.log(this.categories);
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
     toBack() {
-      this.$router.push("/catalog/characteristic_groups");
+      this.$router.push("/contents/top-menu");
     },
     onInsert(event) {
-      this.ruleForm.attributes.splice(event.index, 0, event.data);
+      this.ruleForm.splice(event.index, 0, event.data);
     },
   },
   components: {

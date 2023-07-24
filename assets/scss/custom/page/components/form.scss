@@ -9,20 +9,20 @@
     width: 100%;
     margin-bottom: 0;
   }
-  input {
-    background: #ffffff;
-    padding: 10px 13px !important;
-    border: 1px solid #e4e6ef;
-    border-radius: 6.175px;
+  // input {
+  //   background: #ffffff;
+  //   padding: 10px 13px !important;
+  //   border: 1px solid #e4e6ef;
+  //   border-radius: 6.175px;
 
-    @include fontInter(14.3px, 400);
-    line-height: 21.5px !important;
-    color: #181c32 !important;
-    &::placeholder {
-      color: #a1a5bf;
-    }
-    min-height: 42px !important;
-  }
+  //   @include fontInter(14.3px, 400);
+  //   line-height: 21.5px !important;
+  //   color: #181c32 !important;
+  //   &::placeholder {
+  //     color: #a1a5bf;
+  //   }
+  //   min-height: 42px !important;
+  // }
   .el-input,
   .category-select {
     .el-input__inner,

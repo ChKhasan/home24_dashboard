@@ -139,11 +139,11 @@
             <a-upload
               action="https://api.e-shop.ndc.uz/api/admin/files/upload"
               list-type="picture-card"
-              :file-list="fileList"
+              :file-list="fileList[item.index]"
               @preview="handlePreview"
-              @change="handleChange"
+              @change="($event) => handleChange($event, item.index)"
             >
-              <div v-if="fileList.length < 1">
+              <div v-if="fileList[item.index].length < 1">
                 <span v-html="addImgIcon"></span>
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
@@ -283,7 +283,11 @@ export default {
       editId: "",
       previewVisible: false,
       previewImage: "",
-      fileList: [],
+      fileList: {
+        ru: [],
+        en: [],
+        uz: [],
+      },
       banners: [],
       types: {},
       rules: {
@@ -352,8 +356,12 @@ export default {
       // this.$message.error("Click on No");
     },
     openAddModal() {
-      this.fileList = [];
-      this.editId = "";
+      (this.fileList = {
+        ru: [],
+        en: [],
+        uz: [],
+      }),
+        (this.editId = "");
       this.ruleForm.type = "";
       this.showModal();
     },
@@ -365,7 +373,7 @@ export default {
         link: data.link,
         type: data.type,
       };
-      this.fileList = [
+      this.fileList.ru = [
         {
           uid: "-1",
           name: "image.png",
@@ -373,6 +381,27 @@ export default {
           url: this.ruleForm.img.ru,
         },
       ];
+      this.fileList.uz = this.ruleForm.img.uz
+        ? [
+            {
+              uid: "-1",
+              name: "image.png",
+              status: "done",
+              url: this.ruleForm.img.uz,
+            },
+          ]
+        : [];
+      this.fileList.en = this.ruleForm.img.en
+        ? [
+            {
+              uid: "-1",
+              name: "image.png",
+              status: "done",
+              url: this.ruleForm.img.en,
+            },
+          ]
+        : [];
+      console.log(this.ruleForm);
       this.showModal();
     },
     closeModal() {
@@ -419,13 +448,15 @@ export default {
       this.previewImage = file.url || file.preview;
       this.previewVisible = true;
     },
-    async handleChange({ fileList }) {
+    async handleChange({ fileList }, lang) {
       this.loadingBtn = true;
-      this.fileList = fileList;
+      this.fileList[lang] = fileList;
+      console.log(fileList);
       if (fileList[0]?.response?.path) {
-        this.ruleForm.img.ru = fileList[0]?.response?.path;
+        this.ruleForm.img[lang] = fileList[0]?.response?.path;
         this.loadingBtn = false;
       } else if (fileList.length == 0) {
+        this.ruleForm.img[lang] = "";
         this.loadingBtn = false;
       }
     },

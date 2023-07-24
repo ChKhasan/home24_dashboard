@@ -18,7 +18,7 @@
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columnCharacteristic"
+            :columns="columnTopBar"
             :data-source="groups"
             :pagination="false"
             align="center"
@@ -27,7 +27,9 @@
             <span slot="name" slot-scope="text">
               <h6>{{ text?.ru }}</h6>
             </span>
-
+            <span slot="category" slot-scope="text">
+              <h6>{{ text?.name?.ru }}</h6>
+            </span>
             <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
 
@@ -109,7 +111,7 @@ export default {
       this.current = 1;
       if (this.$route.query.per_page != e) {
         await this.$router.replace({
-          path: `/catalog/characteristic_groups`,
+          path: `/contents/top-menu`,
           query: {
             page: this.current,
             per_page: e,
@@ -146,18 +148,15 @@ export default {
     },
     async __GET_GROUPS() {
       this.loading = true;
-      const data = await this.$store.dispatch("fetchCharacters/getCharacteristics", {
+      const data = await this.$store.dispatch("fetchTopBars/getTopBars", {
         ...this.$route.query,
       });
       this.loading = false;
-      this.totalPage = data.characteristics?.total;
-      const pageIndex = this.indexPage(
-        data?.characteristics?.current_page,
-        data?.characteristics?.per_page
-      );
+      this.totalPage = data.bars?.total;
+      const pageIndex = this.indexPage(data?.bars?.current_page, data?.bars?.per_page);
       // console.log(data?.groups?.current_page);
       // console.log(data?.groups?.per_page);
-      this.groups = data?.characteristics.data.map((item, index) => {
+      this.groups = data?.bars.data.map((item, index) => {
         return {
           ...item,
           numberId: item.id,
@@ -171,11 +170,11 @@ export default {
   },
 
   async mounted() {
-    // this.getFirstData("/catalog/characteristic_groups", "__GET_GROUPS");
+    this.getFirstData("/contents/top-menu", "__GET_GROUPS");
   },
   watch: {
     async current(val) {
-      this.changePagination(val, "/catalog/characteristic_groups", "__GET_GROUPS");
+      this.changePagination(val, "/contents/top-menu", "__GET_GROUPS");
     },
   },
   components: {
