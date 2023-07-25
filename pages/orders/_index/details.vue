@@ -86,93 +86,139 @@
                   >
                   <p>Flat Shipping Rate</p>
                 </div>
-              </div>
-              <div class="custom_block px-4 py-4">
-                <FormTitle title="сведения о клиенте" />
-
                 <div class="order-details-items">
                   <span
                     ><svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 18 18"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        opacity="0.3"
-                        d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z"
+                        d="M20 8H16C15.4 8 15 8.4 15 9V16H10V17C10 17.6 10.4 18 11 18H16C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18H21C21.6 18 22 17.6 22 17V13L20 8Z"
                         fill="currentColor"
                       ></path>
                       <path
-                        d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z"
+                        opacity="0.3"
+                        d="M20 18C20 19.1 19.1 20 18 20C16.9 20 16 19.1 16 18C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18ZM15 4C15 3.4 14.6 3 14 3H3C2.4 3 2 3.4 2 4V13C2 13.6 2.4 14 3 14H15V4ZM6 16C4.9 16 4 16.9 4 18C4 19.1 4.9 20 6 20C7.1 20 8 19.1 8 18C8 16.9 7.1 16 6 16Z"
                         fill="currentColor"
                       ></path>
-                      <rect
-                        x="7"
-                        y="6"
-                        width="4"
-                        height="4"
-                        rx="2"
-                        fill="currentColor"
-                      ></rect>
                     </svg>
-                    Клиент</span
+                    Operator</span
                   >
-                  <div class="order-user">
-                    <div class="order-user-avatar">
-                      <img src="../../../assets/images/image.png" alt="" />
+                  <p>Akmal</p>
+                </div>
+                <div class="order-details-items">
+                  <span
+                    ><svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M20 8H16C15.4 8 15 8.4 15 9V16H10V17C10 17.6 10.4 18 11 18H16C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18H21C21.6 18 22 17.6 22 17V13L20 8Z"
+                        fill="currentColor"
+                      ></path>
+                      <path
+                        opacity="0.3"
+                        d="M20 18C20 19.1 19.1 20 18 20C16.9 20 16 19.1 16 18C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18ZM15 4C15 3.4 14.6 3 14 3H3C2.4 3 2 3.4 2 4V13C2 13.6 2.4 14 3 14H15V4ZM6 16C4.9 16 4 16.9 4 18C4 19.1 4.9 20 6 20C7.1 20 8 19.1 8 18C8 16.9 7.1 16 6 16Z"
+                        fill="currentColor"
+                      ></path>
+                    </svg>
+                    Deliveryman</span
+                  >
+                  <p>Akmal</p>
+                </div>
+              </div>
+              <div>
+                <div class="custom_block px-4 py-4">
+                  <FormTitle title="сведения о клиенте" />
+
+                  <div class="order-details-items">
+                    <span
+                      ><svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          opacity="0.3"
+                          d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z"
+                          fill="currentColor"
+                        ></path>
+                        <rect
+                          x="7"
+                          y="6"
+                          width="4"
+                          height="4"
+                          rx="2"
+                          fill="currentColor"
+                        ></rect>
+                      </svg>
+                      Клиент</span
+                    >
+                    <div class="order-user">
+                      <div class="order-user-avatar">
+                        <img src="../../../assets/images/image.png" alt="" />
+                      </div>
+                      <p>27/02/2023</p>
                     </div>
-                    <p>
-                      27/02/2023
-                    </p>
                   </div>
-                </div>
-                <div class="order-details-items">
-                  <span>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                  <div class="order-details-items">
+                    <span>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          opacity="0.3"
+                          d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      Электронная почта</span
                     >
-                      <path
-                        opacity="0.3"
-                        d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19Z"
-                        fill="currentColor"
-                      ></path>
-                      <path
-                        d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    Электронная почта</span
-                  >
-                  <p>Online</p>
-                </div>
-                <div class="order-details-items">
-                  <span>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <p>Online</p>
+                  </div>
+                  <div class="order-details-items">
+                    <span>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5 20H19V21C19 21.6 18.6 22 18 22H6C5.4 22 5 21.6 5 21V20ZM19 3C19 2.4 18.6 2 18 2H6C5.4 2 5 2.4 5 3V4H19V3Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          opacity="0.3"
+                          d="M19 4H5V20H19V4Z"
+                          fill="currentColor"
+                        ></path>
+                      </svg>
+                      Телефон</span
                     >
-                      <path
-                        d="M5 20H19V21C19 21.6 18.6 22 18 22H6C5.4 22 5 21.6 5 21V20ZM19 3C19 2.4 18.6 2 18 2H6C5.4 2 5 2.4 5 3V4H19V3Z"
-                        fill="currentColor"
-                      ></path>
-                      <path
-                        opacity="0.3"
-                        d="M19 4H5V20H19V4Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    Телефон</span
-                  >
-                  <p>Flat Shipping Rate</p>
+                    <p>Flat Shipping Rate</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -222,7 +268,7 @@
               <div
                 class="d-flex justify-content-between align-items-center card_header pt-4"
               >
-                <FormTitle title=" Заказ #14534" />
+                <FormTitle title="Total  #14534" />
               </div>
               <a-table
                 :columns="columnsOrder"
@@ -231,14 +277,11 @@
                 align="center"
               >
                 <a slot="img" slot-scope="text"
-                  ><img
-                    class="table-image"
-                    src="../../../assets/images/image.png"
-                    alt=""
+                  ><img class="table-image" src="../../../assets/images/image.png" alt=""
                 /></a>
                 <nuxt-link
                   to="/catalog/products"
-                  slot="client"
+                  slot="product"
                   slot-scope="text"
                   align="center"
                 >
@@ -261,13 +304,14 @@
                   {{ tags }}
                 </span>
               </a-table>
+              <div class="d-flex justify-content-end align-items-center card_header pt-4">
+                <FormTitle title="Общий сумма: 23 000 000 so'm" />
+              </div>
             </div>
           </div>
           <div class="mb-5">
             <div class="card_block py-5">
-              <div
-                class="d-flex justify-content-between align-items-center card_header"
-              >
+              <div class="d-flex justify-content-between align-items-center card_header">
                 <div
                   class="d-flex align-items-between justify-content-between w-100 pt-4"
                 >
@@ -283,10 +327,7 @@
                 align="center"
               >
                 <a slot="img" slot-scope="text"
-                  ><img
-                    class="table-image"
-                    src="../../../assets/images/image.png"
-                    alt=""
+                  ><img class="table-image" src="../../../assets/images/image.png" alt=""
                 /></a>
                 <nuxt-link
                   to="/catalog/products"
@@ -440,9 +481,7 @@
                     <div class="order-user-avatar">
                       <img src="../../../assets/images/image.png" alt="" />
                     </div>
-                    <p>
-                      27/02/2023
-                    </p>
+                    <p>27/02/2023</p>
                   </div>
                 </div>
                 <div class="order-details-items">
@@ -481,11 +520,7 @@
                         d="M5 20H19V21C19 21.6 18.6 22 18 22H6C5.4 22 5 21.6 5 21V20ZM19 3C19 2.4 18.6 2 18 2H6C5.4 2 5 2.4 5 3V4H19V3Z"
                         fill="currentColor"
                       ></path>
-                      <path
-                        opacity="0.3"
-                        d="M19 4H5V20H19V4Z"
-                        fill="currentColor"
-                      ></path>
+                      <path opacity="0.3" d="M19 4H5V20H19V4Z" fill="currentColor"></path>
                     </svg>
                     Телефон</span
                   >

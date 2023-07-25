@@ -16,12 +16,8 @@ export const actions = {
     }
   },
   async postPromotions({}, data) {
-    try {
-      const res = await this.$axios.$post(`/promotions`, data);
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$post(`/promotions`, data);
+    return res;
   },
   async editPromotions({}, payload) {
     try {

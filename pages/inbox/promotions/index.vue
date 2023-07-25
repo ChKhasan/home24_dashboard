@@ -43,7 +43,7 @@
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                title="Are you sure delete this group?"
+                title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"
                 @confirm="deletePost(text)"
@@ -122,7 +122,7 @@ export default {
             per_page: e,
           },
         });
-        this.__GET_GROUPS();
+        this.__GET_PROMOTIONS();
       }
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
@@ -133,25 +133,25 @@ export default {
       // this.$message.error("Click on No");
     },
     deletePost(id) {
-      this.__DELETE_CHARACTER_GROUP(id);
+      this.__DELETE_PROMOTIONS(id);
     },
     editAction(id) {
       this.$router.push(`/inbox/promotions/${id}`);
     },
-    async __DELETE_CHARACTER_GROUP(id) {
+    async __DELETE_PROMOTIONS(id) {
       try {
-        const data = await this.$store.dispatch("fetchPromotions/deleteGroups", id);
+        const data = await this.$store.dispatch("fetchPromotions/deletePromotions", id);
         await this.$notify({
           title: "Success",
-          message: "Группа был успешно удален",
+          message: "Успешно удален",
           type: "success",
         });
-        this.__GET_GROUPS();
+        this.__GET_PROMOTIONS();
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    async __GET_GROUPS() {
+    async __GET_PROMOTIONS() {
       this.loading = true;
       const data = await this.$store.dispatch("fetchPromotions/getPromotions", {
         ...this.$route.query,
@@ -176,11 +176,11 @@ export default {
   },
 
   async mounted() {
-    this.getFirstData("/inbox/promotions", "__GET_GROUPS");
+    this.getFirstData("/inbox/promotions", "__GET_PROMOTIONS");
   },
   watch: {
     async current(val) {
-      this.changePagination(val, "/catalog/characteristic_groups", "__GET_GROUPS");
+      this.changePagination(val, "/catalog/characteristic_groups", "__GET_PROMOTIONS");
     },
   },
   components: {

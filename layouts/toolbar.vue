@@ -506,6 +506,13 @@ export default {
             path: "settings-regions",
             disabled: false,
           },
+          {
+            name: "Di Coin и Барабан",
+            index: "67",
+            to: "/settings/d-coin",
+            path: "settings-d-coin",
+            disabled: false,
+          },
         ],
       },
     };

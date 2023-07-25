@@ -1,52 +1,53 @@
 <template lang="html">
   <div>
-    <el-form
-      label-position="top"
-      :model="ruleForm1"
-      :rules="rules"
-      ref="ruleForm"
-      label-width="120px"
-      class="demo-ruleForm"
-    >
-      <TitleBlock title="Топ меню" :breadbrumb="['Контент сайта']" lastLink="Топ меню">
-        <div class="d-flex">
-          <span class="mx-3">
-            <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
-          </span>
-          <div
-            class="add-btn add-header-btn add-header-btn-padding btn-primary"
-            type="submit"
-            @click="submitForm('ruleForm')"
+    <TitleBlock title="Топ меню" :breadbrumb="['Контент сайта']" lastLink="Топ меню">
+      <div class="d-flex">
+        <span class="mx-3">
+          <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
+        </span>
+        <div
+          class="add-btn add-header-btn add-header-btn-padding btn-primary"
+          type="submit"
+          @click="submitForm('ruleFormBar')"
+        >
+          <span class="svg-icon" v-html="addIcon"></span>
+          Сохранять 
+        </div> 
+      </div>
+    </TitleBlock>
+    <div class="container_xl">
+      <div class="card_block-form py-5">
+        <div
+          class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
+        ></div>
+        <el-tabs class="form_tabs" v-model="activeName">
+          <el-tab-pane
+            v-for="(itemLang, index) in lang"
+            :label="itemLang.label"
+            :name="itemLang.label"
+            :key="index"
           >
-            <span class="svg-icon" v-html="addIcon"></span>
-            Сохранять
-          </div>
-        </div>
-      </TitleBlock>
-      <div class="container_xl">
-        <div class="card_block-form py-5">
-          <div
-            class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
-          ></div>
-          <el-tabs class="form_tabs" v-model="activeName">
-            <el-tab-pane
-              v-for="(itemLang, index) in lang"
-              :label="itemLang.label"
-              :name="itemLang.label"
-              :key="index"
-            >
-              <div class="form-container form-container-ltr">
-                <FormTitle title="Верхняя панель" />
-                <div class="list">
-                  <drop-list
-                    :items="ruleForm"
-                    @insert="onInsert"
-                    @reorder="$event.apply(ruleForm)"
-                  >
-                    <template v-slot:item="{ item }">
-                      <drag :key="item.indexId">
+            <div class="form-container form-container-ltr">
+              <FormTitle title="Верхняя панель" />
+              <div class="list">
+                <drop-list
+                  :items="ruleForm"
+                  @insert="onInsert"
+                  @reorder="$event.apply(ruleForm)"
+                >
+                  <template v-slot:item="{ item }">
+                    <drag :key="item.indexId" @dragend="handleDragEnd">
+                      <el-form
+                        label-position="top"
+                        :model="item"
+                        :rules="rulesBar"
+                        ref="ruleFormBar"
+                        label-width="120px"
+                        class="demo-ruleForm"
+                      >
                         <div class="top-menu-input-grid pb-3">
                           <el-form-item
+                            :prop="`bar_${item.indexId}`"
                             class="form-block required mb-0 w-100 align-items-start"
                             label="Категория или акция"
                           >
@@ -75,6 +76,7 @@
                           <el-form-item
                             label="Короткое имя"
                             class="mb-0 form-block required w-100 align-items-start"
+                            prop="name.ru"
                           >
                             <el-input
                               v-model="item.name[itemLang.key]"
@@ -115,7 +117,7 @@
                           <div class="variant_btns mb-1 mt-0">
                             <div
                               class="variant-btn variant-btn-delete mx-2"
-                              @click="deleteElement(item.indexId)"
+                              @click="deleteElement(item)"
                             >
                               <svg
                                 width="30"
@@ -143,25 +145,25 @@
                             </div>
                           </div>
                         </div>
-                      </drag>
-                    </template>
-                    <template v-slot:feedback="{ data }">
-                      <div class="item feedback" :key="data">{{ data }}</div>
-                    </template>
-                  </drop-list>
-                  <div class="d-flex justify-content-start">
-                    <div class="create-inner-variant mt-0" @click="addElement()">
-                      <span v-html="addInnerValidatIcon"></span>
-                      Добавить
-                    </div>
+                      </el-form>
+                    </drag>
+                  </template>
+                  <template v-slot:feedback="{ data }">
+                    <div class="item feedback" :key="data">{{ data }}</div>
+                  </template>
+                </drop-list>
+                <div class="d-flex justify-content-start">
+                  <div class="create-inner-variant mt-0" @click="addElement()">
+                    <span v-html="addInnerValidatIcon"></span>
+                    Добавить
                   </div>
                 </div>
               </div>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
       </div>
-    </el-form>
+    </div>
   </div>
 </template>
 <script>
@@ -223,6 +225,18 @@ export default {
         // ],
       },
       ruleForm1: {},
+      rulesBar: {
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "This field is required",
+              trigger: "change",
+            },
+          ],
+        },
+      },
+
       ruleForm: [
         {
           indexId: 1,
@@ -238,6 +252,7 @@ export default {
           text_color: "",
           color1: "",
           color2: "",
+          position: 1,
         },
       ],
     };
@@ -246,9 +261,33 @@ export default {
     this.__GET_TOP_MENU();
   },
   methods: {
-    deleteElement(id) {
-      if (this.ruleForm.length > 1)
-        this.ruleForm = this.ruleForm.filter((item) => item.indexId != id);
+    async handleDragEnd(event) {
+      this.ruleForm = await this.ruleForm.map((item, index) => {
+        return {
+          ...item,
+          position: index + 1,
+        };
+      });
+      const data = {
+        bars: this.ruleForm.map((item) => {
+          const { indexId, ...rest } = item;
+          return rest;
+        }),
+      };
+      this.__POST_TOP_MENU(data);
+    },
+    async deleteElement(item) {
+      if (item?.id) {
+        try {
+          await this.$store.dispatch("fetchTopBars/deleteTopBars", item.id);
+          this.notification("Success", "Успешно удален", "success");
+          this.__GET_TOP_MENU();
+        } catch (e) {}
+      } else {
+        console.log(item.indexId);
+        if (this.ruleForm.length > 1)
+          this.ruleForm = this.ruleForm.filter((elem) => elem.indexId != item.indexId);
+      }
     },
     addElement() {
       this.ruleForm.push({
@@ -258,25 +297,32 @@ export default {
           en: "",
         },
         promotion_id: null,
-        category_id: "",
+        category_id: null,
         icon: null,
         icon_svg: "",
         text_color: "",
         color1: "",
         color2: "",
+        position: Math.max(...this.ruleForm.map((o) => o.position)) + 1,
         indexId: Math.max(...this.ruleForm.map((o) => o.indexId)) + 1,
       });
     },
     submitForm(ruleForm) {
-      const data = {
-        bars: this.ruleForm.map((item) => {
-          const { indexId, ...rest } = item;
-          return rest;
-        }),
-      };
-      this.$refs[ruleForm].validate((valid) => {
-        valid ? this.__POST_TOP_MENU(data) : false;
+      console.log(this.$refs);
+      this.$refs[ruleForm].forEach((item) => {
+        item.validate((valid) => {
+          if (!valid) return false;
+        });
       });
+      // const data = {
+      //   bars: this.ruleForm.map((item) => {
+      //     const { indexId, ...rest } = item;
+      //     return rest;
+      //   }),
+      // };
+      // this.$refs[ruleForm].validate((valid) => {
+      //   valid ? this.__POST_TOP_MENU(data) : false;
+      // });
     },
     async handleSearch(value) {
       console.log(value);
@@ -293,7 +339,6 @@ export default {
       console.log(value);
       let obj = this.ruleForm.find((item) => item.indexId == id);
       obj.category_id = value;
-      console.log(obj);
     },
     async __POST_TOP_MENU(data) {
       try {
@@ -312,12 +357,12 @@ export default {
           return {
             ...item,
             indexId: index + 1,
+            position: index + 1,
           };
         });
         this.categories = data?.bars?.data
           .map((item, index) => item.category)
           .filter((elem) => elem);
-        console.log(this.categories);
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -329,6 +374,7 @@ export default {
       this.ruleForm.splice(event.index, 0, event.data);
     },
   },
+
   components: {
     TitleBlock,
     LayoutHeaderBtn,

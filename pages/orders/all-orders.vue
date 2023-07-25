@@ -1,10 +1,6 @@
 <template lang="html">
   <div class="all-orders">
-    <TitleBlock
-      title="Все заказы"
-      :breadbrumb="['Заказы']"
-      lastLink="Все заказы"
-    >
+    <TitleBlock title="Все заказы" :breadbrumb="['Заказы']" lastLink="Все заказы">
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
@@ -71,9 +67,7 @@
     </div>
     <div class="container_xl app-container mb-5">
       <div class="card_block py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header"
-        >
+        <div class="d-flex justify-content-between align-items-center card_header">
           <div class="d-flex align-items-between justify-content-between w-100">
             <SearchInput placeholder="Поиск заказа" />
             <div class="d-flex align-items-center"></div>
@@ -85,12 +79,9 @@
           :pagination="false"
           align="center"
         >
-          <a slot="img" slot-scope="text"
-            ><img
-              class="table-image"
-              src="../../assets/images/image.png"
-              alt=""
-          /></a>
+          <!-- <a slot="img" slot-scope="text"
+            ><img class="table-image" src="../../assets/images/image.png" alt=""
+          /></a> -->
           <nuxt-link
             to="/orders/1232/details"
             slot="client"
@@ -144,55 +135,60 @@ export default {
         {
           key: "1",
           orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
+          client: "Джеймс Кэмерон",
+          number: "+998 99 730 14 99",
+          dataEdit: "22.22.2022 12:30",
+          operator: "Khasan",
+          region: "Tashkent",
+          count: 23,
           tags: "Success",
           btns: "id",
         },
         {
           key: "2",
           orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
+          client: "Джеймс Кэмерон",
+          number: "+998 99 730 14 99",
+          dataEdit: "22.22.2022 12:30",
+          operator: "Khasan",
+          region: "status",
+          count: 23,
           tags: "Success",
           btns: "id",
         },
         {
           key: "3",
           orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
+          client: "Джеймс Кэмерон",
+          number: "+998 99 730 14 99",
+          dataEdit: "22.22.2022 12:30",
+          operator: "Khasan",
+          region: "Tashkent",
+          count: 23,
           tags: "Success",
           btns: "id",
         },
         {
           key: "4",
           orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
+          client: "Джеймс Кэмерон",
+          number: "+998 99 730 14 99",
+          dataEdit: "22.22.2022 12:30",
+          operator: "Khasan",
+          region: "Tashkent",
+          count: 23,
           tags: "Success",
           btns: "id",
         },
         {
           key: "5",
           orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
+          client: "Джеймс Кэмерон",
+          number: "+998 99 730 14 99",
+          dataEdit: "22.22.2022 12:30",
+          operator: "Khasan",
+          region: "Tashkent",
+          count: 23,
           tags: "Success",
           btns: "id",
         },
@@ -206,17 +202,17 @@ export default {
           scopedSlots: { customRender: "orderId" },
           className: "column-name",
         },
-        {
-          title: "ПРОДУКТ",
-          dataIndex: "img",
-          key: "img",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
-          // width: "8%",
-          align: "right",
-          className: "column-img",
-          colSpan: 0,
-        },
+        // {
+        //   title: "ПРОДУКТ",
+        //   dataIndex: "img",
+        //   key: "img",
+        //   slots: { title: "customTitle" },
+        //   scopedSlots: { customRender: "img" },
+        //   width: "55px",
+        //   align: "right",
+        //   className: "column-img",
+        //   colSpan: 0,
+        // },
         {
           title: "Клиент",
           dataIndex: "client",
@@ -224,52 +220,58 @@ export default {
           scopedSlots: { customRender: "client" },
           className: "column-name",
           key: "client",
-          colSpan: 2,
           align: "left",
           width: "20%",
         },
         {
-          title: "дата добавления",
-          dataIndex: "dataAdd",
-          scopedSlots: { customRender: "dataAdd" },
+          title: "Номер телефона",
+          dataIndex: "number",
+          scopedSlots: { customRender: "number" },
           className: "column-name",
-          key: "dataAdd",
+          key: "number",
         },
         {
-          title: "дата изменения",
+          title: "дата",
           dataIndex: "dataEdit",
           scopedSlots: { customRender: "dataEdit" },
           className: "column-name",
           key: "dataEdit",
         },
         {
-          title: "общая сумма",
-          dataIndex: "price",
-          scopedSlots: { customRender: "price" },
+          title: "Оператор",
+          dataIndex: "operator",
+          scopedSlots: { customRender: "operator" },
           className: "column-name",
-          key: "price",
+          key: "operator",
         },
         {
-          title: "статус оплаты",
-          dataIndex: "statusSum",
-          scopedSlots: { customRender: "statusSum" },
-          className: "column-options",
-          key: "statusSum",
+          title: "Область",
+          dataIndex: "region",
+          scopedSlots: { customRender: "region" },
+          className: "column-price",
+          key: "region",
         },
         {
-          title: "статус",
-          dataIndex: "tags",
-          scopedSlots: { customRender: "tags" },
-          className: "column-tags",
-          key: "tags",
+          title: "кол-во",
+          dataIndex: "count",
+          scopedSlots: { customRender: "count" },
+          className: "column-qty",
+          key: "count",
         },
+        // {
+        //   title: "статус",
+        //   dataIndex: "tags",
+        //   scopedSlots: { customRender: "tags" },
+        //   className: "column-tags",
+        //   key: "tags",
+        // },
         {
           title: "ДЕЙСТВИЯ",
           key: "btns",
           dataIndex: "btns",
           scopedSlots: { customRender: "btns" },
           className: "column-btns",
-          width: "80px",
+          width: "100px",
           align: "center",
         },
       ],

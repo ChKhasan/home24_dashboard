@@ -64,6 +64,7 @@
                           label="Короткое название"
                         >
                           <el-input
+                            maxlength="30"
                             v-model="ruleForm.short_name[item.key]"
                             placeholder="Короткое название..."
                           ></el-input>
@@ -209,7 +210,7 @@
 
                     <div class="category-input-grid">
                       <div class="form-block">
-                        <el-form-item :prop="`name.ru`" label="Полное название">
+                        <el-form-item label="Полное название">
                           <el-input
                             v-model="ruleForm.product_card_text[item.key]"
                             placeholder="Полное название..."
@@ -234,7 +235,7 @@
             <div class="category-img-grid">
               <div class="form-container">
                 <FormTitle title="Параметры" />
-                <div
+                <!-- <div
                   class="form-block status-style"
                   :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']"
                 >
@@ -254,9 +255,13 @@
                     >
                     </el-option>
                   </el-select>
-                </div>
+                </div> -->
 
-                <el-form-item class="form-block" label="Дата" prop="start">
+                <el-form-item
+                  class="form-block align-items-start"
+                  label="Дата"
+                  prop="start_date"
+                >
                   <a-range-picker @change="onChangeDate" />
                 </el-form-item>
                 <div class="form-block">
@@ -366,6 +371,13 @@ export default {
             },
           ],
         },
+        start_date: [
+          {
+            required: true,
+            message: "This field is required",
+            trigger: "change",
+          },
+        ],
         product_card_text: {
           ru: [
             {
@@ -406,8 +418,8 @@ export default {
         end_date: "",
         sticker: "",
         sticker_svg: null,
-        product_card_text_color: "",
-        product_card_back_color: "",
+        product_card_text_color: "#FFFFFF",
+        product_card_back_color: "#000000",
         is_active: 0,
       },
       previewVisible: false,
@@ -451,9 +463,9 @@ export default {
   methods: {
     submitForm(ruleForm) {
       console.log(this.ruleForm);
-      // this.$refs[ruleForm].validate((valid) => {
-      //   valid ? this.__POST_PROMOTIONS(this.ruleForm) : false;
-      // });
+      this.$refs[ruleForm].validate((valid) => {
+        valid ? this.__POST_PROMOTIONS(this.ruleForm) : false;
+      });
     },
     handleCancel() {
       this.previewVisible = false;
@@ -591,6 +603,7 @@ export default {
   padding: 1px 20px;
   line-height: 17.089px; /* 142.407% */
   align-items: center;
+  max-height: 20px;
 }
 .test_label span svg {
   margin-right: 6px;

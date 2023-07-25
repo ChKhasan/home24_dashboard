@@ -15,7 +15,7 @@
           :loading="uploadLoading"
         >
           <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"></span>
-          Добавить акцию
+          Сохранять
         </a-button>
       </div>
     </TitleBlock>
@@ -44,7 +44,7 @@
                       <FormTitle title="Этикетка" />
                       <div
                         class="test_label"
-                        v-if="ruleForm.short_name[item.key].length > 0"
+                        v-if="ruleForm.short_name[item.key]?.length > 0"
                       >
                         <div
                           :style="`background: linear-gradient(250deg, ${ruleForm.short_name_last_color} 0%, ${ruleForm.short_name_first_color} 100%);color: ${ruleForm.color_text}`"
@@ -64,6 +64,7 @@
                           label="Короткое название"
                         >
                           <el-input
+                            maxlength="30"
                             v-model="ruleForm.short_name[item.key]"
                             placeholder="Короткое название..."
                           ></el-input>
@@ -217,7 +218,7 @@
                         </el-form-item>
                       </div>
                     </div>
-                    <div class="form-block">
+                    <div class="form-block" v-if="ruleForm.desc">
                       <div><label for="">Информация</label></div>
                       <quill-editor
                         style="min-height: 250px"
@@ -234,7 +235,7 @@
             <div class="category-img-grid">
               <div class="form-container">
                 <FormTitle title="Параметры" />
-                <div
+                <!-- <div
                   class="form-block status-style"
                   :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']"
                 >
@@ -254,10 +255,22 @@
                     >
                     </el-option>
                   </el-select>
-                </div>
+                </div> -->
 
-                <el-form-item class="form-block" label="Дата" prop="start">
-                  <a-range-picker @change="onChangeDate" />
+                <el-form-item
+                  class="form-block align-items-start"
+                  label="Дата"
+                  prop="start_date"
+                >
+                  <a-range-picker
+                    v-if="ruleForm.start_date"
+                    @change="onChangeDate"
+                    :format="dateFormat"
+                    :default-value="[
+                      moment(ruleForm.start_date, dateFormat),
+                      moment(ruleForm.end_date, dateFormat),
+                    ]"
+                  />
                 </el-form-item>
                 <div class="form-block">
                   <div><label for="">Добавить изображения</label></div>
@@ -300,7 +313,7 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import status from "../../../mixins/status";
-
+import moment from "moment";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -314,6 +327,7 @@ export default {
   mixins: [status],
   data() {
     return {
+      dateFormat: "YYYY-MM-DD",
       iconType: false,
       activeLabelType: "input",
       activeName: "Русский",
@@ -366,6 +380,13 @@ export default {
             },
           ],
         },
+        start_date: [
+          {
+            required: true,
+            message: "This field is required",
+            trigger: "change",
+          },
+        ],
         product_card_text: {
           ru: [
             {
@@ -449,11 +470,30 @@ export default {
     };
   },
   methods: {
+    moment,
     submitForm(ruleForm) {
-      console.log(this.ruleForm);
-      // this.$refs[ruleForm].validate((valid) => {
-      //   valid ? this.__POST_PROMOTIONS(this.ruleForm) : false;
-      // });
+      const {
+        md_banner,
+        sm_banner,
+        lg_banner,
+        sm_short_name_icon,
+        md_short_name_icon,
+        lg_short_name_icon,
+        sm_sticker,
+        md_sticker,
+        lg_sticker,
+        for_search,
+        created_at,
+        updated_at,
+        slug,
+        id,
+        ...rest
+      } = this.ruleForm;
+      console.log(rest);
+
+      this.$refs[ruleForm].validate((valid) => {
+        valid ? this.__POST_PROMOTIONS(rest) : false;
+      });
     },
     handleCancel() {
       this.previewVisible = false;
@@ -487,7 +527,10 @@ export default {
 
     async __POST_PROMOTIONS(res) {
       try {
-        await this.$store.dispatch("fetchPromotions/postPromotions", res);
+        await this.$store.dispatch("fetchPromotions/editPromotions", {
+          id: this.$route.params.id,
+          data: res,
+        });
         this.notification("Success", "Успешно добавлен", "success");
         this.$router.push("/inbox/promotions");
       } catch (e) {
@@ -499,11 +542,35 @@ export default {
         "fetchPromotions/getPromotionsById",
         this.$route.params.id
       );
-      console.log("asdasdasd",data);
+      this.ruleForm = { ...data?.promotion };
+      if (data.promotion.lg_banner) {
+        this.fileList.banner = [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            oldImg: true,
+            url: data.promotion.lg_banner,
+          },
+        ];
+      }
+      if (data.promotion.lg_sticker) {
+        this.fileList.sticker = [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            oldImg: true,
+            url: data.promotion.lg_sticker,
+          },
+        ];
+      }
     },
   },
-  mounted() {
-    this.__GET_PROMOTIONS_BY_ID();
+  async mounted() {
+    await this.__GET_PROMOTIONS_BY_ID();
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
   },
   watch: {
     activeLabelType(val) {
@@ -601,6 +668,7 @@ export default {
   padding: 1px 20px;
   line-height: 17.089px; /* 142.407% */
   align-items: center;
+  max-height: 20px;
 }
 .test_label span svg {
   margin-right: 6px;

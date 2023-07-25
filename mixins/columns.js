@@ -435,10 +435,10 @@ export default {
         },
         {
           title: "Дата окончания",
-          dataIndex: "start_date",
-          key: "start_date",
+          dataIndex: "end_date",
+          key: "end_date",
           align: "center",
-          scopedSlots: { customRender: "start_date" },
+          scopedSlots: { customRender: "end_date" },
           className: "column-date",
           width: "15%",
         },
