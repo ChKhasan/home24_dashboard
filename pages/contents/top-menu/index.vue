@@ -28,15 +28,18 @@
               <h6>{{ text?.ru }}</h6>
             </span>
             <span slot="category" slot-scope="text">
-              <h6>{{ text?.name?.ru }}</h6>
+              <h6>{{ text?.name?.ru ? text?.name?.ru : "----" }}</h6>
+            </span>
+            <span slot="promotion" slot-scope="text">
+              <h6>{{ text?.name?.ru ? text?.name?.ru : "----" }}</h6>
             </span>
             <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editAction(text)">
+              <!-- <span class="action-btn" @click="editAction(text)">
                 <img :src="editIcon" alt="" />
-              </span>
+              </span> -->
               <a-popconfirm
                 title="Are you sure delete this group?"
                 ok-text="Yes"
@@ -130,9 +133,7 @@ export default {
     deletePost(id) {
       this.__DELETE_CHARACTER_GROUP(id);
     },
-    editAction(id) {
-      this.$router.push(`/catalog/edit_characteristic/${id}`);
-    },
+
     async __DELETE_CHARACTER_GROUP(id) {
       try {
         const data = await this.$store.dispatch("fetchCharacters/deleteGroups", id);

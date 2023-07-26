@@ -3,6 +3,10 @@ export const actions = {
     const res = await this.$axios.$get(`/bars`, { params: payload });
     return res;
   },
+  async getTopBarsSearch({}, payload) {
+    const res = await this.$axios.$get(`/bars/search`, { params: payload });
+    return res;
+  },
   async getTopBarsById({}, id) {
     const res = await this.$axios.$get(`/bars/${id}`);
     return res;

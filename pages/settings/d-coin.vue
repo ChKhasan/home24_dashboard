@@ -54,36 +54,57 @@
           <div class="form-container">
             <FormTitle title="Di Coin" />
             <div class="products-input-grid-3">
-              <el-form-item
-                class="form-block align-items-start"
-                prop="character_name"
-                label="Di coin для регистрации"
-              >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Di coin для регистрации..."
-                ></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block align-items-start"
-                prop="character_name"
-                label="Эквивалент покупки Di Coin"
-              >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Эквивалент покупки Di Coin..."
-                ></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block align-items-start"
-                prop="character_name"
-                label="Di Coin использовать цену валюты"
-              >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Di Coin использовать цену валюты..."
-                ></el-input>
-              </el-form-item>
+              <div class="form-block align-items-start d-flex">
+                <label for="">
+                  Di coin для регистрации
+                  <a-popover placement="top">
+                    <template slot="content">
+                      <span>Продукт дня</span>
+                    </template>
+                    <span class="nav-info">?</span>
+                  </a-popover>
+                </label>
+                <el-form-item class="form-block" prop="character_name">
+                  <el-input
+                    v-model="ruleForm.character_name"
+                    placeholder="Di coin для регистрации..."
+                  ></el-input>
+                </el-form-item>
+              </div>
+              <div class="form-block align-items-start d-flex">
+                <label for="">
+                  Эквивалент покупки Di Coin
+                  <a-popover placement="top">
+                    <template slot="content">
+                      <span>Продукт дня</span>
+                    </template>
+                    <span class="nav-info">?</span>
+                  </a-popover>
+                </label>
+                <el-form-item class="form-block align-items-start" prop="character_name">
+                  <el-input
+                    v-model="ruleForm.character_name"
+                    placeholder="Эквивалент покупки Di Coin..."
+                  ></el-input>
+                </el-form-item>
+              </div>
+              <div class="form-block align-items-start d-flex">
+                <label for="">
+                  Di Coin использовать цену валюты
+                  <a-popover placement="top">
+                    <template slot="content">
+                      <span>Продукт дня</span>
+                    </template>
+                    <span class="nav-info">?</span>
+                  </a-popover>
+                </label>
+                <el-form-item class="form-block align-items-start" prop="character_name">
+                  <el-input
+                    v-model="ruleForm.character_name"
+                    placeholder="Di Coin использовать цену валюты..."
+                  ></el-input>
+                </el-form-item>
+              </div>
             </div>
           </div>
         </div>

@@ -49,7 +49,7 @@
                     <el-form-item
                       label="Заголовок"
                       prop="title.ru"
-                      class="form-block required d-flex align-items-start"
+                      class="form-block d-flex align-items-start"
                     >
                       <el-input
                         v-model="ruleForm.title[item.key]"

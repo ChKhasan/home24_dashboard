@@ -11,8 +11,8 @@
           @click="submitForm('ruleFormBar')"
         >
           <span class="svg-icon" v-html="addIcon"></span>
-          Сохранять 
-        </div> 
+          Сохранять
+        </div>
       </div>
     </TitleBlock>
     <div class="container_xl">
@@ -47,13 +47,14 @@
                       >
                         <div class="top-menu-input-grid pb-3">
                           <el-form-item
-                            :prop="`bar_${item.indexId}`"
+                            :prop="`current_id`"
                             class="form-block required mb-0 w-100 align-items-start"
                             label="Категория или акция"
+                            style="max-width: 387px"
                           >
                             <a-select
                               show-search
-                              v-model="item.category_id"
+                              v-model="item.current_id"
                               placeholder="input search text"
                               style="width: 100%"
                               :default-active-first-option="false"
@@ -68,9 +69,33 @@
                                 slot="notFoundContent"
                                 size="small"
                               />
-                              <a-select-option v-for="d in categories" :key="d.id">
+                              <!-- <a-select-option v-for="d in categories" :key="d.id">
                                 {{ d.name.ru }}
-                              </a-select-option>
+                              </a-select-option> -->
+                              <a-select-opt-group
+                                label="Kategoriyalar"
+                                v-if="categories.length > 0"
+                              >
+                                <a-select-option
+                                  v-for="d in categories"
+                                  :value="d.id"
+                                  :key="d.id"
+                                >
+                                  {{ d.name.ru }}
+                                </a-select-option>
+                              </a-select-opt-group>
+                              <a-select-opt-group
+                                label="Aksiyalar"
+                                v-if="promotions.length > 0"
+                              >
+                                <a-select-option
+                                  v-for="d in promotions"
+                                  :value="d.id"
+                                  :key="d.id"
+                                >
+                                  {{ d.name.ru }}
+                                </a-select-option>
+                              </a-select-opt-group>
                             </a-select>
                           </el-form-item>
                           <el-form-item
@@ -181,6 +206,7 @@ export default {
       multiSelectError: true,
       fetching: false,
       categories: [],
+      promotions: [],
       data: [],
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
@@ -230,11 +256,18 @@ export default {
           ru: [
             {
               required: true,
-              message: "This field is required",
+              message: "This is required",
               trigger: "change",
             },
           ],
         },
+        current_id: [
+          {
+            required: true,
+            message: "This is required",
+            trigger: "change",
+          },
+        ],
       },
 
       ruleForm: [
@@ -245,6 +278,7 @@ export default {
             uz: "",
             en: "",
           },
+          current_id: null,
           promotion_id: null,
           category_id: null,
           icon: null,
@@ -274,7 +308,8 @@ export default {
           return rest;
         }),
       };
-      this.__POST_TOP_MENU(data);
+      console.log(this.ruleForm);
+      // this.__POST_TOP_MENU(data);
     },
     async deleteElement(item) {
       if (item?.id) {
@@ -303,17 +338,41 @@ export default {
         text_color: "",
         color1: "",
         color2: "",
+        id: 0,
         position: Math.max(...this.ruleForm.map((o) => o.position)) + 1,
         indexId: Math.max(...this.ruleForm.map((o) => o.indexId)) + 1,
       });
     },
     submitForm(ruleForm) {
-      console.log(this.$refs);
+      const data = {
+        bars: this.ruleForm.map((item) => {
+          const { indexId, ...rest } = item;
+          if (item.current_id.includes("cat")) {
+            return {
+              ...rest,
+              category_id: Number(item.current_id.split("_")[1]),
+            };
+          } else if (item.current_id.includes("promo")) {
+            console.log(item.current_id, "sdsfsdfsdfjshdfsdhfghsdghfgsdhfg");
+            return {
+              ...rest,
+              category_id: null,
+              promotion_id: Number(item.current_id.split("_")[1]),
+            };
+          }
+        }),
+      };
+      console.log(data);
+      let arr = [];
       this.$refs[ruleForm].forEach((item) => {
         item.validate((valid) => {
           if (!valid) return false;
+          arr.push(1);
         });
       });
+      if (arr.length == this.$refs[ruleForm].length) {
+        this.__POST_TOP_MENU(data);
+      }
       // const data = {
       //   bars: this.ruleForm.map((item) => {
       //     const { indexId, ...rest } = item;
@@ -327,18 +386,27 @@ export default {
     async handleSearch(value) {
       console.log(value);
       this.fetching = true;
-      const categoriesData = await this.$store.dispatch("fetchCategories/getCategories", {
-        search: value,
-      });
-      this.categories = categoriesData?.categories.data;
-      this.fetching = false;
-
-      console.log(this.categories);
+      if (value.length > 2) {
+        const categoriesData = await this.$store.dispatch(
+          "fetchTopBars/getTopBarsSearch",
+          {
+            search: value,
+          }
+        );
+        this.categories = categoriesData?.categories.map((item) => {
+          return { ...item, id: `cat_${item.id}` };
+        });
+        this.promotions = categoriesData?.promotions.map((item) => {
+          return { ...item, id: `promo_${item.id}` };
+        });
+        this.fetching = false;
+      }
     },
     handleChange(value, id) {
       console.log(value);
       let obj = this.ruleForm.find((item) => item.indexId == id);
       obj.category_id = value;
+      console.log(obj);
     },
     async __POST_TOP_MENU(data) {
       try {
@@ -358,11 +426,41 @@ export default {
             ...item,
             indexId: index + 1,
             position: index + 1,
+            current_id: item.category_id
+              ? `cat_${item.category_id}`
+              : `promo_${item.promotion_id}`,
           };
         });
         this.categories = data?.bars?.data
-          .map((item, index) => item.category)
+          .filter((elem) => elem.category_id)
+          .map((item, index) => {
+            return {
+              ...item.category,
+              id: `cat_${item.category.id}`,
+            };
+          })
           .filter((elem) => elem);
+        const unique = this.categories.filter(
+          (obj, index) =>
+            this.categories.findIndex((item) => item.id === obj.id) === index
+        );
+        this.categories = [...unique];
+
+        this.promotions = data?.bars?.data
+          .filter((elem) => elem.promotion_id)
+          .map((item, index) => {
+            return {
+              ...item.promotion,
+              id: `promo_${item.promotion.id}`,
+            };
+          })
+          .filter((elem) => elem);
+        const unique1 = this.promotions.filter(
+          (obj, index) =>
+            this.promotions.findIndex((item) => item.id === obj.id) === index
+        );
+        this.promotions = [...unique1];
+        this.topBarRules();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -373,8 +471,23 @@ export default {
     onInsert(event) {
       this.ruleForm.splice(event.index, 0, event.data);
     },
+    topBarRules() {
+      this.ruleForm.forEach((item) => {
+        this.rulesBar.name.ru = [
+          {
+            required: true,
+            message: "Brand name is required",
+            trigger: "change",
+          },
+        ];
+      });
+    },
   },
-
+  watch: {
+    "ruleForm.length"() {
+      this.topBarRules();
+    },
+  },
   components: {
     TitleBlock,
     LayoutHeaderBtn,

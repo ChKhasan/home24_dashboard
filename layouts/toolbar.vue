@@ -495,9 +495,9 @@ export default {
           {
             name: "Пользователи",
             index: "65",
-            to: "/settings/banners2",
-            path: "settings-banners2",
-            disabled: true,
+            to: "/settings/users",
+            path: "settings-users",
+            disabled: false,
           },
           {
             name: "Регионы",
