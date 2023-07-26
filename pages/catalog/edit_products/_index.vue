@@ -1495,7 +1495,7 @@ export default {
         const atributValid = artibutReqiured.length == atr;
         console.log(newData);
         if (!valid && !atributValid) return false;
-        // this.__POST_PRODUCTS(newData);
+        this.__POST_PRODUCTS(newData);
         // this.characterRequired
         //   ? this.__POST_PRODUCTS(newData)
         //   : this.notification("Success", "Вы не добавили характеристику", "error");
