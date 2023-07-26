@@ -3,6 +3,12 @@ export const actions = {
     const res = await this.$axios.$get(`/products`, { params: payload });
     return res;
   },
+  async getProductsSearch({}, payload) {
+    const res = await this.$axios.$get(`/products/get_undone_variations`, {
+      params: payload,
+    });
+    return res;
+  },
   async getProductsById({}, id) {
     const res = await this.$axios.$get(`/products/${id}`);
     return res;

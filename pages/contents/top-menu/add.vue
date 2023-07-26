@@ -283,9 +283,9 @@ export default {
           category_id: null,
           icon: null,
           icon_svg: "",
-          text_color: "",
-          color1: "",
-          color2: "",
+          text_color: "#000000",
+          color1: "#F6F7F9",
+          color2: "#F6F7F9",
           position: 1,
         },
       ],
@@ -335,30 +335,38 @@ export default {
         category_id: null,
         icon: null,
         icon_svg: "",
-        text_color: "",
-        color1: "",
-        color2: "",
+        text_color: "#000000",
+        color1: "#F6F7F9",
+        color2: "#F6F7F9",
         id: 0,
-        position: Math.max(...this.ruleForm.map((o) => o.position)) + 1,
-        indexId: Math.max(...this.ruleForm.map((o) => o.indexId)) + 1,
+        position:
+          this.ruleForm.length > 0
+            ? Math.max(...this.ruleForm.map((o) => o.position)) + 1
+            : 1,
+        indexId:
+          this.ruleForm.length > 0
+            ? Math.max(...this.ruleForm.map((o) => o.indexId)) + 1
+            : 1,
       });
     },
     submitForm(ruleForm) {
       const data = {
         bars: this.ruleForm.map((item) => {
           const { indexId, ...rest } = item;
-          if (item.current_id.includes("cat")) {
-            return {
-              ...rest,
-              category_id: Number(item.current_id.split("_")[1]),
-            };
-          } else if (item.current_id.includes("promo")) {
-            console.log(item.current_id, "sdsfsdfsdfjshdfsdhfghsdghfgsdhfg");
-            return {
-              ...rest,
-              category_id: null,
-              promotion_id: Number(item.current_id.split("_")[1]),
-            };
+          if (item.current_id) {
+            if (item.current_id.includes("cat")) {
+              return {
+                ...rest,
+                category_id: Number(item.current_id.split("_")[1]),
+              };
+            } else if (item.current_id.includes("promo")) {
+              console.log(item.current_id, "sdsfsdfsdfjshdfsdhfghsdghfgsdhfg");
+              return {
+                ...rest,
+                category_id: null,
+                promotion_id: Number(item.current_id.split("_")[1]),
+              };
+            }
           }
         }),
       };
@@ -432,11 +440,11 @@ export default {
           };
         });
         this.categories = data?.bars?.data
-          .filter((elem) => elem.category_id)
+          .filter((elem) => elem.category_id && elem.category)
           .map((item, index) => {
             return {
               ...item.category,
-              id: `cat_${item.category.id}`,
+              id: `cat_${item.category?.id}`,
             };
           })
           .filter((elem) => elem);
@@ -447,11 +455,11 @@ export default {
         this.categories = [...unique];
 
         this.promotions = data?.bars?.data
-          .filter((elem) => elem.promotion_id)
+          .filter((elem) => elem.promotion_id && elem.promotion)
           .map((item, index) => {
             return {
               ...item.promotion,
-              id: `promo_${item.promotion.id}`,
+              id: `promo_${item.promotion?.id}`,
             };
           })
           .filter((elem) => elem);
@@ -461,8 +469,18 @@ export default {
         );
         this.promotions = [...unique1];
         this.topBarRules();
+        this.addDefaultForms();
       } catch (e) {
+        console.log(e);
         this.statusFunc(e.response);
+      }
+    },
+    addDefaultForms() {
+      if (this.ruleForm.length < 4) {
+        let fromLength = 4 - this.ruleForm.length;
+        for (let i = 1; i < fromLength; i++) {
+          this.addElement();
+        }
       }
     },
     toBack() {

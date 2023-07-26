@@ -399,7 +399,7 @@
                           </div>
                         </el-form>
 
-                        <div class="form-variant-block">
+                        <div class="form-variant-block mb-0">
                           <div><label>Price</label></div>
                           <el-input
                             disabled
@@ -411,7 +411,7 @@
                         <el-form-item
                           prop="attributes"
                           label="Aкции "
-                          class="form-variant-block"
+                          class="form-variant-block mb-0"
                         >
                           <el-select
                             class="w-100"
@@ -435,11 +435,11 @@
                         <el-form-item
                           prop="attributes"
                           label="Поиск продуктов "
-                          class="form-variant-block"
+                          class="form-variant-block mb-0"
                         >
                           <el-input placeholder="Поиск..." />
                         </el-form-item>
-                        <div class="form-block">
+                        <div class="form-block mb-0">
                           <div>
                             <label
                               >Pop
@@ -462,7 +462,7 @@
                             />
                           </span>
                         </div>
-                        <div class="form-block mx-2">
+                        <div class="form-block mx-2 mb-0">
                           <div>
                             <label
                               >POD
@@ -486,7 +486,7 @@
                             />
                           </span>
                         </div>
-                        <div class="form-block">
+                        <div class="form-block mb-0">
                           <div>
                             <label
                               >Stat
@@ -513,6 +513,7 @@
                       </div>
                       <div class="variant_btns mb-1">
                         <div
+                          v-if="!item.constProduct"
                           class="variant-btn variant-btn-delete mx-2"
                           @click="deleteValidation(element.id, item.id)"
                           v-html="removeIcon"
@@ -530,7 +531,14 @@
                 <!-- Validations -->
               </div>
               <div class="d-flex justify-content-start" v-if="atributes.length > 0">
-                <div class="create-inner-variant" @click="addValidation(element.id)">
+                <!-- <div class="create-inner-variant" @click="addValidation(element.id)">
+                  <span v-html="addInnerValidatIcon"></span>
+                  Добавит внутренний варизаци
+                </div> -->
+                <div
+                  class="create-inner-variant"
+                  @click="currentProduct(element.id, false)"
+                >
                   <span v-html="addInnerValidatIcon"></span>
                   Добавит внутренний варизаци
                 </div>
@@ -538,7 +546,10 @@
             </div>
           </transition-group>
           <div>
-            <div class="add-variant create-inner-variant mt-0" @click="addProduct">
+            <div
+              class="add-variant create-inner-variant mt-0"
+              @click="currentProduct(null, true)"
+            >
               <span v-html="addInnerValidatIcon"></span>
               Добавит варизаци
             </div>
@@ -768,6 +779,7 @@
       </template>
     </a-modal>
     <!-- category modal -->
+    <!-- character modal -->
     <a-modal
       v-model="visible.character"
       :closable="false"
@@ -910,6 +922,71 @@
         </div>
       </div>
     </a-modal>
+    <!-- character modal -->
+    <!-- search modal -->
+    <a-modal
+      v-model="visible.searchVar"
+      title="Добавить"
+      :closable="false"
+      @ok="handleOk('searchVar')"
+    >
+      <el-form
+        label-position="top"
+        :model="brandData"
+        :rules="rulesModal"
+        ref="brandData"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <div class="form-block required">
+          <div><label for="">Название продукта </label></div>
+          <el-form-item prop="name">
+            <a-select
+              show-search
+              mode="multiple"
+              v-model="searchResoultProducts"
+              placeholder="Название продукта..."
+              style="width: 100%"
+              :default-active-first-option="false"
+              :show-arrow="false"
+              :filter-option="false"
+              :not-found-content="fetching ? undefined : null"
+              @search="handleSearch"
+              @change="handleChangeSearch"
+            >
+              <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+              <a-select-option v-for="d in searchProducts" :key="d.id" :value="d?.id">
+                {{ d?.info?.name?.ru }}
+              </a-select-option>
+            </a-select>
+          </el-form-item>
+        </div>
+      </el-form>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="handleOk('searchVar')"
+          >
+            Отмена
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="searchType ? addSearchProductByColor() : addSearchProduct()"
+            type="primary"
+            :loading="searchResoultProducts.length == 0"
+          >
+            <span
+              v-if="!searchResoultProducts.length == 0"
+              class="svg-icon"
+              v-html="addIcon"
+            ></span>
+            Сохранить
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
+    <!-- search modal -->
   </div>
 </template>
 <script>
@@ -938,9 +1015,14 @@ export default {
   mixins: [status],
   data() {
     return {
+      currentProductId: null,
+      searchType: false,
+      fetching: false,
+      searchProducts: [],
       productModal: {
         product_modal1: false,
       },
+      searchResoultProducts: [],
       closeIcon: require("../../../assets/svg/components/remove.svg?raw"),
       copyIcon: require("../../../assets/svg/components/copy.svg?raw"),
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
@@ -1082,6 +1164,7 @@ export default {
         brand: false,
         category: false,
         character: false,
+        searchVar: false,
       },
       rulesCategory: {
         desc: {
@@ -1189,6 +1272,87 @@ export default {
     }
   },
   methods: {
+    async handleSearch(value) {
+      this.fetching = true;
+      if (value.length > 2) {
+        const searchProductData = await this.$store.dispatch(
+          "fetchProducts/getProductsSearch",
+          {
+            search: value,
+            brand: this.ruleForm.brand_id,
+            category: this.ruleForm.category_id,
+          }
+        );
+        this.searchProducts = searchProductData.products;
+        this.fetching = false;
+      }
+    },
+    handleChangeSearch(value) {
+      console.log(value);
+
+      // console.log(value);
+      // let obj = this.ruleForm.find((item) => item.indexId == id);
+      // obj.category_id = value;
+      // console.log(obj);
+    },
+    currentProduct(id, typeProduct) {
+      console.log("chuld");
+      this.searchType = typeProduct;
+      this.currentProductId = id;
+      this.visible.searchVar = true;
+    },
+    addSearchProductByColor() {
+      console.log("chuld");
+      this.searchResoultProducts.forEach((item) => {
+        let seartProduct = this.searchProducts.find((elem) => elem.id == item);
+        const options = { ...this.atributNames };
+        const newVariations = [
+          {
+            id: 1,
+            indexId: seartProduct.id,
+            options: [1],
+            price: seartProduct.price,
+            is_default: 1,
+            product_of_the_day: 0,
+            is_popular: 0,
+            optionName: options,
+            characteristics: [],
+            characteristicsValues: {},
+            status: "active",
+          },
+        ];
+        this.ruleForm.products.push({
+          id: this.ruleForm.products.at(-1).id + 1,
+          images: [],
+          imagesData: [],
+          variations: newVariations,
+        });
+      });
+      this.visible.searchVar = false;
+    },
+    addSearchProduct() {
+      console.log("parent");
+
+      const product = this.findProductWithId(this.currentProductId);
+      const options = { ...this.atributNames };
+      this.searchResoultProducts.forEach((item) => {
+        let seartProduct = this.searchProducts.find((elem) => elem.id == item);
+        product.variations.push({
+          id: product.variations.at(-1).id + 1,
+          indexId: seartProduct.id,
+          options: [1],
+          price: seartProduct.price,
+          is_default: 0,
+          product_of_the_day: 0,
+          is_popular: 0,
+          characteristics: [],
+          characteristicsValues: {},
+          optionName: options,
+          status: "active",
+        });
+      });
+      this.visible.searchVar = false;
+    },
     fullScreen(id, val) {
       this.productModal = {
         [`product_modal${id}`]: val,
@@ -1318,6 +1482,8 @@ export default {
     // products
     submitForm(ruleForm) {
       const newData = this.transformData();
+      console.log(newData);
+
       let artibutReqiured = [];
       if (this.$refs.ruleFormAtributes) {
         this.$refs["ruleFormAtributes"].forEach((item) => {
@@ -1333,7 +1499,7 @@ export default {
         const atributValid = artibutReqiured.length == atr;
         console.log(newData);
         if (!valid && !atributValid) return false;
-        this.__POST_PRODUCTS(newData);
+        // this.__POST_PRODUCTS(newData);
         // this.characterRequired
         //   ? this.__POST_PRODUCTS(newData)
         //   : this.notification("Success", "Вы не добавили характеристику", "error");
@@ -1592,7 +1758,9 @@ export default {
         },
         id: null,
       });
+      console.log(this.cascaderCategories);
     },
+
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
       const category = data.category;
@@ -1642,6 +1810,7 @@ export default {
       } else {
         this.cascader.push(data.info.category.id);
       }
+
       this.ruleForm.category_id = data.info.category.id;
       this.__GET_CATEGORY_BY_ID(data.info.category.id);
       this.ruleForm.products = data.products.map((item, productIndex) => {
@@ -1672,6 +1841,7 @@ export default {
           let characteristics = variant.characteristic_options.map((charOp) => charOp.id);
           return {
             id: index + 1,
+            constProduct: true,
             indexId: variant.id,
             options: [...options],
             optionName: atribut,
@@ -1728,6 +1898,11 @@ export default {
     },
   },
   watch: {
+    "visible.searchVar"(val) {
+      if (!val) {
+        this.searchResoultProducts = [];
+      }
+    },
     "ruleForm.products.length"(val) {
       this.ruleForm.products.forEach((item) => {
         this.productModal[`product_modal${item.id}`] = false;
