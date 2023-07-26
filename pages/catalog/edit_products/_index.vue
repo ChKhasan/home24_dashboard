@@ -1274,7 +1274,7 @@ export default {
   methods: {
     async handleSearch(value) {
       this.fetching = true;
-      if (value.length > 2) {
+      if (value.length > 1) {
         const searchProductData = await this.$store.dispatch(
           "fetchProducts/getProductsSearch",
           {
@@ -1296,13 +1296,11 @@ export default {
       // console.log(obj);
     },
     currentProduct(id, typeProduct) {
-      console.log("chuld");
       this.searchType = typeProduct;
       this.currentProductId = id;
       this.visible.searchVar = true;
     },
     addSearchProductByColor() {
-      console.log("chuld");
       this.searchResoultProducts.forEach((item) => {
         let seartProduct = this.searchProducts.find((elem) => elem.id == item);
         const options = { ...this.atributNames };
@@ -1331,8 +1329,6 @@ export default {
       this.visible.searchVar = false;
     },
     addSearchProduct() {
-      console.log("parent");
-
       const product = this.findProductWithId(this.currentProductId);
       const options = { ...this.atributNames };
       this.searchResoultProducts.forEach((item) => {
