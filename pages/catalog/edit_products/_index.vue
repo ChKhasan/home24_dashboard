@@ -79,9 +79,8 @@
                       <a-cascader
                         :options="cascaderCategories"
                         :show-search="{ filter }"
-                        disabled
                         popupClassName="category-cascader"
-                        class="category-select w-100"
+                        class="category-select w-100 disabledBtn"
                         popper-class="select-popper-hover"
                         v-model="cascader"
                         placeholder="Выберите категорию"
@@ -1331,6 +1330,8 @@ export default {
       this.visible.searchVar = false;
     },
     addSearchProduct() {
+      console.log(this.searchProducts);
+
       const product = this.findProductWithId(this.currentProductId);
       const options = { ...this.atributNames };
       this.searchResoultProducts.forEach((item) => {
@@ -1898,7 +1899,7 @@ export default {
   watch: {
     "visible.searchVar"(val) {
       if (!val) {
-        this.searchType ? this.addSearchProductByColor() : this.addSearchProduct();
+        // this.searchType ? this.addSearchProductByColor() : this.addSearchProduct();
         this.searchResoultProducts = [];
       } else {
         setTimeout(() => {
