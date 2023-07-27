@@ -1519,20 +1519,19 @@ export default {
       );
     },
     submitFormCharacter(ruleForm) {
-      if (this.$refs[ruleForm]) {
-        console.log(this.$refs);
-
-        this.characterRequired = false;
-        const trueData = [];
-        this.$refs[ruleForm].forEach((item) => {
-          item.validate((valid) => {
-            if (!valid) return false;
-            trueData.push(valid);
-            if (trueData.length == this.$refs[ruleForm].length)
-              (this.characterRequired = true), this.handleOk("character");
-          });
-        });
-      }
+      this.handleOk("character");
+      // if (this.$refs[ruleForm]) {
+      //   this.characterRequired = false;
+      //   const trueData = [];
+      //   this.$refs[ruleForm].forEach((item) => {
+      //     item.validate((valid) => {
+      //       if (!valid) return false;
+      //       trueData.push(valid);
+      //       if (trueData.length == this.$refs[ruleForm].length)
+      //         (this.characterRequired = true), this.handleOk("character");
+      //     });
+      //   });
+      // }
     },
     transformData() {
       const newData = {

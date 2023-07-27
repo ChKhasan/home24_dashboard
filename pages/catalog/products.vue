@@ -85,7 +85,7 @@
             >
           </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
-          <h4 slot="qty" slot-scope="text">{{ text ? text : "------" }}</h4>
+          <span slot="qty" slot-scope="text">{{ text ? text : "------" }}</span>
           <a slot="price" slot-scope="text">{{ text ? `${text}` : "------" }}</a>
           <span slot="customTitle"></span>
 
