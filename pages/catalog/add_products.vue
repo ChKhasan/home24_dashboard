@@ -6,7 +6,7 @@
           Отмена
         </div>
         <a-button
-          class="add-btn add-header-btn btn-primary d-flex align-items-center"
+          class="add-btn add-header-btn btn-primary d-flex align-items-center disabled"
           type="primary"
           @click="submitForm('ruleForm')"
           :loading="uploadLoading"

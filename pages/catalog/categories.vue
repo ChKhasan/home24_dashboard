@@ -1,11 +1,8 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Категории"
-      :breadbrumb="['Каталог']"
-      lastLink="Категории"
-    >
-      <LayoutHeaderBtn
+    <TitleBlock title="Категории" :breadbrumb="['Каталог']" lastLink="Категории">
+      <LayoutHeaderBtnc
+        class="disabledBtn"
         name=" Добавить категорию"
         :headerbtnCallback="headerbtnCallback"
         :light="false"
@@ -13,9 +10,7 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header"
-        >
+        <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
             <SearchInput placeholder="Категория поиска" />
             <div></div>
@@ -63,12 +58,7 @@
               align="center"
               class="select-table-child"
             >
-              <img
-                class="table-image select-img"
-                v-if="text"
-                :src="text"
-                alt=""
-              />
+              <img class="table-image select-img" v-if="text" :src="text" alt="" />
               <img
                 class="table-image select-img"
                 v-else
@@ -110,10 +100,7 @@
               </a-popconfirm>
             </span>
             <span slot="is_popular" slot-scope="text">
-              <a-checkbox
-                @change="onChangeCheckbox(text)"
-                :checked="text == 1"
-              />
+              <a-checkbox @change="onChangeCheckbox(text)" :checked="text == 1" />
             </span>
           </a-table>
           <div class="d-flex justify-content-between mt-4">
@@ -121,13 +108,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="
-                changePageSizeGlobal(
-                  e,
-                  '/catalog/categories',
-                  '__GET_CATEGORIES'
-                )
-              "
+              @change="changePageSizeGlobal(e, '/catalog/categories', '__GET_CATEGORIES')"
             >
               <el-option
                 v-for="item in pageSizes"

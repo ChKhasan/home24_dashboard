@@ -3,7 +3,7 @@
     <TitleBlock title="Продукты" :breadbrumb="['Каталог']" lastLink="Продукты">
       <div class="d-flex">
         <div
-          class="add-btn add-header-btn add-header-btn-padding btn-primary"
+          class="add-btn add-header-btn add-header-btn-padding btn-primary disabledBtn"
           @click="$router.push('/catalog/add_products')"
         >
           <span class="svg-icon" v-html="addIcon"></span>

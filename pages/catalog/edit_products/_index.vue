@@ -79,6 +79,7 @@
                       <a-cascader
                         :options="cascaderCategories"
                         :show-search="{ filter }"
+                        disabled
                         popupClassName="category-cascader"
                         class="category-select w-100"
                         popper-class="select-popper-hover"
@@ -191,7 +192,7 @@
                     <div class="product-plus-btn">
                       <el-form-item prop="brand_id">
                         <el-select
-                          class="w-100"
+                          class="w-100 disabled"
                           v-model="ruleForm.brand_id"
                           allow-create
                           popper-class="select-popper-hover"
@@ -943,6 +944,8 @@
           <el-form-item prop="name">
             <a-select
               show-search
+              focus
+              ref="searchProductSelect"
               mode="multiple"
               v-model="searchResoultProducts"
               placeholder="Название продукта..."
@@ -950,7 +953,6 @@
               :default-active-first-option="false"
               :show-arrow="false"
               :filter-option="false"
-              :not-found-content="fetching ? undefined : null"
               @search="handleSearch"
               @change="handleChangeSearch"
             >
@@ -972,9 +974,9 @@
           </div>
           <a-button
             class="add-btn add-header-btn btn-primary"
+            :class="{ disabledBtn: searchResoultProducts.length == 0 }"
             @click="searchType ? addSearchProductByColor() : addSearchProduct()"
             type="primary"
-            :loading="searchResoultProducts.length == 0"
           >
             <span
               v-if="!searchResoultProducts.length == 0"
@@ -1823,7 +1825,7 @@ export default {
           variant.characteristic_options.forEach((characItem) => {
             charac = {
               ...charac,
-              [`char_${characItem.characteristic_id}`]: characItem.id,
+              [`char_${characItem.characteristic_id}`]: characItem.name.ru,
             };
             this.rulesCharacter[`char_${characItem.characteristic_id}`] = [
               {
@@ -1896,7 +1898,13 @@ export default {
   watch: {
     "visible.searchVar"(val) {
       if (!val) {
+        this.searchType ? this.addSearchProductByColor() : this.addSearchProduct();
         this.searchResoultProducts = [];
+      } else {
+        setTimeout(() => {
+          this.$refs.searchProductSelect.focus();
+          console.log(this.$refs.searchProductSelect);
+        }, 0);
       }
     },
     "ruleForm.products.length"(val) {
