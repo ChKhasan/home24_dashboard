@@ -439,6 +439,18 @@
                         >
                           <el-input placeholder="Поиск..." />
                         </el-form-item>
+                        <el-form-item
+                          v-if="item.dicoin != null"
+                          prop="attributes"
+                          label="Процент (Di Coin)"
+                          class="form-variant-block mb-0"
+                        >
+                          <el-input
+                            maxLength="2"
+                            placeholder="Di Coin..."
+                            v-model="item.dicoin"
+                          />
+                        </el-form-item>
                         <div class="form-block mb-0">
                           <div>
                             <label
@@ -506,6 +518,28 @@
                                   $event
                                     ? (item.status = 'active')
                                     : (item.status = 'inactive')
+                              "
+                            />
+                          </span>
+                        </div>
+                        <div class="form-block mb-0">
+                          <div>
+                            <label
+                              >Di Coin
+                              <a-popover placement="top">
+                                <template slot="content">
+                                  <span>Di Coin</span>
+                                </template>
+                                <span class="nav-info">?</span>
+                              </a-popover></label
+                            >
+                          </div>
+                          <span>
+                            <a-switch
+                              :checked="item.dicoin != null"
+                              @change="
+                                ($event) =>
+                                  $event ? (item.dicoin = '') : (item.dicoin = null)
                               "
                             />
                           </span>
@@ -1136,6 +1170,7 @@ export default {
                 is_popular: 0,
                 product_of_the_day: 0,
                 status: "active",
+                dicoin: null,
               },
             ],
           },
@@ -1318,6 +1353,7 @@ export default {
             characteristics: [],
             characteristicsValues: {},
             status: "active",
+            dicoin: null,
           },
         ];
         this.ruleForm.products.push({
@@ -1348,6 +1384,7 @@ export default {
           characteristicsValues: {},
           optionName: options,
           status: "active",
+          dicoin: null,
         });
       });
       this.visible.searchVar = false;
@@ -1554,6 +1591,7 @@ export default {
                 }
               ),
               status: elem.status,
+              dicoin: elem.dicoin,
             };
           });
           return {
@@ -1634,6 +1672,7 @@ export default {
         characteristicsValues: {},
         optionName: options,
         status: "active",
+        dicoin: null,
       });
     },
     deleteProduct(variantId) {
@@ -1674,6 +1713,7 @@ export default {
           characteristics: [],
           characteristicsValues: {},
           status: "active",
+          dicoin: null,
         },
       ];
       this.ruleForm.products.push({
@@ -1808,7 +1848,6 @@ export default {
       } else {
         this.cascader.push(data.info.category.id);
       }
-
       this.ruleForm.category_id = data.info.category.id;
       this.__GET_CATEGORY_BY_ID(data.info.category.id);
       this.ruleForm.products = data.products.map((item, productIndex) => {
@@ -1850,6 +1889,7 @@ export default {
             is_popular: variant.is_popular,
             product_of_the_day: variant.product_of_the_day,
             status: variant.status,
+            dicoin: variant.dicoin ? variant.dicoin : null,
           };
         });
         return {
