@@ -4,7 +4,7 @@
       label-position="top"
       :model="ruleForm"
       :rules="rules"
-      ref="ruleForm"
+      ref="ruleFormDiCoin"
       label-width="120px"
       class="demo-ruleForm"
     >
@@ -20,7 +20,7 @@
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
-            @click="submitForm('ruleForm')"
+            @click="submitForm('ruleFormDiCoin')"
           >
             <span class="svg-icon"
               ><svg
@@ -81,9 +81,9 @@
                     <span class="nav-info">?</span>
                   </a-popover>
                 </label>
-                <el-form-item class="form-block align-items-start" prop="character_name">
+                <el-form-item class="form-block align-items-start" prop="sum_to_dicoin">
                   <el-input
-                    v-model="ruleForm.character_name"
+                    v-model="ruleForm.sum_to_dicoin"
                     placeholder="Эквивалент покупки Di Coin..."
                   ></el-input>
                 </el-form-item>
@@ -98,9 +98,9 @@
                     <span class="nav-info">?</span>
                   </a-popover>
                 </label>
-                <el-form-item class="form-block align-items-start" prop="character_name">
+                <el-form-item class="form-block align-items-start" prop="dicoin_to_sum">
                   <el-input
-                    v-model="ruleForm.character_name"
+                    v-model="ruleForm.dicoin_to_sum"
                     placeholder="Di Coin использовать цену валюты..."
                   ></el-input>
                 </el-form-item>
@@ -267,27 +267,29 @@ export default {
       ],
       value: [],
       rules: {
-        character_group: [
+        dicoin_to_sum: [
           {
             required: true,
-            // message: "incorrec",
+            message: "This field is required",
             trigger: "change",
           },
         ],
-        character_name: [
+        sum_to_dicoin: [
           {
             required: true,
-            // message: "incorrec",
+            message: "This field is required",
             trigger: "change",
           },
         ],
       },
       ruleForm: {
-        character_group: "",
-        character_name: "",
-        character_option: "",
+        sum_to_dicoin: "",
+        dicoin_to_sum: "",
       },
     };
+  },
+  mounted() {
+    this.__GET_DICOIN();
   },
   methods: {
     handleClick(tab, event) {
@@ -295,16 +297,20 @@ export default {
     },
     submitForm(ruleForm) {
       this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-          console.log(this.ruleForm);
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
+        valid ? this.__POST_DICOIN(this.ruleForm) : false;
       });
     },
-    toAddProduct(val) {
-      // this.$router.push("/catalog/add_products");
+    async __GET_DICOIN() {
+      const data = await this.$store.dispatch("fetchDiCoin/showDiCoin");
+      console.log(data);
+    },
+    async __POST_DICOIN(formData) {
+      try {
+        const data = await this.$store.dispatch("fetchDiCoin/postDiCoin", formData);
+        console.log(data);
+      } catch (e) {
+        console.log(e);
+      }
     },
     toBack() {
       this.$router.push("/catalog/characteristic");

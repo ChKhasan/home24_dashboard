@@ -75,20 +75,22 @@
         </div>
         <a-table
           :columns="columns"
-          :data-source="tableData"
+          :data-source="orders"
           :pagination="false"
           align="center"
         >
           <!-- <a slot="img" slot-scope="text"
             ><img class="table-image" src="../../assets/images/image.png" alt=""
           /></a> -->
+          <span slot="orderId" slot-scope="text">#{{ text }}</span>
+          <!-- <span slot="count" slot-scope="text">{{ text }}</span> -->
           <nuxt-link
-            to="/orders/1232/details"
-            slot="client"
+            :to="`/orders/${text?.id}/details`"
+            slot="name"
             slot-scope="text"
             align="center"
           >
-            {{ text }}
+            {{ text?.name }}
           </nuxt-link>
           <a slot="price" slot-scope="text">${{ text }}</a>
           <span slot="customTitle"></span>
@@ -120,7 +122,7 @@
 import AddBtn from "../../components/form/Add-btn.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import TitleBlock from "../../components/Title-block.vue";
-
+import moment from "moment";
 export default {
   layout: "toolbar",
   data() {
@@ -131,6 +133,7 @@ export default {
       tableData: [],
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
+      orders: [],
       data: [
         {
           key: "1",
@@ -201,6 +204,7 @@ export default {
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "orderId" },
           className: "column-name",
+          width: "100px",
         },
         // {
         //   title: "ПРОДУКТ",
@@ -215,27 +219,25 @@ export default {
         // },
         {
           title: "Клиент",
-          dataIndex: "client",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "client" },
+          scopedSlots: { customRender: "name" },
           className: "column-name",
-          key: "client",
           align: "left",
           width: "20%",
         },
         {
           title: "Номер телефона",
-          dataIndex: "number",
-          scopedSlots: { customRender: "number" },
+          dataIndex: "phone_number",
+          scopedSlots: { customRender: "phone_number" },
           className: "column-name",
-          key: "number",
+          key: "phone_number",
         },
         {
           title: "дата",
-          dataIndex: "dataEdit",
-          scopedSlots: { customRender: "dataEdit" },
-          className: "column-name",
-          key: "dataEdit",
+          dataIndex: "dateAdd",
+          scopedSlots: { customRender: "dateAdd" },
+          className: "column-date",
+          key: "dateAdd",
         },
         {
           title: "Оператор",
@@ -293,8 +295,10 @@ export default {
     if (this.data) {
       this.tableData = this.data;
     }
+    this.__GET_ORDERS();
   },
   methods: {
+    moment,
     handleTableChange(pagination, filters, sorter) {
       console.log(filters);
       this.tableData = this.data.map((item) => {
@@ -305,7 +309,32 @@ export default {
       });
       console.log(this.tableData);
     },
-
+    async __GET_ORDERS() {
+      this.loading = true;
+      const data = await this.$store.dispatch("fetchOrders/getOrders", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pageIndex = this.indexPage(
+        data?.orders?.current_page,
+        data?.orders?.per_page
+      );
+      this.orders = data?.orders?.data.map((item, index) => {
+        return {
+          ...item,
+          key: index + pageIndex,
+          orderId: item.id,
+          phone_number: `+${item.phone_number}`,
+          dateAdd: moment(item?.created_at).format("DD/MM/YYYY"),
+          count: item?.products.length,
+        };
+      });
+      this.totalPage = data?.orders?.total;
+      this.orders.dataAdd = moment(data?.orders?.created_at).format("DD/MM/YYYY");
+    },
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
+    },
     start() {
       this.loading = true;
       setTimeout(() => {

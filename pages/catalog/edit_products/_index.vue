@@ -861,9 +861,9 @@
                   />
                 </div>
                 <div class="ch-product-body">
-                  <span class="ch-product-info"> Пурпурные </span>
-                  <span class="ch-product-info"> dual SIM 265 gb </span>
-                  <span class="ch-product-info"> 17 100 000 сум LL A </span>
+                  <span class="ch-product-info"> {{ ruleForm?.name?.ru }} </span>
+                  <!-- <span class="ch-product-info"> dual SIM 265 gb </span> -->
+                  <span class="ch-product-info"> {{variations?.price}} $  </span>
                 </div>
               </div>
             </span>
