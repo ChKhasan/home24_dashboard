@@ -11,7 +11,7 @@
           <div class="mt-4 mb-5">
             <div class="order-detail-grid-2">
               <div class="custom_block px-4 py-4">
-                <FormTitle title="Информация заказa (#14534)" />
+                <FormTitle :title="`Информация заказa (#${order?.id})`" />
                 <div class="order-details-items">
                   <span
                     ><svg
@@ -33,7 +33,7 @@
                     </svg>
                     Date Added</span
                   >
-                  <p>27/02/2023</p>
+                  <p>{{ moment(order.created_at).format("DD/MM/YYYY") }}</p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -61,7 +61,7 @@
                     </svg>
                     Payment Method</span
                   >
-                  <p>Online</p>
+                  <p>{{ order?.payment_method }}</p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -84,7 +84,7 @@
                     </svg>
                     Shipping Method</span
                   >
-                  <p>Flat Shipping Rate</p>
+                  <p>{{ order?.delivery_method }}</p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -107,7 +107,7 @@
                     </svg>
                     Operator</span
                   >
-                  <p>Akmal</p>
+                  <p>{{ order?.operator ? order?.operator : "---" }}</p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -130,7 +130,7 @@
                     </svg>
                     Deliveryman</span
                   >
-                  <p>Akmal</p>
+                  <p>{{ order?.deliveryman ? order?.deliveryman : "---" }}</p>
                 </div>
               </div>
               <div>
@@ -167,10 +167,7 @@
                       Клиент</span
                     >
                     <div class="order-user">
-                      <div class="order-user-avatar">
-                        <img src="../../../assets/images/image.png" alt="" />
-                      </div>
-                      <p>27/02/2023</p>
+                      <p>{{ order?.user?.name }}</p>
                     </div>
                   </div>
                   <div class="order-details-items">
@@ -194,7 +191,7 @@
                       </svg>
                       Электронная почта</span
                     >
-                    <p>Online</p>
+                    <p>{{ order?.user?.email ? order?.user?.email : "---" }}</p>
                   </div>
                   <div class="order-details-items">
                     <span>
@@ -217,7 +214,7 @@
                       </svg>
                       Телефон</span
                     >
-                    <p>Flat Shipping Rate</p>
+                    <p>{{ `+${order?.phone_number}` }}</p>
                   </div>
                 </div>
               </div>
@@ -268,7 +265,7 @@
               <div
                 class="d-flex justify-content-between align-items-center card_header pt-4"
               >
-                <FormTitle title="Total  #14534" />
+                <FormTitle :title="`Total: ${order?.products?.length}`" />
               </div>
               <a-table
                 :columns="columnsOrder"
@@ -478,10 +475,7 @@
                     Клиент</span
                   >
                   <div class="order-user">
-                    <div class="order-user-avatar">
-                      <img src="../../../assets/images/image.png" alt="" />
-                    </div>
-                    <p>27/02/2023</p>
+                    <p>{{ order?.user?.name }}</p>
                   </div>
                 </div>
                 <div class="order-details-items">
@@ -505,7 +499,7 @@
                     </svg>
                     Электронная почта</span
                   >
-                  <p>Online</p>
+                  <p>{{ order?.user?.email ? order?.user?.email : "---" }}</p>
                 </div>
                 <div class="order-details-items">
                   <span>
@@ -524,7 +518,7 @@
                     </svg>
                     Телефон</span
                   >
-                  <p>Flat Shipping Rate</p>
+                  <p>{{ `+${order?.phone_number}` }}</p>
                 </div>
               </div>
             </div>
@@ -591,7 +585,7 @@ import AddBtn from "../../../components/form/Add-btn.vue";
 import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import FormTitle from "../../../components/Form-title.vue";
-
+import moment from "moment";
 export default {
   layout: "toolbar",
   data() {
@@ -603,6 +597,7 @@ export default {
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
       activeName: "summa",
+      order: {},
       lang: [
         {
           key: "Русский",
@@ -880,8 +875,10 @@ export default {
     if (this.data) {
       this.tableData = this.data;
     }
+    this.__GET_ORDER();
   },
   methods: {
+    moment,
     handleTableChange(pagination, filters, sorter) {
       console.log(filters);
       this.tableData = this.data.map((item) => {
@@ -892,7 +889,13 @@ export default {
       });
       console.log(this.tableData);
     },
-
+    async __GET_ORDER() {
+      const data = await this.$store.dispatch(
+        "fetchOrders/getOrdersById",
+        this.$route.params.index
+      );
+      this.order = data?.order;
+    },
     start() {
       this.loading = true;
       setTimeout(() => {

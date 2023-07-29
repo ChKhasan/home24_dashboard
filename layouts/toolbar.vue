@@ -249,272 +249,8 @@ export default {
         toolbarResIcon: require("../assets/svg/custom/toolbar/toolbarResIcon.svg?raw"),
         logoIcon: require("../assets/svg/custom/toolbar/home24-logo.svg?raw"),
       },
+      toolbarMenu: {},
       squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-      toolbarMenu: {
-        category: [
-          {
-            name: "Продукты",
-            index: "11",
-            to: "/catalog/products",
-            path: "catalog-products",
-            disabled: false,
-          },
-          {
-            name: "Категории",
-            index: "12",
-            to: "/catalog/categories",
-            path: "catalog-categories",
-            disabled: false,
-          },
-          {
-            name: "Атрибуты",
-            index: "13",
-            to: "/catalog/atributs",
-            path: "catalog-atributs",
-            disabled: false,
-          },
-          {
-            name: "Характеристика",
-            index: "14",
-            to: "/catalog/characteristic_groups",
-            path: "catalog-characteristic_groups",
-            disabled: false,
-          },
-          {
-            name: "Бренды",
-            index: "15",
-            to: "/catalog/brands",
-            path: "catalog-brands",
-            disabled: false,
-          },
-          {
-            name: "Значки",
-            index: "16",
-            to: "/catalog/badges",
-            path: "catalog-badges",
-            disabled: false,
-          },
-        ],
-        showcases: [],
-        orders: [
-          {
-            name: "Все заказы (0)",
-            index: "21",
-            to: "/orders/all-orders",
-            path: "orders-all-orders",
-            disabled: false,
-          },
-          {
-            name: "Новые заказы (0)",
-            index: "22",
-            to: "/orders/new-orders",
-            path: "orders-new-orders",
-
-            disabled: false,
-          },
-          {
-            name: "Принятые заказы (0)",
-            index: "23",
-            to: "/orders/accepted-orders",
-            path: "orders-accepted-orders",
-
-            disabled: false,
-          },
-          {
-            name: "Готовые в отправке (0)",
-            index: "24",
-            to: "/orders/ready-orders",
-            path: "orders-ready-orders",
-
-            disabled: false,
-          },
-          {
-            name: "В доставке (0)",
-            index: "25",
-            to: "/orders/delivery-orders",
-            path: "orders-delivery-orders",
-            disabled: false,
-          },
-          {
-            name: "Возврат (0)",
-            index: "26",
-            to: "/orders/return-orders",
-            path: "orders-return-orders",
-
-            disabled: false,
-          },
-          {
-            name: "Доставленные (0)",
-            index: "27",
-            to: "/orders/delivered-orders",
-            path: "orders-delivered-orders",
-
-            disabled: false,
-          },
-          {
-            name: "Отмененные (0)",
-            index: "28",
-            to: "/orders/canceled-orders",
-            path: "orders-canceled-orders",
-            disabled: false,
-          },
-          {
-            name: "Заявки",
-            index: "29",
-            to: "/orders/applications",
-            path: "orders-applications",
-            disabled: false,
-          },
-        ],
-        marketing: [
-          {
-            name: "Скидки",
-            index: "31",
-            to: "/inbox/discount",
-            path: "inbox-discount",
-            disabled: false,
-          },
-          {
-            name: "По Email",
-            index: "32",
-            to: "/inbox/email",
-            path: "inbox-email",
-
-            disabled: false,
-          },
-          {
-            name: "По SMS",
-            index: "33",
-            to: "/inbox/sms",
-            path: "inbox-sms",
-            disabled: false,
-          },
-          {
-            name: "Aкции",
-            index: "34",
-            to: "/inbox/promotions",
-            path: "inbox-promotions",
-            disabled: false,
-          },
-        ],
-        content: [
-          {
-            name: "Блог",
-            index: "51",
-            to: "/contents/blog",
-            path: "contents-blog",
-            disabled: false,
-          },
-          {
-            name: "Баннеры",
-            index: "52",
-            to: "/contents/banners",
-            path: "contents-banners",
-            disabled: false,
-          },
-          {
-            name: "Комментарии",
-            index: "53",
-            to: "/contents/comments",
-            disabled: false,
-          },
-          {
-            name: "Отзывы",
-            index: "54",
-            to: "/contents/banners2",
-            path: "contents-banners2",
-            disabled: true,
-          },
-          {
-            name: "Вопрос и ответы",
-            index: "55",
-            to: "/contents/faq",
-            path: "contents-faq",
-            disabled: false,
-          },
-          {
-            name: "Категории (F.A.Q)",
-            index: "56",
-            to: "/contents/faq_categories",
-            path: "contents-faq_categories",
-            disabled: false,
-          },
-          {
-            name: "Отзывы",
-            index: "57",
-            to: "/contents/feedbacks",
-            path: "contents-feedbacks",
-            disabled: false,
-          },
-          {
-            name: "Топ меню",
-            index: "58",
-            to: "/contents/top-menu",
-            path: "contents-top-menu",
-            disabled: false,
-          },
-        ],
-        settings: [
-          {
-            name: "Характеристика",
-            disabled: false,
-            submenu: true,
-            data: [
-              {
-                index: "71",
-                name: "Параметры",
-                to: "/settings/characteristics/options",
-                path: "settings-characteristics-options",
-                disabled: false,
-              },
-            ],
-          },
-          {
-            name: "Переводы",
-            index: "62",
-            to: "/settings/translations",
-            path: "settings-translations",
-            disabled: true,
-          },
-          {
-            name: "Справочник",
-            index: "63",
-            to: "/settings/banners2",
-            path: "settings-banners2",
-
-            disabled: true,
-          },
-          {
-            name: "Общие данные",
-            index: "64",
-            to: "/settings/comments2",
-            path: "settings-comments2",
-
-            disabled: true,
-          },
-          {
-            name: "Пользователи",
-            index: "65",
-            to: "/settings/users",
-            path: "settings-users",
-            disabled: false,
-          },
-          {
-            name: "Регионы",
-            index: "66",
-            to: "/settings/regions",
-            path: "settings-regions",
-            disabled: false,
-          },
-          {
-            name: "Di Coin и Барабан",
-            index: "67",
-            to: "/settings/d-coin",
-            path: "settings-d-coin",
-            disabled: false,
-          },
-        ],
-      },
     };
   },
 
@@ -524,8 +260,282 @@ export default {
     },
   },
   async mounted() {
+    this.$store.dispatch("getOrdersCount");
     await this.$store.dispatch("getShowCasesStore");
-    this.toolbarMenu.showcases = [];
+    (this.toolbarMenu = {
+      category: [
+        {
+          name: "Продукты",
+          index: "11",
+          to: "/catalog/products",
+          path: "catalog-products",
+          disabled: false,
+        },
+        {
+          name: "Категории",
+          index: "12",
+          to: "/catalog/categories",
+          path: "catalog-categories",
+          disabled: false,
+        },
+        {
+          name: "Атрибуты",
+          index: "13",
+          to: "/catalog/atributs",
+          path: "catalog-atributs",
+          disabled: false,
+        },
+        {
+          name: "Характеристика",
+          index: "14",
+          to: "/catalog/characteristic_groups",
+          path: "catalog-characteristic_groups",
+          disabled: false,
+        },
+        {
+          name: "Бренды",
+          index: "15",
+          to: "/catalog/brands",
+          path: "catalog-brands",
+          disabled: false,
+        },
+        {
+          name: "Значки",
+          index: "16",
+          to: "/catalog/badges",
+          path: "catalog-badges",
+          disabled: false,
+        },
+      ],
+      showcases: [],
+      orders: [
+        {
+          name: `Все заказы (${this.$store.state.ordersCount.all})`,
+          index: "21",
+          to: "/orders/all-orders",
+          path: "orders-all-orders",
+          disabled: false,
+        },
+        {
+          name: `Новые заказы (${this.$store.state.ordersCount.new})`,
+          index: "22",
+          to: "/orders/new-orders",
+          path: "orders-new-orders",
+
+          disabled: false,
+        },
+        {
+          name: `Принятые заказы (${this.$store.state.ordersCount.accepted})`,
+          index: "23",
+          to: "/orders/accepted-orders",
+          path: "orders-accepted-orders",
+
+          disabled: false,
+        },
+        {
+          name: `Ожидание (${this.$store.state.ordersCount.pending})`,
+          index: "24",
+          to: "/orders/pending-orders",
+          path: "orders-pending-orders",
+
+          disabled: false,
+        },
+        // {
+        //   name: "Готовые в отправке (0)",
+        //   index: "24",
+        //   to: "/orders/ready-orders",
+        //   path: "orders-ready-orders",
+
+        //   disabled: false,
+        // },
+        // {
+        //   name: "В доставке (0)",
+        //   index: "25",
+        //   to: "/orders/delivery-orders",
+        //   path: "orders-delivery-orders",
+        //   disabled: false,
+        // },
+        {
+          name: `Возврат (${this.$store.state.ordersCount.returned})`,
+          index: "25",
+          to: "/orders/return-orders",
+          path: "orders-return-orders",
+
+          disabled: false,
+        },
+        {
+          name: `Доставленные (${this.$store.state.ordersCount.returned})`,
+          index: "26",
+          to: "/orders/delivered-orders",
+          path: "orders-delivered-orders",
+
+          disabled: false,
+        },
+        {
+          name: `Отмененные (${this.$store.state.ordersCount.canceled})`,
+          index: "27",
+          to: "/orders/canceled-orders",
+          path: "orders-canceled-orders",
+          disabled: false,
+        },
+        {
+          name: "Заявки",
+          index: "28",
+          to: "/orders/applications",
+          path: "orders-applications",
+          disabled: false,
+        },
+      ],
+      marketing: [
+        {
+          name: "Скидки",
+          index: "31",
+          to: "/inbox/discount",
+          path: "inbox-discount",
+          disabled: false,
+        },
+        {
+          name: "По Email",
+          index: "32",
+          to: "/inbox/email",
+          path: "inbox-email",
+
+          disabled: false,
+        },
+        {
+          name: "По SMS",
+          index: "33",
+          to: "/inbox/sms",
+          path: "inbox-sms",
+          disabled: false,
+        },
+        {
+          name: "Aкции",
+          index: "34",
+          to: "/inbox/promotions",
+          path: "inbox-promotions",
+          disabled: false,
+        },
+      ],
+      content: [
+        {
+          name: "Блог",
+          index: "51",
+          to: "/contents/blog",
+          path: "contents-blog",
+          disabled: false,
+        },
+        {
+          name: "Баннеры",
+          index: "52",
+          to: "/contents/banners",
+          path: "contents-banners",
+          disabled: false,
+        },
+        {
+          name: "Комментарии",
+          index: "53",
+          to: "/contents/comments",
+          disabled: false,
+        },
+        {
+          name: "Отзывы",
+          index: "54",
+          to: "/contents/banners2",
+          path: "contents-banners2",
+          disabled: true,
+        },
+        {
+          name: "Вопрос и ответы",
+          index: "55",
+          to: "/contents/faq",
+          path: "contents-faq",
+          disabled: false,
+        },
+        {
+          name: "Категории (F.A.Q)",
+          index: "56",
+          to: "/contents/faq_categories",
+          path: "contents-faq_categories",
+          disabled: false,
+        },
+        {
+          name: "Отзывы",
+          index: "57",
+          to: "/contents/feedbacks",
+          path: "contents-feedbacks",
+          disabled: false,
+        },
+        {
+          name: "Топ меню",
+          index: "58",
+          to: "/contents/top-menu",
+          path: "contents-top-menu",
+          disabled: false,
+        },
+      ],
+      settings: [
+        {
+          name: "Характеристика",
+          disabled: false,
+          submenu: true,
+          data: [
+            {
+              index: "71",
+              name: "Параметры",
+              to: "/settings/characteristics/options",
+              path: "settings-characteristics-options",
+              disabled: false,
+            },
+          ],
+        },
+        {
+          name: "Переводы",
+          index: "62",
+          to: "/settings/translations",
+          path: "settings-translations",
+          disabled: true,
+        },
+        {
+          name: "Справочник",
+          index: "63",
+          to: "/settings/banners2",
+          path: "settings-banners2",
+
+          disabled: true,
+        },
+        {
+          name: "Общие данные",
+          index: "64",
+          to: "/settings/comments2",
+          path: "settings-comments2",
+
+          disabled: true,
+        },
+        {
+          name: "Пользователи",
+          index: "65",
+          to: "/settings/users",
+          path: "settings-users",
+          disabled: false,
+        },
+        {
+          name: "Регионы",
+          index: "66",
+          to: "/settings/regions",
+          path: "settings-regions",
+          disabled: false,
+        },
+        {
+          name: "Di Coin и Барабан",
+          index: "67",
+          to: "/settings/d-coin",
+          path: "settings-d-coin",
+          disabled: false,
+        },
+      ],
+    }),
+      (this.toolbarMenu.showcases = []);
     this.$store.state.showcases.forEach((elem, index) => {
       this.toolbarMenu.showcases.push({
         name: elem?.name?.ru,

@@ -10,7 +10,9 @@
             :class="{ 'active-orders': $route.path == '/orders/new-orders' }"
             to="/orders/new-orders"
           >
-            <span class="order-light-blue"></span> Новые (0)
+            <span class="order-light-blue"></span> Новые ({{
+              this.$store.state.ordersCount.new
+            }})
           </nuxt-link>
           <nuxt-link
             class="order-links"
@@ -19,30 +21,36 @@
             }"
             to="/orders/accepted-orders"
           >
-            <span class="order-black"></span> Принятые (0)
+            <span class="order-black"></span> Принятые ({{
+              this.$store.state.ordersCount.accepted
+            }})
           </nuxt-link>
-          <nuxt-link
+          <!-- <nuxt-link
             class="order-links"
             :class="{ 'active-orders': $route.path == '/orders/ready-orders' }"
             to="/orders/ready-orders"
           >
             <span class="order-blue"></span> Готовые в отправке (0)
-          </nuxt-link>
+          </nuxt-link> -->
           <nuxt-link
             class="order-links"
             :class="{
-              'active-orders': $route.path == '/orders/delivery-orders',
+              'active-orders': $route.path == '/orders/pending-orders',
             }"
-            to="/orders/delivery-orders"
+            to="/orders/pending-orders"
           >
-            <span class="order-yellow"></span> В доставке (0)
+            <span class="order-yellow"></span> Ожидание ({{
+              this.$store.state.ordersCount.pending
+            }})
           </nuxt-link>
           <nuxt-link
             class="order-links"
             :class="{ 'active-orders': $route.path == '/orders/return-orders' }"
             to="/orders/return-orders"
           >
-            <span class="order-purple"></span> Возврат (0)
+            <span class="order-purple"></span> Возврат ({{
+              this.$store.state.ordersCount.returned
+            }})
           </nuxt-link>
           <nuxt-link
             class="order-links"
@@ -51,7 +59,9 @@
             }"
             to="/orders/delivered-orders"
           >
-            <span class="order-green"></span> Доставленные (0)
+            <span class="order-green"></span> Доставленные ({{
+              this.$store.state.ordersCount.done
+            }})
           </nuxt-link>
           <nuxt-link
             class="order-links"
@@ -60,7 +70,9 @@
             }"
             to="/orders/canceled-orders"
           >
-            <span class="order-red"></span> Отмененные (0)
+            <span class="order-red"></span> Отмененные ({{
+              this.$store.state.ordersCount.canceled
+            }})
           </nuxt-link>
         </div>
       </div>
@@ -83,7 +95,10 @@
             ><img class="table-image" src="../../assets/images/image.png" alt=""
           /></a> -->
           <span slot="orderId" slot-scope="text">#{{ text }}</span>
-          <!-- <span slot="count" slot-scope="text">{{ text }}</span> -->
+          <span slot="operator" slot-scope="text">{{ text ? text : "----" }}</span>
+          <span slot="user_address" slot-scope="text">{{
+            text ? text?.region?.name?.ru : "----"
+          }}</span>
           <nuxt-link
             :to="`/orders/${text?.id}/details`"
             slot="name"
@@ -244,14 +259,16 @@ export default {
           dataIndex: "operator",
           scopedSlots: { customRender: "operator" },
           className: "column-name",
+          align: "left",
+
           key: "operator",
         },
         {
           title: "Область",
-          dataIndex: "region",
-          scopedSlots: { customRender: "region" },
+          dataIndex: "user_address",
+          scopedSlots: { customRender: "user_address" },
           className: "column-price",
-          key: "region",
+          key: "user_address",
         },
         {
           title: "кол-во",
