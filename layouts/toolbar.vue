@@ -269,7 +269,7 @@
   </div>
 </template>
 <script>
-import FormTitle from "../components/form-title.vue";
+import FormTitle from "../components/Form-title.vue";
 import AddModal from "../components/modals/Add-modal.vue";
 export default {
   data() {
