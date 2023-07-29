@@ -633,7 +633,7 @@
 import AddBtn from "../../../components/form/Add-btn.vue";
 import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
-import FormTitle from "../../../components/form-title.vue";
+import FormTitle from "../../../components/Form-title.vue";
 import moment from "moment";
 export default {
   layout: "toolbar",
