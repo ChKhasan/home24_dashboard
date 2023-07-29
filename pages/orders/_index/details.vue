@@ -301,7 +301,7 @@
                   ><img class="table-image" :src="text?.images[0]?.md_img" alt=""
                 /></a>
                 <nuxt-link
-                  to="/catalog/products"
+                  :to="`/catalog/edit_products/${text?.id}`"
                   slot="product"
                   slot-scope="text"
                   align="center"
@@ -353,7 +353,7 @@
           <div class="mt-4 mb-5">
             <div class="order-detail-grid-2">
               <div class="custom_block px-4 py-4">
-                <FormTitle title="Информация заказa (#14534)" />
+                <FormTitle :title="`Информация заказa (#${order?.id})`" />
                 <div class="order-details-items">
                   <span
                     ><svg
@@ -375,7 +375,7 @@
                     </svg>
                     Date Added</span
                   >
-                  <p>27/02/2023</p>
+                  <p>{{ moment(order.created_at).format("DD/MM/YYYY") }}</p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -403,7 +403,7 @@
                     </svg>
                     Payment Method</span
                   >
-                  <p>Online</p>
+                  <p>{{ order?.payment_method }}</p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -426,7 +426,69 @@
                     </svg>
                     Shipping Method</span
                   >
-                  <p>Flat Shipping Rate</p>
+                  <p>{{ order?.delivery_method }}</p>
+                </div>
+                <div class="order-details-items">
+                  <span
+                    ><svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        opacity="0.3"
+                        d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z"
+                        fill="currentColor"
+                      ></path>
+                      <path
+                        d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z"
+                        fill="currentColor"
+                      ></path>
+                      <rect
+                        x="7"
+                        y="6"
+                        width="4"
+                        height="4"
+                        rx="2"
+                        fill="currentColor"
+                      ></rect>
+                    </svg>
+                    Operator</span
+                  >
+                  <p>{{ order?.operator ? order?.operator : "---" }}</p>
+                </div>
+                <div class="order-details-items">
+                  <span
+                    ><svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        opacity="0.3"
+                        d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z"
+                        fill="currentColor"
+                      ></path>
+                      <path
+                        d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z"
+                        fill="currentColor"
+                      ></path>
+                      <rect
+                        x="7"
+                        y="6"
+                        width="4"
+                        height="4"
+                        rx="2"
+                        fill="currentColor"
+                      ></rect>
+                    </svg>
+                    Deliveryman</span
+                  >
+                  <p>{{ order?.deliveryman ? order?.deliveryman : "---" }}</p>
                 </div>
               </div>
               <div class="custom_block px-4 py-4">
