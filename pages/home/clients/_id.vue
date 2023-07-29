@@ -135,12 +135,12 @@
               slot-scope="tags"
               class="tags-style"
               :class="{
-                tag_success: tags == 'done',
-                tag_inProgress: tags == 'pending',
-                tag_approved: tags == 'accepted',
-                tag_rejected: tags == 'canceled',
-                tag_rejected: tags == 'returned',
-                tag_success: tags == 'new',
+                tag_new: tags == 'done',
+                tag_pending: tags == 'pending',
+                tag_accepted: tags == 'accepted',
+                tag_canceled: tags == 'canceled',
+                tag_canceled: tags == 'returned',
+                tag_new: tags == 'new',
               }"
             >
               {{ tags }}

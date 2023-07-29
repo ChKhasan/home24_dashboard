@@ -37,10 +37,10 @@
               slot-scope="tags"
               class="tags-style"
               :class="{
-                tag_success: tags == 'Success',
-                tag_inProgress: tags == 'in progress',
-                tag_approved: tags == 'Approved',
-                tag_rejected: tags == 'rejected',
+                tag_new: tags == 'Success',
+                tag_pending: tags == 'in progress',
+                tag_accepted: tags == 'Approved',
+                tag_canceled: tags == 'rejected',
               }"
             >
               {{ tags }}

@@ -8,7 +8,11 @@
       label-width="120px"
       class="demo-ruleForm"
     >
-      <TitleBlock title="Заказы" :breadbrumb="['Главная', 'Заказы']" lastLink="#192">
+      <TitleBlock
+        title="Заказы"
+        :breadbrumb="['Главная', 'Заказы']"
+        :lastLink="`#${order?.id}`"
+      >
         <div class="d-flex">
           <span class="mx-3">
             <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
@@ -18,30 +22,7 @@
             type="submit"
             @click="submitForm('ruleForm')"
           >
-            <span class="svg-icon"
-              ><svg
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                width="24px"
-                height="24px"
-                viewBox="0 0 24 24"
-                version="1.1"
-              >
-                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                  <polygon points="0 0 24 0 24 24 0 24"></polygon>
-                  <path
-                    d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z"
-                    fill="#000000"
-                    fill-rule="nonzero"
-                    opacity="0.3"
-                  ></path>
-                  <path
-                    d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z"
-                    fill="#000000"
-                  ></path>
-                </g></svg
-            ></span>
-            Добавить продукт
+            Сохранять
           </div>
         </div>
       </TitleBlock>
@@ -60,13 +41,13 @@
                 <el-form-item prop="character_group">
                   <el-select
                     class="w-100"
-                    v-model="ruleForm.character_group"
+                    v-model="ruleForm.status"
                     filterable
                     allow-create
                     placeholder="Статус"
                   >
                     <el-option
-                      v-for="item in options"
+                      v-for="item in status[ruleForm.status]"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"
@@ -170,16 +151,6 @@
                   ></el-input>
                 </el-form-item>
               </div>
-              <div class="d-flex justify-content-end">
-                <div class="form-btn form-outline-transparent mx-3">Отмена</div>
-                <div
-                  type="submit"
-                  class="form-btn form-btn-primary"
-                  @click="submitForm('ruleForm')"
-                >
-                  Сохранить изменения
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -197,41 +168,55 @@ export default {
   layout: "toolbar",
   data() {
     return {
-      activeName: "Русский",
-      lang: [
-        {
-          key: "Русский",
-        },
-        {
-          key: "Uzbek",
-        },
-        {
-          key: "English",
-        },
-      ],
-      options: [
-        {
-          value: "Успешно",
-          label: "успешно",
-        },
-        {
-          value: "CSS",
-          label: "CSS",
-        },
-        {
-          value: "JavaScript",
-          label: "JavaScript",
-        },
-      ],
-      value: [],
-      rules: {
-        character_group: [
+      status: {
+        pending: [
           {
-            required: true,
-            // message: "incorrec",
-            trigger: "change",
+            value: "pending",
+            label: "Ожидание ",
+          },
+          {
+            value: "accepted",
+            label: "Принятые",
+          },
+          {
+            value: "canceled",
+            label: "Отменено",
           },
         ],
+        accepted: [
+          {
+            value: "accepted",
+            label: "Принятые",
+          },
+          {
+            value: "done",
+            label: "Доставленные",
+          },
+          {
+            value: "returned",
+            label: "Возврат ",
+          },
+        ],
+        returned: [
+          {
+            value: "returned",
+            label: "Возврат ",
+          },
+        ],
+        done: [
+          {
+            value: "done",
+            label: "Доставленные",
+          },
+        ],
+        canceled: [
+          {
+            value: "canceled",
+            label: "Отменено",
+          },
+        ],
+      },
+      rules: {
         character_name: [
           {
             required: true,
@@ -241,50 +226,42 @@ export default {
         ],
       },
       ruleForm: {
-        character_group: "",
-        character_name: "",
-        character_option: "",
-        postNumber: "",
-        area: "",
-        region: "",
-        fullAdress: "",
+        status: "",
       },
       count: 10,
-      rows: [
-        {
-          total_price_with_nds: 123.213,
-        },
-        {
-          total_price_with_nds: 123.123,
-        },
-        {
-          total_price_with_nds: 1232.1321,
-        },
-        {
-          total_price_with_nds: 21.3213,
-        },
-        {
-          total_price_with_nds: 21.3213,
-        },
-      ],
     };
   },
+  mounted() {
+    this.__GET_ORDER();
+  },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     submitForm(ruleForm) {
-      this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-          console.log(this.ruleForm);
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+      this.__EDIT_ORDER(this.ruleForm);
+      // this.$refs[ruleForm].validate((valid) => {
+      //   if (valid) {
+      //     console.log(this.ruleForm);
+      //   } else {
+      //     console.log("error submit!!");
+      //     return false;
+      //   }
+      // });
     },
-    toAddProduct(val) {
-      // this.$router.push("/catalog/add_products");
+    async __GET_ORDER() {
+      const data = await this.$store.dispatch(
+        "fetchOrders/getOrdersById",
+        this.$route.params.index
+      );
+      this.ruleForm.status = data?.order?.status;
+      this.order = data?.order;
+    },
+    async __EDIT_ORDER(formData) {
+      try {
+        const data = await this.$store.dispatch("fetchOrders/editOrders", {
+          id: this.$route.params.index,
+          data: formData,
+        });
+        this.__GET_ORDER();
+      } catch (e) {}
     },
     toBack() {
       this.$router.go(-1);

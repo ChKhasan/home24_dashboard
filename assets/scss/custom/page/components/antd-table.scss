@@ -181,19 +181,27 @@
   }
 }
 
-.tag_success {
+.tag_new {
   background: #c9f7f5;
   color: #18b3bd;
 }
-.tag_inProgress {
+.tag_done {
+  background: #c9f7f5;
+  color: #18b3bd;
+}
+.tag_pending {
   background: #fff4de;
   color: #ffa909;
 }
-.tag_rejected {
+.tag_returned {
   background: #ffe2e5;
   color: #f65160;
 }
-.tag_approved {
+.tag_canceled {
+  background: #ffe2e5;
+  color: #f65160;
+}
+.tag_accepted {
   color: #3699ff;
   background: #e1f0ff;
 }

@@ -601,13 +601,13 @@ export default {
           className: "column-qty",
           key: "count",
         },
-        // {
-        //   title: "статус",
-        //   dataIndex: "tags",
-        //   scopedSlots: { customRender: "tags" },
-        //   className: "column-tags",
-        //   key: "tags",
-        // },
+        {
+          title: "статус",
+          dataIndex: "status",
+          scopedSlots: { customRender: "tags" },
+          className: "column-tags",
+          key: "status",
+        },
         {
           title: "ДЕЙСТВИЯ",
           key: "id",

@@ -53,10 +53,12 @@
             slot-scope="tags"
             class="tags-style"
             :class="{
-              tag_success: tags == 'Success',
-              tag_inProgress: tags == 'in progress',
-              tag_approved: tags == 'Approved',
-              tag_rejected: tags == 'rejected',
+              tag_pending: tags == 'pending',
+              tag_accepted: tags == 'accepted',
+              tag_canceled: tags == 'canceled',
+              tag_done: tags == 'done',
+              tag_new: tags == 'new',
+              tag_returned: tags == 'returned',
             }"
           >
             {{ tags }}
@@ -151,13 +153,11 @@ export default {
           key: index + pageIndex,
           orderId: item.id,
           phone_number: `+${item.phone_number}`,
-          dateAdd: moment(item?.created_at).format("DD/MM/YYYY"),
+          dateAdd: moment(item?.created_at).format("DD/MM/YYYY HH:mm"),
           count: item?.products.length,
         };
       });
       this.totalPage = data?.orders?.total;
-      this.orders.dataAdd = moment(data?.orders?.created_at).format("DD/MM/YYYY");
-      console.log(this.orders);
     },
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;

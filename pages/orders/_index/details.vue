@@ -330,10 +330,10 @@
                   slot-scope="tags"
                   class="tags-style"
                   :class="{
-                    tag_success: tags == 'Success',
-                    tag_inProgress: tags == 'in progress',
-                    tag_approved: tags == 'Approved',
-                    tag_rejected: tags == 'rejected',
+                    tag_new: tags == 'Success',
+                    tag_pending: tags == 'in progress',
+                    tag_accepted: tags == 'Approved',
+                    tag_canceled: tags == 'rejected',
                   }"
                 >
                   {{ tags }}
@@ -543,10 +543,10 @@
                   slot-scope="tags"
                   class="tags-style"
                   :class="{
-                    tag_success: tags == 'Completed' || tags == 'Delivered',
-                    tag_inProgress: tags == 'Pending',
-                    tag_approved: tags == 'Processing' || tags == 'Delivering',
-                    tag_rejected: tags == 'Failed',
+                    tag_new: tags == 'Completed' || tags == 'Delivered',
+                    tag_pending: tags == 'Pending',
+                    tag_accepted: tags == 'Processing' || tags == 'Delivering',
+                    tag_canceled: tags == 'Failed',
                   }"
                 >
                   {{ tags }}
@@ -844,8 +844,8 @@ export default {
 
     classObject(tag) {
       return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
+        tag_new: tag == "Success",
+        tag_pending: tag == "in progress",
       };
     },
   },

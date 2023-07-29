@@ -74,8 +74,8 @@
             slot-scope="text"
             class="tags-style"
             :class="{
-              tag_success: text == 'active',
-              tag_rejected: text == 'inactive',
+              tag_new: text == 'active',
+              tag_canceled: text == 'inactive',
             }"
           >
             {{ text == "active" ? "Активный " : "Неактивный" }}

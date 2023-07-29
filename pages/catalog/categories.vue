@@ -71,10 +71,10 @@
               slot-scope="is_active"
               class="tags-style"
               :class="{
-                tag_success: is_active == 1,
-                tag_inProgress: is_active == 'in progress',
-                tag_approved: is_active == 'Approved',
-                tag_rejected: is_active == 0,
+                tag_new: is_active == 1,
+                tag_pending: is_active == 'in progress',
+                tag_accepted: is_active == 'Approved',
+                tag_canceled: is_active == 0,
               }"
             >
               {{ is_active ? "Active" : "Inactive" }}
