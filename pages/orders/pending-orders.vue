@@ -12,13 +12,13 @@
             <SearchInput
               placeholder="Поиск заказа"
               @changeSearch="
-                ($event) => changeSearch($event, '/orders/new-orders', '__GET_ORDERS')
+                ($event) => changeSearch($event, '/orders/pending-orders', '__GET_ORDERS')
               "
             />
             <div class="input status-select w-100"></div>
             <span></span>
             <a-button
-              @click="clearQuery('/orders/new-orders', '__GET_ORDERS')"
+              @click="clearQuery('/orders/pending-orders', '__GET_ORDERS')"
               type="primary"
               class="d-flex align-items-center justify-content-center"
               style="height: 38px"
@@ -74,7 +74,7 @@
             placeholder="Select"
             @change="
               ($event) =>
-                changePageSizeGlobal($event, '/orders/new-orders', '__GET_ORDERS')
+                changePageSizeGlobal($event, '/orders/pending-orders', '__GET_ORDERS')
             "
           >
             <el-option
@@ -114,17 +114,18 @@ export default {
       orders: [],
     };
   },
+
   async mounted() {
     if (
       !Object.keys(this.$route.query).includes("page") ||
       !Object.keys(this.$route.query).includes("per_page")
     ) {
       await this.$router.replace({
-        path: "/orders/new-orders",
+        path: "/orders/pending-orders",
         query: {
           page: this.params.page,
           per_page: this.params.pageSize,
-          status: "new",
+          status: "pending",
         },
       });
     }

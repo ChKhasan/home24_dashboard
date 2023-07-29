@@ -3,7 +3,7 @@
     <TitleBlock
       title="Заказы"
       :breadbrumb="['Главная', 'Заказы']"
-      lastLink="#192"
+      :lastLink="`#${order?.id}`"
     ></TitleBlock>
     <div class="container_xl app-container mt-5">
       <el-tabs class="order_tabs" v-model="activeName" @tab-click="handleClick">
@@ -89,21 +89,29 @@
                 <div class="order-details-items">
                   <span
                     ><svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M20 8H16C15.4 8 15 8.4 15 9V16H10V17C10 17.6 10.4 18 11 18H16C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18H21C21.6 18 22 17.6 22 17V13L20 8Z"
+                        opacity="0.3"
+                        d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z"
                         fill="currentColor"
                       ></path>
                       <path
-                        opacity="0.3"
-                        d="M20 18C20 19.1 19.1 20 18 20C16.9 20 16 19.1 16 18C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18ZM15 4C15 3.4 14.6 3 14 3H3C2.4 3 2 3.4 2 4V13C2 13.6 2.4 14 3 14H15V4ZM6 16C4.9 16 4 16.9 4 18C4 19.1 4.9 20 6 20C7.1 20 8 19.1 8 18C8 16.9 7.1 16 6 16Z"
+                        d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z"
                         fill="currentColor"
                       ></path>
+                      <rect
+                        x="7"
+                        y="6"
+                        width="4"
+                        height="4"
+                        rx="2"
+                        fill="currentColor"
+                      ></rect>
                     </svg>
                     Operator</span
                   >
@@ -112,21 +120,29 @@
                 <div class="order-details-items">
                   <span
                     ><svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M20 8H16C15.4 8 15 8.4 15 9V16H10V17C10 17.6 10.4 18 11 18H16C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18H21C21.6 18 22 17.6 22 17V13L20 8Z"
+                        opacity="0.3"
+                        d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z"
                         fill="currentColor"
                       ></path>
                       <path
-                        opacity="0.3"
-                        d="M20 18C20 19.1 19.1 20 18 20C16.9 20 16 19.1 16 18C16 16.9 16.9 16 18 16C19.1 16 20 16.9 20 18ZM15 4C15 3.4 14.6 3 14 3H3C2.4 3 2 3.4 2 4V13C2 13.6 2.4 14 3 14H15V4ZM6 16C4.9 16 4 16.9 4 18C4 19.1 4.9 20 6 20C7.1 20 8 19.1 8 18C8 16.9 7.1 16 6 16Z"
+                        d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z"
                         fill="currentColor"
                       ></path>
+                      <rect
+                        x="7"
+                        y="6"
+                        width="4"
+                        height="4"
+                        rx="2"
+                        fill="currentColor"
+                      ></rect>
                     </svg>
                     Deliveryman</span
                   >
@@ -220,14 +236,22 @@
               </div>
             </div>
           </div>
-          <div class="mb-5">
+          <div class="mb-5" v-if="order?.delivery_method == 'courier'">
             <div class="custom_block px-4 py-4 position-relative">
               <FormTitle title="Адрес доставки" />
               <ul class="order-adress-list">
-                <li>Unit 1/23 Hastings Road,</li>
-                <li>Melbourne 3000,</li>
-                <li>Victoria,</li>
-                <li>Australia. ,</li>
+                <li v-if="order?.user_address?.region?.name?.ru">
+                  {{ order?.user_address?.region?.name?.ru }},
+                </li>
+                <li v-if="order?.user_address?.district?.name?.ru">
+                  {{ order?.user_address?.district?.name?.ru }},
+                </li>
+                <li v-if="order?.user_address?.village?.name?.ru">
+                  {{ order?.user_address?.village?.name?.ru }},
+                </li>
+                <li v-if="order?.user_address?.address">
+                  {{ order?.user_address?.address }}. ,
+                </li>
               </ul>
               <div class="abs_img">
                 <svg
@@ -269,12 +293,12 @@
               </div>
               <a-table
                 :columns="columnsOrder"
-                :data-source="dataOrder"
+                :data-source="order?.products_info"
                 :pagination="false"
                 align="center"
               >
                 <a slot="img" slot-scope="text"
-                  ><img class="table-image" src="../../../assets/images/image.png" alt=""
+                  ><img class="table-image" :src="text?.images[0]?.md_img" alt=""
                 /></a>
                 <nuxt-link
                   to="/catalog/products"
@@ -282,9 +306,23 @@
                   slot-scope="text"
                   align="center"
                 >
-                  {{ text }}
+                  {{ text?.info?.name?.ru }}
                 </nuxt-link>
-                <a slot="price" slot-scope="text">${{ text }}</a>
+                <a slot="price" slot-scope="text"
+                  >{{
+                    `${text?.real_price}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                  }}
+                  so'm</a
+                >
+                <span slot="totalSum" slot-scope="text"
+                  >{{
+                    `${text?.product?.real_price * text?.count}`.replace(
+                      /\B(?=(\d{3})+(?!\d))/g,
+                      " "
+                    )
+                  }}
+                  so'm</span
+                >
                 <span slot="customTitle"></span>
 
                 <span
@@ -302,63 +340,12 @@
                 </span>
               </a-table>
               <div class="d-flex justify-content-end align-items-center card_header pt-4">
-                <FormTitle title="Общий сумма: 23 000 000 so'm" />
+                <FormTitle
+                  :title="`Общий сумма: ${`${order?.products_info?.reduce((sum, item) => {
+                    return sum + item?.count * item?.product?.real_price;
+                  }, 0)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm`"
+                />
               </div>
-            </div>
-          </div>
-          <div class="mb-5">
-            <div class="card_block py-5">
-              <div class="d-flex justify-content-between align-items-center card_header">
-                <div
-                  class="d-flex align-items-between justify-content-between w-100 pt-4"
-                >
-                  <FormTitle title=" Истории #14534" />
-
-                  <div class="d-flex align-items-center"></div>
-                </div>
-              </div>
-              <a-table
-                :columns="columns"
-                :data-source="tableData"
-                :pagination="false"
-                align="center"
-              >
-                <a slot="img" slot-scope="text"
-                  ><img class="table-image" src="../../../assets/images/image.png" alt=""
-                /></a>
-                <nuxt-link
-                  to="/catalog/products"
-                  slot="client"
-                  slot-scope="text"
-                  align="center"
-                >
-                  {{ text }}
-                </nuxt-link>
-                <a slot="price" slot-scope="text">${{ text }}</a>
-                <span slot="customTitle"></span>
-
-                <span
-                  slot="tags"
-                  slot-scope="tags"
-                  class="tags-style"
-                  :class="{
-                    tag_success: tags == 'Success',
-                    tag_inProgress: tags == 'in progress',
-                    tag_approved: tags == 'Approved',
-                    tag_rejected: tags == 'rejected',
-                  }"
-                >
-                  {{ tags }}
-                </span>
-                <span slot="btns" slot-scope="text">
-                  <span class="action-btn" @click="tableActions(text)">
-                    <img :src="editIcon" alt="" />
-                  </span>
-                  <span class="action-btn" @click="tableActions(text)">
-                    <img :src="deleteIcon" alt="" />
-                  </span>
-                </span>
-              </a-table>
             </div>
           </div>
         </el-tab-pane>
@@ -584,7 +571,7 @@
 import AddBtn from "../../../components/form/Add-btn.vue";
 import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
-import FormTitle from "../../../components/Form-title.vue";
+import FormTitle from "../../../components/form-title.vue";
 import moment from "moment";
 export default {
   layout: "toolbar",
@@ -742,8 +729,8 @@ export default {
       columnsOrder: [
         {
           title: "ПРОДУКТ",
-          dataIndex: "img",
-          key: "img",
+          dataIndex: "product",
+          key: "product",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "img" },
           width: "50px",
@@ -763,32 +750,23 @@ export default {
           //   width: "20%",
         },
         {
-          title: "Артикул",
-          dataIndex: "sku",
-          scopedSlots: { customRender: "sku" },
-          className: "column-code",
-          key: "sku",
-        },
-        {
           title: "КОЛ-ВО",
-          dataIndex: "qty",
-          scopedSlots: { customRender: "qty" },
+          dataIndex: "count",
+          scopedSlots: { customRender: "count" },
           className: "column-code",
-          key: "qty",
+          key: "count",
         },
         {
           title: "ЦЕНА ЗА ЕДИНИЦУ ТОВАРА",
-          dataIndex: "price",
+          dataIndex: "product",
           scopedSlots: { customRender: "price" },
           className: "column-code",
-          key: "price",
+          key: "product",
         },
         {
           title: "ОБЩИЙ",
-          dataIndex: "totalSum",
           scopedSlots: { customRender: "totalSum" },
           className: "column-code",
-          key: "totalSum",
         },
       ],
       columns: [
@@ -924,7 +902,6 @@ export default {
     TitleBlock,
     SearchInput,
     AddBtn,
-    FormTitle,
     FormTitle,
   },
 };

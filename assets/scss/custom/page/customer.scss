@@ -37,6 +37,7 @@
   }
   .customer_sub-info {
     display: flex;
+    margin-top: 16px;
     span {
       margin-right: 16.3px;
       line-height: 20px;
@@ -83,4 +84,3 @@
     @include fontInter(13.975px, 500);
   }
 }
-

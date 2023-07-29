@@ -12,25 +12,24 @@
         <div class="antd_table product_table">
           <a-table
             :columns="columns"
-            :data-source="tableData"
+            :data-source="clients"
             :pagination="false"
             align="center"
           >
             <a slot="img" slot-scope="text"
-              ><img
-                class="table-image"
-                src="../../assets/images/image.png"
-                alt=""
+              ><img class="table-image" src="../../../assets/images/image.png" alt=""
             /></a>
             <span
-              @click="$router.push('/home/customer-info/123')"
+              @click="$router.push(`/home/clients/${text?.id}`)"
               slot="name"
               slot-scope="text"
             >
-              <h6>{{ text }}</h6>
+              <h6 style="cursor: pointer">{{ text?.name }}</h6>
             </span>
             <h4 slot="number" slot-scope="text">{{ text }}</h4>
             <a slot="price" slot-scope="text">${{ text }}</a>
+            <span slot="key" slot-scope="text">#{{ text }}</span>
+            <span slot="email" slot-scope="text">{{ text ? text : "----" }}</span>
             <span slot="customTitle"></span>
 
             <span
@@ -55,74 +54,87 @@
               </span>
             </span>
           </a-table>
+          <div class="d-flex justify-content-between mt-4">
+            <el-select
+              v-model="params.pageSize"
+              class="table-page-size"
+              placeholder="Select"
+              @change="
+                ($event) => changePageSizeGlobal($event, '/home/clients', '__GET_CLIENTS')
+              "
+            >
+              <el-option
+                v-for="item in pageSizes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import AddBtn from "../../components/form/Add-btn.vue";
-import SearchInput from "../../components/form/Search-input.vue";
-import Title from "../../components/Title.vue";
-import TitleBlock from "../../components/Title-block.vue";
-import FormTitle from "../../components/Form-title.vue";
+import AddBtn from "../../../components/form/Add-btn.vue";
+import SearchInput from "../../../components/form/Search-input.vue";
+import Title from "../../../components/Title.vue";
+import TitleBlock from "../../../components/Title-block.vue";
+import FormTitle from "../../../components/form-title.vue";
+import moment from "moment";
+import global from "../../../mixins/global";
 
 export default {
   // middleware: "auth",
+  mixins: [global],
   data() {
     return {
-      pageSize: 10,
-      editIcon: require("../../assets/svg/components/edit-icon.svg"),
-      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      tableData: [],
-      selectedRowKeys: [], // Check here to configure the default column
+      editIcon: require("../../../assets/svg/components/edit-icon.svg"),
+      deleteIcon: require("../../../assets/svg/components/delete-icon.svg"),
       loading: false,
+      clients: [],
       columns: [
         {
-          title: "ФИО",
-          dataIndex: "img",
-          key: "img",
+          title: "№",
+          dataIndex: "key",
+          key: "key",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
+          scopedSlots: { customRender: "key" },
           align: "left",
-          className: "column-img",
-          colSpan: 2,
-          width: "45px",
+          className: "column-name",
+          width: "60px",
         },
         {
-          dataIndex: "name",
-          key: "name",
+          title: "ФИО",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "name" },
           className: "column-name",
           width: "30%",
-          colSpan: 0,
         },
         {
           title: "Номер телефона",
-          dataIndex: "number",
-          scopedSlots: { customRender: "number" },
+          dataIndex: "login",
+          scopedSlots: { customRender: "login" },
           className: "column-code",
-          key: "number",
+          key: "login",
           //   width: "10%",
         },
         {
           title: "email",
           dataIndex: "email",
           className: "column-qty",
+          scopedSlots: { customRender: "email" },
           key: "email",
           align: "center",
-          //   width: "10%",
-        },
-        {
-          title: "username",
-          dataIndex: "username",
-          className: "column-name",
-
-          key: "username",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "username" },
-          //   width: "16%",
         },
 
         {
@@ -204,61 +216,39 @@ export default {
     };
   },
   methods: {
-    toAddProduct() {
-      this.$router.push("/catalog/add_products");
-      console.log("errors");
-    },
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
-        });
-      });
-      console.log(this.tableData);
-    },
-
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
     tableActions(id) {
       console.log(id);
     },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
+    moment,
+    async __GET_CLIENTS() {
+      this.loading = true;
+      const data = await this.$store.dispatch("fetchClients/getClients", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pageIndex = this.indexPage(
+        data?.clients?.current_page,
+        data?.clients?.per_page
+      );
+      this.clients = data?.clients?.data.map((item, index) => {
+        return {
+          ...item,
+          key: index + pageIndex,
+          indexId: index + pageIndex,
+          dateAdd: moment(item?.created_at).format("DD/MM/YYYY"),
+        };
+      });
+      this.totalPage = data?.clients?.total;
+      this.clients.dataAdd = moment(data?.clients?.created_at).format("DD/MM/YYYY");
+      console.log(this.clients);
     },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
     },
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
 
-    classObject(tag) {
-      return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
-      };
-    },
-  },
   mounted() {
-    if (this.data) {
-      this.tableData = this.data;
-    }
+    this.getFirstData("/home/clients", "__GET_CLIENTS");
   },
   components: {
     AddBtn,

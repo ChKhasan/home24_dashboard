@@ -82,7 +82,7 @@
 </template>
 <script>
 import TitleBlock from "../../components/Title-block.vue";
-import FormTitle from "../../components/Form-title.vue";
+import FormTitle from "../../components/form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
 import global from "../../mixins/global";
 import status from "../../mixins/status";

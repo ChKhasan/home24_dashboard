@@ -1,103 +1,49 @@
 <template lang="html">
   <div class="all-orders">
-    <TitleBlock
-      title="Готовые в отправке"
-      :breadbrumb="['Заказы']"
-      lastLink="Готовые в отправке"
-    >
+    <TitleBlock title="Все заказы" :breadbrumb="['Заказы']" lastLink="Все заказы">
     </TitleBlock>
     <div class="container_xl app-container">
-      <div class="card_block py-5">
-        <div class="order-links-grid">
-          <nuxt-link
-            class="order-links"
-            :class="{ 'active-orders': $route.path == '/orders/new-orders' }"
-            to="/orders/new-orders"
-          >
-            <span class="order-light-blue"></span> Новые (0)
-          </nuxt-link>
-          <nuxt-link
-            class="order-links"
-            :class="{
-              'active-orders': $route.path == '/orders/accepted-orders',
-            }"
-            to="/orders/accepted-orders"
-          >
-            <span class="order-black"></span> Принятые (0)
-          </nuxt-link>
-          <nuxt-link
-            class="order-links"
-            :class="{ 'active-orders': $route.path == '/orders/ready-orders' }"
-            to="/orders/ready-orders"
-          >
-            <span class="order-blue"></span> Готовые в отправке (0)
-          </nuxt-link>
-          <nuxt-link
-            class="order-links"
-            :class="{
-              'active-orders': $route.path == '/orders/delivery-orders',
-            }"
-            to="/orders/delivery-orders"
-          >
-            <span class="order-yellow"></span> В доставке (0)
-          </nuxt-link>
-          <nuxt-link
-            class="order-links"
-            :class="{ 'active-orders': $route.path == '/orders/return-orders' }"
-            to="/orders/return-orders"
-          >
-            <span class="order-purple"></span> Возврат (0)
-          </nuxt-link>
-          <nuxt-link
-            class="order-links"
-            :class="{
-              'active-orders': $route.path == '/orders/delivered-orders',
-            }"
-            to="/orders/delivered-orders"
-          >
-            <span class="order-green"></span> Доставленные (0)
-          </nuxt-link>
-          <nuxt-link
-            class="order-links"
-            :class="{
-              'active-orders': $route.path == '/orders/canceled-orders',
-            }"
-            to="/orders/canceled-orders"
-          >
-            <span class="order-red"></span> Отмененные (0)
-          </nuxt-link>
-        </div>
-      </div>
+      <OrderStatusMenu />
     </div>
     <div class="container_xl app-container mb-5">
       <div class="card_block py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header"
-        >
-          <div class="d-flex align-items-between justify-content-between w-100">
-            <SearchInput placeholder="Поиск заказа" />
-            <div class="d-flex align-items-center"></div>
+        <div class="d-flex justify-content-between align-items-center card_header">
+          <div class="prodduct-list-header-grid w-100 align-items-center">
+            <SearchInput
+              placeholder="Поиск заказа"
+              @changeSearch="
+                ($event) => changeSearch($event, '/orders/pending-orders', '__GET_ORDERS')
+              "
+            />
+            <div class="input status-select w-100"></div>
+            <span></span>
+            <a-button
+              @click="clearQuery('/orders/pending-orders', '__GET_ORDERS')"
+              type="primary"
+              class="d-flex align-items-center justify-content-center"
+              style="height: 38px"
+              ><a-icon type="reload"
+            /></a-button>
           </div>
         </div>
         <a-table
-          :columns="columns"
-          :data-source="tableData"
+          :columns="columnOrders"
+          :data-source="orders"
           :pagination="false"
           align="center"
         >
-          <a slot="img" slot-scope="text"
-            ><img
-              class="table-image"
-              src="../../assets/images/image.png"
-              alt=""
-          /></a>
+          <span slot="orderId" slot-scope="text">#{{ text }}</span>
+          <span slot="operator" slot-scope="text">{{ text ? text : "----" }}</span>
+          <span slot="user_address" slot-scope="text">{{
+            text ? text?.region?.name?.ru : "----"
+          }}</span>
           <nuxt-link
-          to="/orders/1232/details"
-            slot="client"
+            :to="`/orders/${text?.id}/details`"
+            slot="name"
             slot-scope="text"
             align="center"
           >
-            {{ text }}
+            {{ text?.name }}
           </nuxt-link>
           <a slot="price" slot-scope="text">${{ text }}</a>
           <span slot="customTitle"></span>
@@ -116,223 +62,106 @@
             {{ tags }}
           </span>
           <span slot="btns" slot-scope="text">
-    
-            <span
-              class="action-btn"
-              @click="$router.push('/orders/1232/edit')"
-            >
+            <span class="action-btn" @click="$router.push(`/orders/${text}/edit`)">
               <img :src="editIcon" alt="" />
             </span>
           </span>
         </a-table>
+        <div class="d-flex justify-content-between mt-4">
+          <el-select
+            v-model="params.pageSize"
+            class="table-page-size"
+            placeholder="Select"
+            @change="
+              ($event) =>
+                changePageSizeGlobal($event, '/orders/pending-orders', '__GET_ORDERS')
+            "
+          >
+            <el-option
+              v-for="item in pageSizes"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <a-pagination
+            class="table-pagination"
+            :simple="false"
+            v-model.number="current"
+            :total="totalPage"
+            :page-size.sync="params.pageSize"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import AddBtn from "../../components/form/Add-btn.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import TitleBlock from "../../components/Title-block.vue";
-
+import moment from "moment";
+import global from "../../mixins/global";
+import columns from "../../mixins/columns";
+import OrderStatusMenu from "../../components/OrderStatusMenu.vue";
 export default {
   layout: "toolbar",
+  mixins: [global, columns],
   data() {
     return {
-      pageSize: 10,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
-      deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
-      tableData: [],
-      selectedRowKeys: [], // Check here to configure the default column
       loading: false,
-      data: [
-        {
-          key: "1",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "2",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "3",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "4",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "5",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-      ],
-      columns: [
-        {
-          title: "Заказ ID",
-          dataIndex: "orderId",
-          key: "orderId",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "orderId" },
-          className: "column-name",
-        },
-        {
-          title: "ПРОДУКТ",
-          dataIndex: "img",
-          key: "img",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
-          // width: "8%",
-          align: "right",
-          className: "column-img",
-          colSpan: 0,
-        },
-        {
-          title: "Клиент",
-          dataIndex: "client",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "client" },
-          className: "column-name",
-          key: "client",
-          colSpan: 2,
-          align: "left",
-          width: "20%",
-        },
-        {
-          title: "дата добавления",
-          dataIndex: "dataAdd",
-          scopedSlots: { customRender: "dataAdd" },
-          className: "column-name",
-          key: "dataAdd",
-        },
-        {
-          title: "дата изменения",
-          dataIndex: "dataEdit",
-          scopedSlots: { customRender: "dataEdit" },
-          className: "column-name",
-          key: "dataEdit",
-        },
-        {
-          title: "общая сумма",
-          dataIndex: "price",
-          scopedSlots: { customRender: "price" },
-          className: "column-name",
-          key: "price",
-        },
-        {
-          title: "статус оплаты",
-          dataIndex: "statusSum",
-          scopedSlots: { customRender: "statusSum" },
-          className: "column-options",
-          key: "statusSum",
-        },
-        {
-          title: "статус",
-          dataIndex: "tags",
-          scopedSlots: { customRender: "tags" },
-          className: "column-tags",
-          key: "tags",
-        },
-        {
-          title: "ДЕЙСТВИЯ",
-          key: "btns",
-          dataIndex: "btns",
-          scopedSlots: { customRender: "btns" },
-          className: "column-btns",
-          width: "80px",
-          align: "center",
-        },
-      ],
+      orders: [],
     };
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
 
-    classObject(tag) {
-      return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
-      };
-    },
-  },
-  mounted() {
-    if (this.data) {
-      this.tableData = this.data;
+  async mounted() {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
+      await this.$router.replace({
+        path: "/orders/pending-orders",
+        query: {
+          page: this.params.page,
+          per_page: this.params.pageSize,
+        },
+      });
     }
+    this.__GET_ORDERS();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   methods: {
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
-        });
-      });
-      console.log(this.tableData);
-    },
-
-    start() {
+    moment,
+    async __GET_ORDERS() {
       this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
+      const data = await this.$store.dispatch("fetchOrders/getOrders", {
+        ...this.$route.query,
+      });
+      this.loading = false;
+      const pageIndex = this.indexPage(
+        data?.orders?.current_page,
+        data?.orders?.per_page
+      );
+      this.orders = data?.orders?.data.map((item, index) => {
+        return {
+          ...item,
+          key: index + pageIndex,
+          orderId: item.id,
+          phone_number: `+${item.phone_number}`,
+          dateAdd: moment(item?.created_at).format("DD/MM/YYYY"),
+          count: item?.products.length,
+        };
+      });
+      this.totalPage = data?.orders?.total;
+      this.orders.dataAdd = moment(data?.orders?.created_at).format("DD/MM/YYYY");
+      console.log(this.orders);
     },
-    tableActions(id) {
-      console.log(id);
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
     },
   },
-  components: { TitleBlock, SearchInput, AddBtn },
+  components: { TitleBlock, SearchInput, OrderStatusMenu },
 };
 </script>
-<style lang="scss"></style>

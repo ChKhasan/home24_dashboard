@@ -32,7 +32,6 @@ export default {
   },
   methods: {
     async changeSearch(val, url, func) {
-      console.log("Asdasdasd");
       this.searchVal = val.target.value;
       if (val.target.value.length > 2) {
         if (this.$route.query?.search != val.target.value)

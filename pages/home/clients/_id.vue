@@ -1,23 +1,14 @@
 <template lang="html">
   <div class="all-orders">
-    <TitleBlock
-      title="Клиенты"
-      :breadbrumb="['Главная']"
-      lastLink="Клиенты"
-    ></TitleBlock>
+    <TitleBlock title="Клиенты" :breadbrumb="['Главная']" lastLink="Клиенты"></TitleBlock>
     <div class="container_xl app-container mt-5">
       <div class="mt-4 mb-5">
         <div class="custom_block customer_card_padding">
           <div class="customer_card">
-            <div class="customer_img">
-              <div>
-                <img src="../../../assets/images/image.png" alt="" />
-              </div>
-            </div>
             <div class="customer_details">
-              <h1>Max Smith</h1>
+              <h1>{{ client?.name }}</h1>
               <div class="customer_sub-info">
-                <span
+                <span v-if="client?.email"
                   ><svg
                     width="24"
                     height="24"
@@ -34,85 +25,8 @@
                       d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z"
                       fill="currentColor"
                     ></path></svg
-                  >max@kt.com</span
+                  >{{ client?.email }}</span
                 >
-                <span
-                  ><svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      opacity="0.3"
-                      d="M18.0624 15.3453L13.1624 20.7453C12.5624 21.4453 11.5624 21.4453 10.9624 20.7453L6.06242 15.3453C4.56242 13.6453 3.76242 11.4453 4.06242 8.94534C4.56242 5.34534 7.46242 2.44534 11.0624 2.04534C15.8624 1.54534 19.9624 5.24534 19.9624 9.94534C20.0624 12.0453 19.2624 13.9453 18.0624 15.3453Z"
-                      fill="currentColor"
-                    ></path>
-                    <path
-                      d="M12.0624 13.0453C13.7193 13.0453 15.0624 11.7022 15.0624 10.0453C15.0624 8.38849 13.7193 7.04535 12.0624 7.04535C10.4056 7.04535 9.06241 8.38849 9.06241 10.0453C9.06241 11.7022 10.4056 13.0453 12.0624 13.0453Z"
-                      fill="currentColor"
-                    ></path></svg
-                  >SF, Bay Area
-                </span>
-              </div>
-              <div class="customer_info-header">
-                <div class="customer_number-card">
-                  <div>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        opacity="0.5"
-                        x="13"
-                        y="6"
-                        width="13"
-                        height="2"
-                        rx="1"
-                        transform="rotate(90 13 6)"
-                        fill="currentColor"
-                      ></rect>
-                      <path
-                        d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    <h5>$4,500</h5>
-                  </div>
-                  <span>Earnings</span>
-                </div>
-                <div class="customer_number-card">
-                  <div>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        opacity="0.5"
-                        x="13"
-                        y="6"
-                        width="13"
-                        height="2"
-                        rx="1"
-                        transform="rotate(90 13 6)"
-                        fill="currentColor"
-                      ></rect>
-                      <path
-                        d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z"
-                        fill="currentColor"
-                      ></path>
-                    </svg>
-                    <h5>$4,500</h5>
-                  </div>
-                  <span>Earnings</span>
-                </div>
               </div>
             </div>
           </div>
@@ -139,16 +53,44 @@
           </div>
           <div class="customer_info px-4 pb-4">
             <div class="order-details-items bb_none">
-              <span> Date Added</span>
-              <p>27/02/2023</p>
+              <span>Дата Добавлена</span>
+              <p>{{ moment(client?.created_at).format("DD/MM/YYYY") }}</p>
             </div>
             <div class="order-details-items bb_none">
-              <span> Payment Method</span>
-              <p>Online</p>
+              <span> Номер телефона</span>
+              <p>{{ `+${client?.login}` }}</p>
             </div>
-            <div class="order-details-items bb_none">
-              <span> Shipping Method</span>
-              <p>Flat Shipping Rate</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 mb-5" v-if="customerTab == 1 && client?.addresses?.length > 0">
+        <div class="custom_block">
+          <div class="hr_header px-4 pt-4">
+            <FormTitle title="Адреса" />
+          </div>
+          <div class="customer_info px-4 pb-4">
+            <div class="order-details-items bb_none" v-for="address in client?.addresses">
+              <span
+                ><svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    opacity="0.3"
+                    d="M18.0624 15.3453L13.1624 20.7453C12.5624 21.4453 11.5624 21.4453 10.9624 20.7453L6.06242 15.3453C4.56242 13.6453 3.76242 11.4453 4.06242 8.94534C4.56242 5.34534 7.46242 2.44534 11.0624 2.04534C15.8624 1.54534 19.9624 5.24534 19.9624 9.94534C20.0624 12.0453 19.2624 13.9453 18.0624 15.3453Z"
+                    fill="currentColor"
+                  ></path>
+                  <path
+                    d="M12.0624 13.0453C13.7193 13.0453 15.0624 11.7022 15.0624 10.0453C15.0624 8.38849 13.7193 7.04535 12.0624 7.04535C10.4056 7.04535 9.06241 8.38849 9.06241 10.0453C9.06241 11.7022 10.4056 13.0453 12.0624 13.0453Z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+                {{ address?.region?.name?.ru }}, {{ address?.district?.name?.ru }},
+                {{ address?.village?.name?.ru }}, {{ address?.address }}</span
+              >
             </div>
           </div>
         </div>
@@ -156,12 +98,8 @@
 
       <div class="mb-5" v-if="customerTab == 2">
         <div class="card_block py-5">
-          <div
-            class="d-flex justify-content-between align-items-center card_header"
-          >
-            <div
-              class="d-flex align-items-between justify-content-between w-100 pt-4"
-            >
+          <div class="d-flex justify-content-between align-items-center card_header">
+            <div class="d-flex align-items-between justify-content-between w-100 pt-4">
               <FormTitle title="Заказы" />
 
               <div class="d-flex align-items-center"></div>
@@ -169,15 +107,17 @@
           </div>
           <a-table
             :columns="columns"
-            :data-source="tableData"
+            :data-source="client?.orders"
             :pagination="false"
             align="center"
           >
+            <span slot="id" slot-scope="text">#{{ text }}</span>
+            <span slot="created_at" slot-scope="text">{{
+              moment(text).format("DD/MM/YYYY")
+            }}</span>
+            <span slot="phone_number" slot-scope="text">+{{ text }}</span>
             <a slot="img" slot-scope="text"
-              ><img
-                class="table-image"
-                src="../../../assets/images/image.png"
-                alt=""
+              ><img class="table-image" src="../../../assets/images/image.png" alt=""
             /></a>
             <nuxt-link
               to="/catalog/products"
@@ -195,10 +135,12 @@
               slot-scope="tags"
               class="tags-style"
               :class="{
-                tag_success: tags == 'Success',
-                tag_inProgress: tags == 'in progress',
-                tag_approved: tags == 'Approved',
-                tag_rejected: tags == 'rejected',
+                tag_success: tags == 'done',
+                tag_inProgress: tags == 'pending',
+                tag_approved: tags == 'accepted',
+                tag_rejected: tags == 'canceled',
+                tag_rejected: tags == 'returned',
+                tag_success: tags == 'new',
               }"
             >
               {{ tags }}
@@ -222,7 +164,7 @@ import AddBtn from "../../../components/form/Add-btn.vue";
 import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import FormTitle from "../../../components/Form-title.vue";
-
+import moment from "moment";
 export default {
   layout: "toolbar",
   data() {
@@ -234,6 +176,7 @@ export default {
       selectedRowKeys: [], // Check here to configure the default column
       loading: false,
       activeName: "summa",
+      client: {},
       customerTab: 1,
       lang: [
         {
@@ -376,89 +319,38 @@ export default {
           totalSum: "$240.00",
         },
       ],
-      columnsOrder: [
-        {
-          title: "ПРОДУКТ",
-          dataIndex: "img",
-          key: "img",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
-          width: "50px",
-          align: "left",
-          className: "column-img",
-          colSpan: 0,
-        },
-        {
-          title: "ПРОДУКТ",
-          dataIndex: "product",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "product" },
-          className: "column-code",
-          key: "product",
-          colSpan: 2,
-          align: "left",
-          //   width: "20%",
-        },
-        {
-          title: "Артикул",
-          dataIndex: "sku",
-          scopedSlots: { customRender: "sku" },
-          className: "column-code",
-          key: "sku",
-        },
-        {
-          title: "КОЛ-ВО",
-          dataIndex: "qty",
-          scopedSlots: { customRender: "qty" },
-          className: "column-code",
-          key: "qty",
-        },
-        {
-          title: "ЦЕНА ЗА ЕДИНИЦУ ТОВАРА",
-          dataIndex: "price",
-          scopedSlots: { customRender: "price" },
-          className: "column-code",
-          key: "price",
-        },
-        {
-          title: "ОБЩИЙ",
-          dataIndex: "totalSum",
-          scopedSlots: { customRender: "totalSum" },
-          className: "column-code",
-          key: "totalSum",
-        },
-      ],
+
       columns: [
         {
           title: "Номер заказ",
-          dataIndex: "orderId",
-          key: "orderId",
+          dataIndex: "id",
+          key: "id",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "orderId" },
+          scopedSlots: { customRender: "id" },
           className: "column-code",
         },
 
         {
           title: "Номер клиента",
-          dataIndex: "dataAdd",
-          scopedSlots: { customRender: "dataAdd" },
+          dataIndex: "phone_number",
+          scopedSlots: { customRender: "phone_number" },
           className: "column-code",
-          key: "dataAdd",
+          key: "phone_number",
         },
 
         {
           title: "статус",
-          dataIndex: "tags",
+          dataIndex: "status",
           scopedSlots: { customRender: "tags" },
           className: "column-tags",
-          key: "tags",
+          key: "status",
         },
         {
           title: "дата",
-          dataIndex: "dataEdit",
-          scopedSlots: { customRender: "dataEdit" },
+          dataIndex: "created_at",
+          scopedSlots: { customRender: "created_at" },
           className: "column-code",
-          key: "dataEdit",
+          key: "created_at",
         },
       ],
       columns2: [
@@ -496,57 +388,23 @@ export default {
       ],
     };
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
-
-    classObject(tag) {
-      return {
-        tag_success: tag == "Success",
-        tag_inProgress: tag == "in progress",
-      };
-    },
-  },
   mounted() {
     if (this.data) {
       this.tableData = this.data;
     }
+    this.__GET_CLIENT();
   },
   methods: {
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
-        });
-      });
-      console.log(this.tableData);
-    },
-
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
+    moment,
     tableActions(id) {
       console.log(id);
     },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
+    async __GET_CLIENT() {
+      const data = await this.$store.dispatch(
+        "fetchClients/showClients",
+        this.$route.params.id
+      );
+      this.client = data?.client;
     },
   },
   components: {

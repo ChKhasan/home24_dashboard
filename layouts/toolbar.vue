@@ -39,7 +39,13 @@
                   :to="items.to"
                   :class="{ 'event-none': items.to == $route.path }"
                 >
-                  <el-menu-item :index="items.index">
+                  <el-menu-item
+                    :index="items.index"
+                    :class="{
+                      is_active: items.to == $route.path,
+                      disabled: items.disabled,
+                    }"
+                  >
                     <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
@@ -58,7 +64,13 @@
                 :class="{ disabled: items.disabled }"
               >
                 <nuxt-link :to="items.to">
-                  <el-menu-item :index="items.index">
+                  <el-menu-item
+                    :index="items.index"
+                    :class="{
+                      is_active: items.to == $route.path,
+                      disabled: items.disabled,
+                    }"
+                  >
                     <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
@@ -74,10 +86,17 @@
                 v-for="(items, index) in toolbarMenu.orders"
                 class="toolbar-menu-products"
                 :key="index"
-                :class="{ disabled: items.disabled }"
+                :class="{
+                  disabled: items.disabled,
+                }"
               >
                 <nuxt-link :to="items.to">
-                  <el-menu-item :index="items.index">
+                  <el-menu-item
+                    :index="items.index"
+                    :class="{
+                      is_active: items.to == $route.path,
+                    }"
+                  >
                     <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
@@ -93,10 +112,15 @@
                 class="toolbar-menu-products"
                 v-for="(items, index) in toolbarMenu.marketing"
                 :key="index"
-                :class="{ disabled: items.disabled }"
               >
                 <nuxt-link :to="items.to">
-                  <el-menu-item :index="items.index">
+                  <el-menu-item
+                    :index="items.index"
+                    :class="{
+                      is_active: items.to == $route.path,
+                      disabled: items.disabled,
+                    }"
+                  >
                     <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
@@ -104,8 +128,13 @@
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item-group class="home_menu toolbar-menu-products">
-              <nuxt-link to="/home/customer">
-                <el-menu-item index="40">
+              <nuxt-link to="/home/clients">
+                <el-menu-item
+                  index="40"
+                  :class="{
+                    is_active: $route.path.includes('clients'),
+                  }"
+                >
                   <span class="menu-icon" v-html="icons.customerIcon"> </span>
                   <p class="not-ul-menu">Клиенты</p></el-menu-item
                 >
@@ -123,7 +152,13 @@
                 :class="{ disabled: items.disabled }"
               >
                 <nuxt-link :to="items.to">
-                  <el-menu-item :index="items.index">
+                  <el-menu-item
+                    :index="items.index"
+                    :class="{
+                      is_active: items.to == $route.path,
+                      disabled: items.disabled,
+                    }"
+                  >
                     <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
@@ -153,7 +188,7 @@
                   <nuxt-link :to="itemsIn.to" class="sub_menu">
                     <el-menu-item
                       :index="itemsIn.index"
-                      :class="{ 'is-active': itemsIn.to == $route.path }"
+                      :class="{ is_active: itemsIn.to == $route.path }"
                     >
                       <span class="menu-bullet"><span class="bullet-dot"></span></span>
                       <p>{{ itemsIn.name }}</p></el-menu-item
@@ -170,7 +205,13 @@
                 v-if="!items.submenu"
               >
                 <nuxt-link :to="items.to">
-                  <el-menu-item :index="items.index">
+                  <el-menu-item
+                    :index="items.index"
+                    :class="{
+                      is_active: items.to == $route.path,
+                      disabled: items.disabled,
+                    }"
+                  >
                     <span class="menu-bullet"><span class="bullet-dot"></span></span>
                     <p>{{ items.name }}</p></el-menu-item
                   >
@@ -179,7 +220,12 @@
             </el-submenu>
             <el-menu-item-group class="home_menu toolbar-menu-products">
               <nuxt-link to="/home/content-manager">
-                <el-menu-item index="70">
+                <el-menu-item
+                  index="70"
+                  :class="{
+                    is_active: $route.path.includes('content-manager'),
+                  }"
+                >
                   <span class="menu-icon" v-html="icons.contentManagerIcon"></span>
                   <p class="not-ul-menu">Контент-менеджеры</p></el-menu-item
                 >
@@ -223,7 +269,7 @@
   </div>
 </template>
 <script>
-import FormTitle from "../components/Form-title.vue";
+import FormTitle from "../components/form-title.vue";
 import AddModal from "../components/modals/Add-modal.vue";
 export default {
   data() {
@@ -321,7 +367,6 @@ export default {
           index: "22",
           to: "/orders/new-orders",
           path: "orders-new-orders",
-
           disabled: false,
         },
         {
@@ -329,7 +374,6 @@ export default {
           index: "23",
           to: "/orders/accepted-orders",
           path: "orders-accepted-orders",
-
           disabled: false,
         },
         {
@@ -337,7 +381,6 @@ export default {
           index: "24",
           to: "/orders/pending-orders",
           path: "orders-pending-orders",
-
           disabled: false,
         },
         // {
@@ -358,16 +401,16 @@ export default {
         {
           name: `Возврат (${this.$store.state.ordersCount.returned})`,
           index: "25",
-          to: "/orders/return-orders",
-          path: "orders-return-orders",
+          to: "/orders/returned-orders",
+          path: "orders-returned-orders",
 
           disabled: false,
         },
         {
-          name: `Доставленные (${this.$store.state.ordersCount.returned})`,
+          name: `Доставленные (${this.$store.state.ordersCount.done})`,
           index: "26",
-          to: "/orders/delivered-orders",
-          path: "orders-delivered-orders",
+          to: "/orders/done-orders",
+          path: "orders-done-orders",
 
           disabled: false,
         },
@@ -479,6 +522,7 @@ export default {
           name: "Характеристика",
           disabled: false,
           submenu: true,
+          index: "61",
           data: [
             {
               index: "71",
@@ -564,6 +608,7 @@ export default {
     },
     activeOpens() {
       const routerName = this.$route.name;
+      console.log(routerName.includes("options"));
       if (routerName.includes("catalog")) {
         this.defaultOpens = ["1"];
       } else if (routerName.includes("orders")) {
@@ -574,7 +619,7 @@ export default {
         this.defaultOpens = ["5"];
       } else if (routerName.includes("contents")) {
         this.defaultOpens = ["5"];
-      } else if (routerName.includes("charactristic")) {
+      } else if (routerName.includes("characteristics")) {
         this.defaultOpens = ["6", "7"];
       } else if (routerName.includes("showcases")) {
         this.defaultOpens = ["8"];
@@ -630,7 +675,7 @@ export default {
           this.defaultOpens = ["5"];
         } else if (oldVal.includes("contents")) {
           this.defaultOpens = ["5"];
-        } else if (oldVal.includes("charactristic")) {
+        } else if (oldVal.includes("characteristics")) {
           this.defaultOpens = ["6", "7"];
         } else if (oldVal.includes("showcases")) {
           this.defaultOpens = ["8"];
