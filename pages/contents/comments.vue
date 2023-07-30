@@ -18,23 +18,27 @@
             :pagination="false"
             :loading="loading"
           >
-            <div slot="img" slot-scope="text">
-              <img class="table-image" src="../../assets/images/image.png" alt="" />
-            </div>
             <span
               @click="$router.push('/home/customer-info/123')"
-              slot="name"
+              slot="product"
               slot-scope="text"
             >
-              <h6>{{ text }}</h6>
+              <nuxt-link :to="`/catalog/edit_products/${text?.id}`">
+                <h6>{{ text?.name?.ru }}</h6></nuxt-link
+              >
             </span>
+            <span slot="user" slot-scope="text">{{ text?.name }}</span>
+            <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
             <span slot="editId" slot-scope="text">
+              <span class="action-btn" @click="editAction(text)">
+                <img :src="editIcon" alt="" />
+              </span>
               <a-popconfirm
                 title="Are you sure delete this comment?"
                 ok-text="Yes"
                 cancel-text="No"
-                @confirm="deleteComment(text)"
+                @confirm="deletePoduct(text)"
                 @cancel="cancel"
               >
                 <span class="action-btn">
@@ -48,7 +52,10 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="changePageSize"
+              @change="
+                ($event) =>
+                  changePageSizeGlobal($event, '/contents/comments', '__GET_COMMENTS')
+              "
             >
               <el-option
                 v-for="item in pageSizes"
@@ -69,6 +76,64 @@
         </div>
       </div>
     </div>
+    <a-modal
+      v-model="visible"
+      title="Добавить"
+      :closable="false"
+      @ok="handleOk"
+      width="561px"
+    >
+      <el-form
+        label-position="top"
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleFormComment"
+        label-width="120px"
+        class="demo-ruleForm"
+        action=""
+      >
+        <div>
+          <el-form-item class="form-block" label="Комментарий">
+            <el-input
+              type="textarea"
+              rows="5"
+              disabled
+              placeholder="Зоговолок"
+              v-model="currentComment.comment"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            class="form-block required align-items-start"
+            label="Ответ"
+            prop="comment"
+          >
+            <el-input
+              type="textarea"
+              rows="5"
+              placeholder="Ответ"
+              v-model="ruleForm.comment"
+            ></el-input>
+          </el-form-item>
+        </div>
+      </el-form>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="handleOk"
+          >
+            Отмена
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            type="primary"
+            @click="submitCommit"
+          >
+            Сохранить
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -82,46 +147,43 @@ export default {
   data() {
     return {
       loading: true,
+      visible: false,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
+      addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
+
       columns: [
         {
-          title: "ID",
-          dataIndex: "user_id",
-          key: "user_id",
+          title: "№",
+          dataIndex: "key",
+          key: "key",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "id" },
+          scopedSlots: { customRender: "key" },
           align: "left",
           className: "column-name",
           width: "60px",
         },
         {
-          title: "Пользователь",
-          dataIndex: "img",
-          key: "img",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "img" },
-          align: "left",
-          className: "column-img",
-          colSpan: 2,
-          width: "45px",
-        },
-        {
-          dataIndex: "Пользователь",
-          key: "name",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "name" },
-          className: "column-name",
-          width: "30%",
-          colSpan: 0,
-        },
-        {
-          dataIndex: "Продукт",
-          key: "product",
+          title: "Продукт",
+          dataIndex: "product_info",
+          key: "product_info",
           slots: { title: "customTitle" },
           scopedSlots: { customRender: "product" },
+          align: "left",
           className: "column-name",
+          width: "20%",
         },
+
+        {
+          title: "Пользователь",
+          dataIndex: "user",
+          key: "user",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "user" },
+          className: "column-name",
+          width: "10%",
+        },
+
         {
           title: "Коммент",
           dataIndex: "comment",
@@ -136,7 +198,7 @@ export default {
           className: "column-qty",
           key: "slug",
           align: "center",
-          //   width: "10%",
+          width: "10%",
         },
 
         {
@@ -151,14 +213,60 @@ export default {
       ],
       previewVisible: false,
       comments: [],
+      currentComment: {},
+      rules: {
+        comment: [
+          {
+            required: true,
+            message: "This field is required",
+            trigger: "change",
+          },
+        ],
+      },
+      ruleForm: {
+        user_id: null,
+        product_id: null,
+        comment: "",
+        stars: null,
+      },
     };
   },
   methods: {
+    handleOk() {
+      this.visible = false;
+    },
     show(name) {
       this.$modal.show(name);
     },
     hide(name) {
       this.$modal.hide(name);
+    },
+    editAction(id) {
+      console.log(id);
+      this.visible = true;
+      this.currentComment = this.comments.find((item) => item.id == id);
+    },
+    deletePoduct(id) {
+      this.__DELETE_GLOBAL(
+        id,
+        "fetchComments/deleteComments",
+        "Успешно удален",
+        "__GET_COMMENTS"
+      );
+    },
+    submitCommit() {
+      this.$refs.ruleFormComment.validate((valid) => {
+        if (valid) {
+          this.__POST_COMMENTS(this.ruleForm);
+        } else {
+          return false;
+        }
+      });
+    },
+    async __POST_COMMENTS(formData) {
+      try {
+        const data = await this.$store.dispatch("fetchComments/postComments", formData);
+      } catch (e) {}
     },
     cancel(e) {
       // this.$message.error("Click on No");
@@ -178,7 +286,6 @@ export default {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },
-
     async __GET_COMMENTS() {
       this.loading = true;
       const data = await this.$store.dispatch("fetchComments/getComments", {
@@ -186,12 +293,20 @@ export default {
       });
       this.loading = false;
       this.totalPage = data.comments?.total;
-      this.comments = data.comments?.data.map((item) => {
+      const pageIndex = this.indexPage(
+        data?.comments?.current_page,
+        data?.comments?.per_page
+      );
+      this.comments = data.comments?.data.map((item, index) => {
         return {
           ...item,
           editId: item.id,
+          key: pageIndex + index,
         };
       });
+    },
+    indexPage(current_page, per_page) {
+      return (current_page * 1 - 1) * per_page + 1;
     },
     deleteComment(id) {
       this.__DELETE_COMMENT(id);
@@ -233,34 +348,10 @@ export default {
     },
   },
   async mounted() {
-    if (
-      !Object.keys(this.$route.query).includes("page") ||
-      !Object.keys(this.$route.query).includes("per_page")
-    ) {
-      await this.$router.replace({
-        path: `/contents/comments`,
-        query: { page: this.params.page, per_page: this.params.pageSize },
-      });
-    }
-    this.__GET_COMMENTS();
-    this.current = Number(this.$route.query.page);
-    this.params.pageSize = Number(this.$route.query.per_page);
+    this.getFirstData("/contents/comments", "__GET_COMMENTS");
   },
-  watch: {
-    async current(val) {
-      if (this.$route.query.page != val) {
-        await this.$router.replace({
-          path: `/contents/comments`,
-          query: {
-            page: val,
-            per_page: this.params.pageSize,
-          },
-        });
-        this.__GET_COMMENTS();
-      }
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-    },
+  async current(val) {
+    this.changePagination(val, "/contents/comments", "__GET_COMMENTS");
   },
   components: {
     TitleBlock,

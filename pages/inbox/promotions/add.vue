@@ -47,7 +47,7 @@
                         v-if="ruleForm.short_name[item.key].length > 0"
                       >
                         <div
-                          :style="`background: linear-gradient(250deg, ${ruleForm.short_name_last_color} 0%, ${ruleForm.short_name_first_color} 100%);color: ${ruleForm.color_text}`"
+                          :style="`background: linear-gradient(250deg, ${ruleForm.short_name_last_color} 0%, ${ruleForm.short_name_first_color} 100%);color: ${ruleForm.short_name_text_color}`"
                         >
                           <span v-html="ruleForm.short_name_icon_svg"></span
                           >{{ ruleForm.short_name[item.key] }}
@@ -92,7 +92,7 @@
                           <el-form-item class="mb-0 form-block" label="Цвет для текста">
                             <el-color-picker
                               popper-class="badges-color-picker"
-                              v-model="ruleForm.color_text"
+                              v-model="ruleForm.short_name_text_color"
                             ></el-color-picker>
                           </el-form-item>
                         </div>
@@ -413,6 +413,7 @@ export default {
         short_name_icon_svg: "",
         short_name_first_color: "",
         short_name_last_color: "",
+        short_name_text_color: "",
         banner: "",
         start_date: "",
         end_date: "",

@@ -30,6 +30,7 @@
         <a-table
           :columns="columnOrders"
           :data-source="orders"
+          :loading="loading"
           :pagination="false"
           align="center"
         >
@@ -161,6 +162,11 @@ export default {
     },
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
+    },
+    watch: {
+      async current(val) {
+        this.changePagination(val, "/orders/accepted-orders", "__GET_ORDERS");
+      },
     },
   },
   components: { TitleBlock, SearchInput, OrderStatusMenu },

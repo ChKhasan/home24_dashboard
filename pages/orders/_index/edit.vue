@@ -78,7 +78,7 @@
               </div>
               <div class="form-block required">
                 <div><label for="character_group">Дата заказа</label></div>
-                <el-input type="text" disabled value="#123456" />
+                <el-input type="text" disabled :value="`#${order?.id}`" />
               </div>
             </div>
           </div>
