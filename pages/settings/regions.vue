@@ -689,7 +689,7 @@ export default {
 
   async mounted() {
     this.getFirstData("/settings/regions", "__GET_LOCATIONS");
-    this.getFirstData("/settings/regions", "__GET_REGION_GROUPS");
+    this.__GET_REGION_GROUPS();
   },
   watch: {
     async current(val) {
