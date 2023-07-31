@@ -307,7 +307,7 @@ export default {
   },
   async mounted() {
     this.$store.dispatch("getOrdersCount");
-    // await this.$store.dispatch("getShowCasesStore");
+    await this.$store.dispatch("getShowCasesStore");
     (this.toolbarMenu = {
       category: [
         {
