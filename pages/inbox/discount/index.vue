@@ -47,10 +47,7 @@
               {{ text?.ru }}
             </span>
             <span slot="id" slot-scope="text">
-              <span
-                class="action-btn"
-                @click="$router.push(`/inbox/edit_discount/${text}`)"
-              >
+              <span class="action-btn" @click="$router.push(`/inbox/discount/${text}`)">
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
@@ -156,7 +153,6 @@ export default {
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
     },
-   
   },
 
   watch: {

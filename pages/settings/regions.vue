@@ -2,8 +2,17 @@
   <div>
     <TitleBlock title="Регионы" :breadbrumb="['Контент сайта']" lastLink="Регионы">
       <div
+        v-if="activeTab == 'regions'"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
-        @click="openAddModal"
+        @click="openRegionModal"
+      >
+        <span class="svg-icon" v-html="addIcon"></span>
+        Добавить
+      </div>
+      <div
+        v-else
+        class="add-btn add-header-btn add-header-btn-padding btn-primary"
+        @click="openGroupModal"
       >
         <span class="svg-icon" v-html="addIcon"></span>
         Добавить
@@ -103,173 +112,57 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="Группы" name="groups">
-          <el-tabs class="form_tabs" v-model="activeLang" @tab-click="handleClick">
-            <el-tab-pane
-              v-for="(item, index) in lang"
-              :label="item.label"
-              :name="item.label"
-              :key="index"
-            >
-              <div class="card_block py-5">
-                <div class="d-flex pt-4 justify-content-between align-items-center">
-                  <FormTitle title="Группы" />
-                </div>
-                <div class="antd_table product_table">
-                  <a-table
-                    :columns="columns1"
-                    :data-source="groups"
-                    :pagination="false"
-                    align="center"
-                    :loading="loading"
-                  >
-                    <template
-                      v-for="col in ['name', 'age', 'address']"
-                      :slot="col"
-                      slot-scope="text, record, index"
-                    >
-                      <div class="form-block mb-0">
-                        <a-input
-                          v-if="record.editable"
-                          style="margin: -5px 0"
-                          :value="text[item.key]"
-                          @change="(e) => handleChange(e.target.value, record.key, col)"
-                        />
-                        <template v-else>
-                          {{ text[item.key] }}
-                        </template>
-                      </div>
-                    </template>
-                    <template slot="regions" slot-scope="text, record, index">
-                      <div class="form-block mb-0">
-                        <a-select
-                          v-if="record.editable"
-                          mode="multiple"
-                          placeholder="Inserted are removed"
-                          :value="text"
-                          style="width: 100%"
-                          v-model="text"
-                          @change="handleChange1"
-                        >
-                          <a-select-option
-                            v-for="item in options"
-                            :key="item"
-                            :value="item"
-                          >
-                            {{ item }}
-                          </a-select-option>
-                        </a-select>
-                        <template v-else>
-                          <span v-for="val in text">{{ val }}</span>
-                        </template>
-                      </div>
-                    </template>
-                    <template slot="status" slot-scope="text, record, index">
-                      <div class="form-block mb-0">
-                        <a-select
-                          v-if="record.editable"
-                          placeholder="Inserted are removed"
-                          :value="text"
-                          style="width: 100%"
-                          v-model="text"
-                          @change="handleChange1"
-                        >
-                          <a-select-option
-                            v-for="item in statusOptions"
-                            :key="item.value"
-                            :value="item.label"
-                          >
-                            {{ item.label }}
-                          </a-select-option>
-                        </a-select>
-                        <template v-else>
-                          <span>
-                            <span
-                              class="tags-style"
-                              :class="{
-                                tag_new: text == 'active',
-                                tag_canceled: text == 'inactive',
-                              }"
-                            >
-                              {{ text == "active" ? "Активный " : "Неактивный" }}
-                            </span></span
-                          >
-                        </template>
-                      </div>
-                    </template>
-
-                    <template slot="id" slot-scope="text, record, index">
-                      <div class="editable-row-operations">
-                        <span v-if="record.editable">
-                          <a-button-group>
-                            <a-button
-                              shape="round"
-                              class="d-flex align-items-center"
-                              icon="save"
-                              type="primary"
-                              @click="() => save(record.key)"
-                            >
-                            </a-button>
-                            <a-popconfirm
-                              title="Sure to cancel?"
-                              @confirm="() => cancel(record.key)"
-                            >
-                              <a-button
-                                icon="close"
-                                class="d-flex align-items-center"
-                                shape="round"
-                              ></a-button>
-                            </a-popconfirm>
-                          </a-button-group>
-                          <!-- <a-button type="primary" @click="() => save(record.key)"
-                        >Save</a-button
-                      > -->
-                        </span>
-                        <span v-else>
-                          <span
-                            class="action-btn"
-                            :disabled="editingKey !== ''"
-                            @click="() => edit(record.key)"
-                          >
-                            <img :src="editIcon" alt="" />
-                          </span>
-                          <a-popconfirm
-                            title="Вы действительно хотите удалить?"
-                            ok-text="Yes"
-                            cancel-text="No"
-                            @confirm="deletePost(text)"
-                            @cancel="cancel"
-                          >
-                            <span class="action-btn">
-                              <img :src="deleteIcon" alt="" />
-                            </span>
-                          </a-popconfirm>
-                        </span>
-                      </div>
-                    </template>
-                    <!-- <span slot="id" slot-scope="text">
-                  <span
-                    class="action-btn"
-                    @click="$router.push(`/settings/edit/${text}`)"
-                  >
+          <div class="card_block py-5">
+            <div class="d-flex pt-4 justify-content-between align-items-center">
+              <FormTitle title="Группы" />
+            </div>
+            <div class="antd_table product_table">
+              <a-table
+                :columns="columns1"
+                :data-source="groups"
+                :pagination="false"
+                align="center"
+                :loading="loading"
+              >
+                <span slot="name" slot-scope="text" align="center">
+                  <h6>{{ text?.ru }}</h6>
+                </span>
+                <span slot="key" slot-scope="text">#{{ text }}</span>
+                <span
+                  slot="is_active"
+                  slot-scope="tags"
+                  class="tags-style"
+                  :class="{
+                    tag_pending: tags == 'pending',
+                    tag_accepted: tags == 'accepted',
+                    tag_canceled: tags == 'canceled',
+                    tag_done: tags == 'done',
+                    tag_new: tags == 1,
+                    tag_returned: tags == 0,
+                  }"
+                >
+                  {{ tags ? "Active" : "Inactive" }}
+                </span>
+                <span slot="id" slot-scope="text">
+                  <span class="action-btn" @click="groupEdit(text)">
                     <img :src="editIcon" alt="" />
                   </span>
+
                   <a-popconfirm
                     title="Вы действительно хотите удалить?"
                     ok-text="Yes"
                     cancel-text="No"
-                    @confirm="deletePost(text)"
+                    @confirm="deleteGroup(text)"
                     @cancel="cancel"
                   >
                     <span class="action-btn">
                       <img :src="deleteIcon" alt="" />
                     </span>
                   </a-popconfirm>
-                </span> -->
-                  </a-table>
-                </div>
-              </div>
-            </el-tab-pane>
-          </el-tabs>
+                </span>
+              </a-table>
+            </div>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -343,6 +236,120 @@
         </div>
       </template>
     </a-modal>
+    <a-modal v-model="visibleGroup" title="Добавить" :closable="false" @ok="handleOk">
+      <div class="d-flex flex-column">
+        <div class="form_tab mb-4 bottom_hr">
+          <span
+            style="border-right: 0"
+            v-for="(item, index) in modalTabData"
+            :key="index"
+            @click="modalTab = item.index"
+            :class="{ 'avtive-formTabModal': modalTab == item.index }"
+          >
+            {{ item.label }}
+          </span>
+        </div>
+        <div
+          class="flex-column d-flex"
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          v-if="modalTab == item.index"
+        >
+          <el-form
+            label-position="top"
+            :model="ruleFormGroup"
+            :rules="rules"
+            ref="ruleFormRegion"
+            label-width="120px"
+            class="demo-ruleForm"
+            action=""
+          >
+            <div>
+              <el-form-item
+                class="form-block required align-items-start"
+                prop="name.ru"
+                label="Группа"
+              >
+                <el-input
+                  type="text"
+                  placeholder="Группа..."
+                  v-model="ruleFormGroup.name[item.index]"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                class="form-block required align-items-start"
+                prop="name.ru"
+                label="Status"
+              >
+                <a-select
+                  placeholder="Inserted are removed"
+                  v-model="ruleFormGroup.is_active"
+                  style="width: 100%"
+                >
+                  <a-select-option
+                    v-for="item in statusOptions"
+                    :key="item.value"
+                    :value="item.value"
+                  >
+                    {{ item.label }}
+                  </a-select-option>
+                </a-select>
+              </el-form-item>
+              <el-form-item
+                class="form-block required align-items-start"
+                prop="price"
+                label="Цена"
+              >
+                <el-input
+                  type="text"
+                  placeholder="Цена..."
+                  v-model="ruleFormGroup.delivery_price"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                class="w-100 form-block required align-items-start"
+                label="Регионы"
+              >
+                <a-select
+                  mode="multiple"
+                  label-in-value
+                  :value="value"
+                  placeholder="Продукты"
+                  style="width: 100%"
+                  :filter-option="false"
+                  :not-found-content="fetching ? undefined : null"
+                  @search="fetchUser"
+                  @change="handleChangeSearch"
+                >
+                  <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+                  <a-select-option v-for="d in regions" :key="d.id">
+                    {{ d.name.ru }}
+                  </a-select-option>
+                </a-select>
+              </el-form-item>
+            </div>
+          </el-form>
+        </div>
+      </div>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="handleOk"
+          >
+            Отмена
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="sendGroup"
+            type="primary"
+          >
+            <span class="svg-icon" v-html="addIcon"></span>
+            Сохранить
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -360,27 +367,19 @@ const columns1 = [
     title: "Название",
     dataIndex: "name",
     scopedSlots: { customRender: "name" },
-    width: "30%",
-    className: "column-name",
-  },
-  {
-    title: "Группы",
-    dataIndex: "regions",
-    scopedSlots: { customRender: "regions" },
     className: "column-name",
   },
   {
     title: "Статус",
-    key: "status",
-    dataIndex: "status",
-    scopedSlots: { customRender: "status" },
+    key: "is_active",
+    dataIndex: "is_active",
+    scopedSlots: { customRender: "is_active" },
     className: "column-tags",
     filters: [
       { text: "Активный", value: "active" },
       { text: "Неактивный", value: "inactive" },
     ],
     onFilter: (value, record) => record.status.indexOf(value) === 0,
-    width: "16%",
   },
   {
     title: "действия",
@@ -406,6 +405,9 @@ export default {
   data() {
     this.cacheData = data.map((item) => ({ ...item }));
     return {
+      fetching: false,
+      value: [],
+      activeTab: "regions",
       statusOptions: [
         {
           value: 1,
@@ -417,7 +419,6 @@ export default {
         },
       ],
       activeLang: "Русский",
-
       lang: [
         {
           key: "ru",
@@ -433,6 +434,7 @@ export default {
         },
       ],
       visible: false,
+      visibleGroup: false,
       options: OPTIONS,
       selectedItems: [],
       groups: [],
@@ -469,6 +471,17 @@ export default {
         is_active: 1,
         regions: [],
       },
+      regions: [],
+      ruleFormGroup: {
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
+        delivery_price: "",
+        regions: [],
+        is_active: 1,
+      },
       ruleForm: {
         name: {
           ru: "",
@@ -493,6 +506,14 @@ export default {
     };
   },
   methods: {
+    sendGroup() {
+      this.ruleFormGroup.regions = this.value.map((item) => item.key);
+      this.__POST_GROUP(this.ruleFormGroup);
+    },
+    groupEdit(id) {
+      this.groupId = id;
+      this.ruleFormGroup;
+    },
     handleChange(value, key, column) {
       const newData = [...this.data];
       const target = newData.find((item) => key === item.key);
@@ -500,6 +521,24 @@ export default {
         target[column] = value;
         this.data = newData;
       }
+    },
+    async fetchUser(value) {
+      this.options = [];
+      if (value.length > 2) {
+        this.fetching = true;
+        const data = await this.$store.dispatch("fetchRegions/getRegions", {
+          search: value,
+        });
+        this.regions = data?.regions?.data;
+        this.fetching = false;
+      }
+    },
+    handleChangeSearch(value) {
+      Object.assign(this, {
+        value,
+        options: [],
+        fetching: false,
+      });
     },
     handleClick(tab, event) {
       this.formVal = "";
@@ -509,7 +548,6 @@ export default {
       target.regions = [...selectedItems];
     },
     edit(key) {
-      console.log(key);
       const newData = [...this.data];
       const target = newData.find((item) => key === item.key);
       this.editingKey = key;
@@ -546,7 +584,7 @@ export default {
       }
     },
     handleClickatab(e) {
-      console.log(e.name);
+      this.activeTab = e.name;
     },
     showModal() {
       this.visible = true;
@@ -563,10 +601,20 @@ export default {
         }
       });
     },
-    openAddModal() {
-      this.showModal();
+    openRegionModal() {
+      this.visible = true;
     },
-
+    openGroupModal() {
+      this.visibleGroup = true;
+    },
+    deleteGroup(id) {
+      this.__DELETE_GLOBAL(
+        id,
+        "fetchRegions/deleteRegionsGroup",
+        "Успешно удален",
+        "__GET_REGION_GROUPS"
+      );
+    },
     deletePost(id) {
       this.__DELETE_GLOBAL(
         id,
@@ -602,7 +650,6 @@ export default {
       });
       this.groups = data.groups?.data;
       this.loading = false;
-      console.log(this.groups);
       this.totalPage = data.groups?.total;
       const pageIndex = this.indexPage(
         data?.groups?.current_page,
@@ -617,6 +664,16 @@ export default {
     },
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
+    },
+    async __POST_GROUP(res) {
+      try {
+        await this.$store.dispatch("fetchRegions/postRegionsGroup", res);
+        this.notification("Success", "Успешно добавлен", "success");
+        this.visibleGroup = false;
+        this.__GET_REGION_GROUPS();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
     },
     async __POST_BRANDS(res) {
       try {

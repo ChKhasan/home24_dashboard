@@ -314,7 +314,9 @@ export default {
       ],
     };
   },
-
+  mounted() {
+    this.__GET_DISCOUNT();
+  },
   methods: {
     discountAllValue() {
       if (this.percent) {
@@ -382,6 +384,25 @@ export default {
         await this.$store.dispatch("fetchDiscount/postDiscount", data);
         this.notification("Success", "Успешно добавлен", "success");
         this.$router.push("/inbox/discount");
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    async __GET_DISCOUNT(data) {
+      try {
+        const data = await this.$store.dispatch(
+          "fetchDiscount/showDiscount",
+          this.$route.params.id
+        );
+        this.ruleForm = { ...data?.discount };
+        this.ruleForm.products = data?.discount?.products((item) => {
+          return {
+            ...item,
+            percent: item.pivot.percent,
+            amount: item.pivot.amount,
+          };
+        });
+        console.log(data);
       } catch (e) {
         this.statusFunc(e.response);
       }

@@ -50,4 +50,12 @@ export const actions = {
       return e.response;
     }
   },
+  async deleteRegionsGroup({}, id) {
+    try {
+      const res = await this.$axios.$delete(`/region_groups/${id}`);
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
 };
