@@ -432,13 +432,13 @@
                             </el-option>
                           </el-select>
                         </el-form-item>
-                        <el-form-item
+                        <!-- <el-form-item
                           prop="attributes"
                           label="Поиск продуктов "
                           class="form-variant-block mb-0"
                         >
                           <el-input placeholder="Поиск..." />
-                        </el-form-item>
+                        </el-form-item> -->
                         <el-form-item
                           v-if="item.dicoin != null"
                           prop="attributes"
@@ -863,7 +863,7 @@
                 <div class="ch-product-body">
                   <span class="ch-product-info"> {{ ruleForm?.name?.ru }} </span>
                   <!-- <span class="ch-product-info"> dual SIM 265 gb </span> -->
-                  <span class="ch-product-info"> {{variations?.price}} $  </span>
+                  <span class="ch-product-info"> {{ variations?.price }} $ </span>
                 </div>
               </div>
             </span>
@@ -1366,10 +1366,9 @@ export default {
       this.visible.searchVar = false;
     },
     addSearchProduct() {
-      console.log(this.searchProducts);
-
       const product = this.findProductWithId(this.currentProductId);
       const options = { ...this.atributNames };
+
       this.searchResoultProducts.forEach((item) => {
         let seartProduct = this.searchProducts.find((elem) => elem.id == item);
         product.variations.push({
@@ -1382,7 +1381,7 @@ export default {
           is_popular: 0,
           characteristics: [],
           characteristicsValues: {},
-          optionName: options,
+          optionName: { ...options },
           status: "active",
           dicoin: null,
         });
@@ -1518,7 +1517,6 @@ export default {
     // products
     submitForm(ruleForm) {
       const newData = this.transformData();
-      console.log(newData);
 
       let artibutReqiured = [];
       if (this.$refs.ruleFormAtributes) {
@@ -1533,9 +1531,14 @@ export default {
           ? this.$refs.ruleFormAtributes.length
           : 0;
         const atributValid = artibutReqiured.length == atr;
-        console.log(newData);
-        if (!valid && !atributValid) return false;
-        this.__POST_PRODUCTS(newData);
+
+        if (valid) {
+          if (atributValid) {
+            this.__POST_PRODUCTS(newData);
+          }
+        } else {
+          return false;
+        }
         // this.characterRequired
         //   ? this.__POST_PRODUCTS(newData)
         //   : this.notification("Success", "Вы не добавили характеристику", "error");
@@ -1638,6 +1641,7 @@ export default {
       ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
         `at_${obj.id}`
       ];
+      console.log(product);
     },
     handleCancel() {
       this.previewVisible = false;
@@ -1653,8 +1657,9 @@ export default {
     atributNames() {
       const options = {};
       this.atributes.forEach((elem) => {
-        return (options[elem.name] = "");
+        return (options[`at_${elem?.id}`] = "");
       });
+      console.log("atr", this.atributes);
       return options;
     },
     addValidation(variantId) {
@@ -1674,6 +1679,7 @@ export default {
         status: "active",
         dicoin: null,
       });
+      console.log(options);
     },
     deleteProduct(variantId) {
       if (this.ruleForm.products.length > 1) {
@@ -1803,7 +1809,6 @@ export default {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
       const category = data.category;
       this.atributes = category.attributes;
-      console.log(this.atributes);
       this.character_group = category.characteristic_groups;
       this.atributes.forEach((element) => {
         this.rulesAtributes[`at_${element.id}`] = [
@@ -1826,6 +1831,7 @@ export default {
           ];
         });
       });
+      console.log("atribut rules", this.rulesAtributes);
     },
     async __GET_PRODUCT_BY_ID() {
       const data = await this.$store.dispatch(
