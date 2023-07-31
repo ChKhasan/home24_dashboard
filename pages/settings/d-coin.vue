@@ -117,120 +117,84 @@
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
               <el-form-item
                 class="form-block mb-0 align-items-start"
                 prop="character_name"
                 label="Барабанная пьеса"
               >
-                <el-input
-                  v-model="ruleForm.character_name"
-                  placeholder="Барабанная пьеса..."
-                ></el-input>
+                <el-input placeholder="Барабанная пьеса..."></el-input>
               </el-form-item>
             </div>
           </div>
