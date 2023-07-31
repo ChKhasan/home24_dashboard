@@ -272,6 +272,7 @@
 import FormTitle from "../components/Form-title.vue";
 import AddModal from "../components/modals/Add-modal.vue";
 export default {
+  middleware: ["auth"],
   data() {
     const item = {
       date: "2016-05-02",
@@ -602,7 +603,9 @@ export default {
     handleCommand(command) {
       switch (command) {
         case "logout":
-          this.$auth.logout("local");
+          localStorage.removeItem("auth_token");
+          this.$router.push("/");
+
           break;
       }
     },
