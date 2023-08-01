@@ -108,10 +108,10 @@
                     ></div>
                   </div>
                 </div>
-                <span class="last-info" v-if="lastCategory.length > 0"
+                <!-- <span class="last-info" v-if="lastCategory.length > 0"
                   >Недавняя категория:
                   <p @click="reloadCategories">{{ findLastCategory }}</p></span
-                >
+                > -->
               </div>
               <el-tabs class="form_tabs" v-model="activeName">
                 <el-tab-pane
@@ -411,26 +411,31 @@
                         <el-form-item
                           prop="attributes"
                           label="Aкции "
-                          class="form-variant-block mb-0"
+                          class="form-variant-block form-block mb-0"
                         >
-                          <el-select
-                            class="w-100"
-                            allow-create
-                            :loading="brands.length < 1"
-                            loading-text="Loading..."
-                            no-data-text="Не найдено"
-                            no-match-text="Не найдено"
-                            multiple
-                            placeholder="Aкции..."
+                          <a-select
+                            show-search
+                            focus
+                            ref="searchProductSelect"
+                            mode="multiple"
+                            v-model="item.promotions"
+                            placeholder="Название продукта..."
+                            style="width: 100%"
+                            :default-active-first-option="false"
+                            :show-arrow="false"
+                            :filter-option="false"
+                            @search="handleSearchPromo"
+                            @change="handleChangeSearchPromo"
                           >
-                            <el-option
-                              v-for="item in allAtributes"
-                              :key="item?.id"
-                              :label="item?.name?.ru"
-                              :value="item?.id"
+                            <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+                            <a-select-option
+                              v-for="d in promotionsData"
+                              :key="d.id"
+                              :value="d?.id"
                             >
-                            </el-option>
-                          </el-select>
+                              {{ d?.name?.ru }}
+                            </a-select-option>
+                          </a-select>
                         </el-form-item>
                         <!-- <el-form-item
                           prop="attributes"
@@ -1057,6 +1062,7 @@ export default {
       productModal: {
         product_modal1: false,
       },
+      promotionsData: [],
       searchResoultProducts: [],
       closeIcon: require("../../../assets/svg/components/remove.svg?raw"),
       copyIcon: require("../../../assets/svg/components/copy.svg?raw"),
@@ -1171,6 +1177,7 @@ export default {
                 product_of_the_day: 0,
                 status: "active",
                 dicoin: null,
+                promotions: [],
               },
             ],
           },
@@ -1275,24 +1282,24 @@ export default {
   },
   computed: {
     findLastCategory() {
-      let allCategories = [];
-      if (this.cascaderCategories.length > 0 && this.lastCategory.length == 3) {
-        const findCategory = this.cascaderCategories.find(
-          (item) => item.id == this.lastCategory[0]
-        );
-        const findChildCategory = findCategory?.children.find(
-          (item) => item.id == this.lastCategory[1]
-        );
-        const findChild2Category = findChildCategory?.children.find(
-          (item) => item.id == this.lastCategory[2]
-        );
-        findCategory?.label && allCategories.push(findCategory?.label);
-        findChildCategory?.label && allCategories.push(findChildCategory?.label);
-        findChild2Category?.label && allCategories.push(findChild2Category?.label);
-      }
-      if (allCategories.length == 3) {
-        return allCategories.join("/");
-      }
+      // let allCategories = [];
+      // if (this.cascaderCategories.length > 0 && this.lastCategory.length == 3) {
+      //   const findCategory = this.cascaderCategories.find(
+      //     (item) => item.id == this.lastCategory[0]
+      //   );
+      //   const findChildCategory = findCategory?.children.find(
+      //     (item) => item.id == this.lastCategory[1]
+      //   );
+      //   const findChild2Category = findChildCategory?.children.find(
+      //     (item) => item.id == this.lastCategory[2]
+      //   );
+      //   findCategory?.label && allCategories.push(findCategory?.label);
+      //   findChildCategory?.label && allCategories.push(findChildCategory?.label);
+      //   findChild2Category?.label && allCategories.push(findChild2Category?.label);
+      // }
+      // if (allCategories.length == 3) {
+      //   return allCategories.join("/");
+      // }
     },
   },
   async mounted() {
@@ -1320,6 +1327,19 @@ export default {
           }
         );
         this.searchProducts = searchProductData.products;
+        this.fetching = false;
+      }
+    },
+    async handleSearchPromo(value) {
+      this.fetching = true;
+      if (value.length > 1) {
+        const searchProductData = await this.$store.dispatch(
+          "fetchPromotions/getPromotions",
+          {
+            search: value,
+          }
+        );
+        this.promotionsData = searchProductData.promotions.data;
         this.fetching = false;
       }
     },
@@ -1354,6 +1374,7 @@ export default {
             characteristicsValues: {},
             status: "active",
             dicoin: null,
+            promotions: [],
           },
         ];
         this.ruleForm.products.push({
@@ -1384,6 +1405,7 @@ export default {
           optionName: { ...options },
           status: "active",
           dicoin: null,
+          promotions: [],
         });
       });
       this.visible.searchVar = false;
@@ -1535,6 +1557,7 @@ export default {
         if (valid) {
           if (atributValid) {
             this.__POST_PRODUCTS(newData);
+            // console.log(newData);
           }
         } else {
           return false;
@@ -1595,6 +1618,7 @@ export default {
               ),
               status: elem.status,
               dicoin: elem.dicoin,
+              promotions: elem.promotions,
             };
           });
           return {
@@ -1641,7 +1665,6 @@ export default {
       ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
         `at_${obj.id}`
       ];
-      console.log(product);
     },
     handleCancel() {
       this.previewVisible = false;
@@ -1678,6 +1701,7 @@ export default {
         optionName: options,
         status: "active",
         dicoin: null,
+        promotions: [],
       });
       console.log(options);
     },
@@ -1720,6 +1744,7 @@ export default {
           characteristicsValues: {},
           status: "active",
           dicoin: null,
+          promotions: [],
         },
       ];
       this.ruleForm.products.push({
@@ -1768,6 +1793,7 @@ export default {
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = [...data.categories?.data];
+      console.log(data);
       this.cascaderCategories = this.categories.map((item) => {
         item.label = item.name.ru;
         if (item.children.length > 0) {
@@ -1854,6 +1880,7 @@ export default {
       } else {
         this.cascader.push(data.info.category.id);
       }
+      let promotionsTest = []
       this.ruleForm.category_id = data.info.category.id;
       this.__GET_CATEGORY_BY_ID(data.info.category.id);
       this.ruleForm.products = data.products.map((item, productIndex) => {
@@ -1882,6 +1909,7 @@ export default {
           });
           let options = variant.attribute_options.map((atrOp) => atrOp.id);
           let characteristics = variant.characteristic_options.map((charOp) => charOp.id);
+          promotionsTest = [...variant.promotions]
           return {
             id: index + 1,
             constProduct: true,
@@ -1896,6 +1924,10 @@ export default {
             product_of_the_day: variant.product_of_the_day,
             status: variant.status,
             dicoin: variant.dicoin ? variant.dicoin : null,
+            promotions:
+              variant.promotions.length > 0
+                ? variant.promotions.map((promoItem) => promoItem.id)
+                : [],
           };
         });
         return {
@@ -1921,6 +1953,7 @@ export default {
       });
       this.characterRequired = true;
       this.comments = data.comments;
+      console.log(promotionsTest,"promotions");
     },
     characterValueCopy() {
       var copyCharacter = {};

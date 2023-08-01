@@ -1,17 +1,9 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Категории"
-      :breadbrumb="['Каталог']"
-      lastLink="Категории"
-    >
+    <TitleBlock title="Категории" :breadbrumb="['Каталог']" lastLink="Категории">
       <div class="d-flex">
         <span class="mx-3">
-          <LayoutHeaderBtn
-            name="Отмена"
-            :headerbtnCallback="toBack"
-            :light="true"
-          />
+          <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
         </span>
         <a-button
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
@@ -54,10 +46,7 @@
 
                     <div class="category-input-grid">
                       <div class="form-block required mb-0">
-                        <el-form-item
-                          :prop="`name.ru`"
-                          label="Название категории"
-                        >
+                        <el-form-item :prop="`name.ru`" label="Название категории">
                           <el-input
                             v-model="ruleForm.name[item.key]"
                             placeholder="Название категории..."
@@ -186,9 +175,7 @@
                     </div>
                     <drop-list
                       :items="group_characteristics"
-                      @insert="
-                        ($event) => onInsert($event, 'group_characteristics')
-                      "
+                      @insert="($event) => onInsert($event, 'group_characteristics')"
                       @reorder="$event.apply(group_characteristics)"
                     >
                       <template v-slot:item="{ item }">
@@ -219,9 +206,7 @@
                           <div class="variant_btns mb-1 mt-0">
                             <div
                               class="variant-btn variant-btn-delete mx-2"
-                              @click="
-                                deleteElement('group_characteristics', item.id)
-                              "
+                              @click="deleteElement('group_characteristics', item.id)"
                             >
                               <svg
                                 width="30"
@@ -307,9 +292,7 @@
               <FormTitle title="Параметры" />
               <div
                 class="form-block status-style"
-                :class="[
-                  ruleForm.is_active == 1 ? 'status-active' : 'status-inactive',
-                ]"
+                :class="[ruleForm.is_active == 1 ? 'status-active' : 'status-inactive']"
               >
                 <div><label>Статус</label></div>
                 <el-select
@@ -335,13 +318,8 @@
                   type="number"
                 ></el-input>
               </div>
-              <div
-                class="switch-text form-block d-flex flex-row align-items-center"
-              >
-                <a-switch
-                  @change="onChange"
-                  :checked="ruleForm.is_popular == 1"
-                />
+              <div class="switch-text form-block d-flex flex-row align-items-center">
+                <a-switch @change="onChange" :checked="ruleForm.is_popular == 1" />
                 <label class="mx-3 mb-0">Популярный</label>
               </div>
               <div class="form-block">
@@ -366,17 +344,13 @@
                     :footer="null"
                     @cancel="handleCancel"
                   >
-                    <img
-                      alt="example"
-                      style="width: 100%"
-                      :src="previewImage"
-                    />
+                    <img alt="example" style="width: 100%" :src="previewImage" />
                   </a-modal>
                 </div>
               </div>
               <div class="form-block">
                 <div><label>Svg</label></div>
-                <el-input v-model="ruleForm.order" placeholder="Svg"></el-input>
+                <el-input v-model="ruleForm.icon_svg" placeholder="Svg"></el-input>
               </div>
               <div class="form-block">
                 <div><label for="">Добавить значок продукта</label></div>
@@ -400,11 +374,7 @@
                     :footer="null"
                     @cancel="handleCancel"
                   >
-                    <img
-                      alt="example"
-                      style="width: 100%"
-                      :src="previewImage"
-                    />
+                    <img alt="example" style="width: 100%" :src="previewImage" />
                   </a-modal>
                 </div>
               </div>
@@ -539,6 +509,7 @@ export default {
           en: "",
         },
         icon: null,
+        icon_svg: null,
         img: null,
         attributes: [],
         group_characteristics: [],
@@ -630,16 +601,13 @@ export default {
       this.groups = allGr;
     },
     deleteElement(type, id) {
-      if (this[type].length > 1)
-        this[type] = this[type].filter((item) => item.id != id);
+      if (this[type].length > 1) this[type] = this[type].filter((item) => item.id != id);
     },
     submitForm(ruleForm) {
       const data = {
         ...this.ruleForm,
         attributes: this.attributes.map((item) => item.name),
-        group_characteristics: this.group_characteristics.map(
-          (item) => item.name
-        ),
+        group_characteristics: this.group_characteristics.map((item) => item.name),
       };
       if (this.fileList.img[0]?.oldImg) {
         data.img = this.fileList.img[0]?.url;
@@ -668,8 +636,7 @@ export default {
     },
     async handleChange({ fileList }, type) {
       this.fileList[type] = fileList;
-      if (fileList[0]?.response?.path)
-        this.ruleForm[type] = fileList[0]?.response?.path;
+      if (fileList[0]?.response?.path) this.ruleForm[type] = fileList[0]?.response?.path;
     },
     onChange(checked) {
       checked ? (this.ruleForm.is_popular = 1) : (this.ruleForm.is_popular = 0);
@@ -686,12 +653,8 @@ export default {
       this.slug = data.category.slug;
       this.categoryChild = data.category.children;
       this.ruleForm.name.ru = data.category.name.ru;
-      this.ruleForm.name.uz = data.category.name.uz
-        ? data.category.name.uz
-        : "";
-      this.ruleForm.name.en = data.category.name.en
-        ? data.category.name.en
-        : "";
+      this.ruleForm.name.uz = data.category.name.uz ? data.category.name.uz : "";
+      this.ruleForm.name.en = data.category.name.en ? data.category.name.en : "";
       this.ruleForm.desc = data.category.desc
         ? data.category.desc
         : {
@@ -765,9 +728,7 @@ export default {
     },
 
     async __GET_CATEGORIES() {
-      const dataCat = await this.$store.dispatch(
-        "fetchCategories/getCategories"
-      );
+      const dataCat = await this.$store.dispatch("fetchCategories/getCategories");
       dataCat.categories?.data.forEach((item) => {
         if (item.children.length > 0) {
           this.categories = [item, ...item.children, ...this.categories];
@@ -778,9 +739,7 @@ export default {
 
       this.categories = this.categories
         .filter((elem) => elem.id != this.$route.params.index)
-        .filter(
-          (item) => !this.categoryChild.find((childId) => childId.id == item.id)
-        );
+        .filter((item) => !this.categoryChild.find((childId) => childId.id == item.id));
     },
     async __EDIT_CATEGORIES(res) {
       try {

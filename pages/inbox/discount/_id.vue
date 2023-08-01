@@ -180,7 +180,14 @@
                 </div>
                 <div class="form-block mb-0">
                   <el-form-item label="Дата" prop="start">
-                    <a-range-picker @change="onChange" />
+                    <a-range-picker
+                      @change="onChange"
+                      :default-value="[
+                        moment(ruleForm.start, dateFormat),
+                        moment(ruleForm.end, dateFormat),
+                      ]"
+                      :format="dateFormat"
+                    />
                   </el-form-item>
                 </div>
               </div>
@@ -198,6 +205,7 @@ import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import { Drag, DropList } from "vue-easy-dnd";
 import status from "../../../mixins/status";
 import debounce from "lodash/debounce";
+import moment from "moment";
 export default {
   layout: "toolbar",
   mixins: [status],
@@ -207,6 +215,7 @@ export default {
     return {
       value: [],
       data: [],
+      dateFormat: "YYYY/MM/DD",
       fetching: false,
       activeName: "Русский",
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
@@ -318,6 +327,7 @@ export default {
     this.__GET_DISCOUNT();
   },
   methods: {
+    moment,
     discountAllValue() {
       if (this.percent) {
         this.ruleForm.products = this.ruleForm.products.map((item) => {
@@ -381,7 +391,10 @@ export default {
     },
     async __POST_DISCOUNT(data) {
       try {
-        await this.$store.dispatch("fetchDiscount/postDiscount", data);
+        await this.$store.dispatch("fetchDiscount/editDiscount", {
+          id: this.$route.params.id,
+          data: data,
+        });
         this.notification("Success", "Успешно добавлен", "success");
         this.$router.push("/inbox/discount");
       } catch (e) {
@@ -395,16 +408,20 @@ export default {
           this.$route.params.id
         );
         this.ruleForm = { ...data?.discount };
-        this.ruleForm.products = data?.discount?.products((item) => {
+        console.log(this.ruleForm);
+        // this.ruleForm.start.replace()
+        this.ruleForm.products = data?.discount?.products.map((item) => {
           return {
             ...item,
             percent: item.pivot.percent,
             amount: item.pivot.amount,
           };
         });
+        // this.data = data?.discount?.products
         console.log(data);
       } catch (e) {
-        this.statusFunc(e.response);
+        console.log(e);
+        // this.statusFunc(e.response);
       }
     },
     async fetchUser(value) {

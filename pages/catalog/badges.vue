@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Значки"
-      :breadbrumb="['Контент сайта']"
-      lastLink="Значки"
-    >
+    <TitleBlock title="Значки" :breadbrumb="['Контент сайта']" lastLink="Значки">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -56,9 +52,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="
-                changePageSizeGlobal(e, '/catalog/badges', '__GET_BADGES')
-              "
+              @change="changePageSizeGlobal(e, '/catalog/badges', '__GET_BADGES')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -271,9 +265,7 @@ export default {
         background_color: this.ruleForm.background_color
           ? this.ruleForm.background_color
           : "#1F8A70",
-        text_color: this.ruleForm.text_color
-          ? this.ruleForm.text_color
-          : "#ffffff",
+        text_color: this.ruleForm.text_color ? this.ruleForm.text_color : "#ffffff",
       };
       if (!this.editId) {
         delete data.products;
@@ -313,16 +305,16 @@ export default {
       this.loading = true;
       const data = await this.$store.dispatch("fetchBadges/showBadges", id);
       this.ruleForm.name = data?.badge?.name;
+      this.loading = false;
       this.ruleForm.background_color = data?.badge?.background_color;
       this.ruleForm.text_color = data?.badge?.text_color;
-      this.ruleForm.products = data?.badge?.products.map((item) => item.id);
-      this.value = data?.badge?.products.map((item) => {
-        return {
-          key: item.id,
-          label: item.info.name.ru,
-        };
-      });
-      this.loading = false;
+      // this.ruleForm.products = data?.badge?.products.map((item) => item.id);
+      // this.value = data?.badge?.products.map((item) => {
+      //   return {
+      //     key: item.id,
+      //     label: item.info.name.ru,
+      //   };
+      // });
     },
     async __GET_BADGES() {
       this.loading = true;
@@ -330,12 +322,12 @@ export default {
         ...this.$route.query,
       });
       this.badges = data.badges?.data;
-      this.loading = false;
       this.totalPage = data.badges?.total;
       const pageIndex = this.indexPage(
         data?.badges?.current_page,
         data?.badges?.per_page
       );
+      this.loading = false;
       this.badges = this.badges.map((item, index) => {
         return {
           ...item,
@@ -466,5 +458,4 @@ export default {
     }
   }
 }
-
 </style>

@@ -42,9 +42,24 @@ export const actions = {
     const res = await this.$axios.$post(`/region_groups`, data);
     return res;
   },
+  async putRegionsGroup({}, payload) {
+    const res = await this.$axios.$put(
+      `/region_groups/${payload.id}`,
+      payload.data
+    );
+    return res;
+  },
   async getRegionsGroups({}, payload) {
     try {
       const res = await this.$axios.$get(`/region_groups`, { params: payload });
+      return res;
+    } catch (e) {
+      return e.response;
+    }
+  },
+  async getRegionsGroupsById({}, id) {
+    try {
+      const res = await this.$axios.$get(`/region_groups/${id}`);
       return res;
     } catch (e) {
       return e.response;

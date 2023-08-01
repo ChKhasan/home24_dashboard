@@ -236,7 +236,12 @@
         </div>
       </template>
     </a-modal>
-    <a-modal v-model="visibleGroup" title="Добавить" :closable="false" @ok="handleOk">
+    <a-modal
+      v-model="visibleGroup"
+      title="Добавить"
+      :closable="false"
+      @ok="handleOkGroup"
+    >
       <div class="d-flex flex-column">
         <div class="form_tab mb-4 bottom_hr">
           <span
@@ -335,7 +340,7 @@
         <div class="add_modal-footer d-flex justify-content-end">
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-            @click="handleOk"
+            @click="handleOkGroup"
           >
             Отмена
           </div>
@@ -508,11 +513,12 @@ export default {
   methods: {
     sendGroup() {
       this.ruleFormGroup.regions = this.value.map((item) => item.key);
-      this.__POST_GROUP(this.ruleFormGroup);
+      this.groupId ? this.__EDIT_GROUP() : this.__POST_GROUP(this.ruleFormGroup);
     },
     groupEdit(id) {
       this.groupId = id;
-      this.ruleFormGroup;
+      // this.ruleFormGroup;
+      this.__GET_REGION_GROUPS_BY_ID(id);
     },
     handleChange(value, key, column) {
       const newData = [...this.data];
@@ -561,7 +567,6 @@ export default {
       const newCacheData = [...this.cacheData];
       const target = newData.find((item) => key === item.key);
       const targetCache = newCacheData.find((item) => key === item.key);
-      console.log(target);
       if (target && targetCache) {
         delete target.editable;
         this.data = newData;
@@ -591,6 +596,9 @@ export default {
     },
     handleOk(e) {
       this.visible = false;
+    },
+    handleOkGroup(e) {
+      this.visibleGroup = false;
     },
     getData() {
       this.$refs["ruleFormRegion"][0].validate((valid) => {
@@ -675,6 +683,28 @@ export default {
         this.statusFunc(e.response);
       }
     },
+    async __EDIT_GROUP() {
+      try {
+        await this.$store.dispatch("fetchRegions/putRegionsGroup", {
+          id: this.groupId,
+          data: this.ruleFormGroup,
+        });
+        this.notification("Success", "Успешно добавлен", "success");
+        this.visibleGroup = false;
+        this.__GET_REGION_GROUPS();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
+    },
+    async __GET_REGION_GROUPS_BY_ID(res) {
+      const data = await this.$store.dispatch("fetchRegions/getRegionsGroupsById", res);
+      console.log(data);
+      const { id, created_at, updated_at, for_search, ...rest } = data?.group;
+      this.ruleFormGroup = { ...rest };
+      if (this.groupId) {
+        this.visibleGroup = true;
+      }
+    },
     async __POST_BRANDS(res) {
       try {
         await this.$store.dispatch("fetchRegions/postRegions", res);
@@ -694,6 +724,11 @@ export default {
   watch: {
     async current(val) {
       this.changePagination(val, "/settings/regions", "__GET_LOCATIONS");
+    },
+    visibleGroup(val) {
+      if (!val) {
+        this.groupId = null;
+      }
     },
   },
   components: {
