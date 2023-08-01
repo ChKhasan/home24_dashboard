@@ -64,9 +64,9 @@
                     <span class="nav-info">?</span>
                   </a-popover>
                 </label>
-                <el-form-item class="form-block" prop="character_name">
+                <el-form-item class="form-block" prop="dicoin_to_reg">
                   <el-input
-                    v-model="ruleForm.character_name"
+                    v-model="ruleForm.dicoin_to_reg"
                     placeholder="Di coin для регистрации..."
                   ></el-input>
                 </el-form-item>
@@ -245,10 +245,18 @@ export default {
             trigger: "change",
           },
         ],
+        dicoin_to_reg: [
+          {
+            required: true,
+            message: "This field is required",
+            trigger: "change",
+          },
+        ],
       },
       ruleForm: {
         sum_to_dicoin: "",
         dicoin_to_sum: "",
+        dicoin_to_reg: "",
       },
     };
   },
@@ -266,7 +274,11 @@ export default {
     },
     async __GET_DICOIN() {
       const data = await this.$store.dispatch("fetchDiCoin/showDiCoin");
-      console.log(data);
+      this.ruleForm = {
+        sum_to_dicoin: data?.dicoin?.sum_to_dicoin,
+        dicoin_to_sum: data?.dicoin?.dicoin_to_sum,
+        dicoin_to_reg: data?.dicoin?.dicoin_to_reg,
+      };
     },
     async __POST_DICOIN(formData) {
       try {
