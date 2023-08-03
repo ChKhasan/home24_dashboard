@@ -415,17 +415,15 @@
                         >
                           <a-select
                             show-search
-                            focus
                             ref="searchProductSelect"
                             mode="multiple"
                             v-model="item.promotions"
-                            placeholder="Название продукта..."
+                            placeholder="Aкции..."
                             style="width: 100%"
                             :default-active-first-option="false"
                             :show-arrow="false"
                             :filter-option="false"
                             @search="handleSearchPromo"
-                            @change="handleChangeSearchPromo"
                           >
                             <a-spin v-if="fetching" slot="notFoundContent" size="small" />
                             <a-select-option
@@ -1880,7 +1878,7 @@ export default {
       } else {
         this.cascader.push(data.info.category.id);
       }
-      let promotionsTest = []
+      let promotionsArr = [];
       this.ruleForm.category_id = data.info.category.id;
       this.__GET_CATEGORY_BY_ID(data.info.category.id);
       this.ruleForm.products = data.products.map((item, productIndex) => {
@@ -1909,7 +1907,7 @@ export default {
           });
           let options = variant.attribute_options.map((atrOp) => atrOp.id);
           let characteristics = variant.characteristic_options.map((charOp) => charOp.id);
-          promotionsTest = [...variant.promotions]
+          promotionsArr.push(...variant.promotions);
           return {
             id: index + 1,
             constProduct: true,
@@ -1953,7 +1951,12 @@ export default {
       });
       this.characterRequired = true;
       this.comments = data.comments;
-      console.log(promotionsTest,"promotions");
+      // this.promotionsData = promotionsArr.filter(
+      //   (item) => !this.promotionsData.find((elem) => elem.id == item.id)
+      // );
+      this.promotionsData = promotionsArr.filter(
+        (obj, index) => promotionsArr.findIndex((item) => item.id === obj.id) === index
+      );
     },
     characterValueCopy() {
       var copyCharacter = {};
