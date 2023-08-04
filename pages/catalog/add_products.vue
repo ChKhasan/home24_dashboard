@@ -318,6 +318,7 @@
                   <a-upload
                     action="https://api.e-shop.ndc.uz/api/admin/files/upload"
                     list-type="picture-card"
+                    :headers="headers"
                     :multiple="true"
                     :showUploadList="false"
                     :file-list="element.imagesData"
@@ -566,6 +567,7 @@
           <a-upload
             action="https://api.e-shop.ndc.uz/api/admin/files/upload"
             list-type="picture-card"
+            :headers="headers"
             :file-list="fileListBrand"
             @preview="handlePreview"
             @change="handleChangeBrand"
@@ -726,6 +728,7 @@
             <a-upload
               action="https://api.e-shop.ndc.uz/api/admin/files/upload"
               list-type="picture-card"
+              :headers="headers"
               :file-list="fileListCategory"
               @preview="handlePreview"
               @change="handleChangeCategory"
@@ -922,6 +925,9 @@ export default {
   mixins: [status],
   data() {
     return {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
       productModal: {
         product_modal1: false,
       },

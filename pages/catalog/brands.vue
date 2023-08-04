@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Бренды"
-      :breadbrumb="['Контент сайта']"
-      lastLink="Бренды"
-    >
+    <TitleBlock title="Бренды" :breadbrumb="['Контент сайта']" lastLink="Бренды">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -85,9 +81,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="
-                changePageSizeGlobal(e, '/catalog/brands', '__GET_BRANDS')
-              "
+              @change="changePageSizeGlobal(e, '/catalog/brands', '__GET_BRANDS')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -141,9 +135,7 @@
               <a-switch
                 :checked="ruleForm.is_top == 1"
                 @change="
-                  ruleForm.is_top == 1
-                    ? (ruleForm.is_top = 0)
-                    : (ruleForm.is_top = 1)
+                  ruleForm.is_top == 1 ? (ruleForm.is_top = 0) : (ruleForm.is_top = 1)
                 "
             /></span>
             <label class="mx-3">Популярные бренды </label>
@@ -152,6 +144,7 @@
             <a-upload
               action="https://api.e-shop.ndc.uz/api/admin/files/upload"
               list-type="picture-card"
+              :headers="headers"
               :file-list="fileList"
               @preview="handlePreview"
               @change="handleChange"
@@ -161,11 +154,7 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -215,6 +204,9 @@ export default {
   mixins: [global, status, columns],
   data() {
     return {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
       visible: false,
       modalTab: "ru",
       modalTabData: [
@@ -281,9 +273,7 @@ export default {
       };
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_BRANDS(data)
-            : this.__POST_BRANDS(data);
+          this.editId != "" ? this.__EDIT_BRANDS(data) : this.__POST_BRANDS(data);
         } else {
           return false;
         }

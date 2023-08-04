@@ -322,6 +322,7 @@
                   </div>
                   <a-upload
                     action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                    :headers="headers"
                     list-type="picture-card"
                     :multiple="true"
                     :showUploadList="false"
@@ -619,6 +620,7 @@
         <div class="clearfix variant-img">
           <a-upload
             action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+            :headers="headers"
             list-type="picture-card"
             :file-list="fileListBrand"
             @preview="handlePreview"
@@ -779,6 +781,7 @@
           <div class="clearfix variant-img pt-0">
             <a-upload
               action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+              :headers="headers"
               list-type="picture-card"
               :file-list="fileListCategory"
               @preview="handlePreview"
@@ -1053,6 +1056,9 @@ export default {
   mixins: [status],
   data() {
     return {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
       currentProductId: null,
       searchType: false,
       fetching: false,

@@ -138,6 +138,7 @@
           <div class="clearfix variant-img">
             <a-upload
               action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+              :headers="headers"
               list-type="picture-card"
               :file-list="fileList[item.index]"
               @preview="handlePreview"
@@ -195,6 +196,9 @@ export default {
   mixins: [global],
   data() {
     return {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
       loading: true,
       modalTab: "ru",
       editIcon: require("../../assets/svg/components/edit-icon.svg"),

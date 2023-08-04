@@ -3,6 +3,9 @@ export const actions = {
     try {
       const res = await this.$axios.$get(`/characteristics`, {
         params: payload,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
       });
       return res;
     } catch (e) {
@@ -13,6 +16,9 @@ export const actions = {
     try {
       const res = await this.$axios.$get(`/characteristics_options`, {
         params: payload,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
       });
       return res;
     } catch (e) {
@@ -23,7 +29,12 @@ export const actions = {
     try {
       const res = await this.$axios.$post(
         `/characteristics_options/store_more`,
-        data
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
       );
       return res;
     } catch (e) {
@@ -32,7 +43,11 @@ export const actions = {
   },
   async getCharacteristicsById({}, id) {
     try {
-      const res = await this.$axios.$get(`/characteristics/${id}`);
+      const res = await this.$axios.$get(`/characteristics/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
       return res;
     } catch (e) {
       return e.response;
@@ -40,7 +55,11 @@ export const actions = {
   },
   async postCharacteristics({}, data) {
     try {
-      const res = await this.$axios.$post(`/characteristics`, data);
+      const res = await this.$axios.$post(`/characteristics`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
       return res;
     } catch (e) {
       return e.response;
@@ -50,7 +69,12 @@ export const actions = {
     try {
       const res = await this.$axios.$put(
         `/characteristics/${payload.id}`,
-        payload.data
+        payload.data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
       );
       return res;
     } catch (e) {
@@ -59,24 +83,39 @@ export const actions = {
   },
   async deleteCharacteristics({}, id) {
     try {
-      const res = await this.$axios.$delete(`/characteristics/${id}`);
+      const res = await this.$axios.$delete(`/characteristics/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+        },
+      });
       return res;
     } catch (e) {
       return e.response;
     }
   },
   async postGroups({}, data) {
-    const res = await this.$axios.$post(`/characteristics_groups`, data);
+    const res = await this.$axios.$post(`/characteristics_groups`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
     return res;
   },
   async getGroups({}, payload) {
     const res = await this.$axios.$get(`/characteristics_groups/all`, {
       params: payload,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
     });
     return res;
   },
   async deleteGroups({}, id) {
-    const res = await this.$axios.$delete(`/characteristics/${id}`);
+    const res = await this.$axios.$delete(`/characteristics/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
     return res;
   },
 };

@@ -65,6 +65,7 @@
               <div class="clearfix variant-img">
                 <a-upload
                   action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                  :headers="headers"
                   list-type="picture-card"
                   :file-list="fileList1"
                   @preview="handlePreview"
@@ -89,6 +90,7 @@
               <div class="clearfix variant-img">
                 <a-upload
                   action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                  :headers="headers"
                   list-type="picture-card"
                   :file-list="fileList"
                   :multiple="true"
@@ -130,6 +132,9 @@ export default {
   layout: "toolbar",
   data() {
     return {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       fileList1: [],

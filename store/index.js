@@ -1,6 +1,7 @@
 export const state = () => ({
   showcases: [],
   changeShowcases: true,
+  authenticated: false,
   ordersCount: {
     all: 0,
     accepted: 0,
@@ -13,6 +14,9 @@ export const state = () => ({
 });
 
 export const mutations = {
+  logIn(state) {
+    state.authenticated = true;
+  },
   showcases(state, payload) {
     state.showcases = payload.data;
     state.changeShowcases = payload.change;
@@ -31,18 +35,19 @@ export const mutations = {
 
 export const actions = {
   async getOrdersCount({ commit }, payload) {
-    const res = await this.$axios.$get(
-      `/orders/counts`
-      // , {
-      //   headers: {
-      //     Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-      //   },
-      // }
-    );
+    const res = await this.$axios.$get(`/orders/counts`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
     commit("ordersCount", res?.counts);
   },
   async getShowCasesStore({ commit }, payload) {
-    const res = await this.$axios.$get(`/showcases/all`);
+    const res = await this.$axios.$get(`/showcases/all`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
     commit("showcases", { data: res?.showcases, change: payload });
   },
 };

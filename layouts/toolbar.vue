@@ -590,6 +590,12 @@ export default {
         disabled: false,
       });
     });
+    if (localStorage.getItem("auth_token")) {
+      this.$store.commit("logIn");
+    } else {
+      this.$router.push("/admin/login");
+      this.$store.commit("logOut");
+    }
     this.handleOpen();
     this.handleClose();
     this.activeOpens();
@@ -597,14 +603,22 @@ export default {
   },
 
   methods: {
+    async logOut() {
+      try {
+        const data = await this.$store.dispatch("fetchAuth/logOut");
+        await localStorage.removeItem("auth_token");
+        this.$router.push("/admin/login");
+      } catch (e) {
+        this.statusFunc(e);
+      }
+    },
     takeChange(e) {
       console.log(e);
     },
     handleCommand(command) {
       switch (command) {
         case "logout":
-          localStorage.removeItem("auth_token");
-          this.$router.push("/");
+          this.logOut();
 
           break;
       }

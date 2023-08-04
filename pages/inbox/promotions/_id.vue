@@ -157,6 +157,7 @@
                                 <a-upload
                                   class="icon_upload"
                                   action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                                  :headers="headers"
                                   list-type="picture-card"
                                   :file-list="fileList.sticker"
                                   @preview="handlePreview"
@@ -278,6 +279,7 @@
                     <a-upload
                       list-type="picture-card"
                       action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                      :headers="headers"
                       :file-list="fileList.banner"
                       @preview="handlePreview"
                       @change="($event) => handleChange($event, 'banner')"
@@ -327,6 +329,9 @@ export default {
   mixins: [status],
   data() {
     return {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
       dateFormat: "YYYY-MM-DD",
       iconType: false,
       activeLabelType: "input",
