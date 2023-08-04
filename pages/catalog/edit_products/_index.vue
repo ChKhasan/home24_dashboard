@@ -1800,7 +1800,7 @@ export default {
             if (item2.children.length > 0) {
               item2.children = item2.children.map((item3) => {
                 item3.label = item3.name.ru;
-                if (item3.children.length > 0) {
+                if (item3.children?.length > 0) {
                   return item3;
                 } else {
                   delete item3["children"];
@@ -1826,7 +1826,7 @@ export default {
         },
         id: null,
       });
-      console.log(this.cascaderCategories);
+      console.log(this.cascaderCategories,"cas cat");
     },
 
     async __GET_CATEGORY_BY_ID(id) {
@@ -1957,6 +1957,7 @@ export default {
       this.promotionsData = promotionsArr.filter(
         (obj, index) => promotionsArr.findIndex((item) => item.id === obj.id) === index
       );
+      console.log(this.cascader, " cascader");
     },
     characterValueCopy() {
       var copyCharacter = {};
