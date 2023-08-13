@@ -56,7 +56,7 @@
             columnWidth: '40px',
             align: 'right',
           }"
-          >{{ text }}
+          >
           <span slot="img" slot-scope="text">
             <img v-if="text" class="table-image" :src="text" alt="text" />
             <img
@@ -211,18 +211,18 @@ export default {
       this.totalPage = this.products.products?.total;
       this.loading = false;
       this.data = this.products.products.data.map((item) => {
-        if (item.products[0].images.length > 0) {
+        if (item.info.products[0].images.length > 0) {
           return {
             ...item,
             key: item.id,
-            price: item.products[0].price,
-            model: item.products[0].model,
+            price: item.price,
+            model: item.model,
             name: {
               name: item.name,
               category: item.category,
             },
-            img: item.products[0].images[0].sm_img,
-            status: item.products[0].status,
+            img: item.info.products[0].images[0].sm_img,
+            status: item.status,
           };
         } else {
           return {
@@ -232,13 +232,14 @@ export default {
               category: item.category,
             },
             key: item.id,
-            price: item.products[0].price,
-            model: item.products[0].model,
+            price: item.price,
+            model: item.model,
             img: null,
-            status: item.products[0].status,
+            status: item.status,
           };
         }
       });
+      console.log(this.data);
     },
     deletePoduct(id) {
       this.__DELETE_GLOBAL(
