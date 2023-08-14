@@ -81,7 +81,7 @@
                                   :value="d.id"
                                   :key="d.id"
                                 >
-                                  {{ d.name.ru }}
+                                  {{ d?.name?.ru }}
                                 </a-select-option>
                               </a-select-opt-group>
                               <a-select-opt-group
@@ -474,6 +474,7 @@ export default {
         console.log(e);
         this.statusFunc(e.response);
       }
+      console.log(this.categories);
     },
     addDefaultForms() {
       if (this.ruleForm.length < 4) {
