@@ -2,13 +2,13 @@
   <div>
     <TitleBlock title="Продукты" :breadbrumb="['Каталог']" lastLink="Продукты">
       <div class="d-flex">
-        <div
+        <!-- <div
           class="add-btn add-header-btn add-header-btn-padding btn-primary disabledBtn"
           @click="$router.push('/catalog/add_products')"
         >
           <span class="svg-icon" v-html="addIcon"></span>
           Добавить продукт
-        </div>
+        </div> -->
       </div>
     </TitleBlock>
     <div class="container_xl app-container">
@@ -86,7 +86,9 @@
           </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
           <span slot="qty" slot-scope="text">{{ text ? text : "------" }}</span>
-          <a slot="price" slot-scope="text">{{ text ? `${text}` : "------" }}</a>
+          <a slot="price" slot-scope="text">{{
+            text ? `${`${text}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")} so'm` : "------"
+          }}</a>
           <span slot="customTitle"></span>
 
           <span
@@ -255,7 +257,7 @@ export default {
   },
   async mounted() {
     this.getFirstData("/catalog/products", "__GET_PRODUCTS");
-    console.log(process.env.VUE_APP_APIKEY,"env");
+    console.log(process.env.VUE_APP_APIKEY, "env");
   },
   watch: {
     async current(val) {

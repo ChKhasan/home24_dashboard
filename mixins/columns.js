@@ -196,7 +196,7 @@ export default {
         },
         {
           title: "ЦЕНА",
-          dataIndex: "price",
+          dataIndex: "real_price",
           className: "column-price",
           key: "price",
           slots: { title: "customTitle" },

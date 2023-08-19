@@ -363,6 +363,15 @@
                           class="demo-ruleForm d-flex"
                           action=""
                         >
+                          <div class="form-variant-block mb-0">
+                            <div><label>Имя</label></div>
+                            <el-input
+                              v-model="item.name"
+                              class="disabled"
+                              placeholder="Имя..."
+                              type="text"
+                            ></el-input>
+                          </div>
                           <div
                             v-if="atributes.length > 0"
                             class="form-variant-block atribut_selects"
@@ -401,7 +410,7 @@
                         </el-form>
 
                         <div class="form-variant-block mb-0">
-                          <div><label>Price</label></div>
+                          <div><label>Цена</label></div>
                           <el-input
                             disabled
                             v-model="item.price"
@@ -1366,6 +1375,7 @@ export default {
         const options = { ...this.atributNames };
         const newVariations = [
           {
+            name: seartProduct.info.name.ru,
             id: 1,
             indexId: seartProduct.id,
             options: [1],
@@ -1388,12 +1398,13 @@ export default {
           variations: newVariations,
         });
       });
+      console.log(this.ruleForm);
+
       this.visible.searchVar = false;
     },
     addSearchProduct() {
       const product = this.findProductWithId(this.currentProductId);
       const options = { ...this.atributNames };
-
       this.searchResoultProducts.forEach((item) => {
         let seartProduct = this.searchProducts.find((elem) => elem.id == item);
         product.variations.push({
@@ -1408,6 +1419,7 @@ export default {
           characteristicsValues: {},
           optionName: { ...options },
           status: "active",
+          name: seartProduct.info.name.ru,
           dicoin: null,
           promotions: [],
         });
@@ -1915,6 +1927,7 @@ export default {
           let characteristics = variant.characteristic_options.map((charOp) => charOp.id);
           promotionsArr.push(...variant.promotions);
           return {
+            name: variant.name.ru,
             id: index + 1,
             constProduct: true,
             indexId: variant.id,
