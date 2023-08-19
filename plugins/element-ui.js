@@ -3,6 +3,7 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "element-ui/lib/theme-chalk/base.css";
 import CollapseTransition from "element-ui/lib/transitions/collapse-transition";
+import locale from "element-ui/lib/locale/lang/en";
 import {
   Dropdown,
   DropdownMenu,
@@ -28,6 +29,7 @@ import {
   Table,
   TableColumn,
   DatePicker,
+  TimePicker,
   Form,
   FormItem,
   Tabs,
@@ -44,6 +46,8 @@ import {
 
 //   return !(this.filterable || this.multiple || !isIE) && !this.visible;
 // };
+Vue.use(ElementUI, { locale });
+Vue.component(CollapseTransition.name, CollapseTransition);
 Vue.use(Dropdown);
 Vue.use(DropdownMenu);
 Vue.use(DropdownItem);
@@ -68,6 +72,7 @@ Vue.use(ButtonGroup);
 Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(DatePicker);
+Vue.use(TimePicker);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Tabs);

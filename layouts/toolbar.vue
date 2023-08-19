@@ -592,6 +592,13 @@ export default {
           path: "settings-d-coin",
           disabled: false,
         },
+        {
+          name: "Филиалы",
+          index: "70",
+          to: "/settings/locations",
+          path: "settings-locations",
+          disabled: false,
+        },
       ],
     }),
       (this.toolbarMenu.showcases = []);

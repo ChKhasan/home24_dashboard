@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Permission groups"
-      :breadbrumb="['настройки']"
-      lastLink="Permission groups"
-    >
+    <TitleBlock title="Филиалы" :breadbrumb="['настройки']" lastLink="Филиалы">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -17,26 +13,21 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Permission groups" />
+            <FormTitle title="Филиалы" />
           </div>
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columnPermissionGroups"
+            :columns="columnBranches"
             :data-source="group"
             :pagination="false"
             align="center"
             :loading="loading"
           >
-            <span
-              @click="$router.push('/home/customer-info/123')"
-              slot="title"
-              slot-scope="text"
-              align="center"
-            >
+            <span slot="name" slot-scope="text" align="center">
               <h6>{{ text?.ru }}</h6>
             </span>
-
+            <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="id" slot-scope="text">
               <span class="action-btn" @click="editPost(text)">
                 <img :src="editIcon" alt="" />
@@ -59,13 +50,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="
-                changePageSizeGlobal(
-                  e,
-                  '/settings/permissions-group',
-                  '__GET_PERMISSION_GROUPS'
-                )
-              "
+              @change="changePageSizeGlobal(e, '/settings/locations', '__GET_LOCATIONS')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -86,7 +71,22 @@
         </div>
       </div>
     </div>
-    <a-modal v-model="visible" title="Добавить" :closable="false" @ok="handleOk">
+    <a-modal
+      v-model="visible"
+      :title="editId ? `Изменять` : `Добавить`"
+      :closable="false"
+      @ok="handleOk"
+    >
+      <div class="modal_tab mb-4">
+        <span
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          @click="modalTab = item.index"
+          :class="{ 'avtive-modalTab': modalTab == item.index }"
+        >
+          {{ item.label }}
+        </span>
+      </div>
       <el-form
         label-position="top"
         :model="ruleForm"
@@ -94,52 +94,76 @@
         ref="ruleForm"
         label-width="120px"
         class="demo-ruleForm"
-        action=""
       >
-        <div>
-          <div class="form-block required">
-            <div>
-              <label for="">Название </label>
-            </div>
-            <el-form-item prop="name">
-              <el-input
-                type="text"
-                placeholder="Зоговолок"
-                v-model="ruleForm.name"
-              ></el-input>
-            </el-form-item>
-            <el-form-item
-              class="form-block align-items-start mt-3"
-              prop="name"
-              label="Permissions"
+        <div
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          v-if="modalTab == item.index"
+        >
+          <el-form-item
+            class="form-block required align-items-start"
+            label="Зоговолок"
+            prop="name.ru"
+          >
+            <el-input
+              type="text"
+              placeholder="Зоговолок"
+              v-model="ruleForm.name[`${item.index}`]"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            class="form-block required align-items-start"
+            label="Рабочее время"
+            prop="work_time"
+          >
+            <el-time-picker
+              class="w-100"
+              is-range
+              v-model="value1"
+              start-placeholder="Start time"
+              end-placeholder="End time"
+              :editable="false"
+              :clearable="true"
+              :picker-options="{
+                selectableRange: '18:30:00 - 20:30:00',
+              }"
             >
-              <div class="d-flex align-items-center" style="gap: 16px">
-                <a-select
-                  v-model="ruleForm.permissions"
-                  placeholder="input search text"
-                  style="width: 100%"
-                >
-                  <a-select-opt-group label="Permissions" v-if="permissions.length > 0">
-                    <a-select-option v-for="d in permissions" :value="d.id" :key="d.id">
-                      {{ d?.name }}
-                    </a-select-option>
-                  </a-select-opt-group>
-                </a-select>
-                <div
-                  @click="$router.push('/settings/permissions')"
-                  class="outline-btn outline-light-blue-btn"
-                  v-html="plusCategoryIcon"
-                ></div>
-              </div>
-            </el-form-item>
-          </div>
+            </el-time-picker>
+          </el-form-item>
+          <el-form-item
+            class="form-block required align-items-start"
+            label="Номер телефона"
+            prop="phone_number"
+          >
+            <el-input
+              type="text"
+              v-mask="'+998 ## ### ## ##'"
+              placeholder="+998 __ ___ __ __"
+              v-model="ruleForm.phone_number"
+            />
+          </el-form-item>
+          <el-form-item
+            class="w-100 form-block required align-items-start"
+            label="Регионы"
+          >
+            <a-select
+              show-search
+              placeholder="Регионы"
+              style="width: 100%"
+              @change="onChangeRegion"
+            >
+              <a-select-option v-for="d in regions" :key="d.id">
+                {{ d.name.ru }}
+              </a-select-option>
+            </a-select>
+          </el-form-item>
         </div>
       </el-form>
       <template slot="footer">
         <div class="add_modal-footer d-flex justify-content-end">
           <div
             class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
-            @click="handleOk"
+            @click="closeModal"
           >
             Отмена
           </div>
@@ -149,7 +173,6 @@
             type="primary"
             :loading="loadingBtn"
           >
-            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
             Сохранить
           </a-button>
         </div>
@@ -166,12 +189,31 @@ import FormTitle from "../../../components/Form-title.vue";
 import global from "../../../mixins/global";
 import status from "../../../mixins/status";
 import columns from "../../../mixins/columns";
-
+import moment from "moment";
 export default {
   // middleware: "auth",
   mixins: [global, status, columns],
   data() {
     return {
+      fetching: false,
+      value: "",
+      regions: [],
+      modalTabData: [
+        {
+          label: "Русский",
+          index: "ru",
+        },
+        {
+          label: "O'zbek",
+          index: "uz",
+        },
+        {
+          label: "English",
+          index: "en",
+        },
+      ],
+      modalTab: "ru",
+      value1: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
       visible: false,
       editIcon: require("../../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../../assets/svg/components/delete-icon.svg"),
@@ -180,16 +222,44 @@ export default {
       loading: true,
       loadingBtn: false,
       ruleForm: {
-        name: "",
-        password: "",
-        role_id: null,
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
+        work_time: "",
+        phone_number: "",
+        region_id: null,
       },
       fetching: false,
       permissions: [],
       editId: "",
       group: [],
       rules: {
-        name: [
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Это поле обязательна",
+              trigger: "change",
+            },
+          ],
+        },
+        phone_number: [
+          {
+            required: true,
+            message: "Это поле обязательна",
+            trigger: "change",
+          },
+        ],
+        region_id: [
+          {
+            required: true,
+            message: "Это поле обязательна",
+            trigger: "change",
+          },
+        ],
+        work_time: [
           {
             required: true,
             message: "Это поле обязательна",
@@ -199,23 +269,52 @@ export default {
       },
     };
   },
+
   methods: {
+    moment,
+    onChangeRegion(id) {
+      this.ruleForm.region_id = id;
+    },
     showModal() {
       this.visible = true;
     },
     handleOk(e) {
       this.visible = false;
     },
+    async fetchUser(value) {
+      this.options = [];
+      if (value.length > 2) {
+        this.fetching = true;
+        const data = await this.$store.dispatch("fetchRegions/getRegions", {
+          search: value,
+        });
+        this.regions = data?.regions?.data;
+        this.fetching = false;
+      }
+    },
+    handleChangeSearch(value) {
+      Object.assign(this, {
+        value,
+        options: [],
+        fetching: false,
+      });
+    },
     getData() {
+      console.log(this.ruleForm);
+      const data = {
+        ...this.ruleForm,
+        phone_number: this.ruleForm.phone_number.replaceAll(" ", ""),
+      };
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_PERMISSION_GROUP(this.ruleForm)
-            : this.__POST_PREMISSION_GROUP(this.ruleForm);
+          this.editId != "" ? this.__EDIT_LOCATIONS(data) : this.__POST_LOCATIONS(data);
         } else {
           return false;
         }
       });
+    },
+    closeModal() {
+      this.visible = false;
     },
     deleteImg() {
       this.editImage = "";
@@ -226,35 +325,53 @@ export default {
     },
     editPost(id) {
       this.editId = id;
-      const data = this.group.find((item) => item.id == id);
-      //   this.slug = data.slug;
+      // console.log(new Date(2016, 9, 10, 8, 40));
+      this.__GET_LOCATIONS_BY_ID(id);
+    },
+    async __GET_LOCATIONS_BY_ID(id) {
+      const data = await this.$store.dispatch("fetchLocations/showLocations", id);
       this.ruleForm = {
-        name: data.name,
-        permissions: data.permissions.map((item) => item.id),
+        name: data.branch?.name,
+        work_time: data.branch?.work_time,
+        phone_number: data.branch?.phone_number,
+        region_id: data.branch?.region_id,
       };
+      this.value1[0] = new Date(
+        2016,
+        9,
+        10,
+        Number(data.branch?.work_time.split("-")[0].split(":")[0]),
+        Number(data.branch?.work_time.split("-")[0].split(":")[1])
+      );
+      this.value1[1] = new Date(
+        2016,
+        9,
+        10,
+        Number(data.branch?.work_time.split("-")[1].split(":")[0]),
+        Number(data.branch?.work_time.split("-")[1].split(":")[1])
+      );
       this.showModal();
-
       console.log(this.ruleForm);
     },
     deletePost(id) {
       this.__DELETE_GLOBAL(
         id,
-        "fetchPermissions/deletePermissionGroups",
+        "fetchLocations/deleteLocations",
         "Успешно удален",
-        "__GET_PERMISSION_GROUPS"
+        "__GET_LOCATIONS"
       );
     },
-    async __GET_PERMISSION_GROUPS() {
+    async __GET_LOCATIONS() {
       this.loading = true;
-      const data = await this.$store.dispatch("fetchPermissions/getPermissionGroups", {
+      const data = await this.$store.dispatch("fetchLocations/getLocations", {
         ...this.$route.query,
       });
-      this.group = data.groups?.data;
+      this.group = data.branches?.data;
       this.loading = false;
-      this.totalPage = data.groups?.total;
+      this.totalPage = data.branches?.total;
       const pageIndex = this.indexPage(
-        data?.groups?.current_page,
-        data?.groups?.per_page
+        data?.branches?.current_page,
+        data?.branches?.per_page
       );
       this.group = this.group.map((item, index) => {
         return {
@@ -267,25 +384,25 @@ export default {
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
     },
-    async __POST_PREMISSION_GROUP(res) {
+    async __POST_LOCATIONS(res) {
       try {
-        await this.$store.dispatch("fetchPermissions/postPermissionGroups", res);
+        await this.$store.dispatch("fetchLocations/postLocations", res);
         this.notification("Success", "Успешно добавлен", "success");
         this.handleOk();
-        this.__GET_PERMISSION_GROUPS();
+        this.__GET_LOCATIONS();
       } catch (e) {
         this.statusFunc(e.response);
       }
     },
-    async __EDIT_PERMISSION_GROUP(res) {
+    async __EDIT_LOCATIONS(res) {
       try {
-        await this.$store.dispatch("fetchPermissions/editPermissionGroups", {
+        await this.$store.dispatch("fetchLocations/editLocations", {
           id: this.editId,
           data: res,
         });
         this.notification("Success", "Успешно добавлен", "success");
         this.handleOk();
-        this.__GET_PERMISSION_GROUPS();
+        this.__GET_LOCATIONS();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -298,7 +415,7 @@ export default {
       this.fetching = true;
       if (value.length > 2) {
         const permissionsData = await this.$store.dispatch(
-          "fetchPermissions/getPermissions",
+          "fetchLocations/getLocations",
           {
             search: value,
           }
@@ -316,17 +433,25 @@ export default {
   },
 
   async mounted() {
-    const permissionsData = await this.$store.dispatch("fetchPermissions/getPermissions");
+    const permissionsData = await this.$store.dispatch("fetchLocations/getLocations");
     this.permissions = permissionsData?.permissions?.data;
-    this.getFirstData("/settings/permissions-group", "__GET_PERMISSION_GROUPS");
+    const data = await this.$store.dispatch("fetchRegions/getRegions");
+    this.regions = data?.regions?.data;
+    this.getFirstData("/settings/locations", "__GET_LOCATIONS");
   },
   watch: {
     async current(val) {
-      this.changePagination(
-        val,
-        "/settings/permissions-group",
-        "__GET_PERMISSION_GROUPS"
-      );
+      this.changePagination(val, "/settings/locations", "__GET_LOCATIONS");
+    },
+    value1(val) {
+      if (val) {
+        this.ruleForm.work_time = `${this.moment(val[0]).format("HH:mm")}-${this.moment(
+          val[1]
+        ).format("HH:mm")}`;
+      }
+    },
+    modalTab() {
+      console.log(this.ruleForm);
     },
     visible(val) {
       if (val == false) {

@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Отзывы"
-      :breadbrumb="['Контент сайта']"
-      lastLink="Отзывы"
-    >
+    <TitleBlock title="Отзывы" :breadbrumb="['Контент сайта']" lastLink="Отзывы">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -236,9 +232,7 @@ export default {
       delete newData["link_en"];
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_BANNERS(newData)
-            : this.__POST_BANNERS(newData);
+          this.editId != "" ? this.__EDIT_BANNERS(newData) : this.__POST_BANNERS(newData);
         } else {
           return false;
         }
@@ -250,7 +244,6 @@ export default {
     openAddModal() {
       this.fileList = [];
       this.editId = "";
-      ttt;
       this.ruleForm.type = "";
       this.$router.push("/contents/add_feedbacks");
     },
@@ -311,10 +304,7 @@ export default {
     },
     async __UPLOAD_FILE(formData) {
       try {
-        const data = await this.$store.dispatch(
-          "uploadFile/uploadFile",
-          formData
-        );
+        const data = await this.$store.dispatch("uploadFile/uploadFile", formData);
         return data.path;
       } catch (e) {
         this.statusFunc(e.response);

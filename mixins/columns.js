@@ -682,6 +682,38 @@ export default {
           align: "right",
         },
       ],
+      columnBranches: [
+        {
+          title: "№",
+          dataIndex: "key",
+          key: "key",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "key" },
+          align: "left",
+          className: "column-name",
+          width: "60px",
+        },
+
+        {
+          title: "Название",
+          dataIndex: "name",
+          key: "name",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "name" },
+          className: "column-name",
+          width: "30%",
+        },
+
+        {
+          title: "действия",
+          key: "id",
+          dataIndex: "id",
+          scopedSlots: { customRender: "id" },
+          className: "column-btns",
+          //   width: "10%",
+          align: "right",
+        },
+      ],
     };
   },
 };
