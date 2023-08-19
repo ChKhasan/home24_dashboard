@@ -60,11 +60,12 @@
               class="table-page-size"
               placeholder="Select"
               @change="
-                changePageSizeGlobal(
-                  e,
-                  '/settings/permissions-group',
-                  '__GET_PERMISSION_GROUPS'
-                )
+                (e) =>
+                  changePageSizeGlobal(
+                    e,
+                    '/settings/permissions-group',
+                    '__GET_PERMISSION_GROUPS'
+                  )
               "
             >
               <el-option

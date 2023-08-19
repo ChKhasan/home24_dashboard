@@ -26,6 +26,11 @@
     transition: 3s;
   }
 }
+.text-black-btn {
+  span {
+    color: #000 !important;
+  }
+}
 .add-header-btn {
   svg {
     width: 20px;

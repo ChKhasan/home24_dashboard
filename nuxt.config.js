@@ -37,7 +37,7 @@ export default {
     init(axios) {
       axios.defaults.withCredentials = true;
     },
-    baseURL: "https://api.e-shop.ndc.uz/api/admin",
+    baseURL: process.env.BASE_URL,
   },
   components: true,
 
@@ -121,7 +121,7 @@ export default {
     },
   },
   server: {
-    port: 8000,
-    host: "localhost",
+    port: process.env.PORT,
+    host: process.env.HOST,
   },
 };

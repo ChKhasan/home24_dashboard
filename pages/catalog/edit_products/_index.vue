@@ -163,7 +163,7 @@
                   <div
                     class="form-block status-style"
                     :class="[
-                      ruleForm.is_active == 1 ? 'status-active' : 'status-inactive',
+                      ruleForm.status == 'active' ? 'status-active' : 'status-inactive',
                     ]"
                   >
                     <el-form-item label="Статус">
@@ -171,7 +171,7 @@
                         id="status"
                         class="w-100"
                         popper-class="select-popper-hover"
-                        v-model="ruleForm.is_active"
+                        v-model="ruleForm.status"
                         default-first-option
                         placeholder="Статус"
                       >
@@ -502,7 +502,7 @@
                             />
                           </span>
                         </div>
-                        <div class="form-block mb-0">
+                        <!-- <div class="form-block mb-0">
                           <div>
                             <label
                               >Stat
@@ -525,7 +525,7 @@
                               "
                             />
                           </span>
-                        </div>
+                        </div> -->
                         <div class="form-block mb-0">
                           <div>
                             <label
@@ -1119,11 +1119,11 @@ export default {
       ],
       options: [
         {
-          value: 1,
+          value: "active",
           label: "Активный",
         },
         {
-          value: 0,
+          value: "inactive",
           label: "Неактивный",
         },
       ],
@@ -1159,7 +1159,7 @@ export default {
           en: "",
         },
         brand_id: null,
-        is_active: 1,
+        status: "inactive",
         category_id: "",
         products: [
           {
@@ -1832,7 +1832,7 @@ export default {
         },
         id: null,
       });
-      console.log(this.cascaderCategories,"cas cat");
+      console.log(this.cascaderCategories, "cas cat");
     },
 
     async __GET_CATEGORY_BY_ID(id) {
@@ -1873,7 +1873,7 @@ export default {
 
       this.ruleForm.brand_id = data.info.brand_id;
       this.ruleForm.model = data.info.products[0].model;
-      this.ruleForm.is_active = data.info?.is_active;
+      this.ruleForm.status = data.product?.status;
       if (data.info.category.parent?.parent?.id) {
         this.cascader.push(data.info.category.parent.parent.id);
         this.cascader.push(data.info.category.parent.id);

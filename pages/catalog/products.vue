@@ -56,7 +56,7 @@
             columnWidth: '40px',
             align: 'right',
           }"
-          >
+        >
           <span slot="img" slot-scope="text">
             <img v-if="text" class="table-image" :src="text" alt="text" />
             <img
@@ -255,6 +255,7 @@ export default {
   },
   async mounted() {
     this.getFirstData("/catalog/products", "__GET_PRODUCTS");
+    console.log(process.env.VUE_APP_APIKEY,"env");
   },
   watch: {
     async current(val) {

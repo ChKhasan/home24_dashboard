@@ -539,7 +539,7 @@ export default {
           index: "62",
           to: "/settings/translations",
           path: "settings-translations",
-          disabled: true,
+          disabled: false,
         },
         {
           name: "Справочник",
