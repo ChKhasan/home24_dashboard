@@ -181,7 +181,7 @@ export default {
   mixins: [status, global, authAccess],
   layout: "toolbar",
   head: {
-    title: "F.A.Q",
+    title: "Переводы",
   },
   data() {
     return {
@@ -326,7 +326,6 @@ export default {
 };
 </script>
 <style lang="css">
-
 .card_header {
   padding: 16.25px 0;
 }

@@ -477,18 +477,18 @@ export default {
           disabled: false,
         },
         {
-          name: "Комментарии",
+          name: "Отзывы",
           index: "53",
           to: "/contents/comments",
           disabled: false,
         },
-        {
-          name: "Отзывы",
-          index: "54",
-          to: "/contents/banners2",
-          path: "contents-banners2",
-          disabled: true,
-        },
+        // {
+        //   name: "Отзывы",
+        //   index: "54",
+        //   to: "/contents/banners2",
+        //   path: "contents-banners2",
+        //   disabled: true,
+        // },
         {
           name: "Вопрос и ответы",
           index: "55",
@@ -504,7 +504,7 @@ export default {
           disabled: false,
         },
         {
-          name: "Отзывы",
+          name: "Feedbacks",
           index: "57",
           to: "/contents/feedbacks",
           path: "contents-feedbacks",
@@ -540,14 +540,6 @@ export default {
           to: "/settings/translations",
           path: "settings-translations",
           disabled: false,
-        },
-        {
-          name: "Справочник",
-          index: "63",
-          to: "/settings/banners2",
-          path: "settings-banners2",
-
-          disabled: true,
         },
         {
           name: "Общие данные",

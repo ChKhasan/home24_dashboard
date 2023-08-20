@@ -538,7 +538,11 @@ export default {
 };
 </script>
 <style lang="css">
-
+.prodduct-list-header-grid1 {
+  display: grid;
+  grid-template-columns: 1fr 46px 46px 46px;
+  grid-gap: 24px;
+}
 .card_header {
   padding: 16.25px 0;
 }

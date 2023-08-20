@@ -37,7 +37,7 @@
     <div class="container_xl app-container pb-5">
       <div class="card_block main-table px-4 mt-0 pb-4">
         <div class="d-flex justify-content-between align-items-center card_header">
-          <div class="prodduct-list-header-grid w-100 align-items-center">
+          <div class="prodduct-list-header-grid2 w-100 align-items-center">
             <SearchInput
               placeholder="Поиск
             "
@@ -482,7 +482,11 @@ export default {
 };
 </script>
 <style lang="css">
-
+.prodduct-list-header-grid2 {
+  display: grid;
+  grid-template-columns: 1fr 46px 46px;
+  grid-gap: 24px;
+}
 .card_header {
   padding: 16.25px 0;
 }

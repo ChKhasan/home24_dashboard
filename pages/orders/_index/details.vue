@@ -33,7 +33,7 @@
                     </svg>
                     Date Added</span
                   >
-                  <p>{{ moment(order.created_at).format("DD/MM/YYYY") }}</p>
+                  <p>{{ moment(order.created_at).format("DD/MM/YYYY HH:mm") }}</p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -310,7 +310,9 @@
                 </nuxt-link>
                 <a slot="price" slot-scope="text"
                   >{{
-                    `${text?.real_price}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    `${
+                      text?.discount_price ? text?.discount_price : text?.real_price
+                    }`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
                   so'm</a
                 >
@@ -342,7 +344,9 @@
               <div class="d-flex justify-content-end align-items-center card_header pt-4">
                 <FormTitle
                   :title="`Общий сумма: ${`${order?.products_info?.reduce((sum, item) => {
-                    return sum + item?.count * item?.product?.real_price;
+                    return sum + item?.count * item?.product?.discount_price
+                      ? item?.product?.discount_price
+                      : item?.product?.real_price;
                   }, 0)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm`"
                 />
               </div>
@@ -375,7 +379,7 @@
                     </svg>
                     Date Added</span
                   >
-                  <p>{{ moment(order.created_at).format("DD/MM/YYYY") }}</p>
+                  <p>{{ moment(order.created_at).format("DD/MM/YYYY HH:mm") }}</p>
                 </div>
                 <div class="order-details-items">
                   <span

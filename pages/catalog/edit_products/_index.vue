@@ -94,19 +94,19 @@
                       </a-cascader>
                     </el-form-item>
                   </div>
-                  <div class="prducts-details-btns mb-2">
+                  <!-- <div class="prducts-details-btns mb-2">
                     <div
-                      class="outline-btn outline-light-green-btn"
+                      class="outline-btn outline-light-green-btn disabled"
                       :class="{ disabledBtn: lastCategory.length < 1 }"
                       @click="reloadCategories"
                       v-html="reloadIcon"
                     ></div>
                     <div
-                      class="outline-btn outline-light-blue-btn"
+                      class="outline-btn outline-light-blue-btn disabled"
                       @click="showModal('category')"
                       v-html="plusCategoryIcon"
                     ></div>
-                  </div>
+                  </div> -->
                 </div>
                 <!-- <span class="last-info" v-if="lastCategory.length > 0"
                   >Недавняя категория:
@@ -1632,7 +1632,7 @@ export default {
                   };
                 }
               ),
-              status: elem.status,
+              // status: elem.status,
               dicoin: elem.dicoin,
               promotions: elem.promotions,
             };
@@ -1715,7 +1715,7 @@ export default {
         characteristics: [],
         characteristicsValues: {},
         optionName: options,
-        status: "active",
+        // status: "active",
         dicoin: null,
         promotions: [],
       });
@@ -1758,7 +1758,7 @@ export default {
           optionName: options,
           characteristics: [],
           characteristicsValues: {},
-          status: "active",
+          // status: "active",
           dicoin: null,
           promotions: [],
         },
@@ -1939,7 +1939,7 @@ export default {
             is_default: 1,
             is_popular: variant.is_popular,
             product_of_the_day: variant.product_of_the_day,
-            status: variant.status,
+            // status: variant.status,
             dicoin: variant.dicoin ? variant.dicoin : null,
             promotions:
               variant.promotions.length > 0

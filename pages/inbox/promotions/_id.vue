@@ -108,7 +108,6 @@
                           <div class="d-flex">
                             <el-form-item
                               class="form-block w-100 align-items-start"
-                              prop="name.ru"
                               style="max-width: 400px"
                               label="Короткое название"
                             >
@@ -211,7 +210,10 @@
 
                     <div class="category-input-grid">
                       <div class="form-block">
-                        <el-form-item :prop="`name.ru`" label="Полное название">
+                        <el-form-item
+                          :prop="`product_card_text.ru`"
+                          label="Полное название"
+                        >
                           <el-input
                             v-model="ruleForm.product_card_text[item.key]"
                             placeholder="Полное название..."
@@ -495,7 +497,7 @@ export default {
         id,
         ...rest
       } = this.ruleForm;
-      console.log(rest);
+      console.log(this.ruleForm);
 
       this.$refs[ruleForm].validate((valid) => {
         valid ? this.__POST_PROMOTIONS(rest) : false;
@@ -549,6 +551,7 @@ export default {
         this.$route.params.id
       );
       this.ruleForm = { ...data?.promotion };
+      console.log(this.ruleForm);
       if (data.promotion.lg_banner) {
         this.fileList.banner = [
           {

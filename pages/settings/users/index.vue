@@ -1,10 +1,6 @@
 <template lang="html">
   <div>
-    <TitleBlock
-      title="Permission groups"
-      :breadbrumb="['настройки']"
-      lastLink="Permission groups"
-    >
+    <TitleBlock title="Пользователи" :breadbrumb="['настройки']" lastLink="Пользователи">
       <div
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
@@ -17,7 +13,7 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
           <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Permission groups" />
+            <FormTitle title="Пользователи" />
           </div>
         </div>
         <div class="antd_table product_table">
@@ -59,14 +55,7 @@
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
-              @change="
-                (e) =>
-                  changePageSizeGlobal(
-                    e,
-                    '/settings/permissions-group',
-                    '__GET_PERMISSION_GROUPS'
-                  )
-              "
+              @change="(e) => changePageSizeGlobal(e, '/settings/users', '__GET_USERS')"
             >
               <el-option
                 v-for="item in pageSizes"
@@ -242,10 +231,10 @@ export default {
         id,
         "fetchPermissions/deletePermissionGroups",
         "Успешно удален",
-        "__GET_PERMISSION_GROUPS"
+        "__GET_USERS"
       );
     },
-    async __GET_PERMISSION_GROUPS() {
+    async __GET_USERS() {
       this.loading = true;
       const data = await this.$store.dispatch("fetchPermissions/getPermissionGroups", {
         ...this.$route.query,
@@ -273,7 +262,7 @@ export default {
         await this.$store.dispatch("fetchPermissions/postPermissionGroups", res);
         this.notification("Success", "Успешно добавлен", "success");
         this.handleOk();
-        this.__GET_PERMISSION_GROUPS();
+        this.__GET_USERS();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -286,7 +275,7 @@ export default {
         });
         this.notification("Success", "Успешно добавлен", "success");
         this.handleOk();
-        this.__GET_PERMISSION_GROUPS();
+        this.__GET_USERS();
       } catch (e) {
         this.statusFunc(e.response);
       }
@@ -319,15 +308,11 @@ export default {
   async mounted() {
     const permissionsData = await this.$store.dispatch("fetchPermissions/getPermissions");
     this.permissions = permissionsData?.permissions?.data;
-    this.getFirstData("/settings/permissions-group", "__GET_PERMISSION_GROUPS");
+    this.getFirstData("/settings/users", "__GET_USERS");
   },
   watch: {
     async current(val) {
-      this.changePagination(
-        val,
-        "/settings/permissions-group",
-        "__GET_PERMISSION_GROUPS"
-      );
+      this.changePagination(val, "/settings/users", "__GET_USERS");
     },
     visible(val) {
       if (val == false) {

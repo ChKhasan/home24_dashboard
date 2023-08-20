@@ -417,8 +417,7 @@ export default {
             amount: item.pivot.amount,
           };
         });
-        // this.data = data?.discount?.products
-        console.log(data);
+        this.data = data?.discount?.products;
       } catch (e) {
         console.log(e);
         // this.statusFunc(e.response);
