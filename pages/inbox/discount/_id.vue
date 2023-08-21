@@ -65,7 +65,10 @@
                       </div>
                       <div class="form-block required mb-0">
                         <el-form-item label="Сумма">
-                          <el-input v-model="amount" placeholder="Сумма..."></el-input>
+                          <el-input
+                            v-model="amount"
+                            placeholder="Сумма(в сумах)"
+                          ></el-input>
                         </el-form-item>
                       </div>
                       <div

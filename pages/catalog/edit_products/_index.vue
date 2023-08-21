@@ -208,7 +208,7 @@
                           </el-option>
                         </el-select>
                       </el-form-item>
-                      <div
+                      <!-- <div
                         class="outline-btn outline-light-blue-btn mt-1"
                         @click="showModal('brand')"
                       >
@@ -227,15 +227,15 @@
                             stroke-linejoin="round"
                           />
                         </svg>
-                      </div>
+                      </div> -->
                     </div>
                     <div class="bottom_text">Установить статус продукта</div>
                   </div>
                 </el-form>
               </div>
-              <div class="form-container">
+              <!-- <div class="form-container">
                 <ProductsStatistic />
-              </div>
+              </div> -->
             </div>
             <!-- Product right details -->
           </div>
@@ -349,7 +349,7 @@
                 <transition-group name="el-zoom-in-top" tag="ul">
                   <div
                     class="product-variant"
-                    v-for="item in element.variations"
+                    v-for="(item,itemIndex) in element.variations"
                     :key="item.id"
                   >
                     <div class="product_variant_block">
@@ -558,19 +558,19 @@
                           </span>
                         </div>
                       </div>
-                      <div class="variant_btns mb-1">
+                      <div class="variant_btns mb-3">
                         <div
-                          v-if="!item.constProduct"
+                          v-if="itemIndex != 0"
                           class="variant-btn variant-btn-delete mx-2"
                           @click="deleteValidation(element.id, item.id)"
                           v-html="removeIcon"
                         ></div>
-                        <div
+                        <!-- <div
                           class="variant-btn variant-btn-check"
                           @click="onChangeVariants(element.id, item.id)"
                         >
                           <a-radio :checked="item.is_default == 1"></a-radio>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -1729,14 +1729,15 @@ export default {
       }
     },
     deleteValidation(variantId, innerVarId) {
-      const product = this.findProductWithId(variantId);
-      if (product.variations.length > 1) {
-        product.variations = product.variations.filter((item) => item.id != innerVarId);
-      }
-      const checkDefault = product.variations.filter((item) => item.is_default == 1);
-      if (checkDefault.length == 0) {
-        product.variations[0].is_default = 1;
-      }
+      // const product = this.findProductWithId(variantId);
+      // if (product.variations.length > 1) {
+      //   product.variations = product.variations.filter((item) => item.id != innerVarId);
+      // }
+
+      // const checkDefault = product.variations.filter((item) => item.is_default == 1);
+      // if (checkDefault.length == 0) {
+      //   product.variations[0].is_default = 1;
+      // }
     },
     findProductWithId(variantId) {
       return this.ruleForm.products.find((element) => element.id == variantId);
@@ -1880,7 +1881,7 @@ export default {
         "fetchProducts/getProductsById",
         this.$route.params.index
       );
-      this.ruleForm.name = data.info.name;
+      this.ruleForm.name = data.product.name;
       this.ruleForm.desc = data.info.desc;
 
       this.ruleForm.brand_id = data.info.brand_id;

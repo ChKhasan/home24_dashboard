@@ -80,6 +80,10 @@
     position: static;
   }
 }
+.status-style .el-form--label-top .el-form-item__label {
+  display: inline-flex !important;
+  align-items: center;
+}
 .last-info {
   @include fontTTinterface(14px, 400);
   line-height: 18px;
@@ -95,7 +99,7 @@
 }
 .status-style {
   label {
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     position: relative;
     &::after {
