@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Отзывы" :breadbrumb="['Контент сайта']" lastLink="Отзывы">
       <div
+        v-if="checkAccess('feedbacks', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -42,10 +43,15 @@
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('feedbacks', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('feedbacks', 'DELETE')"
                 title="Are you sure delete this banner?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -67,6 +73,8 @@
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
+import authAccess from "@/mixins/authAccess";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -76,6 +84,7 @@ function getBase64(file) {
   });
 }
 export default {
+  mixins: [authAccess],
   // middleware: "auth",
   data() {
     return {

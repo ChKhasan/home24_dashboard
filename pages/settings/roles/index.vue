@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Роли" :breadbrumb="['Настройки']" lastLink="Роли">
       <div
+        v-if="checkAccess('roles', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/settings/roles/add')"
       >
@@ -46,12 +47,14 @@
 
             <span slot="id" slot-scope="text">
               <span
+                v-if="checkAccess('roles', 'PUT')"
                 class="action-btn"
                 @click="$router.push(`/settings/roles/${text}`)"
               >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('roles', 'DELETE')"
                 title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -73,12 +76,13 @@
 import TitleBlock from "../../../components/Title-block.vue";
 import SearchInput from "../../../components/form/Search-input.vue";
 import global from "../../../mixins/global";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import columns from "../../../mixins/columns";
 
 export default {
   layout: "toolbar",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       loading: false,

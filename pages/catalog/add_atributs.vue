@@ -9,11 +9,7 @@
       class="demo-ruleForm"
       action=""
     >
-      <TitleBlock
-        title="Атрибуты"
-        :breadbrumb="['Каталог']"
-        lastLink="Атрибуты"
-      >
+      <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
         <div class="d-flex">
           <span class="mx-3">
             <LayoutHeaderBtn
@@ -23,6 +19,7 @@
             />
           </span>
           <div
+            v-if="checkAccess('attributes', 'POST')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleForm')"
@@ -115,9 +112,7 @@
                                       />
                                     </svg>
                                   </div>
-                                  <div
-                                    class="variant-btn variant-btn-check cursor_drag"
-                                  >
+                                  <div class="variant-btn variant-btn-check cursor_drag">
                                     <a-icon
                                       type="drag"
                                       :style="{
@@ -151,9 +146,7 @@
                           >
                             <template v-slot:item="{ item }">
                               <drag class="item" :key="item.id">
-                                <div
-                                  class="d-flex align-items-center color_picker"
-                                >
+                                <div class="d-flex align-items-center color_picker">
                                   <el-color-picker
                                     popper-class="badges-color-picker"
                                     v-model="item.name[itemLang.key]"
@@ -188,23 +181,14 @@
                             </template>
                           </drop-list>
                         </el-form-item>
-                        <div
-                          class="variant_btns mb-1 mt-0"
-                          @click="addElement()"
-                        >
+                        <div class="variant_btns mb-1 mt-0" @click="addElement()">
                           <div class="variant-btn variant-btn-check">
                             <span v-html="addInnerValidatIcon"></span>
                           </div>
                         </div>
                       </div>
-                      <div
-                        class="d-flex justify-content-start"
-                        v-if="colorPickerHide"
-                      >
-                        <div
-                          class="create-inner-variant mt-0"
-                          @click="addElement()"
-                        >
+                      <div class="d-flex justify-content-start" v-if="colorPickerHide">
+                        <div class="create-inner-variant mt-0" @click="addElement()">
                           <span v-html="addInnerValidatIcon"></span>
                           Добавить опции
                         </div>
@@ -217,9 +201,9 @@
                         >
                       </span>
                       <span class="bottom_text"
-                        >Установите список ключевых слов, с которыми связана
-                        категория. Разделяйте ключевые слова, добавляя запятую
-                        между каждым ключевое слово.</span
+                        >Установите список ключевых слов, с которыми связана категория.
+                        Разделяйте ключевые слова, добавляя запятую между каждым ключевое
+                        слово.</span
                       >
                     </div>
                   </div>
@@ -238,11 +222,12 @@ import FormTitle from "../../components/Form-title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import { Drag, DropList } from "vue-easy-dnd";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status,authAccess],
   data() {
     return {
       colorPickerHide: true,

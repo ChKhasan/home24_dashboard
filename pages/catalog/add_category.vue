@@ -432,7 +432,7 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import InputBlock from "../../components/form/Input-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {

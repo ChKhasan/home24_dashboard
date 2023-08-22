@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Блог" :breadbrumb="['Контент сайта']" lastLink="Блог">
       <div
+        v-if="checkAccess('posts', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -46,10 +47,15 @@
             <span slot="numberId" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('posts', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('posts', 'DELETE')"
                 title="Are you sure delete this blog?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -156,11 +162,7 @@
                 <div class="ant-upload-text">Добавить изображение</div>
               </div>
             </a-upload>
-            <a-modal
-              :visible="previewVisible"
-              :footer="null"
-              @cancel="handleCancel"
-            >
+            <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
               <img alt="example" style="width: 100%" :src="previewImage" />
             </a-modal>
           </div>
@@ -195,6 +197,8 @@ import AddModal from "../../components/modals/Add-modal.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+import authAccess from "@/mixins/authAccess";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -205,6 +209,7 @@ function getBase64(file) {
 }
 export default {
   // middleware: "auth",
+  mixins: [authAccess],
   data() {
     return {
       headers: {
@@ -428,9 +433,7 @@ export default {
       }
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_POSTS(newData)
-            : this.__POST_POSTS(newData);
+          this.editId != "" ? this.__EDIT_POSTS(newData) : this.__POST_POSTS(newData);
         } else {
           return false;
         }
@@ -528,10 +531,7 @@ export default {
       this.loading = false;
       this.totalPage = data.posts?.total;
       this.posts = data.posts?.data;
-      const pageIndex = this.indexPage(
-        data?.posts?.current_page,
-        data?.posts?.per_page
-      );
+      const pageIndex = this.indexPage(data?.posts?.current_page, data?.posts?.per_page);
       this.posts = this.posts.map((item, index) => {
         return {
           ...item,

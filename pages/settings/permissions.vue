@@ -6,6 +6,7 @@
           <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
         </span>
         <div
+          v-if="checkAccess('permissions', 'PUT')"
           class="add-btn add-header-btn add-header-btn-padding btn-primary"
           type="submit"
           @click="submitForm('ruleForm')"
@@ -72,6 +73,7 @@
                 </el-form-item>
                 <div class="variant_btns mb-1 mt-0">
                   <div
+                    v-if="checkAccess('permissions', 'DELETE')"
                     class="variant-btn variant-btn-delete mx-2"
                     @click="deleteElement(item)"
                   >
@@ -110,11 +112,12 @@
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       activeName: "Русский",
@@ -137,10 +140,6 @@ export default {
         {
           value: "DELETE",
           label: "DELETE",
-        },
-        {
-          value: "",
-          label: "DISABLED",
         },
       ],
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
@@ -249,7 +248,7 @@ export default {
     async __GET_PERMISSIONS() {
       try {
         const data = await this.$store.dispatch("fetchPermissions/getPermissions");
-        this.ruleForm = data?.permissions?.data.map((item, index) => {
+        this.ruleForm = data?.permissions.map((item, index) => {
           const { created_at, groups, updated_at, ...rest } = item;
           if (rest.methods) {
             return { ...rest, indexId: index + 1 };
@@ -270,7 +269,7 @@ export default {
     },
 
     toBack() {
-      this.$router.push("/contents/top-menu");
+      this.$router.go(-1);
     },
   },
   watch: {},

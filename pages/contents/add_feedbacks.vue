@@ -8,30 +8,19 @@
       label-width="120px"
       class="demo-ruleForm"
     >
-      <TitleBlock
-        title="Feedback"
-        :breadbrumb="['Контент сайта']"
-        lastLink="Feedback"
-      >
+      <TitleBlock title="Feedback" :breadbrumb="['Контент сайта']" lastLink="Feedback">
         <div class="d-flex">
           <span class="mx-3">
-            <LayoutHeaderBtn
-              name="Отмена"
-              :headerbtnCallback="toBack"
-              :light="true"
-            />
+            <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
           </span>
           <a-button
+            v-if="checkAccess('feedbacks', 'POST')"
             class="add-btn add-header-btn btn-primary d-flex align-items-center"
             type="primary"
             @click="submitForm('ruleForm')"
             :loading="uploadLoading"
           >
-            <span
-              class="svg-icon"
-              v-html="addIcon"
-              v-if="!uploadLoading"
-            ></span>
+            <span class="svg-icon" v-html="addIcon" v-if="!uploadLoading"></span>
             Добавить
           </a-button>
         </div>
@@ -47,7 +36,11 @@
 
             <div class="form-block required">
               <el-form-item prop="company" label="Company">
-                <el-input type="text" v-model="ruleForm.company" />
+                <el-input
+                  type="text"
+                  placeholder="Company name..."
+                  v-model="ruleForm.company"
+                />
               </el-form-item>
             </div>
             <div class="form-block required">
@@ -76,11 +69,7 @@
                     <div class="ant-upload-text">Добавить изображение</div>
                   </div>
                 </a-upload>
-                <a-modal
-                  :visible="previewVisible"
-                  :footer="null"
-                  @cancel="handleCancel"
-                >
+                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
                   <img alt="example" style="width: 100%" :src="previewImage" />
                 </a-modal>
               </div>
@@ -102,11 +91,7 @@
                     <div class="ant-upload-text">Добавить изображение</div>
                   </div>
                 </a-upload>
-                <a-modal
-                  :visible="previewVisible"
-                  :footer="null"
-                  @cancel="handleCancel"
-                >
+                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
                   <img alt="example" style="width: 100%" :src="previewImage" />
                 </a-modal>
               </div>
@@ -120,6 +105,8 @@
 <script>
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
+import authAccess from "@/mixins/authAccess";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -130,6 +117,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
+  mixins: [authAccess],
   data() {
     return {
       headers: {

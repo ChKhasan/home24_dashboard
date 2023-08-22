@@ -18,6 +18,7 @@
             <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
           </span>
           <div
+            v-if="checkAccess('orders', 'PUT')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleForm')"
@@ -163,9 +164,11 @@ import AddBtn from "../../../components/form/Add-btn.vue";
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import Title from "../../../components/Title.vue";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
+  mixins: [authAccess],
   data() {
     return {
       status: {

@@ -105,12 +105,14 @@
 
           <span slot="id" slot-scope="text">
             <span
+              v-if="checkAccess('products', 'PUT')"
               class="action-btn"
               @click="$router.push(`/catalog/edit_products/${text}`)"
               v-html="editIcon"
             >
             </span>
             <a-popconfirm
+              v-if="checkAccess('products', 'DELETE')"
               title="Are you sure delete this product?"
               ok-text="Yes"
               cancel-text="No"
@@ -156,11 +158,11 @@ import SearchInput from "../../components/form/Search-input.vue";
 import StatusFilter from "../../components/form/Status-filter.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
 import columns from "../../mixins/columns";
-
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 export default {
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       brandSelect: [

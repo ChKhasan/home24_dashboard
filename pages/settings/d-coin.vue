@@ -18,6 +18,7 @@
             <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
           </span>
           <div
+            v-if="checkAccess('translations', 'PUT')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleFormDiCoin')"
@@ -208,9 +209,11 @@ import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import Title from "../../components/Title.vue";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
+  mixins: [authAccess],
   data() {
     return {
       activeName: "Русский",

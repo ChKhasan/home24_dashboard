@@ -6,6 +6,7 @@
           <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
         </span>
         <a-button
+          v-if="checkAccess('categories', 'PUT')"
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="submitForm('ruleForm')"
@@ -398,6 +399,7 @@ import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { Drag, DropList } from "vue-easy-dnd";
 import status from "../../../mixins/status";
+import authAccess from "@/mixins/authAccess";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -409,7 +411,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       headers: {
@@ -531,19 +533,19 @@ export default {
       },
       editorOption: {
         theme: "snow",
-        modules: {
-          toolbar: [
-            [
-              {
-                size: [],
-              },
-            ],
-            ["bold", "italic", "underline", "strike"],
+        // modules: {
+        //   toolbar: [
+        //     [
+        //       {
+        //         size: [],
+        //       },
+        //     ],
+        //     ["bold", "italic", "underline", "strike"],
 
-            ["image"],
-            ["code-block"],
-          ],
-        },
+        //     ["image"],
+        //     ["code-block"],
+        //   ],
+        // },
       },
       option: {
         theme: "bubble",
@@ -588,7 +590,7 @@ export default {
     addElement(type) {
       this[type].push({
         name: "",
-        id: Math.max(...this[type].map((o) => o.id)) + 1,
+        id: this[type].length > 0 ? Math.max(...this[type].map((o) => o.id)) + 1 : 1,
       });
     },
 
@@ -721,6 +723,7 @@ export default {
     async __GET_ATRIBUTES() {
       const data = await this.$store.dispatch("fetchAtributes/getAllAtributes");
       this.atributes = data.attributes;
+      console.log(this.atributes);
       this.allAtributes = data.attributes;
       console.log(data.attributes);
       this.filterElement("attributes");

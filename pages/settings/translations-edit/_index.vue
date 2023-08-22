@@ -9,6 +9,7 @@
           Отмена
         </div>
         <a-button
+          v-if="checkAccess('translations', 'PUT')"
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="saveTranslations"
@@ -73,6 +74,7 @@
 
           <span slot="id" slot-scope="text">
             <a-popconfirm
+              v-if="checkAccess('translations', 'DELETE')"
               title="Are you sure delete this row?"
               ok-text="Yes"
               cancel-text="No"
@@ -121,7 +123,7 @@
 <script>
 import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
 import global from "../../../mixins/global";
 import authAccess from "../../../mixins/authAccess";
 import "quill/dist/quill.core.css";

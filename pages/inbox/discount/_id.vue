@@ -19,6 +19,7 @@
             />
           </span>
           <div
+            v-if="checkAccess('discount', 'PUT')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleFormDiscount')"
@@ -206,12 +207,13 @@ import FormTitle from "../../../components/Form-title.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import { Drag, DropList } from "vue-easy-dnd";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import debounce from "lodash/debounce";
 import moment from "moment";
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     this.lastFetchId = 0;
     this.fetchUser = debounce(this.fetchUser, 800);
@@ -411,7 +413,7 @@ export default {
           this.$route.params.id
         );
         this.ruleForm = { ...data?.discount };
-        console.log(this.ruleForm);
+        console.log(this.ruleForm, "ruleform");
         // this.ruleForm.start.replace()
         this.ruleForm.products = data?.discount?.products.map((item) => {
           return {

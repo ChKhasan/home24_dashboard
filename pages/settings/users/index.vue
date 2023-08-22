@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Пользователи" :breadbrumb="['настройки']" lastLink="Пользователи">
       <div
+        v-if="checkAccess('users', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -18,12 +19,13 @@
         </div>
         <div class="antd_table product_table">
           <a-table
-            :columns="columnPermissionGroups"
+            :columns="columnUsers"
             :data-source="group"
             :pagination="false"
             align="center"
             :loading="loading"
           >
+            <span slot="key" slot-scope="text">#{{ text }}</span>
             <span
               @click="$router.push('/home/customer-info/123')"
               slot="title"
@@ -34,10 +36,15 @@
             </span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('users', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('users', 'DELETE')"
                 title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -50,29 +57,6 @@
               </a-popconfirm>
             </span>
           </a-table>
-          <div class="d-flex justify-content-between mt-4">
-            <el-select
-              v-model="params.pageSize"
-              class="table-page-size"
-              placeholder="Select"
-              @change="(e) => changePageSizeGlobal(e, '/settings/users', '__GET_USERS')"
-            >
-              <el-option
-                v-for="item in pageSizes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
-            <a-pagination
-              class="table-pagination"
-              :simple="false"
-              v-model.number="current"
-              :total="totalPage"
-              :page-size.sync="params.pageSize"
-            />
-          </div>
         </div>
       </div>
     </div>
@@ -87,42 +71,52 @@
         action=""
       >
         <div>
-          <div class="form-block required">
-            <div>
-              <label for="">Название </label>
+          <el-form-item
+            prop="username"
+            label="Имя"
+            class="form-block required align-items-start"
+          >
+            <el-input
+              type="text"
+              placeholder="Имя..."
+              v-model="ruleForm.username"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            prop="password"
+            label="Пароль"
+            class="form-block required align-items-start"
+          >
+            <el-input
+              type="text"
+              placeholder="Пароль..."
+              v-model="ruleForm.password"
+            ></el-input>
+          </el-form-item>
+          <el-form-item
+            class="form-block align-items-start mt-3"
+            prop="role_id"
+            label="Роли"
+          >
+            <div class="d-flex align-items-center" style="gap: 16px">
+              <a-select
+                v-model="ruleForm.role_id"
+                placeholder="Роли..."
+                style="width: 100%"
+              >
+                <a-select-opt-group label="Роли" v-if="roles.length > 0">
+                  <a-select-option v-for="d in roles" :value="d.id" :key="d.id">
+                    {{ d?.name }}
+                  </a-select-option>
+                </a-select-opt-group>
+              </a-select>
+              <div
+                @click="$router.push('/settings/roles')"
+                class="outline-btn outline-light-blue-btn"
+                v-html="plusCategoryIcon"
+              ></div>
             </div>
-            <el-form-item prop="name">
-              <el-input
-                type="text"
-                placeholder="Зоговолок"
-                v-model="ruleForm.name"
-              ></el-input>
-            </el-form-item>
-            <el-form-item
-              class="form-block align-items-start mt-3"
-              prop="name"
-              label="Permissions"
-            >
-              <div class="d-flex align-items-center" style="gap: 16px">
-                <a-select
-                  v-model="ruleForm.permissions"
-                  placeholder="input search text"
-                  style="width: 100%"
-                >
-                  <a-select-opt-group label="Permissions" v-if="permissions.length > 0">
-                    <a-select-option v-for="d in permissions" :value="d.id" :key="d.id">
-                      {{ d?.name }}
-                    </a-select-option>
-                  </a-select-opt-group>
-                </a-select>
-                <div
-                  @click="$router.push('/settings/permissions')"
-                  class="outline-btn outline-light-blue-btn"
-                  v-html="plusCategoryIcon"
-                ></div>
-              </div>
-            </el-form-item>
-          </div>
+          </el-form-item>
         </div>
       </el-form>
       <template slot="footer">
@@ -154,12 +148,13 @@ import Title from "../../../components/Title.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import FormTitle from "../../../components/Form-title.vue";
 import global from "../../../mixins/global";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import columns from "../../../mixins/columns";
 
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       visible: false,
@@ -170,16 +165,30 @@ export default {
       loading: true,
       loadingBtn: false,
       ruleForm: {
-        name: "",
+        username: "",
         password: "",
-        role_id: null,
+        role_id: [],
       },
       fetching: false,
-      permissions: [],
+      roles: [],
       editId: "",
       group: [],
       rules: {
-        name: [
+        username: [
+          {
+            required: true,
+            message: "Это поле обязательна",
+            trigger: "change",
+          },
+        ],
+        password: [
+          {
+            required: true,
+            message: "Это поле обязательна",
+            trigger: "change",
+          },
+        ],
+        role_id: [
           {
             required: true,
             message: "Это поле обязательна",
@@ -200,8 +209,8 @@ export default {
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
           this.editId != ""
-            ? this.__EDIT_PERMISSION_GROUP(this.ruleForm)
-            : this.__POST_PREMISSION_GROUP(this.ruleForm);
+            ? this.__EDIT_USER(this.ruleForm)
+            : this.__POST_USER(this.ruleForm);
         } else {
           return false;
         }
@@ -214,52 +223,45 @@ export default {
       this.showModal();
       this.editId = "";
     },
+    async __GET_ADMINS_BY_ID(res) {
+      const data = await this.$store.dispatch("fetchAdmins/getAdminsById", res);
+      const { id, created_at, updated_at, ...rest } = data?.user;
+      this.ruleForm = { ...rest };
+      this.showModal();
+    },
     editPost(id) {
       this.editId = id;
-      const data = this.group.find((item) => item.id == id);
-      //   this.slug = data.slug;
-      this.ruleForm = {
-        name: data.name,
-        permissions: data.permissions.map((item) => item.id),
-      };
-      this.showModal();
-
-      console.log(this.ruleForm);
+      this.__GET_ADMINS_BY_ID(id);
     },
     deletePost(id) {
       this.__DELETE_GLOBAL(
         id,
-        "fetchPermissions/deletePermissionGroups",
+        "fetchAdmins/deleteAdmins",
         "Успешно удален",
         "__GET_USERS"
       );
     },
     async __GET_USERS() {
       this.loading = true;
-      const data = await this.$store.dispatch("fetchPermissions/getPermissionGroups", {
+      const data = await this.$store.dispatch("fetchAdmins/getAdmins", {
         ...this.$route.query,
       });
-      this.group = data.groups?.data;
+      this.group = data.users;
       this.loading = false;
-      this.totalPage = data.groups?.total;
-      const pageIndex = this.indexPage(
-        data?.groups?.current_page,
-        data?.groups?.per_page
-      );
       this.group = this.group.map((item, index) => {
         return {
           ...item,
           numberId: item.id,
-          key: index + pageIndex,
+          key: index + 1,
         };
       });
     },
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
     },
-    async __POST_PREMISSION_GROUP(res) {
+    async __POST_USER(res) {
       try {
-        await this.$store.dispatch("fetchPermissions/postPermissionGroups", res);
+        await this.$store.dispatch("fetchAdmins/postAdmins", res);
         this.notification("Success", "Успешно добавлен", "success");
         this.handleOk();
         this.__GET_USERS();
@@ -267,9 +269,9 @@ export default {
         this.statusFunc(e.response);
       }
     },
-    async __EDIT_PERMISSION_GROUP(res) {
+    async __EDIT_USER(res) {
       try {
-        await this.$store.dispatch("fetchPermissions/editPermissionGroups", {
+        await this.$store.dispatch("fetchAdmins/editAdmins", {
           id: this.editId,
           data: res,
         });
@@ -281,33 +283,18 @@ export default {
       }
     },
     emptyData() {
-      this.ruleForm.name = "";
+      this.ruleForm = {
+        username: "",
+        password: "",
+        role_id: [],
+      };
       this.editId = "";
     },
-    async handleSearch(value) {
-      this.fetching = true;
-      if (value.length > 2) {
-        const permissionsData = await this.$store.dispatch(
-          "fetchPermissions/getPermissions",
-          {
-            search: value,
-          }
-        );
-        this.permissions = permissionsData?.permissions?.data;
-        this.fetching = false;
-      }
-    },
-    // handleChange(value, id) {
-    //   console.log(value);
-    //   let obj = this.ruleForm.find((item) => item.indexId == id);
-    //   obj.category_id = value;
-    //   console.log(obj);
-    // },
   },
 
   async mounted() {
-    const permissionsData = await this.$store.dispatch("fetchPermissions/getPermissions");
-    this.permissions = permissionsData?.permissions?.data;
+    const rolesData = await this.$store.dispatch("fetchRoles/getRoles");
+    this.roles = rolesData?.roles;
     this.getFirstData("/settings/users", "__GET_USERS");
   },
   watch: {

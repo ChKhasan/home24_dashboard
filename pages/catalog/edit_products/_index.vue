@@ -9,6 +9,7 @@
           Отмена
         </div>
         <a-button
+          v-if="checkAccess('products', 'PUT')"
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="submitForm('ruleForm')"
@@ -349,7 +350,7 @@
                 <transition-group name="el-zoom-in-top" tag="ul">
                   <div
                     class="product-variant"
-                    v-for="(item,itemIndex) in element.variations"
+                    v-for="(item, itemIndex) in element.variations"
                     :key="item.id"
                   >
                     <div class="product_variant_block">
@@ -441,7 +442,7 @@
                               :key="d.id"
                               :value="d?.id"
                             >
-                              {{ d?.name?.ru }}
+                              {{ d?.short_name?.ru }}
                             </a-select-option>
                           </a-select>
                         </el-form-item>
@@ -1051,6 +1052,7 @@ import "quill/dist/quill.bubble.css";
 import AddBrandModal from "../../../components/products/Add-brand-modal.vue";
 import AddCategoryModal from "../../../components/products/Add-category-modal.vue";
 import status from "../../../mixins/status";
+import authAccess from "@/mixins/authAccess";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -1062,7 +1064,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       headers: {
@@ -1733,7 +1735,6 @@ export default {
       // if (product.variations.length > 1) {
       //   product.variations = product.variations.filter((item) => item.id != innerVarId);
       // }
-
       // const checkDefault = product.variations.filter((item) => item.is_default == 1);
       // if (checkDefault.length == 0) {
       //   product.variations[0].is_default = 1;

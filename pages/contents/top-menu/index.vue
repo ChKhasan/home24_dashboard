@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Топ меню" :breadbrumb="['Контент сайта']" lastLink="Топ меню">
       <div
+        v-if="checkAccess('top-bars', 'PUT')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/contents/top-menu/add')"
       >
@@ -41,6 +42,7 @@
                 <img :src="editIcon" alt="" />
               </span> -->
               <a-popconfirm
+                v-if="checkAccess('top-bars', 'DELETE')"
                 title="Are you sure delete this group?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -85,12 +87,13 @@
 import TitleBlock from "../../../components/Title-block.vue";
 import FormTitle from "../../../components/Form-title.vue";
 import global from "../../../mixins/global";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import columns from "../../../mixins/columns";
 
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       loading: true,

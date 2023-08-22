@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Значки" :breadbrumb="['Контент сайта']" lastLink="Значки">
       <div
+        v-if="checkAccess('badges', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -31,10 +32,15 @@
             <span slot="created_at" slot-scope="text">{{ text }}</span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('badges', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('badges', 'DELETE')"
                 title="Are you sure delete this brand?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -189,12 +195,14 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
 import debounce from "lodash/debounce";
+import authAccess from "@/mixins/authAccess";
+
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     this.lastFetchId = 0;
     this.fetchUser = debounce(this.fetchUser, 800);

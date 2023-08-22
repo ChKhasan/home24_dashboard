@@ -2,6 +2,11 @@ export const state = () => ({
   showcases: [],
   changeShowcases: true,
   authenticated: false,
+  permissions: [],
+  operator: {
+    name: "",
+  },
+  role: null,
   ordersCount: {
     all: 0,
     accepted: 0,
@@ -14,12 +19,24 @@ export const state = () => ({
 });
 
 export const mutations = {
+  permissions(state, payload) {
+    console.log(payload);
+    if (payload) {
+      state.permissions = payload;
+    }
+  },
   logIn(state) {
     state.authenticated = true;
+  },
+  checkRole(state, payload) {
+    state.role = payload;
   },
   showcases(state, payload) {
     state.showcases = payload.data;
     state.changeShowcases = payload.change;
+  },
+  takeOperatorName(state, payload) {
+    state.operator = payload;
   },
   ordersCount(state, payload) {
     state.ordersCount.all =
@@ -49,5 +66,23 @@ export const actions = {
       },
     });
     commit("showcases", { data: res?.showcases, change: payload });
+  },
+  async getPermissions({ commit }, payload) {
+    try {
+      const res = await this.$axios.$post(
+        `/auth/me`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+          },
+        }
+      );
+      commit("permissions", res?.permissions);
+      commit("checkRole", res?.role);
+      commit("takeOperatorName", res?.me);
+    } catch (e) {
+      localStorage.removeItem("auth_token");
+    }
   },
 };

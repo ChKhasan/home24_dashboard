@@ -3,6 +3,7 @@
     <TitleBlock title="Переводы" :breadbrumb="['Настройки сайта']" lastLink="Переводы">
       <div class="d-flex">
         <a-button
+          v-if="checkAccess('translations', 'POST')"
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="addGroup"
@@ -85,11 +86,12 @@
             <span
               class="action-btn"
               v-html="editIcon"
-              v-if="checkAccess('translates', 'put')"
+              v-if="checkAccess('translations', 'PUT')"
               @click="editAction(text)"
             >
             </span>
             <a-popconfirm
+              v-if="checkAccess('translations', 'DELETE')"
               title="Are you sure delete this row?"
               ok-text="Yes"
               cancel-text="No"
@@ -230,9 +232,9 @@
 <script>
 import SearchInput from "../../components/form/Search-input.vue";
 import TitleBlock from "../../components/Title-block.vue";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import global from "../../mixins/global";
-import authAccess from "../../mixins/authAccess";
+import authAccess from "@/mixins/authAccess";
 
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
@@ -341,7 +343,7 @@ export default {
   async mounted() {
     this.getFirstData("/settings/translations", "__GET_TRANSLATIONS");
     this.__GET_TRANSLATE_GROUPS();
-    this.checkAllActions("translates");
+    // this.checkAllActions("translates");
   },
   methods: {
     async copyText(name) {

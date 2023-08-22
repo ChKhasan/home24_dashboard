@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
       <div
+        v-if="checkAccess('attributes', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/catalog/add_atributs')"
       >
@@ -62,12 +63,14 @@
             <span slot="customTitle"></span>
             <span slot="id" slot-scope="text">
               <span
+                v-if="checkAccess('attributes', 'PUT')"
                 class="action-btn"
                 @click="$router.push(`/catalog/edit_atributs/${text}`)"
               >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('attributes', 'DELETE')"
                 title="Are you sure delete this atribut?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -118,12 +121,13 @@ import TitleBlock from "../../components/Title-block.vue";
 import Title from "../../components/Title.vue";
 import SearchInput from "../../components/form/Search-input.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       loading: true,

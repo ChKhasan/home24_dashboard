@@ -65,7 +65,7 @@
             {{ tags }}
           </span>
           <span slot="btns" slot-scope="text">
-            <span class="action-btn" @click="$router.push(`/orders/${text}/edit`)">
+           <span class="action-btn" v-if="checkAccess('orders', 'PUT')" @click="$router.push(`/orders/${text}/edit`)" >
               <img :src="editIcon" alt="" />
             </span>
           </span>
@@ -107,9 +107,10 @@ import moment from "moment";
 import global from "../../mixins/global";
 import columns from "../../mixins/columns";
 import OrderStatusMenu from "../../components/OrderStatusMenu.vue";
+import authAccess from "@/mixins/authAccess";
 export default {
   layout: "toolbar",
-  mixins: [global, columns],
+  mixins: [global, columns,authAccess],
   data() {
     return {
       editIcon: require("../../assets/svg/components/edit-icon.svg"),

@@ -6,6 +6,7 @@
       lastLink="Permission groups"
     >
       <div
+        v-if="checkAccess('permission-groups', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -38,10 +39,15 @@
             </span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('permission-groups', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('permission-groups', 'DELETE')"
                 title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -172,12 +178,13 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       visible: false,
@@ -310,7 +317,7 @@ export default {
             search: value,
           }
         );
-        this.permissions = permissionsData?.permissions?.data;
+        this.permissions = permissionsData?.permissions;
         this.fetching = false;
       }
     },
@@ -324,7 +331,7 @@ export default {
 
   async mounted() {
     const permissionsData = await this.$store.dispatch("fetchPermissions/getPermissions");
-    this.permissions = permissionsData?.permissions?.data;
+    this.permissions = permissionsData?.permissions;
     this.getFirstData("/settings/permissions-group", "__GET_PERMISSION_GROUPS");
   },
   watch: {

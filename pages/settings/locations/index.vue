@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Филиалы" :breadbrumb="['настройки']" lastLink="Филиалы">
       <div
+        v-if="checkAccess('branches', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -29,10 +30,15 @@
             </span>
             <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('branches', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('branches', 'DELETE')"
                 title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -145,6 +151,24 @@
           <el-form-item
             class="w-100 form-block required align-items-start"
             label="Регионы"
+            v-if="ruleForm.region_id"
+          >
+            <a-select
+              :value="ruleForm.region_id"
+              show-search
+              placeholder="Регионы"
+              style="width: 100%"
+              @change="onChangeRegion"
+            >
+              <a-select-option v-for="d in regions" :key="d.id">
+                {{ d.name.ru }}
+              </a-select-option>
+            </a-select>
+          </el-form-item>
+          <el-form-item
+            class="w-100 form-block required align-items-start"
+            label="Регионы"
+            v-else
           >
             <a-select
               show-search
@@ -187,12 +211,13 @@ import Title from "../../../components/Title.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import FormTitle from "../../../components/Form-title.vue";
 import global from "../../../mixins/global";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import columns from "../../../mixins/columns";
 import moment from "moment";
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       fetching: false,
@@ -351,7 +376,6 @@ export default {
         Number(data.branch?.work_time.split("-")[1].split(":")[1])
       );
       this.showModal();
-      console.log(this.ruleForm);
     },
     deletePost(id) {
       this.__DELETE_GLOBAL(
@@ -408,8 +432,18 @@ export default {
       }
     },
     emptyData() {
-      this.ruleForm.name = "";
+      this.ruleForm = {
+        name: {
+          ru: "",
+          uz: "",
+          en: "",
+        },
+        work_time: "",
+        phone_number: "",
+        region_id: null,
+      };
       this.editId = "";
+      console.log(this.ruleForm, "clear");
     },
     async handleSearch(value) {
       this.fetching = true;

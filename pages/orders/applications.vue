@@ -13,9 +13,7 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div
-          class="d-flex justify-content-between align-items-center card_header"
-        >
+        <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
             <SearchInput placeholder="Поиск" @changeSearch="changeSearch" />
             <span></span>
@@ -83,6 +81,7 @@
 
           <span slot="id" slot-scope="text">
             <a-popconfirm
+              v-if="checkAccess('applications', 'DELETE')"
               title="Are you sure delete this application ?"
               ok-text="Yes"
               cancel-text="No"
@@ -100,11 +99,7 @@
             placeholder="Select"
             @change="
               ($event) =>
-                changePageSizeGlobal(
-                  $event,
-                  '/orders/applications',
-                  '__GET_PRODUCTS'
-                )
+                changePageSizeGlobal($event, '/orders/applications', '__GET_PRODUCTS')
             "
           >
             <el-option
@@ -132,12 +127,13 @@ import SearchInput from "../../components/form/Search-input.vue";
 import StatusFilter from "../../components/form/Status-filter.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
 import moment from "moment";
+import authAccess from "@/mixins/authAccess";
 
 export default {
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       brandSelect: [
@@ -185,12 +181,9 @@ export default {
     moment,
     async __GET_PRODUCTS() {
       this.loading = true;
-      this.products = await this.$store.dispatch(
-        "fetchApplications/getOneClickOrders",
-        {
-          ...this.$route.query,
-        }
-      );
+      this.products = await this.$store.dispatch("fetchApplications/getOneClickOrders", {
+        ...this.$route.query,
+      });
       console.log(this.products);
       this.totalPage = this.products.products?.total;
       this.loading = false;

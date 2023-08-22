@@ -6,6 +6,7 @@
           <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
         </span>
         <div
+          v-if="checkAccess('top-bars', 'PUT')"
           class="add-btn add-header-btn add-header-btn-padding btn-primary"
           type="submit"
           @click="submitForm('ruleFormBar')"
@@ -50,7 +51,7 @@
                             :prop="`current_id`"
                             class="form-block required mb-0 w-100 align-items-start"
                             label="Категория или акция"
-                            style="max-width: 387px"
+                            style="max-width: 40%"
                           >
                             <a-select
                               show-search
@@ -81,7 +82,17 @@
                                   :value="d.id"
                                   :key="d.id"
                                 >
-                                  {{ d?.name?.ru }}
+                                  <span v-if="d?.parent?.parent?.name?.ru">
+                                    {{
+                                      `${
+                                        d?.parent?.parent && d?.parent?.parent?.name?.ru
+                                      }/`
+                                    }}
+                                  </span>
+                                  <span v-if="d?.parent && d?.parent?.name?.ru">
+                                    {{ `${d?.parent && d?.parent?.name?.ru}/` }}
+                                  </span>
+                                  <span style="color: #3699ff">{{ d?.name?.ru }}</span>
                                 </a-select-option>
                               </a-select-opt-group>
                               <a-select-opt-group
@@ -108,15 +119,50 @@
                               placeholder="Короткое имя..."
                             ></el-input>
                           </el-form-item>
-                          <el-form-item
+                          <div
+                            class="clearfix-img form-block required mb-0 w-100 align-items-start"
+                          >
+                            <label for="">icon</label>
+                            <div class="mb-0">
+                              <a-upload
+                                class="icon_upload-top"
+                                action="https://api.e-shop.ndc.uz/api/admin/files/upload"
+                                :headers="headers"
+                                list-type="picture-card"
+                                :file-list="item?.fileList"
+                                @preview="handlePreview"
+                                @change="
+                                  ($event) => handleChangeImg($event, item.indexId)
+                                "
+                              >
+                                <div
+                                  v-if="item?.fileList.length < 1"
+                                  class="d-flex align-items-center"
+                                >
+                                  <span v-html="addImgIcon"></span>
+                                  <div class="ant-upload-text mx-2 mt-0">Icon</div>
+                                </div>
+                              </a-upload>
+                              <a-modal
+                                :visible="previewVisible"
+                                :footer="null"
+                                @cancel="handleCancel"
+                              >
+                                <img
+                                  alt="example"
+                                  style="width: 100%"
+                                  :src="previewImage"
+                                />
+                              </a-modal>
+                            </div>
+                          </div>
+                          <!-- <el-form-item
                             label="icon"
                             class="form-block required mb-0 w-100 align-items-start"
                           >
-                            <el-input
-                              v-model="item.icon_svg"
-                              placeholder="Svg..."
-                            ></el-input>
-                          </el-form-item>
+                  
+                            
+                          </el-form-item> -->
                           <div class="mb-0 form-block" style="line-height: 40px">
                             <label for="">Цвет 1</label>
                             <el-color-picker
@@ -139,8 +185,9 @@
                             ></el-color-picker>
                           </div>
 
-                          <div class="variant_btns mb-1 mt-0">
+                          <div class="d-flex align-items-center mb-1 mt-0">
                             <div
+                              v-if="checkAccess('top-bars', 'DELETE')"
                               class="variant-btn variant-btn-delete mx-2"
                               @click="deleteElement(item)"
                             >
@@ -195,19 +242,33 @@
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
-import status from "../../../mixins/status";
-
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+      previewVisible: false,
+      previewImage: "",
       activeName: "Русский",
       multiSelectError: true,
       fetching: false,
       categories: [],
       promotions: [],
       data: [],
+      addImgIcon: require("../../../assets/svg/components/add-img-icon.svg?raw"),
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       lang: [
@@ -278,6 +339,7 @@ export default {
             uz: "",
             en: "",
           },
+          fileList: [],
           current_id: null,
           promotion_id: null,
           category_id: null,
@@ -331,6 +393,7 @@ export default {
           uz: "",
           en: "",
         },
+        fileList: [],
         promotion_id: null,
         category_id: null,
         icon: null,
@@ -360,7 +423,6 @@ export default {
                 category_id: Number(item.current_id.split("_")[1]),
               };
             } else if (item.current_id.includes("promo")) {
-              console.log(item.current_id, "sdsfsdfsdfjshdfsdhfghsdghfgsdhfg");
               return {
                 ...rest,
                 category_id: null,
@@ -392,7 +454,6 @@ export default {
       // });
     },
     async handleSearch(value) {
-      console.log(value);
       this.fetching = true;
       if (value.length > 2) {
         const categoriesData = await this.$store.dispatch(
@@ -411,10 +472,8 @@ export default {
       }
     },
     handleChange(value, id) {
-      console.log(value);
       let obj = this.ruleForm.find((item) => item.indexId == id);
       obj.category_id = value;
-      console.log(obj);
     },
     async __POST_TOP_MENU(data) {
       try {
@@ -434,10 +493,29 @@ export default {
             ...item,
             indexId: index + 1,
             position: index + 1,
+            fileList: [],
             current_id: item.category_id
               ? `cat_${item.category_id}`
               : `promo_${item.promotion_id}`,
           };
+        });
+        this.ruleForm = this.ruleForm.map((item, index) => {
+          if (item.icon_svg) {
+            return {
+              ...item,
+              fileList: [
+                {
+                  uid: "-1",
+                  name: "image.png",
+                  status: "done",
+                  oldImg: true,
+                  url: item.icon_svg,
+                },
+              ],
+            };
+          } else {
+            return item;
+          }
         });
         this.categories = data?.bars?.data
           .filter((elem) => elem.category_id && elem.category)
@@ -484,6 +562,25 @@ export default {
         }
       }
     },
+    handleCancel() {
+      this.previewVisible = false;
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = await getBase64(file.originFileObj);
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    async handleChangeImg({ fileList }, id) {
+      let currentObj = this.ruleForm.find((item) => item.indexId == id);
+      currentObj.fileList = fileList;
+      if (fileList[0]?.response?.path) {
+        currentObj.icon_svg = fileList[0]?.response?.path;
+      } else {
+        currentObj.icon_svg = "";
+      }
+    },
     toBack() {
       this.$router.push("/contents/top-menu");
     },
@@ -523,5 +620,15 @@ export default {
 }
 .item {
   pointer-events: painted;
+}
+.icon_upload-top .ant-upload-list-picture-card-container {
+  height: 40px;
+}
+.icon_upload-top .ant-upload-select-picture-card,
+.icon_upload-top .ant-upload-list-picture-card .ant-upload-list-item {
+  height: 40px;
+}
+.clearfix-img {
+  max-width: 104px;
 }
 </style>

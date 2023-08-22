@@ -16,7 +16,11 @@
             v-html="icons.toolbarResIcon"
           ></div>
         </div>
-        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+        <el-aside
+          width="200px"
+          style="background-color: rgb(238, 241, 246)"
+          v-if="!loading"
+        >
           <el-menu
             @open="handleOpen"
             @close="handleClose"
@@ -31,6 +35,7 @@
               </div>
               <el-menu-item-group
                 v-for="(items, index) in toolbarMenu.category"
+                v-if="items.show"
                 class="toolbar-menu-products"
                 :class="{ disabled: items.disabled }"
                 :key="index"
@@ -52,7 +57,7 @@
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="8" class="home_menu">
+            <el-submenu index="8" class="home_menu" v-if="checkShow('showcases')">
               <div slot="title">
                 <span class="menu-icon" v-html="icons.orderIcon"> </span>
                 <p>Витрины</p>
@@ -77,13 +82,18 @@
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="2" class="home_menu">
+            <el-submenu
+              index="2"
+              class="home_menu"
+              v-if="toolbarMenu.orders?.filter((elem) => elem.show).length > 0"
+            >
               <div slot="title">
                 <span class="menu-icon" v-html="icons.orderIcon"> </span>
                 <p>Заказы</p>
               </div>
               <el-menu-item-group
                 v-for="(items, index) in toolbarMenu.orders"
+                v-if="items.show"
                 class="toolbar-menu-products"
                 :key="index"
                 :class="{
@@ -103,7 +113,11 @@
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="3" class="home_menu">
+            <el-submenu
+              index="3"
+              class="home_menu"
+              v-if="toolbarMenu.marketing?.filter((elem) => elem.show).length > 0"
+            >
               <div slot="title">
                 <span v-html="icons.marketingIcon" class="menu-icon"> </span>
                 <p>Маркетинг</p>
@@ -111,6 +125,7 @@
               <el-menu-item-group
                 class="toolbar-menu-products"
                 v-for="(items, index) in toolbarMenu.marketing"
+                v-if="items.show"
                 :key="index"
               >
                 <nuxt-link :to="items.to">
@@ -127,7 +142,10 @@
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item-group class="home_menu toolbar-menu-products">
+            <el-menu-item-group
+              class="home_menu toolbar-menu-products"
+              v-if="checkShow('clients')"
+            >
               <nuxt-link to="/home/clients">
                 <el-menu-item
                   index="40"
@@ -140,7 +158,11 @@
                 >
               </nuxt-link>
             </el-menu-item-group>
-            <el-submenu index="5" class="home_menu">
+            <el-submenu
+              index="5"
+              class="home_menu"
+              v-if="toolbarMenu.content?.filter((elem) => elem.show).length > 0"
+            >
               <div slot="title">
                 <span class="menu-icon" v-html="icons.contentIcon"> </span>
                 <p>Контент сайта</p>
@@ -148,6 +170,7 @@
               <el-menu-item-group
                 class="toolbar-menu-products"
                 v-for="(items, index) in toolbarMenu.content"
+                v-if="items.show"
                 :key="index"
                 :class="{ disabled: items.disabled }"
               >
@@ -165,7 +188,11 @@
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
-            <el-submenu index="6" class="home_menu">
+            <el-submenu
+              index="6"
+              class="home_menu"
+              v-if="toolbarMenu.settings?.filter((elem) => elem.show).length > 0"
+            >
               <div slot="title">
                 <span class="menu-icon" v-html="icons.settingsIcon"> </span>
                 <p>настройки</p>
@@ -174,7 +201,7 @@
               <el-submenu
                 index="7"
                 v-for="(items, index) in toolbarMenu.settings"
-                v-if="items.submenu"
+                v-if="items.submenu && items.show"
                 :key="index"
               >
                 <template slot="title">{{ items.name }}</template>
@@ -280,6 +307,7 @@ export default {
       address: "No. 189, Grove St, Los Angeles",
     };
     return {
+      loading: false,
       activeRouterName: "",
       tableData: Array(20).fill(item),
       sidebarToggle: true,
@@ -307,9 +335,12 @@ export default {
     },
   },
   async mounted() {
+    this.loading = true;
     this.$store.dispatch("getOrdersCount");
     await this.$store.dispatch("getShowCasesStore");
-    (this.toolbarMenu = {
+    await this.$store.dispatch("getPermissions");
+    this.loading = false;
+    this.toolbarMenu = {
       category: [
         {
           name: "Продукты",
@@ -317,20 +348,21 @@ export default {
           to: "/catalog/products",
           path: "catalog-products",
           disabled: false,
+          show: this.checkShow("products"),
         },
         {
           name: "Категории",
           index: "12",
           to: "/catalog/categories",
           path: "catalog-categories",
-          disabled: false,
+          show: this.checkShow("categories"),
         },
         {
           name: "Атрибуты",
           index: "13",
           to: "/catalog/atributs",
           path: "catalog-atributs",
-          disabled: false,
+          show: this.checkShow("attributes"),
         },
         {
           name: "Характеристика",
@@ -338,6 +370,7 @@ export default {
           to: "/catalog/characteristic_groups",
           path: "catalog-characteristic_groups",
           disabled: false,
+          show: this.checkShow("characteristics"),
         },
         {
           name: "Бренды",
@@ -345,6 +378,7 @@ export default {
           to: "/catalog/brands",
           path: "catalog-brands",
           disabled: false,
+          show: this.checkShow("brands"),
         },
         {
           name: "Значки",
@@ -352,6 +386,7 @@ export default {
           to: "/catalog/badges",
           path: "catalog-badges",
           disabled: false,
+          show: this.checkShow("badges"),
         },
       ],
       showcases: [],
@@ -362,6 +397,7 @@ export default {
           to: "/orders/all-orders",
           path: "orders-all-orders",
           disabled: false,
+          show: this.checkShow("orders"),
         },
         {
           name: `Новые заказы (${this.$store.state.ordersCount.new})`,
@@ -369,6 +405,7 @@ export default {
           to: "/orders/new-orders",
           path: "orders-new-orders",
           disabled: false,
+          show: this.checkShow("orders"),
         },
         {
           name: `Принятые заказы (${this.$store.state.ordersCount.accepted})`,
@@ -376,6 +413,7 @@ export default {
           to: "/orders/accepted-orders",
           path: "orders-accepted-orders",
           disabled: false,
+          show: this.checkShow("orders"),
         },
         {
           name: `Ожидание (${this.$store.state.ordersCount.pending})`,
@@ -383,6 +421,7 @@ export default {
           to: "/orders/pending-orders",
           path: "orders-pending-orders",
           disabled: false,
+          show: this.checkShow("orders"),
         },
         // {
         //   name: "Готовые в отправке (0)",
@@ -391,6 +430,7 @@ export default {
         //   path: "orders-ready-orders",
 
         //   disabled: false,
+        // show: this.checkShow("orders"),
         // },
         // {
         //   name: "В доставке (0)",
@@ -398,6 +438,7 @@ export default {
         //   to: "/orders/delivery-orders",
         //   path: "orders-delivery-orders",
         //   disabled: false,
+        // show: this.checkShow("orders"),
         // },
         {
           name: `Возврат (${this.$store.state.ordersCount.returned})`,
@@ -406,6 +447,7 @@ export default {
           path: "orders-returned-orders",
 
           disabled: false,
+          show: this.checkShow("orders"),
         },
         {
           name: `Доставленные (${this.$store.state.ordersCount.done})`,
@@ -414,6 +456,7 @@ export default {
           path: "orders-done-orders",
 
           disabled: false,
+          show: this.checkShow("orders"),
         },
         {
           name: `Отмененные (${this.$store.state.ordersCount.canceled})`,
@@ -421,6 +464,7 @@ export default {
           to: "/orders/canceled-orders",
           path: "orders-canceled-orders",
           disabled: false,
+          show: this.checkShow("orders"),
         },
         {
           name: "Заявки",
@@ -428,6 +472,7 @@ export default {
           to: "/orders/applications",
           path: "orders-applications",
           disabled: false,
+          show: this.checkShow("applications"),
         },
       ],
       marketing: [
@@ -437,14 +482,15 @@ export default {
           to: "/inbox/discount",
           path: "inbox-discount",
           disabled: false,
+          show: this.checkShow("discount"),
         },
         {
           name: "По Email",
           index: "32",
           to: "/inbox/email",
           path: "inbox-email",
-
           disabled: false,
+          show: false,
         },
         {
           name: "По SMS",
@@ -452,6 +498,7 @@ export default {
           to: "/inbox/sms",
           path: "inbox-sms",
           disabled: false,
+          show: false,
         },
         {
           name: "Aкции",
@@ -459,6 +506,7 @@ export default {
           to: "/inbox/promotions",
           path: "inbox-promotions",
           disabled: false,
+          show: this.checkShow("promotions"),
         },
       ],
       content: [
@@ -468,6 +516,7 @@ export default {
           to: "/contents/blog",
           path: "contents-blog",
           disabled: false,
+          show: this.checkShow("posts"),
         },
         {
           name: "Баннеры",
@@ -475,12 +524,14 @@ export default {
           to: "/contents/banners",
           path: "contents-banners",
           disabled: false,
+          show: this.checkShow("banners"),
         },
         {
           name: "Отзывы",
           index: "53",
           to: "/contents/comments",
           disabled: false,
+          show: this.checkShow("comments"),
         },
         // {
         //   name: "Отзывы",
@@ -495,6 +546,7 @@ export default {
           to: "/contents/faq",
           path: "contents-faq",
           disabled: false,
+          show: this.checkShow("faqs"),
         },
         {
           name: "Категории (F.A.Q)",
@@ -502,6 +554,7 @@ export default {
           to: "/contents/faq_categories",
           path: "contents-faq_categories",
           disabled: false,
+          show: this.checkShow("faq-categories"),
         },
         {
           name: "Feedbacks",
@@ -509,6 +562,7 @@ export default {
           to: "/contents/feedbacks",
           path: "contents-feedbacks",
           disabled: false,
+          show: this.checkShow("feedbacks"),
         },
         {
           name: "Топ меню",
@@ -516,6 +570,7 @@ export default {
           to: "/contents/top-menu",
           path: "contents-top-menu",
           disabled: false,
+          show: this.checkShow("top-bars"),
         },
       ],
       settings: [
@@ -524,6 +579,7 @@ export default {
           disabled: false,
           submenu: true,
           index: "61",
+          show: this.checkShow("characteristic-options"),
           data: [
             {
               index: "71",
@@ -540,14 +596,15 @@ export default {
           to: "/settings/translations",
           path: "settings-translations",
           disabled: false,
+          show: this.checkShow("translations"),
         },
         {
           name: "Общие данные",
           index: "64",
           to: "/settings/comments2",
           path: "settings-comments2",
-
           disabled: true,
+          show: this.checkShow("site-info"),
         },
         {
           name: "Пользователи",
@@ -555,6 +612,7 @@ export default {
           to: "/settings/users",
           path: "settings-users",
           disabled: false,
+          show: this.checkShow("users"),
         },
         {
           name: "Роли",
@@ -562,6 +620,7 @@ export default {
           to: "/settings/roles",
           path: "settings-roles",
           disabled: false,
+          show: this.checkShow("roles"),
         },
         {
           name: "Permissions group",
@@ -569,6 +628,7 @@ export default {
           to: "/settings/permissions-group",
           path: "settings-permissions-group",
           disabled: false,
+          show: this.checkShow("permission-groups"),
         },
         {
           name: "Регионы",
@@ -576,6 +636,7 @@ export default {
           to: "/settings/regions",
           path: "settings-regions",
           disabled: false,
+          show: this.checkShow("regions"),
         },
         {
           name: "Di Coin и Барабан",
@@ -583,6 +644,7 @@ export default {
           to: "/settings/d-coin",
           path: "settings-d-coin",
           disabled: false,
+          show: this.checkShow("di-coin"),
         },
         {
           name: "Филиалы",
@@ -590,10 +652,12 @@ export default {
           to: "/settings/locations",
           path: "settings-locations",
           disabled: false,
+          show: this.checkShow("branches"),
         },
       ],
-    }),
-      (this.toolbarMenu.showcases = []);
+    };
+
+    this.toolbarMenu.showcases = [];
     this.$store.state.showcases.forEach((elem, index) => {
       this.toolbarMenu.showcases.push({
         name: elem?.name?.ru,
@@ -616,6 +680,14 @@ export default {
   },
 
   methods: {
+    checkShow(val) {
+      if (this.$store.state.permissions.length > 0) {
+        const target = this.$store.state.permissions.find((item) => item.url == val);
+        return target?.methods.includes("GET");
+      } else {
+        return true;
+      }
+    },
     async logOut() {
       try {
         const data = await this.$store.dispatch("fetchAuth/logOut");

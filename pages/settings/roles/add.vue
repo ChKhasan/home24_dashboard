@@ -14,6 +14,7 @@
             <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
           </span>
           <div
+            v-if="checkAccess('roles', 'POST')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleForm')"
@@ -69,28 +70,28 @@
               prop="permissions"
               label="Permissions"
             >
-            <div class="d-flex align-items-center" style="gap: 16px">
-              <el-select
-                multiple
-                class="w-100"
-                placeholder="Status"
-                default-first-option
-                v-model="ruleForm.permissions"
-              >
-                <el-option
-                  v-for="item in permissions"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id"
+              <div class="d-flex align-items-center" style="gap: 16px">
+                <el-select
+                  multiple
+                  class="w-100"
+                  placeholder="Status"
+                  default-first-option
+                  v-model="ruleForm.permissions"
                 >
-                </el-option>
-              </el-select>
-              <div
+                  <el-option
+                    v-for="item in permissions"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
+                  >
+                  </el-option>
+                </el-select>
+                <div
                   @click="$router.push('/settings/permissions')"
                   class="outline-btn outline-light-blue-btn"
                   v-html="plusCategoryIcon"
                 ></div>
-            </div>
+              </div>
             </el-form-item>
             <el-form-item
               class="form-block align-items-start"
@@ -123,10 +124,11 @@
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import Title from "../../../components/Title.vue";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       plusCategoryIcon: require("../../../assets/svg/components/add-category-icon.svg?raw"),
@@ -139,13 +141,6 @@ export default {
           },
         ],
         permissions: [
-          {
-            required: true,
-            message: "This field is required",
-            trigger: "change",
-          },
-        ],
-        permission_groups: [
           {
             required: true,
             message: "This field is required",
@@ -169,7 +164,6 @@ export default {
     ]);
     this.permissions = permissionsData.permissions.data;
     this.permission_groups = permissionsGroupData.groups.data;
-    console.log(this.permissions);
   },
   methods: {
     handleClick(tab, event) {

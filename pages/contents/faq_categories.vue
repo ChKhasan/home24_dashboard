@@ -6,6 +6,7 @@
       lastLink="Вопрос и ответы"
     >
       <div
+        v-if="checkAccess('faq-categories', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -27,11 +28,7 @@
             @change="handleTableChange"
           >
             <div slot="img" slot-scope="text">
-              <img
-                v-if="typeof text == 'string'"
-                class="table-image"
-                :src="text"
-              />
+              <img v-if="typeof text == 'string'" class="table-image" :src="text" />
               <img
                 v-else
                 class="table-image"
@@ -47,28 +44,25 @@
               <h6>{{ text?.ru }}</h6>
             </span>
             <div slot="faqs" slot-scope="text" v-html="text?.ru"></div>
-            <div
-              slot="faqs"
-              slot-scope="text"
-              align="center"
-              class="option-container"
-            >
-              <span
-                class="option-items"
-                v-for="(item, index) in text"
-                :key="index"
-                >{{ item.question.ru ? item.question.ru : "-----" }}</span
-              >
+            <div slot="faqs" slot-scope="text" align="center" class="option-container">
+              <span class="option-items" v-for="(item, index) in text" :key="index">{{
+                item.question.ru ? item.question.ru : "-----"
+              }}</span>
             </div>
             <span slot="numberId" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('faq-categories', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                title="Are you sure delete this blog?"
+                v-if="checkAccess('faq-categories', 'DELETE')"
+                title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"
                 @confirm="deletePost(text)"
@@ -83,7 +77,7 @@
         </div>
       </div>
     </div>
-    <AddModal
+    <!-- <AddModal
       :title="editId ? 'Изменить категорию' : 'Добавить категорию'"
       name="add_faqs"
       btnText="Save"
@@ -130,18 +124,86 @@
           </div>
         </div>
       </el-form>
-    </AddModal>
+    </AddModal> -->
+    <a-modal
+      v-model="visible"
+      :title="editId ? 'Изменить категорию' : 'Добавить категорию'"
+      :closable="false"
+      @ok="handleOk"
+    >
+      <div class="modal_tab mb-4">
+        <span
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          @click="modalTab = item.index"
+          :class="{ 'avtive-modalTab': modalTab == item.index }"
+        >
+          {{ item.label }}
+        </span>
+      </div>
+
+      <el-form
+        label-position="top"
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="120px"
+        class="demo-ruleForm"
+      >
+        <div
+          v-for="(item, index) in modalTabData"
+          :key="index"
+          v-if="modalTab == item.index"
+        >
+          <div class="form-block required">
+            <div>
+              <label for="faq_category">Category name</label>
+            </div>
+            <el-form-item prop="title_ru">
+              <el-input
+                id="faq_category"
+                type="text"
+                placeholder="Category"
+                v-model="ruleForm[`title_${item.index}`]"
+              ></el-input>
+            </el-form-item>
+          </div>
+        </div>
+      </el-form>
+      <template slot="footer">
+        <div class="add_modal-footer d-flex justify-content-end">
+          <div
+            class="add-btn add-header-btn add-header-btn-padding btn-light-primary mx-3"
+            @click="closeModal"
+          >
+            Отмена
+          </div>
+          <a-button
+            class="add-btn add-header-btn btn-primary"
+            @click="getData"
+            type="primary"
+            :loading="loadingBtn"
+          >
+            <span v-if="!loadingBtn" class="svg-icon" v-html="addIcon"></span>
+            Сохранить
+          </a-button>
+        </div>
+      </template>
+    </a-modal>
   </div>
 </template>
 <script>
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   // middleware: "auth",
+  mixins: [authAccess],
   data() {
     return {
+      visible: false,
       params: {
         page: 1,
       },
@@ -230,11 +292,14 @@ export default {
     };
   },
   methods: {
+    handleOk() {
+      this.visible = false;
+    },
     show(name) {
-      this.$modal.show(name);
+      this.visible = true;
     },
     hide(name) {
-      this.$modal.hide(name);
+      this.visible = false;
     },
 
     async handleTableChange(pagination, filters, sorter) {
@@ -306,10 +371,7 @@ export default {
     },
     async __DELETE_FAQ_CATEGORIES(id) {
       try {
-        await this.$store.dispatch(
-          "fetchFaqCategories/deleteFaqsCategories",
-          id
-        );
+        await this.$store.dispatch("fetchFaqCategories/deleteFaqsCategories", id);
         await this.$notify({
           title: "Success",
           message: "Категория был успешно удален",
@@ -322,10 +384,9 @@ export default {
     },
 
     async __GET_FAQ_CATEGORIES() {
-      const data = await this.$store.dispatch(
-        "fetchFaqCategories/getFaqsCategories",
-        { ...this.$route.query }
-      );
+      const data = await this.$store.dispatch("fetchFaqCategories/getFaqsCategories", {
+        ...this.$route.query,
+      });
       this.loading = false;
       const pagination = { ...this.pagination };
       this.pagination = pagination;
@@ -340,10 +401,7 @@ export default {
     },
     async __POST_FAQ_CATEGORIES(res) {
       try {
-        await this.$store.dispatch(
-          "fetchFaqCategories/postFaqsCategories",
-          res
-        );
+        await this.$store.dispatch("fetchFaqCategories/postFaqsCategories", res);
         await this.$notify({
           title: "Success",
           message: "Категория успешно добавлен",

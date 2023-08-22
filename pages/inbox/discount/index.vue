@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Скидки" :breadbrumb="['Маркетинг']" lastLink="Скидки">
       <div
+        v-if="checkAccess('discount', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/inbox/discount/add')"
       >
@@ -47,11 +48,16 @@
               {{ text?.ru }}
             </span>
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="$router.push(`/inbox/discount/${text}`)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('discount', 'PUT')"
+                @click="$router.push(`/inbox/discount/${text}`)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                title="Are you sure delete this atribut?"
+                v-if="checkAccess('discount', 'DELETE')"
+                title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"
                 @confirm="deleteAtribut(text)"
@@ -98,12 +104,13 @@
 import TitleBlock from "../../../components/Title-block.vue";
 import SearchInput from "../../../components/form/Search-input.vue";
 import global from "../../../mixins/global";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import columns from "../../../mixins/columns";
 
 export default {
   layout: "toolbar",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       loading: true,

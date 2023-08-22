@@ -22,6 +22,7 @@
             />
           </span>
           <div
+          v-if="checkAccess('attributes', 'PUT')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleForm')"
@@ -226,9 +227,11 @@ import FormTitle from "../../../components/Form-title.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import { Drag, DropList } from "vue-easy-dnd";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
+  mixins: [authAccess],
   data() {
     return {
       colorPickerHide: true,

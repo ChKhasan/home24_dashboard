@@ -3,6 +3,7 @@
     <TitleBlock title="Переводы" :breadbrumb="['Настройки сайта']" lastLink="Переводы">
       <div class="d-flex">
         <a-button
+          v-if="checkAccess('translations', 'POST')"
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="addGroup"
@@ -27,6 +28,7 @@
             v-else
             :key="group.id"
             class="add-btn mb-2 add-header-btn btn-primary d-flex align-items-center"
+            :class="{ 'text-black-btn': $route.params.index != group.id }"
             :type="
               $route.params.index == 0
                 ? index == 0
@@ -72,6 +74,7 @@
               ><a-icon type="reload"
             /></a-button>
             <a-button
+            v-if="checkAccess('translations', 'PUT')"
               type="primary"
               class="d-flex align-items-center justify-content-center"
               style="height: 38px"
@@ -107,8 +110,15 @@
           </h6>
 
           <span slot="id" slot-scope="text">
-            <span class="action-btn" v-html="editIcon" @click="editAction(text)"> </span>
+            <span
+              class="action-btn"
+              v-html="editIcon"
+              v-if="checkAccess('translations', 'PUT')"
+              @click="editAction(text)"
+            >
+            </span>
             <a-popconfirm
+              v-if="checkAccess('translations', 'DELETE')"
               title="Are you sure delete this row?"
               ok-text="Yes"
               cancel-text="No"
@@ -260,9 +270,8 @@
 <script>
 import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
 import authAccess from "../../../mixins/authAccess";
-
 import global from "../../../mixins/global";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";

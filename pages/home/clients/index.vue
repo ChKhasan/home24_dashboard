@@ -46,10 +46,18 @@
               {{ tags }}
             </span>
             <span slot="btns" slot-scope="text">
-              <span class="action-btn" @click="tableActions(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('clients', 'PUT')"
+                @click="tableActions(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
-              <span class="action-btn" @click="tableActions(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('clients', 'DELETE')"
+                @click="tableActions(text)"
+              >
                 <img :src="deleteIcon" alt="" />
               </span>
             </span>
@@ -92,10 +100,11 @@ import TitleBlock from "../../../components/Title-block.vue";
 import FormTitle from "../../../components/Form-title.vue";
 import moment from "moment";
 import global from "../../../mixins/global";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   // middleware: "auth",
-  mixins: [global],
+  mixins: [global, authAccess],
   data() {
     return {
       editIcon: require("../../../assets/svg/components/edit-icon.svg"),

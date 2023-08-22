@@ -2,7 +2,7 @@
   <div>
     <TitleBlock title="Регионы" :breadbrumb="['Контент сайта']" lastLink="Регионы">
       <div
-        v-if="activeTab == 'regions'"
+        v-if="activeTab == 'regions' && checkAccess('regions', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openRegionModal"
       >
@@ -10,7 +10,7 @@
         Добавить
       </div>
       <div
-        v-else
+      v-if="activeTab != 'regions' && checkAccess('region-groups', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openGroupModal"
       >
@@ -65,12 +65,14 @@
 
                 <span slot="id" slot-scope="text">
                   <span
+                    v-if="checkAccess('regions', 'PUT')"
                     class="action-btn"
                     @click="$router.push(`/settings/edit/${text}`)"
                   >
                     <img :src="editIcon" alt="" />
                   </span>
                   <a-popconfirm
+                    v-if="checkAccess('regions', 'DELETE')"
                     title="Вы действительно хотите удалить?"
                     ok-text="Yes"
                     cancel-text="No"
@@ -144,11 +146,16 @@
                   {{ tags ? "Active" : "Inactive" }}
                 </span>
                 <span slot="id" slot-scope="text">
-                  <span class="action-btn" @click="groupEdit(text)">
+                  <span
+                    class="action-btn"
+                    v-if="checkAccess('region-groups', 'PUT')"
+                    @click="groupEdit(text)"
+                  >
                     <img :src="editIcon" alt="" />
                   </span>
 
                   <a-popconfirm
+                    v-if="checkAccess('region-groups', 'DELETE')"
                     title="Вы действительно хотите удалить?"
                     ok-text="Yes"
                     cancel-text="No"
@@ -364,8 +371,10 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
+import authAccess from "@/mixins/authAccess";
+
 const OPTIONS = ["Apples", "Nails", "Bananas", "Helicopters"];
 const columns1 = [
   {
@@ -406,7 +415,7 @@ for (let i = 0; i < 10; i++) {
 }
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     this.cacheData = data.map((item) => ({ ...item }));
     return {

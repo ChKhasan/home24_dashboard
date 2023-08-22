@@ -6,6 +6,7 @@
       lastLink="Вопрос и ответы"
     >
       <div
+        v-if="checkAccess('faqs', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -55,10 +56,15 @@
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('faqs', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('faqs', 'DELETE')"
                 title="Are you sure delete this faq?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -180,8 +186,11 @@
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
+import authAccess from "@/mixins/authAccess";
+
 export default {
   // middleware: "auth",
+  mixins: [authAccess],
   data() {
     return {
       params: {
@@ -339,9 +348,7 @@ export default {
       };
       this.$refs["ruleForm"].validate((valid) => {
         if (valid) {
-          this.editId != ""
-            ? this.__EDIT_FAQS(newData)
-            : this.__POST_FAQS(newData);
+          this.editId != "" ? this.__EDIT_FAQS(newData) : this.__POST_FAQS(newData);
         } else {
           return false;
         }
@@ -419,9 +426,7 @@ export default {
       });
     },
     async __GET_FAQ_CATEGORIES() {
-      const data = await this.$store.dispatch(
-        "fetchFaqCategories/getFaqsCategories"
-      );
+      const data = await this.$store.dispatch("fetchFaqCategories/getFaqsCategories");
       this.categories = data.categories?.data;
       this.categories = this.categories.map((item) => {
         return {

@@ -25,40 +25,28 @@ export const actions = {
     }
   },
   async postRoles({}, data) {
-    try {
-      const res = await this.$axios.$post(`/roles`, data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$post(`/roles`, data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
+    return res;
   },
   async editRoles({}, payload) {
-    try {
-      const res = await this.$axios.$put(`/roles/${payload.id}`, payload.data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$put(`/roles/${payload.id}`, payload.data, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
+    return res;
   },
   async deleteRoles({}, id) {
-    try {
-      const res = await this.$axios.$delete(`/roles/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
-        },
-      });
-      return res;
-    } catch (e) {
-      return e.response;
-    }
+    const res = await this.$axios.$delete(`/roles/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
+    return res;
   },
   async postGroups({}, data) {
     const res = await this.$axios.$post(`/roles_groups`, data, {

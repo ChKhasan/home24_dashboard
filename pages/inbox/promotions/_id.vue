@@ -9,6 +9,7 @@
             :light="true"
           /> </span
         ><a-button
+          v-if="checkAccess('promotions', 'PUT')"
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="submitForm('ruleForm')"
@@ -316,7 +317,8 @@ import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import moment from "moment";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -328,7 +330,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       headers: {
@@ -551,7 +553,12 @@ export default {
         this.$route.params.id
       );
       this.ruleForm = { ...data?.promotion };
-      console.log(this.ruleForm);
+      if (this.ruleForm.sticker || this.ruleForm.sticker_svg) {
+        this.activeLabelType = "upload";
+        if (this.ruleForm.sticker_svg) {
+          this.iconType = false;
+        }
+      }
       if (data.promotion.lg_banner) {
         this.fileList.banner = [
           {
@@ -582,6 +589,23 @@ export default {
     document.documentElement.scrollTop = 0;
   },
   watch: {
+    activeLabelType(val) {
+      if (val == "input") {
+        this.ruleForm.sticker = null;
+        this.ruleForm.sticker_svg = null;
+        this.fileList.sticker = [];
+      } else {
+        this.ruleForm.name.ru = null;
+      }
+    },
+    iconType(val) {
+      if (val) {
+        this.ruleForm.sticker_svg = null;
+      } else {
+        this.ruleForm.sticker = null;
+        this.fileList.sticker = [];
+      }
+    },
     activeLabelType(val) {
       if (val == "upload") {
         this.ruleForm.name = {

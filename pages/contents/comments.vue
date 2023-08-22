@@ -31,10 +31,15 @@
             <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
             <span slot="editId" slot-scope="text">
-              <span class="action-btn" @click="editAction(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('comments', 'PUT')"
+                @click="editAction(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('comments', 'DELETE')"
                 title="Are you sure delete this comment?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -140,10 +145,11 @@
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import global from "../../mixins/global";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   // middleware: "auth",
-  mixins: [global],
+  mixins: [global, authAccess],
   data() {
     return {
       loading: true,

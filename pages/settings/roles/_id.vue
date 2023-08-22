@@ -14,6 +14,7 @@
             <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
           </span>
           <div
+            v-if="checkAccess('roles', 'PUT')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleForm')"
@@ -41,7 +42,7 @@
                   ></path>
                 </g></svg
             ></span>
-            Добавить
+            Сохранять
           </div>
         </div>
       </TitleBlock>
@@ -123,10 +124,11 @@
 import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import Title from "../../../components/Title.vue";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       plusCategoryIcon: require("../../../assets/svg/components/add-category-icon.svg?raw"),
@@ -140,13 +142,6 @@ export default {
           },
         ],
         permissions: [
-          {
-            required: true,
-            message: "This field is required",
-            trigger: "change",
-          },
-        ],
-        permission_groups: [
           {
             required: true,
             message: "This field is required",
@@ -168,7 +163,7 @@ export default {
       this.$store.dispatch("fetchPermissions/getPermissions"),
       this.$store.dispatch("fetchPermissions/getPermissionGroups"),
     ]);
-    this.permissions = permissionsData.permissions.data;
+    this.permissions = permissionsData.permissions;
     this.permission_groups = permissionsGroupData.groups.data;
     this.__GET_ROLE_BY_ID();
     console.log(this.permissions);

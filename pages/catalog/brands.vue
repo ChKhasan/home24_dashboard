@@ -2,6 +2,7 @@
   <div>
     <TitleBlock title="Бренды" :breadbrumb="['Контент сайта']" lastLink="Бренды">
       <div
+        v-if="checkAccess('brands', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
@@ -60,10 +61,15 @@
               {{ tags }}
             </span>
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editPost(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('brands', 'PUT')"
+                @click="editPost(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('brands', 'DELETE')"
                 title="Are you sure delete this brand?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -189,8 +195,10 @@ import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
+import authAccess from "@/mixins/authAccess";
+
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -201,7 +209,7 @@ function getBase64(file) {
 }
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       headers: {

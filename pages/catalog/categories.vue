@@ -1,12 +1,15 @@
 <template lang="html">
   <div>
     <TitleBlock title="Категории" :breadbrumb="['Каталог']" lastLink="Категории">
-      <LayoutHeaderBtnc
-        class="disabledBtn"
-        name=" Добавить категорию"
-        :headerbtnCallback="headerbtnCallback"
-        :light="false"
-      />
+      <!-- <div class="d-flex">
+        <div
+          class="add-btn add-header-btn add-header-btn-padding btn-primary disabledBtn"
+          @click="$router.push('/catalog/add_category')"
+        >
+          <span class="svg-icon" v-html="addIcon"></span>
+          Добавить категорию
+        </div>
+      </div> -->
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
@@ -82,12 +85,14 @@
 
             <span slot="id" slot-scope="text">
               <span
+                v-if="checkAccess('categories', 'PUT')"
                 class="action-btn"
                 @click="$router.push(`/catalog/edit_category/${text}`)"
               >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('categories', 'DELETE')"
                 title="Are you sure delete this category?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -139,13 +144,14 @@ import SearchInput from "../../components/form/Search-input.vue";
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import StatusFilter from "../../components/form/Status-filter.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       loading: true,
@@ -268,6 +274,7 @@ export default {
           };
         }
       });
+      console.log(this.categories);
     },
     deleteCategory(id) {
       this.__DELETE_GLOBAL(

@@ -15,13 +15,10 @@
       >
         <div class="d-flex">
           <span class="mx-3">
-            <LayoutHeaderBtn
-              name="Отмена"
-              :headerbtnCallback="toBack"
-              :light="true"
-            />
+            <LayoutHeaderBtn name="Отмена" :headerbtnCallback="toBack" :light="true" />
           </span>
           <div
+            v-if="checkAccess('characteristics', 'POST')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleForm')"
@@ -134,9 +131,7 @@
                                 />
                               </svg>
                             </div>
-                            <div
-                              class="variant-btn variant-btn-check cursor_drag"
-                            >
+                            <div class="variant-btn variant-btn-check cursor_drag">
                               <a-icon
                                 type="drag"
                                 :style="{ color: '#3699FF', fontSize: '18px' }"
@@ -151,10 +146,7 @@
                     </template>
                   </drop-list>
                   <div class="d-flex justify-content-start">
-                    <div
-                      class="create-inner-variant mt-0"
-                      @click="addElement()"
-                    >
+                    <div class="create-inner-variant mt-0" @click="addElement()">
                       <span v-html="addInnerValidatIcon"></span>
                       Добавить характеристику
                     </div>
@@ -172,11 +164,12 @@
 import LayoutHeaderBtn from "../../components/form/Layout-header-btn.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       activeName: "Русский",
@@ -273,11 +266,7 @@ export default {
     async __POST_CHARACTERISTIC(data) {
       try {
         await this.$store.dispatch("fetchCharacters/postCharacteristics", data);
-        this.notification(
-          "Success",
-          "Характеристика успешно добавлен",
-          "success"
-        );
+        this.notification("Success", "Характеристика успешно добавлен", "success");
         this.$router.push("/catalog/characteristic_groups");
       } catch (e) {
         this.statusFunc(e.response);

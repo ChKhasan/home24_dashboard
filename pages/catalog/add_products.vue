@@ -910,7 +910,7 @@ import "quill/dist/quill.core.css";
 import { Drag, DropList } from "vue-easy-dnd";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {

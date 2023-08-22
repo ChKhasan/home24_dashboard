@@ -6,6 +6,7 @@
       :lastLink="showcase?.name?.ru"
     >
       <div
+        v-if="checkAccess('showcases', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="visible = true"
       >
@@ -16,9 +17,7 @@
     <a-spin :spinning="spinning" :delay="delayTime">
       <div class="container_xl app-container mb-5">
         <div class="card_block py-5">
-          <div
-            class="d-flex align-items-between justify-content-between w-100 pt-4 pb-4"
-          >
+          <div class="d-flex align-items-between justify-content-between w-100 pt-4 pb-4">
             <FormTitle :title="showcase?.name?.ru" />
           </div>
           <div class="show-cases-table product_table">
@@ -43,17 +42,19 @@
                       <li class="column-name table-drag">
                         <span v-html="tableDrag"></span>
                       </li>
-                      <li class="column-name">
+                      <li
+                        class="column-name"
+                        @click="$router.push(`/catalog/edit_products/${item.id}`)"
+                      >
                         <span class="drag-img"
-                          ><img
-                            :src="item?.images[0]?.sm_img"
-                            class="table-image"
-                            alt=""
+                          ><img :src="item?.images[0]?.sm_img" class="table-image" alt=""
                         /></span>
-                        {{ item?.slug }}
-                        {{ item?.pivot?.position }}
+                        {{ item?.name?.ru }}
                       </li>
-                      <li class="column-btns d-flex justify-content-center">
+                      <li
+                        class="column-btns d-flex justify-content-center"
+                        v-if="checkAccess('showcases', 'DELETE')"
+                      >
                         <span>
                           <a-popconfirm
                             title="Are you sure delete this row?"
@@ -80,12 +81,7 @@
         </div>
       </div>
     </a-spin>
-    <a-modal
-      v-model="visible"
-      title="Редактировать"
-      :closable="false"
-      @ok="handleOk"
-    >
+    <a-modal v-model="visible" title="Редактировать" :closable="false" @ok="handleOk">
       <el-form
         label-position="top"
         :model="ruleForm"
@@ -174,12 +170,13 @@ import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import { Drag, DropList } from "vue-easy-dnd";
 import FormTitle from "../../../components/Form-title.vue";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 import global from "../../../mixins/global";
 import debounce from "lodash/debounce";
 export default {
   layout: "toolbar",
-  mixins: [status, global],
+  mixins: [status, global, authAccess],
   data() {
     this.lastFetchId = 0;
     this.fetchUser = debounce(this.fetchUser, 800);
@@ -278,10 +275,7 @@ export default {
     async __GET_SHOWCASES(id) {
       try {
         this.spinning = true;
-        const data = await this.$store.dispatch(
-          "fetchShowCases/getShowCasesById",
-          id
-        );
+        const data = await this.$store.dispatch("fetchShowCases/getShowCasesById", id);
         this.showcase = { ...data?.showcase };
         this.ruleForm.name = { ...data?.showcase?.name };
         this.products = data?.showcase?.products;
@@ -304,13 +298,10 @@ export default {
     },
     async __EDIT_SHOWCASES(dataForm) {
       try {
-        const data = await this.$store.dispatch(
-          "fetchShowCases/editShowCases",
-          {
-            id: this.caseId,
-            data: dataForm,
-          }
-        );
+        const data = await this.$store.dispatch("fetchShowCases/editShowCases", {
+          id: this.caseId,
+          data: dataForm,
+        });
         await this.$store.dispatch(
           "getShowCasesStore",
           !this.$store.state.changeShowcases

@@ -9,6 +9,7 @@
             :light="true"
           /> </span
         ><a-button
+          v-if="checkAccess('promotions', 'POST')"
           class="add-btn add-header-btn btn-primary d-flex align-items-center"
           type="primary"
           @click="submitForm('ruleForm')"
@@ -105,7 +106,7 @@
                     <div class="category-input-grid">
                       <el-tabs class="desc_tab" v-model="activeLabelType">
                         <el-tab-pane label="С текстом" name="input">
-                          <div class="d-flex">
+                          <div class="d-flex" v-if="activeLabelType == 'input'">
                             <el-form-item
                               class="form-block w-100 align-items-start"
                               prop="name.ru"
@@ -306,7 +307,8 @@ import LayoutHeaderBtn from "../../../components/form/Layout-header-btn.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import status from "../../../mixins/status";
+import status from "@/mixins/status";
+import authAccess from "@/mixins/authAccess";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -318,7 +320,7 @@ function getBase64(file) {
 }
 export default {
   layout: "toolbar",
-  mixins: [status],
+  mixins: [status, authAccess],
   data() {
     return {
       headers: {
@@ -422,7 +424,7 @@ export default {
         banner: "",
         start_date: "",
         end_date: "",
-        sticker: "",
+        sticker: null,
         sticker_svg: null,
         product_card_text_color: "#FFFFFF",
         product_card_back_color: "#000000",
@@ -514,6 +516,23 @@ export default {
     },
   },
   watch: {
+    iconType(val) {
+      if (val) {
+        this.ruleForm.sticker_svg = null;
+      } else {
+        this.ruleForm.sticker = null;
+        this.fileList.sticker = [];
+      }
+    },
+    activeLabelType(val) {
+      if (val == "input") {
+        this.ruleForm.sticker = null;
+        this.fileList.sticker = [];
+        this.ruleForm.sticker_svg = null;
+      } else {
+        this.ruleForm.name.ru = null;
+      }
+    },
     activeLabelType(val) {
       if (val == "upload") {
         this.ruleForm.name = {

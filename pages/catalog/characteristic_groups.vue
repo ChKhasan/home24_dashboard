@@ -6,6 +6,7 @@
       lastLink="Группа характеристик"
     >
       <div
+        v-if="checkAccess('characteristics', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="$router.push('/catalog/add_characteristic')"
       >
@@ -36,10 +37,15 @@
             <span slot="customTitle"></span>
 
             <span slot="id" slot-scope="text">
-              <span class="action-btn" @click="editAction(text)">
+              <span
+                class="action-btn"
+                v-if="checkAccess('characteristics', 'PUT')"
+                @click="editAction(text)"
+              >
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
+                v-if="checkAccess('characteristics', 'DELETE')"
                 title="Are you sure delete this group?"
                 ok-text="Yes"
                 cancel-text="No"
@@ -85,12 +91,13 @@ import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
 import global from "../../mixins/global";
-import status from "../../mixins/status";
+import status from "@/mixins/status";
 import columns from "../../mixins/columns";
+import authAccess from "@/mixins/authAccess";
 
 export default {
   // middleware: "auth",
-  mixins: [global, status, columns],
+  mixins: [global, status, columns, authAccess],
   data() {
     return {
       loading: true,
@@ -138,10 +145,7 @@ export default {
     },
     async __DELETE_CHARACTER_GROUP(id) {
       try {
-        const data = await this.$store.dispatch(
-          "fetchCharacters/deleteGroups",
-          id
-        );
+        const data = await this.$store.dispatch("fetchCharacters/deleteGroups", id);
         await this.$notify({
           title: "Success",
           message: "Группа был успешно удалена",
@@ -154,12 +158,9 @@ export default {
     },
     async __GET_GROUPS() {
       this.loading = true;
-      const data = await this.$store.dispatch(
-        "fetchCharacters/getCharacteristics",
-        {
-          ...this.$route.query,
-        }
-      );
+      const data = await this.$store.dispatch("fetchCharacters/getCharacteristics", {
+        ...this.$route.query,
+      });
       this.loading = false;
       this.totalPage = data.characteristics?.total;
       const pageIndex = this.indexPage(
@@ -186,11 +187,7 @@ export default {
   },
   watch: {
     async current(val) {
-      this.changePagination(
-        val,
-        "/catalog/characteristic_groups",
-        "__GET_GROUPS"
-      );
+      this.changePagination(val, "/catalog/characteristic_groups", "__GET_GROUPS");
     },
   },
   components: {
