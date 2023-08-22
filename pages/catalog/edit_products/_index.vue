@@ -877,7 +877,7 @@
                   />
                 </div>
                 <div class="ch-product-body">
-                  <span class="ch-product-info"> {{ ruleForm?.name?.ru }} </span>
+                  <span class="ch-product-info"> {{ variations?.name }} </span>
                   <!-- <span class="ch-product-info"> dual SIM 265 gb </span> -->
                   <span class="ch-product-info"> {{ variations?.price }} $ </span>
                 </div>
