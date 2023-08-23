@@ -351,7 +351,7 @@
                   <div
                     class="product-variant"
                     v-for="(item, itemIndex) in element.variations"
-                    :key="item.id"
+                    :key="itemIndex"
                   >
                     <div class="product_variant_block">
                       <div class="variant-grid-4 w-100">
@@ -377,32 +377,34 @@
                             v-if="atributes.length > 0"
                             class="form-variant-block atribut_selects"
                             v-for="(atribut, index) in atributes"
+                            :key="index"
                           >
                             <div>
-                              <label>{{ atribut.name.ru }}</label>
+                              <label>{{ atribut?.name.ru }}</label>
                             </div>
                             <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
                               <el-select
-                                v-if="atribut.name.ru == 'Цвет'"
+                                v-if="atribut?.name.ru == 'Цвет'"
                                 v-model="item.optionName[`at_${atribut.id}`]"
                                 class="w-100 color-options"
                                 :style="`background-color: ${
                                   atribut.options.find(
                                     (optionItem) =>
                                       optionItem.id == item.optionName[`at_${atribut.id}`]
-                                  ).name.ru
+                                  )?.name.ru
                                 };`"
                                 default-first-option
                                 popper-class="select-popper-hover"
                                 placeholder="Параметры"
                                 @change="
-                                  atributOptions({
-                                    productId: element.id,
-                                    variantId: item.id,
-                                    index: index,
-                                    name: atribut.name.ru,
-                                    id: atribut.id,
-                                  })
+                                  ($event) =>
+                                    atributOptions($event, {
+                                      productId: element.id,
+                                      variantId: item.id,
+                                      index: index,
+                                      color: true,
+                                      id: atribut.id,
+                                    })
                                 "
                               >
                                 <el-option
@@ -419,23 +421,18 @@
                                 v-else
                                 v-model="item.optionName[`at_${atribut.id}`]"
                                 class="w-100"
-                                :style="`background-color: ${
-                                  atribut.options.find(
-                                    (optionItem) =>
-                                      optionItem.id == item.optionName[`at_${atribut.id}`]
-                                  ).name.ru
-                                };`"
                                 default-first-option
                                 popper-class="select-popper-hover"
                                 placeholder="Параметры"
                                 @change="
-                                  atributOptions({
-                                    productId: element.id,
-                                    variantId: item.id,
-                                    index: index,
-                                    name: atribut.name.ru,
-                                    id: atribut.id,
-                                  })
+                                  ($event) =>
+                                    atributOptions($event, {
+                                      productId: element.id,
+                                      variantId: item.id,
+                                      index: index,
+                                      color: false,
+                                      id: atribut.id,
+                                    })
                                 "
                               >
                                 <el-option
@@ -450,7 +447,7 @@
                           </div>
                         </el-form>
 
-                        <div class="form-variant-block mb-0">
+                        <div class="form-variant-block atribut_selects mb-0">
                           <div><label>Цена</label></div>
                           <el-input
                             disabled
@@ -1465,7 +1462,28 @@ export default {
           dicoin: null,
           promotions: [],
         });
+        product.images = [
+          ...product.images,
+          ...seartProduct.images.map((imgId) => imgId.lg_img),
+        ];
+        product.imagesData = [
+          ...product.imagesData,
+          ...seartProduct.images.map((itemImg2, index) => {
+            return {
+              uid: (index + 1) * -1,
+              name: "image.png",
+              status: "done",
+              oldImg: true,
+              id: itemImg2.id,
+              response: {
+                path: itemImg2.lg_img,
+              },
+              url: itemImg2.lg_img,
+            };
+          }),
+        ];
       });
+      console.log(product);
       this.visible.searchVar = false;
     },
     fullScreen(id, val) {
@@ -1615,7 +1633,6 @@ export default {
         if (valid) {
           if (atributValid) {
             this.__POST_PRODUCTS(newData);
-            // console.log(newData);
           }
         } else {
           return false;
@@ -1655,13 +1672,14 @@ export default {
       // }
     },
     transformData() {
+      console.log(this.ruleForm);
       const newData = {
         ...this.ruleForm,
         products: this.ruleForm.products.map((item) => {
           const newVariation = item.variations.map((elem) => {
             return {
               id: elem.indexId,
-              options: elem.options,
+              options: Object.values(elem.optionName),
               price: Number.parseFloat(elem.price).toFixed(2) * 1,
               is_default: elem.is_default,
               is_popular: elem.is_popular,
@@ -1716,13 +1734,23 @@ export default {
       }
     },
 
-    atributOptions(obj) {
+    atributOptions(id, obj) {
       const product = this.findProductWithId(obj.productId);
-      product.variations.find((varId) => varId.id == obj.variantId).options[
-        obj.index
-      ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
-        `at_${obj.id}`
-      ];
+      // product.variations.find((varId) => varId.id == obj.variantId).options[
+      //   obj.index
+      // ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
+      //   `at_${obj.id}`
+      // ];
+      if (obj.color) {
+        product.variations = product.variations.map((item) => {
+          let elem = item;
+          elem.optionName[`at_${obj.id}`] = id;
+          return {
+            ...item,
+          };
+        });
+      }
+      console.log(product.variations);
     },
     handleCancel() {
       this.previewVisible = false;
@@ -1893,13 +1921,14 @@ export default {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
       const category = data.category;
       this.atributes = category.attributes;
+      console.log(this.atributes, "atributess");
       this.character_group = category.characteristic_groups;
       this.atributes.forEach((element) => {
         this.rulesAtributes[`at_${element.id}`] = [
           {
             required: true,
             message: "Атрибут обязателен",
-            trigger: "change",
+            trigger: "blur",
           },
         ];
       });
@@ -1928,19 +1957,19 @@ export default {
       this.ruleForm.brand_id = data.info.brand_id;
       this.ruleForm.model = data.info.products[0].model;
       this.ruleForm.status = data.product?.status;
-      if (data.info.category.parent?.parent?.id) {
-        this.cascader.push(data.info.category.parent.parent.id);
-        this.cascader.push(data.info.category.parent.id);
-        this.cascader.push(data.info.category.id);
-      } else if (data.info.category.parent?.id) {
-        this.cascader.push(data.info.category.parent.id);
-        this.cascader.push(data.info.category.id);
+      if (data.product.info.category.parent?.parent?.id) {
+        this.cascader.push(data.product.info.category.parent.parent.id);
+        this.cascader.push(data.product.info.category.parent.id);
+        this.cascader.push(data.product.info.category.id);
+      } else if (data.product.info.category.parent?.id) {
+        this.cascader.push(data.product.info.category.parent.id);
+        this.cascader.push(data.product.info.category.id);
       } else {
-        this.cascader.push(data.info.category.id);
+        this.cascader.push(data.product.info.category.id);
       }
       let promotionsArr = [];
-      this.ruleForm.category_id = data.info.category.id;
-      this.__GET_CATEGORY_BY_ID(data.info.category.id);
+      this.ruleForm.category_id = data.product.info.category.id;
+      this.__GET_CATEGORY_BY_ID(data.product.info.category.id);
       this.ruleForm.products = data.products.map((item, productIndex) => {
         let characterNames = {};
         const variat = item.variations.map((variant, index) => {
@@ -2148,6 +2177,10 @@ export default {
 .color-options input {
   background-color: transparent !important;
   color: transparent !important;
-  border: none !important;
+  // border: none !important;
+}
+.atribut_selects {
+  max-width: 120px;
+  min-width: 100px !important;
 }
 </style>
