@@ -40,6 +40,9 @@ export default {
       value: "",
     };
   },
+  mounted() {
+    this.value = ""
+  },
   computed: {
     routerName() {
       return Object.keys(this.$route.query).length;

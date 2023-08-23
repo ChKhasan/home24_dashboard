@@ -162,7 +162,7 @@ export default {
       this.$store.dispatch("fetchPermissions/getPermissions"),
       this.$store.dispatch("fetchPermissions/getPermissionGroups"),
     ]);
-    this.permissions = permissionsData.permissions.data;
+    this.permissions = permissionsData.permissions;
     this.permission_groups = permissionsGroupData.groups.data;
   },
   methods: {

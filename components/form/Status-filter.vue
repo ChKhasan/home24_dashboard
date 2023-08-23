@@ -22,15 +22,15 @@ export default {
     return {
       options: [
         {
-          value: 2,
+          value: 0,
           label: "All",
         },
         {
-          value: 1,
+          value: "active",
           label: "Активный",
         },
         {
-          value: 0,
+          value: "inactive",
           label: "Неактивный",
         },
       ],

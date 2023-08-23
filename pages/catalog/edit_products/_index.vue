@@ -383,8 +383,48 @@
                             </div>
                             <el-form-item :prop="`at_${atribut.id}`" class="mb-0">
                               <el-select
+                                v-if="atribut.name.ru == 'Цвет'"
+                                v-model="item.optionName[`at_${atribut.id}`]"
+                                class="w-100 color-options"
+                                :style="`background-color: ${
+                                  atribut.options.find(
+                                    (optionItem) =>
+                                      optionItem.id == item.optionName[`at_${atribut.id}`]
+                                  ).name.ru
+                                };`"
+                                default-first-option
+                                popper-class="select-popper-hover"
+                                placeholder="Параметры"
+                                @change="
+                                  atributOptions({
+                                    productId: element.id,
+                                    variantId: item.id,
+                                    index: index,
+                                    name: atribut.name.ru,
+                                    id: atribut.id,
+                                  })
+                                "
+                              >
+                                <el-option
+                                  class="color"
+                                  :style="`color: ${optionElement.name.ru}; background-color: ${optionElement.name.ru}`"
+                                  v-for="optionElement in atribut.options"
+                                  :key="optionElement.id"
+                                  :label="optionElement.name.ru"
+                                  :value="optionElement.id"
+                                >
+                                </el-option>
+                              </el-select>
+                              <el-select
+                                v-else
                                 v-model="item.optionName[`at_${atribut.id}`]"
                                 class="w-100"
+                                :style="`background-color: ${
+                                  atribut.options.find(
+                                    (optionItem) =>
+                                      optionItem.id == item.optionName[`at_${atribut.id}`]
+                                  ).name.ru
+                                };`"
                                 default-first-option
                                 popper-class="select-popper-hover"
                                 placeholder="Параметры"
@@ -2104,5 +2144,10 @@ export default {
 
 .product_list {
   transition: 0.2s;
+}
+.color-options input {
+  background-color: transparent !important;
+  color: transparent !important;
+  border: none !important;
 }
 </style>

@@ -179,20 +179,7 @@ export default {
           label: "HP",
         },
       ],
-      options: [
-        {
-          value: 2,
-          label: "All",
-        },
-        {
-          value: 1,
-          label: "Активный",
-        },
-        {
-          value: 0,
-          label: "Неактивный",
-        },
-      ],
+
       brandSearch: "",
       status: "",
       loading: true,
@@ -253,8 +240,22 @@ export default {
         "__GET_PRODUCTS"
       );
     },
-    changeStatus(val) {
-      // this.status = val;
+    async changeStatus(val) {
+      this.status = val;
+      if (val) {
+        await this.$router.replace({
+          path: this.$route.path,
+          query: { ...this.$route.query, status: val },
+        });
+      } else {
+        let query = { ...this.$route.query };
+        delete query["status"];
+        await this.$router.replace({
+          path: this.$route.path,
+          query: { ...query },
+        });
+      }
+      this.__GET_PRODUCTS();
     },
   },
   async mounted() {
