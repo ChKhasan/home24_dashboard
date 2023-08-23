@@ -1853,7 +1853,6 @@ export default {
         });
     },
     async __POST_PRODUCTS(data) {
-      console.log(data);
       try {
         await this.$store.dispatch("fetchProducts/editProducts", {
           data: data,
@@ -1863,7 +1862,27 @@ export default {
         this.notification("Success", "Продукт успешно добавлен", "success");
         localStorage.setItem("lastCategory", JSON.stringify(this.cascader));
       } catch (e) {
-        this.statusFunc(e.response);
+        if (e.response == undefined) {
+          this.notificationError("Error", "Внутренняя ошибка сервера");
+        }
+        if (e.response.status) {
+          switch (e.response.status) {
+            case 422:
+              this.notificationError(
+                "Error",
+                e.response.data.errors[Object.keys(e.response.data.errors)[0]][0]
+              );
+              break;
+            case 500:
+              this.notificationError("Error", "Внутренняя ошибка сервера");
+              break;
+            case 404:
+              this.notificationError("Error", "Нет результатов запроса для модели");
+              break;
+          }
+        } else {
+          this.notificationError("Error", "Внутренняя ошибка сервера");
+        }
       }
     },
     async __GET_BRANDS() {
