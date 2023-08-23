@@ -123,7 +123,8 @@
                           </div>
                           <div class="variant_btns mb-1 mt-0">
                             <div
-                              class="variant-btn variant-btn-delete mx-2"
+                              v-if="item.name != 1"
+                              class="variant-btn variant-btn-delete ml-2"
                               @click="deleteElement('attributes', item.id)"
                             >
                               <svg
@@ -143,7 +144,7 @@
                               </svg>
                             </div>
                             <div
-                              class="variant-btn variant-btn-check cursor_drag"
+                              class="variant-btn variant-btn-check cursor_drag ml-2"
                               draggable="true"
                             >
                               <a-icon
@@ -670,12 +671,22 @@ export default {
             en: "",
           };
       this.ruleForm.is_active = data.category.is_active;
-      this.attributes = data.category.attributes.map((item, index) => {
-        return {
-          name: item.id,
-          id: index + 1,
-        };
-      });
+      if (data.category.attributes.length > 0) {
+        this.attributes = data.category.attributes.map((item, index) => {
+          return {
+            name: item.id,
+            id: index + 1,
+          };
+        });
+      } else {
+        this.attributes = [
+          {
+            name: 1,
+            id: 1,
+          },
+        ];
+      }
+      console.log(this.attributes, "aslkdjasidhuiashduihaj");
       if (this.groups.length == 0) {
         this.groups = data.category.characteristic_groups;
       }

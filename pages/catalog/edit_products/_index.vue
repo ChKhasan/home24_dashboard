@@ -1396,8 +1396,6 @@ export default {
       }
     },
     handleChangeSearch(value) {
-      console.log(value);
-
       // console.log(value);
       // let obj = this.ruleForm.find((item) => item.indexId == id);
       // obj.category_id = value;
@@ -1437,7 +1435,6 @@ export default {
           variations: newVariations,
         });
       });
-      console.log(this.ruleForm);
 
       this.visible.searchVar = false;
     },
@@ -1483,7 +1480,6 @@ export default {
           }),
         ];
       });
-      console.log(product);
       this.visible.searchVar = false;
     },
     fullScreen(id, val) {
@@ -1672,7 +1668,6 @@ export default {
       // }
     },
     transformData() {
-      console.log(this.ruleForm);
       const newData = {
         ...this.ruleForm,
         products: this.ruleForm.products.map((item) => {
@@ -1727,7 +1722,6 @@ export default {
 
     async handleChangeVatiant({ fileList }, id) {
       const currentProduct = this.findProductWithId(id);
-      console.log(this.ruleForm);
       currentProduct.imagesData = await fileList;
       if (fileList[0]?.response?.path) {
         currentProduct.imagesData = [...fileList];
@@ -1736,21 +1730,15 @@ export default {
 
     atributOptions(id, obj) {
       const product = this.findProductWithId(obj.productId);
-      // product.variations.find((varId) => varId.id == obj.variantId).options[
-      //   obj.index
-      // ] = product.variations.find((varId) => varId.id == obj.variantId).optionName[
-      //   `at_${obj.id}`
-      // ];
       if (obj.color) {
         product.variations = product.variations.map((item) => {
           let elem = item;
-          elem.optionName[`at_${obj.id}`] = id;
           return {
-            ...item,
+            ...elem,
+            optionName: { ...item.optionName, [`at_${obj.id}`]: id },
           };
         });
       }
-      console.log(product.variations);
     },
     handleCancel() {
       this.previewVisible = false;
@@ -1768,7 +1756,6 @@ export default {
       this.atributes.forEach((elem) => {
         return (options[`at_${elem?.id}`] = "");
       });
-      console.log("atr", this.atributes);
       return options;
     },
     addValidation(variantId) {
@@ -1789,7 +1776,6 @@ export default {
         dicoin: null,
         promotions: [],
       });
-      console.log(options);
     },
     deleteProduct(variantId) {
       if (this.ruleForm.products.length > 1) {
@@ -1898,7 +1884,6 @@ export default {
     async __GET_CATEGORIES() {
       const data = await this.$store.dispatch("fetchCategories/getCategories");
       this.categories = [...data.categories?.data];
-      console.log(data);
       this.cascaderCategories = this.categories.map((item) => {
         item.label = item.name.ru;
         if (item.children.length > 0) {
@@ -1933,14 +1918,12 @@ export default {
         },
         id: null,
       });
-      console.log(this.cascaderCategories, "cas cat");
     },
 
     async __GET_CATEGORY_BY_ID(id) {
       const data = await this.$store.dispatch("fetchCategories/getCategoriesById", id);
       const category = data.category;
       this.atributes = category.attributes;
-      console.log(this.atributes, "atributess");
       this.character_group = category.characteristic_groups;
       this.atributes.forEach((element) => {
         this.rulesAtributes[`at_${element.id}`] = [
@@ -1963,7 +1946,6 @@ export default {
           ];
         });
       });
-      console.log("atribut rules", this.rulesAtributes);
     },
     async __GET_PRODUCT_BY_ID() {
       const data = await this.$store.dispatch(
@@ -2066,7 +2048,6 @@ export default {
       this.promotionsData = promotionsArr.filter(
         (obj, index) => promotionsArr.findIndex((item) => item.id === obj.id) === index
       );
-      console.log(this.cascader, " cascader");
     },
     characterValueCopy() {
       var copyCharacter = {};
@@ -2095,7 +2076,6 @@ export default {
       } else {
         setTimeout(() => {
           this.$refs.searchProductSelect.focus();
-          console.log(this.$refs.searchProductSelect);
         }, 0);
       }
     },

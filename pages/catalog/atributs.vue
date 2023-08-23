@@ -70,7 +70,7 @@
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                v-if="checkAccess('attributes', 'DELETE')"
+                v-if="checkAccess('attributes', 'DELETE') && text != 1"
                 title="Are you sure delete this atribut?"
                 ok-text="Yes"
                 cancel-text="No"
