@@ -230,7 +230,7 @@
                         </svg>
                       </div> -->
                     </div>
-                    <div class="bottom_text">Установить статус продукта</div>
+                    <!-- <div class="bottom_text">Установить статус продукта</div> -->
                   </div>
                 </el-form>
               </div>
@@ -245,7 +245,7 @@
           <transition-group name="el-zoom-in-top" tag="ul">
             <div
               class="form-container product_list"
-              v-for="element in ruleForm.products"
+              v-for="(element, elementIndex) in ruleForm.products"
               :key="element.id"
               :class="{
                 'variant-modal': productModal[`product_modal${element.id}`] == true,
@@ -598,9 +598,9 @@
                       </div>
                       <div class="variant_btns mb-3">
                         <div
-                          v-if="itemIndex != 0"
+                          v-if="elementIndex == 0 ? itemIndex != 0 : true"
                           class="variant-btn variant-btn-delete mx-2"
-                          @click="deleteValidation(element.id, item.id)"
+                          @click="deleteValidation(element.id, item)"
                           v-html="removeIcon"
                         ></div>
                         <!-- <div
@@ -896,10 +896,15 @@
             ref="productScroll"
             @scroll="handleScroll"
           >
-            <span v-for="product in ruleForm.products" class="d-flex">
+            <span
+              v-for="(product, productIndex) in ruleForm.products"
+              :key="productIndex"
+              class="d-flex"
+            >
               <div
                 class="character-product-card"
-                v-for="variations in product.variations"
+                v-for="(variations, varIndex) in product.variations"
+                :key="varIndex"
               >
                 <div class="ch-product-img">
                   <img
@@ -928,6 +933,7 @@
             <div
               class="product-character-block"
               v-for="(characterGroup, characterGroupIndex) in character_group"
+              :key="characterGroupIndex"
             >
               <div class="character-group">
                 <h5 @click="characterValueCopy">
@@ -944,15 +950,21 @@
               <div
                 class="product-character-items"
                 v-for="(characters, index) in characterGroup.characteristics"
+                :key="index"
               >
                 <div class="product-character-name">
                   {{ characters.name.ru }}
                 </div>
                 <span class="character_scroll_span" ref="characterScrollItems">
-                  <span v-for="product in ruleForm.products" class="d-flex">
+                  <span
+                    v-for="(product, productIndex) in ruleForm.products"
+                    :key="productIndex"
+                    class="d-flex"
+                  >
                     <div
                       class="product-character-info"
-                      v-for="variations in product.variations"
+                      v-for="(variations, indexvar) in product.variations"
+                      :key="indexvar"
                     >
                       <el-form
                         label-position="top"
@@ -1785,14 +1797,28 @@ export default {
       }
     },
     deleteValidation(variantId, innerVarId) {
-      // const product = this.findProductWithId(variantId);
-      // if (product.variations.length > 1) {
-      //   product.variations = product.variations.filter((item) => item.id != innerVarId);
-      // }
+      const product = this.findProductWithId(variantId);
+      if (product.variations.length > 1 && !innerVarId?.constProduct) {
+        product.variations = product.variations.filter(
+          (item) => item.id != innerVarId.id
+        );
+      }
+      if (innerVarId.constProduct) {
+        this.__DELETE_GLOBAL(innerVarId.indexId);
+      }
       // const checkDefault = product.variations.filter((item) => item.is_default == 1);
       // if (checkDefault.length == 0) {
       //   product.variations[0].is_default = 1;
       // }
+    },
+    async __DELETE_GLOBAL(id) {
+      try {
+        await this.$store.dispatch("fetchProducts/deleteProductsVariation", id);
+        this.notification("Success", "message", "success");
+        this.__GET_PRODUCT_BY_ID();
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
     },
     findProductWithId(variantId) {
       return this.ruleForm.products.find((element) => element.id == variantId);

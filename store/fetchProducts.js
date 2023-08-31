@@ -53,6 +53,14 @@ export const actions = {
     });
     return res;
   },
+  async deleteProductsVariation({}, id) {
+    const res = await this.$axios.$delete(`/variations/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
+    return res;
+  },
   async postGroups({}, data) {
     const res = await this.$axios.$post(`/products_groups`, data, {
       headers: {

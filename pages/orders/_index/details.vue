@@ -186,7 +186,7 @@
                       <p>{{ order?.user?.name }}</p>
                     </div>
                   </div>
-                  <div class="order-details-items">
+                  <!-- <div class="order-details-items">
                     <span>
                       <svg
                         width="24"
@@ -208,7 +208,7 @@
                       Электронная почта</span
                     >
                     <p>{{ order?.user?.email ? order?.user?.email : "---" }}</p>
-                  </div>
+                  </div> -->
                   <div class="order-details-items">
                     <span>
                       <svg
@@ -231,6 +231,64 @@
                       Телефон</span
                     >
                     <p>{{ `+${order?.phone_number}` }}</p>
+                  </div>
+                </div>
+                <div class="custom_block px-4 py-4 mt-3">
+                  <div class="d-flex justify-content-between">
+                    <FormTitle title="Статус заказа" />
+                    <a-button type="primary" @click="submitForm">сохранять</a-button>
+                  </div>
+
+                  <!-- <div class="order-details-items">
+                    <span
+                      ><svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          opacity="0.3"
+                          d="M16.5 9C16.5 13.125 13.125 16.5 9 16.5C4.875 16.5 1.5 13.125 1.5 9C1.5 4.875 4.875 1.5 9 1.5C13.125 1.5 16.5 4.875 16.5 9Z"
+                          fill="currentColor"
+                        ></path>
+                        <path
+                          d="M9 16.5C10.95 16.5 12.75 15.75 14.025 14.55C13.425 12.675 11.4 11.25 9 11.25C6.6 11.25 4.57499 12.675 3.97499 14.55C5.24999 15.75 7.05 16.5 9 16.5Z"
+                          fill="currentColor"
+                        ></path>
+                        <rect
+                          x="7"
+                          y="6"
+                          width="4"
+                          height="4"
+                          rx="2"
+                          fill="currentColor"
+                        ></rect>
+                      </svg>
+                      Клиент</span
+                    >
+                    <div class="order-user">
+                      <p>{{ order?.user?.name }}</p>
+                    </div>
+                  </div> -->
+                  <div class="form-block">
+                    <div><label for="character_group">Статус</label></div>
+                    <el-select
+                      class="w-100"
+                      v-model="ruleForm.status"
+                      filterable
+                      allow-create
+                      placeholder="Статус"
+                    >
+                      <el-option
+                        v-for="item in status[ruleForm.status]"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      >
+                      </el-option>
+                    </el-select>
                   </div>
                 </div>
               </div>
@@ -311,14 +369,19 @@
                 <a slot="price" slot-scope="text"
                   >{{
                     `${
-                      text?.discount_price ? text?.discount_price : text?.real_price
+                      text?.price_with_discount
+                        ? text?.price_with_discount.toFixed()
+                        : text?.price.toFixed()
                     }`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                   }}
-                  so'm</a
+                  so'm
+                  {{
+                    text?.price - text?.price_with_discount > 0 ? "(со скидкой)" : ""
+                  }}</a
                 >
                 <span slot="totalSum" slot-scope="text"
                   >{{
-                    `${text?.product?.real_price * text?.count}`.replace(
+                    `${text?.price_with_discount.toFixed() * text?.count}`.replace(
                       /\B(?=(\d{3})+(?!\d))/g,
                       " "
                     )
@@ -341,14 +404,49 @@
                   {{ tags }}
                 </span>
               </a-table>
-              <div class="d-flex justify-content-end align-items-center card_header pt-4">
-                <FormTitle
-                  :title="`Общий сумма: ${`${order?.products_info?.reduce((sum, item) => {
-                    return sum + item?.count * item?.product?.discount_price
-                      ? item?.product?.discount_price
-                      : item?.product?.real_price;
-                  }, 0)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm`"
-                />
+              <div
+                class="d-flex justify-content-end align-items-end flex-column card_header pt-4"
+              >
+                <div
+                  class="d-flex justify-content-end align-items-start flex-column summ-titles"
+                >
+                  <h2>
+                    Скидка:
+                    {{
+                      ` - ${
+                        order?.products_info?.reduce((sum, item) => {
+                          return sum + item?.count * item?.price;
+                        }, 0) -
+                        order?.products_info
+                          ?.filter((elem) => elem.price_with_discount)
+                          ?.reduce((sum, item) => {
+                            return sum + item?.count * item?.price_with_discount;
+                          }, 0)
+                      }`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}
+                    so'm
+                  </h2>
+                  <h2>
+                    Сумма (Di coin):
+                    {{
+                      `${order?.products_info?.reduce((sum, item) => {
+                        return sum + item?.count * item?.price_with_discount
+                          ? item?.price_with_discount.toFixed()
+                          : item?.price.toFixed();
+                      }, 0)}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                    }}so'm
+                  </h2>
+                  <FormTitle
+                    :title="`Общий сумма: ${`${order?.products_info?.reduce(
+                      (sum, item) => {
+                        return sum + item?.count * item?.price_with_discount
+                          ? item?.price_with_discount.toFixed()
+                          : item?.price.toFixed();
+                      },
+                      0
+                    )}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm`"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -643,6 +741,67 @@ export default {
   layout: "toolbar",
   data() {
     return {
+      status: {
+        pending: [
+          {
+            value: "pending",
+            label: "Ожидание ",
+          },
+          {
+            value: "accepted",
+            label: "Принятые",
+          },
+          {
+            value: "canceled",
+            label: "Отменено",
+          },
+        ],
+        accepted: [
+          {
+            value: "accepted",
+            label: "Принятые",
+          },
+          {
+            value: "done",
+            label: "Доставленные",
+          },
+          {
+            value: "returned",
+            label: "Возврат ",
+          },
+        ],
+        returned: [
+          {
+            value: "returned",
+            label: "Возврат ",
+          },
+        ],
+        done: [
+          {
+            value: "done",
+            label: "Доставленные",
+          },
+        ],
+        canceled: [
+          {
+            value: "canceled",
+            label: "Отменено",
+          },
+        ],
+      },
+      rules: {
+        character_name: [
+          {
+            required: true,
+            // message: "incorrec",
+            trigger: "change",
+          },
+        ],
+      },
+      ruleForm: {
+        status: "",
+      },
+      count: 10,
       pageSize: 10,
       editIcon: require("../../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../../assets/svg/components/delete-icon.svg"),
@@ -824,7 +983,6 @@ export default {
         },
         {
           title: "ЦЕНА ЗА ЕДИНИЦУ ТОВАРА",
-          dataIndex: "product",
           scopedSlots: { customRender: "price" },
           className: "column-code",
           key: "product",
@@ -933,13 +1091,32 @@ export default {
       });
       console.log(this.tableData);
     },
+    submitForm() {
+      this.__EDIT_ORDER(this.ruleForm);
+    },
     async __GET_ORDER() {
       const data = await this.$store.dispatch(
         "fetchOrders/getOrdersById",
         this.$route.params.index
       );
+      this.ruleForm.status = data?.order?.status;
       this.order = data?.order;
     },
+    async __EDIT_ORDER(formData) {
+      try {
+        const data = await this.$store.dispatch("fetchOrders/editOrders", {
+          id: this.$route.params.index,
+          data: formData,
+        });
+        this.$notify({
+          title: "Success",
+          message: "успешно изменен",
+          type: "success",
+        });
+        this.__GET_ORDER();
+      } catch (e) {}
+    },
+
     start() {
       this.loading = true;
       setTimeout(() => {
@@ -972,4 +1149,14 @@ export default {
   },
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+.summ-titles h2 {
+  font-family: "TT Interfaces";
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  font-style: normal;
+  line-height: 15.6px;
+  color: #181c32;
+  margin-bottom: 16px !important;
+}
+</style>

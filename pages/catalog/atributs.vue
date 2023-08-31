@@ -54,11 +54,16 @@
               slot="categories"
               slot-scope="text"
               align="center"
-              class="option-container"
+              class="option-container cursor_pointer"
+              :class="{ maxHeigth: activeOptions == text?.id }"
+              @click="activeCat(text?.id)"
             >
-              <span class="option-items" v-for="(item, index) in text" :key="index">{{
-                item.name.ru ? item.name.ru : "-----"
-              }}</span>
+              <span
+                class="option-items"
+                v-for="(item, index) in text?.categories"
+                :key="index"
+                >{{ item.name.ru ? item.name.ru : "-----" }}</span
+              >
             </div>
             <span slot="customTitle"></span>
             <span slot="id" slot-scope="text">
@@ -130,6 +135,7 @@ export default {
   mixins: [global, status, columns, authAccess],
   data() {
     return {
+      activeOptions: null,
       loading: true,
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
@@ -141,6 +147,14 @@ export default {
   },
 
   methods: {
+    activeCat(id) {
+      if (this.activeOptions != id) {
+        this.activeOptions = id;
+      } else {
+        this.activeOptions = null;
+      }
+      console.log(id, "asdsada");
+    },
     deleteAtribut(id) {
       this.__DELETE_GLOBAL(
         id,
@@ -190,3 +204,8 @@ export default {
 };
 // 246
 </script>
+<style lang="css">
+.maxHeigth {
+  max-height: 1000px !important;
+}
+</style>

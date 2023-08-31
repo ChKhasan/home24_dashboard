@@ -85,7 +85,7 @@
             >
           </div>
           <h4 slot="model" slot-scope="text">{{ text ? text : "------" }}</h4>
-          <span slot="qty" slot-scope="text">{{ text ? text : "------" }}</span>
+          <span slot="qty" slot-scope="text">{{ text }}</span>
           <a slot="price" slot-scope="text">{{
             text ? `${`${text}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")} so'm` : "------"
           }}</a>

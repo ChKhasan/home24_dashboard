@@ -31,13 +31,13 @@
             <span slot="key" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
             <span slot="editId" slot-scope="text">
-              <span
+              <!-- <span
                 class="action-btn"
                 v-if="checkAccess('comments', 'PUT')"
                 @click="editAction(text)"
               >
                 <img :src="editIcon" alt="" />
-              </span>
+              </span> -->
               <a-popconfirm
                 v-if="checkAccess('comments', 'DELETE')"
                 title="Are you sure delete this comment?"
@@ -157,7 +157,6 @@ export default {
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../assets/svg/components/delete-icon.svg"),
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),
-
       columns: [
         {
           title: "№",
@@ -197,14 +196,6 @@ export default {
           className: "column-code",
           key: "comment",
           //   width: "10%",
-        },
-        {
-          title: "Ответ",
-          dataIndex: "slug",
-          className: "column-qty",
-          key: "slug",
-          align: "center",
-          width: "10%",
         },
 
         {

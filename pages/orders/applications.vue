@@ -35,13 +35,19 @@
           }"
         >
           <span slot="img" slot-scope="text">
-            <nuxt-img
-              format="webp"
+            <img
               v-if="text != null"
               class="table-image"
               :src="text.product?.images[0]?.sm_img"
               alt="text"
             />
+            <!-- <nuxt-img
+              format="webp"
+              v-if="text != null"
+              class="table-image"
+              :src="text.product?.images[0]?.sm_img"
+              alt="text"
+            /> -->
             <nuxt-img
               format="webp"
               v-else

@@ -227,7 +227,7 @@
                         </svg>
                       </div>
                     </div>
-                    <div class="bottom_text">Установить статус продукта</div>
+                    <!-- <div class="bottom_text">Установить статус продукта</div> -->
                   </div>
                 </el-form>
               </div>

@@ -20,7 +20,7 @@ export default {
         },
         {
           title: "Категории",
-          dataIndex: "categories",
+          // dataIndex: "categories",
           scopedSlots: { customRender: "categories" },
           className: "column-options",
           key: "categories",
@@ -608,15 +608,15 @@ export default {
           className: "column-tags",
           key: "status",
         },
-        {
-          title: "ДЕЙСТВИЯ",
-          key: "id",
-          dataIndex: "id",
-          scopedSlots: { customRender: "btns" },
-          className: "column-btns",
-          width: "100px",
-          align: "center",
-        },
+        // {
+        //   title: "ДЕЙСТВИЯ",
+        //   key: "id",
+        //   dataIndex: "id",
+        //   scopedSlots: { customRender: "btns" },
+        //   className: "column-btns",
+        //   width: "100px",
+        //   align: "center",
+        // },
       ],
       columnPermissionGroups: [
         {

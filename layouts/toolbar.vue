@@ -195,7 +195,7 @@
             >
               <div slot="title">
                 <span class="menu-icon" v-html="icons.settingsIcon"> </span>
-                <p>настройки</p>
+                <p>Hастройки</p>
               </div>
 
               <el-submenu
@@ -245,7 +245,7 @@
                 </nuxt-link>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item-group class="home_menu toolbar-menu-products">
+            <!-- <el-menu-item-group class="home_menu toolbar-menu-products">
               <nuxt-link to="/home/content-manager">
                 <el-menu-item
                   index="70"
@@ -257,7 +257,7 @@
                   <p class="not-ul-menu">Контент-менеджеры</p></el-menu-item
                 >
               </nuxt-link>
-            </el-menu-item-group>
+            </el-menu-item-group> -->
           </el-menu>
         </el-aside>
         <div class="toolbar-setting pt-05r pr-15r pl-15r pb-15r">
@@ -601,9 +601,9 @@ export default {
         {
           name: "Общие данные",
           index: "64",
-          to: "/settings/comments2",
-          path: "settings-comments2",
-          disabled: true,
+          to: "/settings/site-info",
+          path: "settings-site-info",
+          disabled: false,
           show: this.checkShow("site-info"),
         },
         {

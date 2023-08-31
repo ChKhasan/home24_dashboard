@@ -44,11 +44,17 @@
                 <FormTitle title="Характеристика" />
 
                 <div class="form-block required">
-                  <div class="group-grid1" id="character_group">
-                    <el-form-item prop="group" label="Группа">
+                  <div class="group-grid-2" id="character_group">
+                    <el-form-item prop="group.ru" label="Группа">
                       <el-input
                         placeholder="Группа"
                         v-model="ruleForm.group[itemLang.key]"
+                      />
+                    </el-form-item>
+                    <el-form-item prop="keywords" label="Ключевые слова">
+                      <el-input
+                        placeholder="Ключевые слова..."
+                        v-model="ruleForm.keywords"
                       />
                     </el-form-item>
                   </div>
@@ -192,22 +198,24 @@ export default {
       ],
       options: [],
       rules: {
-        // group: [
-        //   {
-        //     required: true,
-        //     message: "Characteristic group is required",
-        //     trigger: "change",
-        //   },
-        // ],
-        // name: {
-        //   ru: [
-        //     {
-        //       required: true,
-        //       message: "Characteristic name is required",
-        //       trigger: "change",
-        //     },
-        //   ],
-        // },
+        group: {
+          ru: [
+            {
+              required: true,
+              message: "Characteristic group is required",
+              trigger: "change",
+            },
+          ],
+        },
+        name: {
+          ru: [
+            {
+              required: true,
+              message: "Characteristic name is required",
+              trigger: "change",
+            },
+          ],
+        },
         // options: [
         //   {
         //     required: true,
@@ -215,6 +223,13 @@ export default {
         //     trigger: "change",
         //   },
         // ],
+        keywords: [
+          {
+            required: true,
+            message: "Characteristic name is required",
+            trigger: "change",
+          },
+        ],
       },
       ruleForm: {
         group: {
@@ -222,6 +237,7 @@ export default {
           uz: "",
           en: "",
         },
+        keywords: "",
         options: [],
         attributes: [
           {
@@ -289,4 +305,9 @@ export default {
 </script>
 <style lang="scss">
 @import "../../assets/scss/custom/page/characteristic.scss";
+.group-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 24px;
+}
 </style>

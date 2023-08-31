@@ -49,7 +49,7 @@
               <span
                 class="action-btn"
                 v-if="checkAccess('clients', 'PUT')"
-                @click="tableActions(text)"
+                @click="$router.push(`/home/clients/${text}`)"
               >
                 <img :src="editIcon" alt="" />
               </span>
@@ -148,11 +148,10 @@ export default {
 
         {
           title: "действия",
-          key: "btns",
-          dataIndex: "btns",
+          key: "id",
+          dataIndex: "id",
           scopedSlots: { customRender: "btns" },
           className: "column-btns",
-          //   width: "10%",
           align: "right",
         },
       ],
