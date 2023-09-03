@@ -347,8 +347,11 @@ export default {
   async mounted() {
     this.getFirstData("/contents/comments", "__GET_COMMENTS");
   },
-  async current(val) {
-    this.changePagination(val, "/contents/comments", "__GET_COMMENTS");
+  watch: {
+    async current(val) {
+      console.log(val);
+      this.changePagination(val, "/contents/comments", "__GET_COMMENTS");
+    },
   },
   components: {
     TitleBlock,

@@ -33,6 +33,15 @@
           :loading="loading"
           :pagination="false"
           align="center"
+          :customRow="
+            (column) => {
+              return {
+                on: {
+                  click: (e) => clickRow(column), // click header row
+                },
+              };
+            }
+          "
         >
           <span slot="orderId" slot-scope="text">#{{ text }}</span>
           <span slot="operator" slot-scope="text">{{ text ? text : "----" }}</span>
@@ -66,7 +75,11 @@
             {{ tags }}
           </span>
           <span slot="btns" slot-scope="text">
-           <span class="action-btn" v-if="checkAccess('orders', 'PUT')" @click="$router.push(`/orders/${text}/edit`)" >
+            <span
+              class="action-btn"
+              v-if="checkAccess('orders', 'PUT')"
+              @click="$router.push(`/orders/${text}/edit`)"
+            >
               <img :src="editIcon" alt="" />
             </span>
           </span>
@@ -111,7 +124,7 @@ import OrderStatusMenu from "../../components/OrderStatusMenu.vue";
 import authAccess from "@/mixins/authAccess";
 export default {
   layout: "toolbar",
-  mixins: [global, columns,authAccess],
+  mixins: [global, columns, authAccess],
   data() {
     return {
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
@@ -139,6 +152,9 @@ export default {
     this.params.pageSize = Number(this.$route.query.per_page);
   },
   methods: {
+    clickRow(obj) {
+      this.$router.push(`/orders/${obj?.id}/details`);
+    },
     moment,
     async __GET_ORDERS() {
       this.loading = true;

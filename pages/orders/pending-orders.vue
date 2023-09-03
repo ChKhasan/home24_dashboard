@@ -32,6 +32,15 @@
           :loading="loading"
           :pagination="false"
           align="center"
+          :customRow="
+            (column) => {
+              return {
+                on: {
+                  click: (e) => clickRow(column), // click header row
+                },
+              };
+            }
+          "
         >
           <span slot="orderId" slot-scope="text">#{{ text }}</span>
           <span slot="operator" slot-scope="text">{{ text ? text : "----" }}</span>
@@ -138,6 +147,9 @@ export default {
     this.params.pageSize = Number(this.$route.query.per_page);
   },
   methods: {
+    clickRow(obj) {
+      this.$router.push(`/orders/${obj?.id}/details`);
+    },
     moment,
     async __GET_ORDERS() {
       this.loading = true;

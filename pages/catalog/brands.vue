@@ -1,14 +1,14 @@
 <template lang="html">
   <div>
     <TitleBlock title="Бренды" :breadbrumb="['Контент сайта']" lastLink="Бренды">
-      <div
+      <!-- <div
         v-if="checkAccess('brands', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openAddModal"
       >
         <span class="svg-icon" v-html="addIcon"></span>
         Добавить
-      </div>
+      </div> -->
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
@@ -251,7 +251,7 @@ export default {
           {
             required: true,
             message: "Это поле обязательна",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },

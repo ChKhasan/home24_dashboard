@@ -36,7 +36,11 @@
 
             <div class="form-block required">
               <el-form-item prop="company" label="Company">
-                <el-input type="text" v-model="ruleForm.company" />
+                <el-input
+                  type="text"
+                  v-model="ruleForm.company"
+                  placeholder="Company..."
+                />
               </el-form-item>
             </div>
             <div class="form-block required">
@@ -150,6 +154,9 @@ export default {
       },
     };
   },
+  mounted() {
+    this.__GET_ATRIBUT_BY_ID();
+  },
   methods: {
     submitForm(ruleForm) {
       this.$refs[ruleForm].validate((valid) => {
@@ -189,6 +196,13 @@ export default {
       } catch (e) {
         this.statusFunc(e.response);
       }
+    },
+    async __GET_ATRIBUT_BY_ID() {
+      const data = await this.$store.dispatch(
+        "fetchFeedbacks/getFeedbacksById",
+        this.$route.params.index
+      );
+      console.log(data);
     },
     statusFunc(res) {
       switch (res.status) {

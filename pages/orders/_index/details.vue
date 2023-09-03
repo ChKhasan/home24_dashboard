@@ -31,7 +31,7 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    Date Added</span
+                    Дата добавлена</span
                   >
                   <p>{{ moment(order.created_at).format("DD/MM/YYYY HH:mm") }}</p>
                 </div>
@@ -59,7 +59,7 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    Payment Method</span
+                    Способ оплаты</span
                   >
                   <p>{{ order?.payment_method }}</p>
                 </div>
@@ -82,7 +82,7 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    Shipping Method</span
+                    Способ доставки</span
                   >
                   <p>{{ order?.delivery_method }}</p>
                 </div>
@@ -113,7 +113,7 @@
                         fill="currentColor"
                       ></rect>
                     </svg>
-                    Operator</span
+                    Оператор</span
                   >
                   <p>{{ order?.operator ? order?.operator : "---" }}</p>
                 </div>
@@ -144,7 +144,7 @@
                         fill="currentColor"
                       ></rect>
                     </svg>
-                    Deliveryman</span
+                    Курьер</span
                   >
                   <p>{{ order?.deliveryman ? order?.deliveryman : "---" }}</p>
                 </div>
@@ -294,7 +294,10 @@
               </div>
             </div>
           </div>
-          <div class="mb-5" v-if="order?.delivery_method == 'courier'">
+          <div
+            class="mb-5"
+            v-if="order?.delivery_method == 'courier' && order?.user_address"
+          >
             <div class="custom_block px-4 py-4 position-relative">
               <FormTitle title="Адрес доставки" />
               <ul class="order-adress-list">
@@ -376,7 +379,7 @@
                   }}
                   so'm
                   {{
-                    text?.price - text?.price_with_discount > 0 ? "(со скидкой)" : ""
+                    text?.price - text?.price_with_discount > 0 ? "(с скидкой)" : ""
                   }}</a
                 >
                 <span slot="totalSum" slot-scope="text"
@@ -483,7 +486,7 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    Date Added</span
+                    Дата добавлена</span
                   >
                   <p>{{ moment(order.created_at).format("DD/MM/YYYY HH:mm") }}</p>
                 </div>
@@ -511,7 +514,7 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    Payment Method</span
+                    Способ оплаты</span
                   >
                   <p>{{ order?.payment_method }}</p>
                 </div>
@@ -534,7 +537,7 @@
                         fill="currentColor"
                       ></path>
                     </svg>
-                    Shipping Method</span
+                    Способ доставки</span
                   >
                   <p>{{ order?.delivery_method }}</p>
                 </div>
@@ -565,7 +568,7 @@
                         fill="currentColor"
                       ></rect>
                     </svg>
-                    Operator</span
+                    Оператор</span
                   >
                   <p>{{ order?.operator ? order?.operator : "---" }}</p>
                 </div>
@@ -596,7 +599,7 @@
                         fill="currentColor"
                       ></rect>
                     </svg>
-                    Deliveryman</span
+                    Курьер</span
                   >
                   <p>{{ order?.deliveryman ? order?.deliveryman : "---" }}</p>
                 </div>

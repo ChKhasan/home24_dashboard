@@ -339,14 +339,13 @@ export default {
           key: "desc",
           width: "30%",
         },
-        {
-          title: "Slug",
-          dataIndex: "slug",
-          className: "column-qty",
-          key: "slug",
-          align: "center",
-          //   width: "10%",
-        },
+        // {
+        //   title: "Slug",
+        //   dataIndex: "slug",
+        //   className: "column-qty",
+        //   key: "slug",
+        //   align: "center",
+        // },
 
         {
           title: "действия",
@@ -369,7 +368,7 @@ export default {
           {
             required: true,
             message: "Blog title is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
 
@@ -377,7 +376,7 @@ export default {
           {
             required: true,
             message: "Blog desc is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
@@ -610,6 +609,11 @@ export default {
     this.params.pageSize = Number(this.$route.query.per_page);
   },
   watch: {
+    visible(val) {
+      if (!val) {
+        this.ruleFormEmpty();
+      }
+    },
     async current(val) {
       if (this.$route.query.page != val) {
         await this.$router.replace({

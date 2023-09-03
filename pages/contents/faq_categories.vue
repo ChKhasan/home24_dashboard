@@ -281,7 +281,7 @@ export default {
           {
             required: true,
             message: "category nameis required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
@@ -463,6 +463,9 @@ export default {
     this.__GET_FAQ_CATEGORIES();
   },
   watch: {
+    visible(val) {
+      if (!val) this.ruleFormEmpty();
+    },
     "pagination.current"() {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;

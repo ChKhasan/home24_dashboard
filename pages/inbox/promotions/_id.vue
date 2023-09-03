@@ -347,7 +347,7 @@ export default {
         sticker: [],
       },
       lang: [
-          {
+        {
           key: "uz",
           label: "Uzbek",
         },
@@ -577,6 +577,7 @@ export default {
           },
         ];
       }
+      console.log(this.ruleForm);
     },
   },
   async mounted() {

@@ -214,7 +214,7 @@ export default {
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       loadingBtn: false,
       modalTabData: [
-          {
+        {
           index: "uz",
           label: "Uzbek",
         },
@@ -303,7 +303,7 @@ export default {
             {
               required: true,
               message: "Banner link is required",
-              trigger: "change",
+              trigger: "blur",
             },
           ],
         },
@@ -311,7 +311,7 @@ export default {
           {
             required: true,
             message: "Banner type desc is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
@@ -560,6 +560,9 @@ export default {
     this.params.pageSize = Number(this.$route.query.per_page);
   },
   watch: {
+    visible(val) {
+      if (!val) this.ruleFormEmpty();
+    },
     async current(val) {
       if (this.$route.query.page != val) {
         await this.$router.replace({

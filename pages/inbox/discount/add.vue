@@ -61,12 +61,16 @@
                     <div class="discount-grid-input">
                       <div class="form-block required mb-0">
                         <el-form-item label="Процент">
-                          <el-input v-model="percent" placeholder="Процент..."></el-input>
+                          <el-input
+                            v-model="percent"
+                            type="number"
+                            placeholder="Процент..."
+                          ></el-input>
                         </el-form-item>
                       </div>
                       <div class="form-block required mb-0">
                         <el-form-item label="Сумма">
-                          <el-input v-model="amount" placeholder="Сумма..."></el-input>
+                          <el-input v-model="amount" type="number" placeholder="Сумма..."></el-input>
                         </el-form-item>
                       </div>
                       <div
@@ -119,10 +123,14 @@
                     </a-select>
                   </el-form-item>
                   <el-form-item label="Процент" class="form-block mb-0">
-                    <el-input placeholder="Процент..." v-model="product.percent" />
+                    <el-input
+                      placeholder="Процент..."
+                      type="number"
+                      v-model="product.percent"
+                    />
                   </el-form-item>
                   <el-form-item label="Сумма" class="form-block mb-0">
-                    <el-input placeholder="Сумма..." v-model="product.amount" />
+                    <el-input placeholder="Сумма..." type="number" v-model="product.amount" />
                   </el-form-item>
                   <div class="variant_btns mb-1 mt-0">
                     <div
@@ -202,7 +210,7 @@ import authAccess from "@/mixins/authAccess";
 import debounce from "lodash/debounce";
 export default {
   layout: "toolbar",
-  mixins: [status,authAccess],
+  mixins: [status, authAccess],
   data() {
     this.lastFetchId = 0;
     this.fetchUser = debounce(this.fetchUser, 800);
@@ -234,7 +242,7 @@ export default {
         },
       ],
       lang: [
-          {
+        {
           key: "uz",
           label: "Uzbek",
         },

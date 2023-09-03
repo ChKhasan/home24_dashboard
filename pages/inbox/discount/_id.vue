@@ -185,12 +185,13 @@
                 <div class="form-block mb-0">
                   <el-form-item label="Дата" prop="start">
                     <a-range-picker
+                      v-if="ruleForm?.start"
                       @change="onChange"
+                      :format="dateFormat"
                       :default-value="[
                         moment(ruleForm.start, dateFormat),
                         moment(ruleForm.end, dateFormat),
                       ]"
-                      :format="dateFormat"
                     />
                   </el-form-item>
                 </div>
@@ -220,7 +221,7 @@ export default {
     return {
       value: [],
       data: [],
-      dateFormat: "YYYY/MM/DD",
+      dateFormat: "YYYY-MM-DD",
       fetching: false,
       activeName: "Русский",
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
@@ -409,8 +410,6 @@ export default {
           this.$route.params.id
         );
         this.ruleForm = { ...data?.discount };
-        console.log(this.ruleForm, "ruleform");
-        // this.ruleForm.start.replace()
         this.ruleForm.products = data?.discount?.products.map((item) => {
           return {
             ...item,
@@ -419,9 +418,9 @@ export default {
           };
         });
         this.data = data?.discount?.products;
+        console.log(this.ruleForm);
       } catch (e) {
         console.log(e);
-        // this.statusFunc(e.response);
       }
     },
     async fetchUser(value) {

@@ -92,6 +92,9 @@ ul {
 .badges-color-picker .el-color-dropdown__link-btn span {
   opacity: 0;
 }
+.cursor-pointer {
+  cursor: pointer;
+}
 .variant-modal {
   &::-webkit-scrollbar {
     display: none;

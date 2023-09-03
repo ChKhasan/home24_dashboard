@@ -178,21 +178,21 @@ export default {
           {
             required: true,
             message: "Это поле обязательна",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
         password: [
           {
             required: true,
             message: "Это поле обязательна",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
         role_id: [
           {
             required: true,
             message: "Это поле обязательна",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },

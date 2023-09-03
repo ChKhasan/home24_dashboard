@@ -51,12 +51,8 @@
           :pagination="false"
           :page-size="params.pageSize"
           align="center"
-          :row-selection="{
-            selectedRowKeys: selectedRowKeys,
-            columnWidth: '40px',
-            align: 'right',
-          }"
         >
+          <span slot="key" slot-scope="text">#{{ text }}</span>
           <span slot="img" slot-scope="text">
             <img v-if="text" class="table-image" :src="text" alt="text" />
             <img

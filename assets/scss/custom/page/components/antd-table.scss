@@ -19,7 +19,7 @@
 }
 .ant-table-row {
   &:hover {
-    background: initial !important;
+    // background: initial !important;
   }
 }
 .ant-checkbox-checked .ant-checkbox-inner {
@@ -318,7 +318,7 @@
 .ant-table-tbody
   > tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)
   > td {
-  background: #fff !important;
+  // background: #fff !important;
 }
 .ant-table-row-cell-break-word {
   position: relative;

@@ -283,7 +283,7 @@ export default {
           {
             required: true,
             message: "Blog title is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
 
@@ -291,14 +291,14 @@ export default {
           {
             required: true,
             message: "Blog desc is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
         answer_ru: [
           {
             required: true,
             message: "Blog desc is required",
-            trigger: "change",
+            trigger: "blur",
           },
         ],
       },
@@ -500,6 +500,9 @@ export default {
     this.__GET_FAQ_CATEGORIES();
   },
   watch: {
+    visible(val) {
+      if (!val) this.ruleFormEmpty();
+    },
     "pagination.current"() {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;

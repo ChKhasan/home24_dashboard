@@ -51,7 +51,7 @@
                         v-model="ruleForm.group[itemLang.key]"
                       />
                     </el-form-item>
-                    <el-form-item prop="keywords" label="Ключевые слова">
+                    <el-form-item label="Ключевые слова">
                       <el-input
                         placeholder="Ключевые слова..."
                         v-model="ruleForm.keywords"
@@ -183,7 +183,7 @@ export default {
       addIcon: require("../../../assets/svg/components/add-icon.svg?raw"),
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       lang: [
-          {
+        {
           key: "uz",
           label: "Uzbek",
         },
@@ -230,13 +230,13 @@ export default {
         //     trigger: "change",
         //   },
         // ],
-        keywords: [
-          {
-            required: true,
-            message: "Characteristic name is required",
-            trigger: "change",
-          },
-        ],
+        // keywords: [
+        //   {
+        //     required: true,
+        //     message: "Characteristic name is required",
+        //     trigger: "change",
+        //   },
+        // ],
       },
       ruleForm: {
         group: {
