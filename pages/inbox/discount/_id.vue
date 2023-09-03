@@ -106,7 +106,7 @@
                     <a-select
                       show-search
                       :value="product.id"
-                      placeholder="input search text"
+                      placeholder="Продукты..."
                       :default-active-first-option="false"
                       :show-arrow="false"
                       :filter-option="false"
@@ -353,7 +353,6 @@ export default {
       this.ruleForm.products.push({
         percent: null,
         amount: null,
-        id: null,
         indexId: Math.max(...this.ruleForm.products.map((o) => o.indexId)) + 1,
       });
     },
@@ -410,11 +409,12 @@ export default {
           this.$route.params.id
         );
         this.ruleForm = { ...data?.discount };
-        this.ruleForm.products = data?.discount?.products.map((item) => {
+        this.ruleForm.products = data?.discount?.products.map((item, index) => {
           return {
             ...item,
             percent: item.pivot.percent,
             amount: item.pivot.amount,
+            indexId: index + 1,
           };
         });
         this.data = data?.discount?.products;

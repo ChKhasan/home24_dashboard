@@ -70,7 +70,11 @@
                       </div>
                       <div class="form-block required mb-0">
                         <el-form-item label="Сумма">
-                          <el-input v-model="amount" type="number" placeholder="Сумма..."></el-input>
+                          <el-input
+                            v-model="amount"
+                            type="number"
+                            placeholder="Сумма..."
+                          ></el-input>
                         </el-form-item>
                       </div>
                       <div
@@ -106,8 +110,8 @@
                   >
                     <a-select
                       show-search
-                      :value="product.id"
-                      placeholder="input search text"
+                      v-model="product.id"
+                      placeholder="Продукты..."
                       :default-active-first-option="false"
                       :show-arrow="false"
                       :filter-option="false"
@@ -130,7 +134,11 @@
                     />
                   </el-form-item>
                   <el-form-item label="Сумма" class="form-block mb-0">
-                    <el-input placeholder="Сумма..." type="number" v-model="product.amount" />
+                    <el-input
+                      placeholder="Сумма..."
+                      type="number"
+                      v-model="product.amount"
+                    />
                   </el-form-item>
                   <div class="variant_btns mb-1 mt-0">
                     <div
@@ -309,7 +317,6 @@ export default {
             indexId: 1,
             percent: null,
             amount: null,
-            id: null,
           },
         ],
       },
@@ -345,7 +352,6 @@ export default {
       this.ruleForm.products.push({
         percent: null,
         amount: null,
-        id: null,
         indexId: Math.max(...this.ruleForm.products.map((o) => o.indexId)) + 1,
       });
     },

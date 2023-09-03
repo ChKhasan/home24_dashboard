@@ -70,7 +70,7 @@
             </span>
           </a-table>
           <div class="d-flex justify-content-between mt-4">
-            <el-select
+            <!-- <el-select
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
@@ -86,7 +86,8 @@
                 :value="item.value"
               >
               </el-option>
-            </el-select>
+            </el-select> -->
+            <span></span>
             <a-pagination
               class="table-pagination"
               :simple="false"

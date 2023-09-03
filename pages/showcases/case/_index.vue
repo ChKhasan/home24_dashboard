@@ -47,7 +47,16 @@
                         @click="$router.push(`/catalog/edit_products/${item.id}`)"
                       >
                         <span class="drag-img"
-                          ><img :src="item?.images[0]?.sm_img" class="table-image" alt=""
+                          ><img
+                            v-if="item?.images[0]?.sm_img"
+                            :src="item?.images[0]?.sm_img"
+                            class="table-image"
+                            alt="" />
+                          <img
+                            v-else
+                            class="table-image"
+                            src="../../../assets/images/photo_2023-03-04_13-28-58.jpg"
+                            alt=""
                         /></span>
                         {{ item?.name?.ru }}
                       </li>

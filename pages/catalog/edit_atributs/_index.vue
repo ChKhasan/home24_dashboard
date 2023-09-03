@@ -8,11 +8,7 @@
       label-width="120px"
       class="demo-ruleForm"
     >
-      <TitleBlock
-        title="Атрибуты"
-        :breadbrumb="['Каталог']"
-        lastLink="Атрибуты"
-      >
+      <TitleBlock title="Атрибуты" :breadbrumb="['Каталог']" lastLink="Атрибуты">
         <div class="d-flex">
           <span class="mx-3">
             <LayoutHeaderBtn
@@ -22,13 +18,12 @@
             />
           </span>
           <div
-          v-if="checkAccess('attributes', 'PUT')"
+            v-if="checkAccess('attributes', 'PUT')"
             class="add-btn add-header-btn add-header-btn-padding btn-primary"
             type="submit"
             @click="submitForm('ruleForm')"
           >
-            <span class="svg-icon" v-html="addIcon"></span>
-            Сохранить изменение
+            Сохранять
           </div>
         </div>
       </TitleBlock>
@@ -112,9 +107,7 @@
                                       />
                                     </svg>
                                   </div>
-                                  <div
-                                    class="variant-btn variant-btn-check cursor_drag"
-                                  >
+                                  <div class="variant-btn variant-btn-check cursor_drag">
                                     <a-icon
                                       type="drag"
                                       :style="{
@@ -148,9 +141,7 @@
                           >
                             <template v-slot:item="{ item }">
                               <drag class="item" :key="item.elemId">
-                                <div
-                                  class="d-flex align-items-center color_picker"
-                                >
+                                <div class="d-flex align-items-center color_picker">
                                   <el-color-picker
                                     popper-class="badges-color-picker"
                                     v-model="item.name"
@@ -185,31 +176,22 @@
                             </template>
                           </drop-list>
                         </el-form-item>
-                        <div
-                          class="variant_btns mb-1 mt-0"
-                          @click="addElement()"
-                        >
+                        <div class="variant_btns mb-1 mt-0" @click="addElement()">
                           <div class="variant-btn variant-btn-check">
                             <span v-html="addInnerValidatIcon"></span>
                           </div>
                         </div>
                       </div>
-                      <div
-                        class="d-flex justify-content-start"
-                        v-if="colorPickerHide"
-                      >
-                        <div
-                          class="create-inner-variant mt-0"
-                          @click="addElement()"
-                        >
+                      <div class="d-flex justify-content-start" v-if="colorPickerHide">
+                        <div class="create-inner-variant mt-0" @click="addElement()">
                           <span v-html="addInnerValidatIcon"></span>
                           Добавить опции
                         </div>
                       </div>
                       <span class="bottom_text"
-                        >Установите список ключевых слов, с которыми связана
-                        категория. Разделяйте ключевые слова, добавляя запятую
-                        между каждым ключевое слово.</span
+                        >Установите список ключевых слов, с которыми связана категория.
+                        Разделяйте ключевые слова, добавляя запятую между каждым ключевое
+                        слово.</span
                       >
                     </div>
                   </div>
@@ -241,7 +223,7 @@ export default {
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       options: [],
       lang: [
-          {
+        {
           key: "uz",
           label: "Uzbek",
         },
@@ -321,9 +303,7 @@ export default {
       if (typeof this.ruleForm.group_id == "string") {
         this.ruleForm.group_id = this.group_id;
       }
-      const newOptionsNames = this.options.map(
-        (item) => (item.name = item.name.ru)
-      );
+      const newOptionsNames = this.options.map((item) => (item.name = item.name.ru));
       const newOptions = this.ruleForm.optionsName.map((item, index) => {
         if (newOptionsNames.includes(item.name)) {
           let opt = this.options.find((item2) => item2.name == item.name);
@@ -367,18 +347,14 @@ export default {
       this.ruleForm.keywords = data.attribute.keywords;
       this.atribut_id = data.attribute.id;
       this.options = data.attribute.options;
-      this.ruleForm.options = data.attribute.options.map(
-        (item) => item.name.ru
-      );
+      this.ruleForm.options = data.attribute.options.map((item) => item.name.ru);
       this.ruleForm.optionsName = data.attribute.options.map((item, index) => {
         return {
           name: item.name.ru,
           elemId: index + 1,
         };
       });
-      this.colorPickerHide = !data.attribute.name.ru
-        .toUpperCase()
-        .includes("ЦВЕТ");
+      this.colorPickerHide = !data.attribute.name.ru.toUpperCase().includes("ЦВЕТ");
     },
     async __EDIT_ATRIBUTES(data) {
       try {

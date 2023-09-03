@@ -15,7 +15,6 @@
           @click="submitForm('ruleForm')"
           :loading="uploadLoading"
         >
-          <span class="svg-icon" v-if="!uploadLoading" v-html="addIcon"> </span>
           Сохранить изменение
         </a-button>
       </div>
@@ -193,6 +192,7 @@
                       <el-form-item prop="brand_id">
                         <el-select
                           class="w-100 disabled"
+                          disabled
                           v-model="ruleForm.brand_id"
                           allow-create
                           popper-class="select-popper-hover"
@@ -1164,7 +1164,7 @@ export default {
       cascaderCategories: [],
       lastCategory: [],
       lang: [
-          {
+        {
           key: "uz",
           label: "Uzbek",
         },

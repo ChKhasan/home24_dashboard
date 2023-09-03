@@ -23,8 +23,7 @@
             type="submit"
             @click="submitForm('ruleForm')"
           >
-            <span class="svg-icon" v-html="addIcon"></span>
-            Добавить характеристику
+            Сохранять
           </div>
         </div>
       </TitleBlock>
