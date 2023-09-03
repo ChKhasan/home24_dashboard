@@ -237,17 +237,13 @@ export default {
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       addInnerValidatIcon: require("../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       lang: [
-        {
-          key: "ru",
-          label: "Русский",
-        },
-        {
+          {
           key: "uz",
           label: "Uzbek",
         },
         {
-          key: "en",
-          label: "English",
+          key: "ru",
+          label: "Русский",
         },
       ],
       options: [],

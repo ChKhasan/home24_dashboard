@@ -225,16 +225,12 @@ export default {
       regions: [],
       modalTabData: [
         {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
           index: "uz",
+          label: "Uzbek",
         },
         {
-          label: "English",
-          index: "en",
+          index: "ru",
+          label: "Русский",
         },
       ],
       modalTab: "ru",

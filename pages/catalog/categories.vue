@@ -15,9 +15,15 @@
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
           <div class="prodduct-list-header-grid w-100 align-items-center">
-            <SearchInput placeholder="Категория поиска" />
+            <SearchInput
+              placeholder="Категория поиска"
+              @changeSearch="
+                ($event) =>
+                  changeSearch($event, '/catalog/categories', '__GET_CATEGORIES')
+              "
+            />
             <div></div>
-            <StatusFilter />
+            <StatusFilter @changeStatus="changeStatus" />
           </div>
         </div>
         <div class="antd_table select-table">
@@ -109,7 +115,7 @@
             </span>
           </a-table>
           <div class="d-flex justify-content-between mt-4">
-            <el-select
+            <!-- <el-select
               v-model="params.pageSize"
               class="table-page-size"
               placeholder="Select"
@@ -122,7 +128,9 @@
                 :value="item.value"
               >
               </el-option>
-            </el-select>
+            </el-select> -->
+            <span></span>
+
             <a-pagination
               class="table-pagination"
               :simple="false"
@@ -291,6 +299,23 @@ export default {
       this.allCheckbox.includes(id)
         ? (this.allCheckbox = this.allCheckbox.filter((item) => item != id))
         : this.allCheckbox.push(id);
+    },
+    async changeStatus(val) {
+      this.status = val;
+      if (val) {
+        await this.$router.replace({
+          path: this.$route.path,
+          query: { ...this.$route.query, status: val },
+        });
+      } else {
+        let query = { ...this.$route.query };
+        delete query["status"];
+        await this.$router.replace({
+          path: this.$route.path,
+          query: { ...query },
+        });
+      }
+      this.__GET_CATEGORIES();
     },
   },
   async mounted() {

@@ -430,18 +430,26 @@
                     Сумма (Di coin):
                     {{
                       `${order?.products_info?.reduce((sum, item) => {
-                        return sum + item?.count * item?.price_with_discount
-                          ? item?.price_with_discount.toFixed()
-                          : item?.price.toFixed();
+                        return (
+                          sum +
+                          item?.count *
+                            (item?.price_with_discount
+                              ? item?.price_with_discount.toFixed()
+                              : item?.price.toFixed())
+                        );
                       }, 0)}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                     }}so'm
                   </h2>
                   <FormTitle
                     :title="`Общий сумма: ${`${order?.products_info?.reduce(
                       (sum, item) => {
-                        return sum + item?.count * item?.price_with_discount
-                          ? item?.price_with_discount.toFixed()
-                          : item?.price.toFixed();
+                        return (
+                          sum +
+                          item?.count *
+                            (item?.price_with_discount
+                              ? item?.price_with_discount.toFixed()
+                              : item?.price.toFixed())
+                        );
                       },
                       0
                     )}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm`"

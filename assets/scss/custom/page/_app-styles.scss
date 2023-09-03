@@ -137,3 +137,12 @@ ul {
   display: flex;
   flex-wrap: wrap;
 }
+.ant-pagination-jump-prev
+  .ant-pagination-item-container
+  .ant-pagination-item-ellipsis,
+.ant-pagination-jump-next
+  .ant-pagination-item-container
+  .ant-pagination-item-ellipsis {
+  display: flex !important;
+  justify-content: center;
+}

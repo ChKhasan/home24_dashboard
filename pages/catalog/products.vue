@@ -22,7 +22,7 @@
               "
             />
             <div class="input status-select w-100">
-              <el-select v-model="brandSearch" placeholder="Сортировать" class="w-100">
+              <!-- <el-select v-model="brandSearch" placeholder="Сортировать" class="w-100">
                 <el-option
                   class="w-100"
                   v-for="item in brandSelect"
@@ -32,7 +32,7 @@
                   :disabled="item.disabled"
                 >
                 </el-option>
-              </el-select>
+              </el-select> -->
             </div>
             <StatusFilter @changeStatus="changeStatus" />
             <a-button
@@ -124,7 +124,7 @@
           </span>
         </a-table>
         <div class="d-flex justify-content-between mt-4">
-          <el-select
+          <!-- <el-select
             v-model="params.pageSize"
             class="table-page-size"
             placeholder="Select"
@@ -140,7 +140,8 @@
               :value="item.value"
             >
             </el-option>
-          </el-select>
+          </el-select> -->
+          <span></span>
           <a-pagination
             class="table-pagination"
             :simple="false"

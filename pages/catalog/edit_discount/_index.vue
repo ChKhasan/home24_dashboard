@@ -229,17 +229,13 @@ export default {
         },
       ],
       lang: [
-        {
-          key: "ru",
-          label: "Русский",
-        },
-        {
+          {
           key: "uz",
           label: "Uzbek",
         },
         {
-          key: "en",
-          label: "English",
+          key: "ru",
+          label: "Русский",
         },
       ],
       rules: {

@@ -214,17 +214,13 @@ export default {
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       loadingBtn: false,
       modalTabData: [
-        {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
+          {
           index: "uz",
+          label: "Uzbek",
         },
         {
-          label: "English",
-          index: "en",
+          index: "ru",
+          label: "Русский",
         },
       ],
       ruleForm: {

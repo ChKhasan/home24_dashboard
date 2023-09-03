@@ -136,7 +136,7 @@
               >
                 <a-spin v-if="fetching" slot="notFoundContent" size="small" />
                 <a-select-option v-for="d in options" :key="d.id">
-                  {{ d.name.ru }}
+                  {{ d.name?.ru }}
                 </a-select-option>
               </a-select>
             </el-form-item>
@@ -224,16 +224,12 @@ export default {
       },
       modalTabData: [
         {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
           index: "uz",
+          label: "Uzbek",
         },
         {
-          label: "English",
-          index: "en",
+          index: "ru",
+          label: "Русский",
         },
       ],
       options: [],
@@ -263,6 +259,7 @@ export default {
         return {
           id: item.key,
           position: index + 1,
+          name: item?.name,
         };
       });
       this.$refs.ruleFormShowCase.validate((valid) => {
@@ -288,7 +285,7 @@ export default {
         this.value = this.products.map((item) => {
           return {
             key: item.pivot.product_id,
-            label: item.slug,
+            label: item.name.ru,
           };
         });
         this.spinning = false;

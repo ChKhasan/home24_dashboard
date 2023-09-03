@@ -10,7 +10,7 @@
         Добавить
       </div>
       <div
-      v-if="activeTab != 'regions' && checkAccess('region-groups', 'POST')"
+        v-if="activeTab != 'regions' && checkAccess('region-groups', 'POST')"
         class="add-btn add-header-btn add-header-btn-padding btn-primary"
         @click="openGroupModal"
       >
@@ -435,16 +435,12 @@ export default {
       activeLang: "Русский",
       lang: [
         {
-          key: "ru",
-          label: "Русский",
-        },
-        {
           key: "uz",
           label: "Uzbek",
         },
         {
-          key: "en",
-          label: "English",
+          key: "ru",
+          label: "Русский",
         },
       ],
       visible: false,
@@ -459,16 +455,12 @@ export default {
       editingKey: "",
       modalTabData: [
         {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
           index: "uz",
+          label: "Uzbek",
         },
         {
-          label: "English",
-          index: "en",
+          index: "ru",
+          label: "Русский",
         },
       ],
       editIcon: require("../../assets/svg/components/edit-icon.svg"),

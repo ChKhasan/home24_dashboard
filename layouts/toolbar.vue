@@ -380,14 +380,14 @@ export default {
           disabled: false,
           show: this.checkShow("brands"),
         },
-        {
-          name: "Значки",
-          index: "16",
-          to: "/catalog/badges",
-          path: "catalog-badges",
-          disabled: false,
-          show: this.checkShow("badges"),
-        },
+        // {
+        //   name: "Значки",
+        //   index: "16",
+        //   to: "/catalog/badges",
+        //   path: "catalog-badges",
+        //   disabled: false,
+        //   show: this.checkShow("badges"),
+        // },
       ],
       showcases: [],
       orders: [

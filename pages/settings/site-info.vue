@@ -148,17 +148,13 @@ export default {
         authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
       lang: [
-        {
-          key: "ru",
-          label: "Русский",
-        },
-        {
+          {
           key: "uz",
           label: "Uzbek",
         },
         {
-          key: "en",
-          label: "English",
+          key: "ru",
+          label: "Русский",
         },
       ],
       addIcon: require("../../assets/svg/components/add-icon.svg?raw"),

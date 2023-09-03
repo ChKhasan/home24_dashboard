@@ -188,17 +188,13 @@ export default {
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
 
       lang: [
-        {
-          key: "ru",
-          label: "Русский",
-        },
-        {
+          {
           key: "uz",
           label: "Uzbek",
         },
         {
-          key: "en",
-          label: "English",
+          key: "ru",
+          label: "Русский",
         },
       ],
       options: [],

@@ -247,7 +247,7 @@ const columns = [
     scopedSlots: { customRender: "indexId" },
     className: "column-name",
     align: "left",
-    width: 50,
+    width: 100,
   },
   {
     title: "КЛЮЧ",
@@ -264,18 +264,15 @@ const columns = [
     scopedSlots: { customRender: "valRu" },
     className: "column-name",
     align: "left",
-    width: "30%",
   },
   {
     title: "ЗНАЧЕНИЕ(EN)",
-
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "valEn" },
     className: "column-name",
   },
   {
     title: "ЗНАЧЕНИЕ(UZ)",
-
     slots: { title: "customTitle" },
     scopedSlots: { customRender: "valUz" },
     className: "column-name",
@@ -385,9 +382,7 @@ export default {
       );
     },
     async __GET_TRANSLATE_GROUPS() {
-      const data = await this.$store.dispatch("fetchTranslations/getTranslateGruop", {
-        ...this.$route.query,
-      });
+      const data = await this.$store.dispatch("fetchTranslations/getTranslateGruop", {});
       this.groups = data?.groups?.data;
       console.log(this.groups);
     },

@@ -102,20 +102,6 @@ export default {
       addImgIcon: require("../../assets/svg/components/add-img-icon.svg?raw"),
       selectedRowKeys: [], // Check here to configure the default column
       loadingBtn: false,
-      modalTabData: [
-        {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
-          index: "uz",
-        },
-        {
-          label: "English",
-          index: "en",
-        },
-      ],
       ruleForm: {
         img: {
           ru: "",

@@ -967,17 +967,13 @@ export default {
       cascaderCategories: [],
       lastCategory: [],
       lang: [
-        {
-          key: "ru",
-          label: "Русский",
-        },
-        {
+          {
           key: "uz",
           label: "Uzbek",
         },
         {
-          key: "en",
-          label: "English",
+          key: "ru",
+          label: "Русский",
         },
       ],
       options: [

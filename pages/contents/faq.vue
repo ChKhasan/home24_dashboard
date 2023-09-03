@@ -208,16 +208,12 @@ export default {
       loadingBtn: false,
       modalTabData: [
         {
-          label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
           index: "uz",
+          label: "Uzbek",
         },
         {
-          label: "English",
-          index: "en",
+          index: "ru",
+          label: "Русский",
         },
       ],
       ruleForm: {

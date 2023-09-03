@@ -218,17 +218,13 @@ export default {
       visible: false,
       modalTab: "ru",
       modalTabData: [
+          {
+          key: "uz",
+          label: "Uzbek",
+        },
         {
+          key: "ru",
           label: "Русский",
-          index: "ru",
-        },
-        {
-          label: "O'zbek",
-          index: "uz",
-        },
-        {
-          label: "English",
-          index: "en",
         },
       ],
       editIcon: require("../../assets/svg/components/edit-icon.svg"),

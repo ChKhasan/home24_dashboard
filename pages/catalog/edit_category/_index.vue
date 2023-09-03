@@ -104,6 +104,8 @@
                             <el-form-item>
                               <el-select
                                 v-model="item.name"
+                                v-if="item.name == 1"
+                                :disabled="item.name == 1"
                                 class="w-100"
                                 @change="filterElement('attributes')"
                                 popper-class="select-popper-hover"
@@ -113,6 +115,26 @@
                               >
                                 <el-option
                                   v-for="item in atributes"
+                                  :key="item.id"
+                                  :label="item.name.ru"
+                                  :value="item.id"
+                                >
+                                </el-option>
+                              </el-select>
+                              <el-select
+                                v-model="item.name"
+                                class="w-100"
+                                v-else
+                                @change="filterElement('attributes')"
+                                popper-class="select-popper-hover"
+                                default-first-option
+                                no-data-text="No atribut"
+                                placeholder="Выберите атрибут"
+                              >
+                                <el-option
+                                  v-for="item in [
+                                    ...atributes.filter((item) => item.id != 1),
+                                  ]"
                                   :key="item.id"
                                   :label="item.name.ru"
                                   :value="item.id"
@@ -440,16 +462,12 @@ export default {
       allGroups: [],
       lang: [
         {
-          key: "ru",
-          label: "Русский",
-        },
-        {
           key: "uz",
           label: "Uzbek",
         },
         {
-          key: "en",
-          label: "English",
+          key: "ru",
+          label: "Русский",
         },
       ],
       options: [
@@ -610,6 +628,8 @@ export default {
     },
     deleteElement(type, id) {
       if (this[type].length > 1) this[type] = this[type].filter((item) => item.id != id);
+      this.filterElement("attributes");
+      this.filterElement("group_characteristics");
     },
     submitForm(ruleForm) {
       const data = {
