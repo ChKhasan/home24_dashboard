@@ -18,7 +18,8 @@
       </div>
     </TitleBlock>
     <div class="container_xl">
-      <div class="card_block-form py-5">
+      <div class="card_block-form py-5 position-relative">
+        <Loader v-if="loading" />
         <div
           class="d-flex justify-content-between align-items-center card_header card_tabs_padding"
         ></div>
@@ -423,6 +424,7 @@ import "quill/dist/quill.bubble.css";
 import { Drag, DropList } from "vue-easy-dnd";
 import status from "../../../mixins/status";
 import authAccess from "@/mixins/authAccess";
+import Loader from "../../../components/loader.vue";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -437,6 +439,7 @@ export default {
   mixins: [status, authAccess],
   data() {
     return {
+      loading: false,
       headers: {
         authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
@@ -674,10 +677,13 @@ export default {
     },
 
     async __GET_CATEGORY_BY_ID() {
+      this.loading = true;
       const data = await this.$store.dispatch(
         "fetchCategories/getCategoriesById",
         this.$route.params.index
       );
+      this.loading = false;
+
       this.slug = data.category.slug;
       this.categoryChild = data.category.children;
       this.ruleForm.name.ru = data.category.name.ru;
@@ -811,6 +817,7 @@ export default {
     LayoutHeaderBtn,
     Drag,
     DropList,
+    Loader,
   },
 };
 </script>

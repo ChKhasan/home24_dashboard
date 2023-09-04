@@ -16,9 +16,23 @@
     </TitleBlock>
     <div class="container_xl app-container">
       <div class="card_block py-5">
-        <div class="d-flex justify-content-between align-items-center pt-4">
-          <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Группа характеристик" />
+        <div class="d-flex justify-content-between align-items-center card_header">
+          <div class="prodduct-list-header-grid w-100 align-items-center">
+            <SearchInput
+              placeholder="Группа характеристик"
+              @changeSearch="
+                changeSearch($event, '/catalog/characteristic_groups', '__GET_GROUPS')
+              "
+            />
+            <span></span>
+            <span></span>
+            <a-button
+              @click="clearQuery('/catalog/characteristic_groups', '__GET_GROUPS')"
+              type="primary"
+              class="d-flex align-items-center justify-content-center"
+              style="height: 38px"
+              ><a-icon type="reload"
+            /></a-button>
           </div>
         </div>
         <div class="antd_table product_table">
@@ -58,21 +72,7 @@
               </a-popconfirm>
             </span>
           </a-table>
-          <div class="d-flex justify-content-between mt-4">
-            <el-select
-              v-model="params.pageSize"
-              class="table-page-size"
-              placeholder="Select"
-              @change="changePageSize"
-            >
-              <el-option
-                v-for="item in pageSizes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+          <div class="d-flex justify-content-end mt-4">
             <a-pagination
               class="table-pagination"
               :simple="false"
@@ -94,6 +94,7 @@ import global from "../../mixins/global";
 import status from "@/mixins/status";
 import columns from "../../mixins/columns";
 import authAccess from "@/mixins/authAccess";
+import SearchInput from "../../components/form/Search-input.vue";
 
 export default {
   // middleware: "auth",
@@ -194,6 +195,7 @@ export default {
     TitleBlock,
     FormTitle,
     AddModal,
+    SearchInput,
   },
   layout: "toolbar",
 };

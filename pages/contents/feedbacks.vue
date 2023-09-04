@@ -19,9 +19,8 @@
           <a-table
             :columns="columns"
             :data-source="feedbacks"
-            :pagination="pagination"
+            :pagination="false"
             :loading="loading"
-            @change="handleTableChange"
           >
             <div slot="img" slot-scope="text">
               <img
@@ -64,6 +63,15 @@
               </a-popconfirm>
             </span>
           </a-table>
+          <div class="d-flex justify-content-end mt-4">
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -74,7 +82,7 @@ import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
 import authAccess from "@/mixins/authAccess";
-
+import global from "../../mixins/global";
 function getBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -84,7 +92,7 @@ function getBase64(file) {
   });
 }
 export default {
-  mixins: [authAccess],
+  mixins: [authAccess, global],
   // middleware: "auth",
   data() {
     return {
@@ -197,22 +205,7 @@ export default {
     hide(name) {
       this.$modal.hide(name);
     },
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
-        await this.$router.replace({
-          path: `/contents/feedbacks`,
-          query: {
-            page: pagination.current,
-          },
-        });
-      }
-      this.loading = true;
-      this.__GET_FEEDBACKS();
-    },
+
     getData() {
       const newData = {
         ...this.ruleForm,
@@ -314,9 +307,7 @@ export default {
       });
 
       this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.feedbacks?.total;
+      this.totalPage = data.feedbacks?.total;
       this.feedbacks = data.feedbacks?.data;
       this.feedbacks = this.feedbacks.map((item) => {
         return {
@@ -395,6 +386,9 @@ export default {
     // this.__GET_FEEDBACKS_TYPES();
   },
   watch: {
+    async current(val) {
+      this.changePagination(val, "/contents/faq", "__GET_FAQS");
+    },
     "pagination.current"() {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;

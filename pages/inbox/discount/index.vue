@@ -22,7 +22,17 @@
               @changeSearch="changeSearch($event, '/inbox/discount', '__GET_DISCOUNT')"
             />
             <span></span>
-            <span></span>
+            <div class="input status-select">
+              <el-select v-model="value" placeholder="Статус" @change="changeStatus">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
             <a-button
               @click="clearQuery('/inbox/discount', '__GET_DISCOUNT')"
               type="primary"
@@ -51,7 +61,7 @@
               <span
                 class="action-btn"
                 v-if="checkAccess('discount', 'PUT')"
-                @click="$router.push(`/inbox/discount/${text}`)"
+                @click="$router.push(`/inbox/discount/${text.id}`)"
               >
                 <img :src="editIcon" alt="" />
               </span>
@@ -108,6 +118,7 @@ import global from "../../../mixins/global";
 import status from "@/mixins/status";
 import authAccess from "@/mixins/authAccess";
 import columns from "../../../mixins/columns";
+import StatusFilter from "../../../components/form/Status-filter.vue";
 
 export default {
   layout: "toolbar",
@@ -121,19 +132,58 @@ export default {
       selectedRowKeys: [],
       discounts: [],
       data: [],
+      options: [
+        {
+          value: 1,
+          label: "Активный",
+        },
+        {
+          value: 0,
+          label: "Архив",
+        },
+      ],
+      value: 1,
     };
   },
   async mounted() {
     this.getFirstData("/inbox/discount", "__GET_DISCOUNT");
   },
   methods: {
-    deleteAtribut(id) {
-      this.__DELETE_GLOBAL(
-        id,
-        "fetchDiscount/deleteDiscount",
-        "Успешно удален",
-        "__GET_DISCOUNT"
-      );
+    async getFirstData(url, dataFunc) {
+      if (
+        !Object.keys(this.$route.query).includes("page") ||
+        !Object.keys(this.$route.query).includes("per_page") ||
+        !Object.keys(this.$route.query).includes("status")
+      ) {
+        await this.$router.replace({
+          path: url,
+          query: { page: this.params.page, per_page: this.params.pageSize, status: 1 },
+        });
+      }
+      this[dataFunc]();
+      this.current = Number(this.$route.query.page);
+      this.params.pageSize = Number(this.$route.query.per_page);
+    },
+    deleteAtribut(obj) {
+      console.log(obj);
+      // this.__DELETE_GLOBAL(
+      //   id,
+      //   "fetchDiscount/deleteDiscount",
+      //   "Успешно удален",
+      //   "__GET_DISCOUNT"
+      // );
+      this.__PUT_DISCOUNT(obj);
+    },
+    async __PUT_DISCOUNT(obj) {
+      try {
+        await this.$store.dispatch("fetchDiscount/editDiscount", {
+          id: obj.id,
+          data: { ...obj, status: 0 },
+        });
+        this.notification("Success", "Успешно добавлен", "success");
+      } catch (e) {
+        this.statusFunc(e.response);
+      }
     },
     async __GET_DISCOUNT() {
       try {
@@ -161,6 +211,14 @@ export default {
     indexPage(current_page, per_page) {
       return (current_page * 1 - 1) * per_page + 1;
     },
+    async changeStatus(val) {
+      this.status = val;
+      await this.$router.replace({
+        path: this.$route.path,
+        query: { ...this.$route.query, status: val },
+      });
+      this.__GET_DISCOUNT();
+    },
   },
 
   watch: {
@@ -171,6 +229,7 @@ export default {
   components: {
     SearchInput,
     TitleBlock,
+    StatusFilter,
   },
 };
 // 246

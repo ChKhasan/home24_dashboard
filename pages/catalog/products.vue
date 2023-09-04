@@ -119,25 +119,7 @@
             </a-popconfirm>
           </span>
         </a-table>
-        <div class="d-flex justify-content-between mt-4">
-          <!-- <el-select
-            v-model="params.pageSize"
-            class="table-page-size"
-            placeholder="Select"
-            @change="
-              ($event) =>
-                changePageSizeGlobal($event, '/catalog/products', '__GET_PRODUCTS')
-            "
-          >
-            <el-option
-              v-for="item in pageSizes"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select> -->
-          <span></span>
+        <div class="d-flex justify-content-end mt-4">
           <a-pagination
             class="table-pagination"
             :simple="false"
@@ -257,7 +239,6 @@ export default {
   },
   async mounted() {
     this.getFirstData("/catalog/products", "__GET_PRODUCTS");
-    console.log(process.env.VUE_APP_APIKEY, "env");
   },
   watch: {
     async current(val) {

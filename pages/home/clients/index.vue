@@ -62,23 +62,7 @@
               </span>
             </span>
           </a-table>
-          <div class="d-flex justify-content-between mt-4">
-            <el-select
-              v-model="params.pageSize"
-              class="table-page-size"
-              placeholder="Select"
-              @change="
-                ($event) => changePageSizeGlobal($event, '/home/clients', '__GET_CLIENTS')
-              "
-            >
-              <el-option
-                v-for="item in pageSizes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+          <div class="d-flex justify-content-end mt-4">
             <a-pagination
               class="table-pagination"
               :simple="false"

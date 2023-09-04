@@ -195,7 +195,7 @@
             >
               <div slot="title">
                 <span class="menu-icon" v-html="icons.settingsIcon"> </span>
-                <p>Hастройки</p>
+                <p>Настройки сайта</p>
               </div>
 
               <el-submenu

@@ -20,7 +20,9 @@
       </div>
     </TitleBlock>
     <div class="container_xl">
-      <div class="card_block-form py-5">
+      <div class="card_block-form py-5 position-relative">
+        <Loader v-if="loading" />
+
         <el-form
           label-position="top"
           :model="ruleForm"
@@ -274,12 +276,12 @@
                       :style="{ color: '#3699FF', fontSize: '18px' }"
                     />
                   </div>
-                  <div
+                  <!-- <div
                     v-if="!productModal[`product_modal${element.id}`]"
                     class="variant-btn variant-btn-delete"
                     @click="deleteProduct(element.id)"
                     v-html="removeIcon"
-                  ></div>
+                  ></div> -->
                 </div>
               </div>
               <div class="variant-img-container">
@@ -598,7 +600,7 @@
                       </div>
                       <div class="variant_btns mb-3">
                         <div
-                          v-if="elementIndex == 0 ? itemIndex != 0 : true"
+                          v-if="item.indexId != product?.info?.id"
                           class="variant-btn variant-btn-delete mx-2"
                           @click="deleteValidation(element.id, item)"
                           v-html="removeIcon"
@@ -1116,6 +1118,7 @@ export default {
   mixins: [status, authAccess],
   data() {
     return {
+      loading: false,
       headers: {
         authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },
@@ -1138,6 +1141,7 @@ export default {
       addInnerValidatIcon: require("../../../assets/svg/components/add-inner-validat-icon.svg?raw"),
       plusCategoryIcon: require("../../../assets/svg/components/add-category-icon.svg?raw"),
       title: "Quill Editor",
+      product: {},
       items: [1, 2],
       cascader: [],
       editorOption: {
@@ -1794,10 +1798,13 @@ export default {
     },
     deleteValidation(variantId, innerVarId) {
       const product = this.findProductWithId(variantId);
-      if (product.variations.length > 1 && !innerVarId?.constProduct) {
+      if (!innerVarId?.constProduct) {
         product.variations = product.variations.filter(
           (item) => item.id != innerVarId.id
         );
+      }
+      if (product.variations.length == 0) {
+        this.deleteProduct(product?.id);
       }
       if (innerVarId.constProduct) {
         this.__DELETE_GLOBAL(innerVarId.indexId);
@@ -1970,13 +1977,15 @@ export default {
       });
     },
     async __GET_PRODUCT_BY_ID() {
+      this.loading = true;
       const data = await this.$store.dispatch(
         "fetchProducts/getProductsById",
         this.$route.params.index
       );
+      this.loading = false;
       this.ruleForm.name = data.product.name;
       this.ruleForm.desc = data.info.desc;
-
+      this.product = { ...data };
       this.ruleForm.brand_id = data.info.brand_id;
       this.ruleForm.model = data.info.products[0].model;
       this.ruleForm.status = data.product?.status;

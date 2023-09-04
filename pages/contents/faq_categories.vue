@@ -23,9 +23,8 @@
           <a-table
             :columns="columns"
             :data-source="categories"
-            :pagination="pagination"
+            :pagination="false"
             :loading="loading"
-            @change="handleTableChange"
           >
             <div slot="img" slot-scope="text">
               <img v-if="typeof text == 'string'" class="table-image" :src="text" />
@@ -74,6 +73,15 @@
               </a-popconfirm>
             </span>
           </a-table>
+          <div class="d-flex justify-content-end mt-4">
+            <a-pagination
+              class="table-pagination"
+              :simple="false"
+              v-model.number="current"
+              :total="totalPage"
+              :page-size.sync="params.pageSize"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -197,10 +205,10 @@ import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
 import AddModal from "../../components/modals/Add-modal.vue";
 import authAccess from "@/mixins/authAccess";
-
+import global from "../../mixins/global";
 export default {
   // middleware: "auth",
-  mixins: [authAccess],
+  mixins: [authAccess, global],
   data() {
     return {
       visible: false,
@@ -298,22 +306,6 @@ export default {
       this.visible = false;
     },
 
-    async handleTableChange(pagination, filters, sorter) {
-      this.params.page = pagination.current;
-      const pager = { ...this.pagination };
-      pager.current = pagination.current;
-      this.pagination = pager;
-      if (this.$route.query.page != pagination.current) {
-        await this.$router.replace({
-          path: `/contents/faq_categories`,
-          query: {
-            page: pagination.current,
-          },
-        });
-      }
-      this.loading = true;
-      this.__GET_FAQ_CATEGORIES();
-    },
     getData() {
       const newData = {
         title: {
@@ -384,9 +376,7 @@ export default {
         ...this.$route.query,
       });
       this.loading = false;
-      const pagination = { ...this.pagination };
-      this.pagination = pagination;
-      pagination.total = data.categories?.total;
+      this.totalPage = data.categories?.total;
       this.categories = data.categories?.data;
       this.categories = this.categories.map((item) => {
         return {
@@ -463,6 +453,9 @@ export default {
     this.__GET_FAQ_CATEGORIES();
   },
   watch: {
+    async current(val) {
+      this.changePagination(val, "/contents/faq", "__GET_FAQS");
+    },
     visible(val) {
       if (!val) this.ruleFormEmpty();
     },

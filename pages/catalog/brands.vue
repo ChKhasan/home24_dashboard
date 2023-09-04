@@ -13,8 +13,20 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center pt-4">
-          <div class="d-flex justify-content-between w-100">
-            <FormTitle title="Бренды" />
+          <div class="prodduct-list-header-grid w-100 align-items-center">
+            <SearchInput
+              placeholder="Поиск бренда"
+              @changeSearch="changeSearch($event, '/catalog/brands', '__GET_BRANDS')"
+            />
+            <span></span>
+            <span></span>
+            <a-button
+              @click="clearQuery('/catalog/brands', '__GET_BRANDS')"
+              type="primary"
+              class="d-flex align-items-center justify-content-center"
+              style="height: 38px"
+              ><a-icon type="reload"
+            /></a-button>
           </div>
         </div>
         <div class="antd_table product_table">
@@ -82,21 +94,7 @@
               </a-popconfirm>
             </span>
           </a-table>
-          <div class="d-flex justify-content-between mt-4">
-            <el-select
-              v-model="params.pageSize"
-              class="table-page-size"
-              placeholder="Select"
-              @change="changePageSizeGlobal(e, '/catalog/brands', '__GET_BRANDS')"
-            >
-              <el-option
-                v-for="item in pageSizes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+          <div class="d-flex justify-content-end mt-4">
             <a-pagination
               class="table-pagination"
               :simple="false"
@@ -190,7 +188,6 @@
 </template>
 <script>
 import AddBtn from "../../components/form/Add-btn.vue";
-import SearchInput from "../../components/form/Search-input.vue";
 import Title from "../../components/Title.vue";
 import TitleBlock from "../../components/Title-block.vue";
 import FormTitle from "../../components/Form-title.vue";
@@ -198,6 +195,7 @@ import global from "../../mixins/global";
 import status from "@/mixins/status";
 import columns from "../../mixins/columns";
 import authAccess from "@/mixins/authAccess";
+import SearchInput from "../../components/form/Search-input.vue";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -218,7 +216,7 @@ export default {
       visible: false,
       modalTab: "ru",
       modalTabData: [
-          {
+        {
           key: "uz",
           label: "Uzbek",
         },
@@ -417,10 +415,10 @@ export default {
   },
   components: {
     AddBtn,
-    SearchInput,
     Title,
     TitleBlock,
     FormTitle,
+    SearchInput,
   },
   layout: "toolbar",
 };

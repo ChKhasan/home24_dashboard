@@ -58,21 +58,7 @@
               </a-popconfirm>
             </span>
           </a-table>
-          <div class="d-flex justify-content-between mt-4">
-            <el-select
-              v-model="params.pageSize"
-              class="table-page-size"
-              placeholder="Select"
-              @change="changePageSize"
-            >
-              <el-option
-                v-for="item in pageSizes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+          <div class="d-flex justify-content-end mt-4">
             <a-pagination
               class="table-pagination"
               :simple="false"
@@ -363,12 +349,12 @@ export default {
       // this.$message.error("Click on No");
     },
     openAddModal() {
-      (this.fileList = {
+      this.fileList = {
         ru: [],
         en: [],
         uz: [],
-      }),
-        (this.editId = "");
+      };
+      this.editId = "";
       this.ruleForm.type = "";
       this.showModal();
     },
@@ -408,7 +394,6 @@ export default {
             },
           ]
         : [];
-      console.log(this.ruleForm);
       this.showModal();
     },
     closeModal() {

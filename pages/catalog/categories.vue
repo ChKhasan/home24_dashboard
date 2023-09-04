@@ -14,15 +14,8 @@
     <div class="container_xl app-container">
       <div class="card_block py-5">
         <div class="d-flex justify-content-between align-items-center card_header">
-          <div class="prodduct-list-header-grid w-100 align-items-center">
-            <SearchInput
-              placeholder="Категория поиска"
-              @changeSearch="
-                ($event) =>
-                  changeSearch($event, '/catalog/categories', '__GET_CATEGORIES')
-              "
-            />
-            <div></div>
+          <div class="justify-content-between d-flex w-100 align-items-center">
+            <FormTitle title="Категории" class="mb-0" />
             <StatusFilter @changeStatus="changeStatus" />
           </div>
         </div>
@@ -114,23 +107,7 @@
               <a-checkbox @change="onChangeCheckbox(text)" :checked="text == 1" />
             </span>
           </a-table>
-          <div class="d-flex justify-content-between mt-4">
-            <!-- <el-select
-              v-model="params.pageSize"
-              class="table-page-size"
-              placeholder="Select"
-              @change="changePageSizeGlobal(e, '/catalog/categories', '__GET_CATEGORIES')"
-            >
-              <el-option
-                v-for="item in pageSizes"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select> -->
-            <span></span>
-
+          <div class="d-flex justify-content-end mt-4">
             <a-pagination
               class="table-pagination"
               :simple="false"

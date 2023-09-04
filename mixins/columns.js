@@ -385,7 +385,6 @@ export default {
         {
           title: "действия",
           key: "id",
-          dataIndex: "id",
           scopedSlots: { customRender: "id" },
           className: "column-btns",
           width: "100px",

@@ -62,7 +62,7 @@
                   list-type="picture-card"
                   :file-list="fileList1"
                   @preview="handlePreview"
-                  @change="($event) => handleChange($event, false)"
+                  @change="($event) => handleChange($event, 'logo')"
                 >
                   <div v-if="fileList1.length < 1">
                     <span v-html="addImgIcon"></span>
@@ -84,7 +84,7 @@
                   :file-list="fileList"
                   :multiple="true"
                   @preview="handlePreview"
-                  @change="($event) => handleChange($event, true)"
+                  @change="($event) => handleChange($event, 'images')"
                 >
                   <div v-if="fileList.length < 50">
                     <span v-html="addImgIcon"></span>
@@ -159,9 +159,9 @@ export default {
   },
   methods: {
     submitForm(ruleForm) {
-      this.$refs[ruleForm].validate((valid) => {
-        valid ? this.__POST_FEEDBACK(this.ruleForm) : false;
-      });
+      this.$refs[ruleForm].validate((valid) =>
+        valid ? this.__PUT_FEEDBACK(this.ruleForm) : false
+      );
     },
     handleCancel() {
       this.previewVisible = false;
@@ -174,22 +174,31 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }, type) {
-      if (fileList[0]?.response?.path && type) {
-        this.ruleForm.images = fileList.map((item) => item.response?.path);
-      } else if (fileList[0]?.response?.path && !type) {
+      if (fileList[fileList.length - 1]?.response?.path && type == "images") {
+        this.ruleForm.images = fileList.map((item) => {
+          if (item.id) {
+            return item.id;
+          } else {
+            return item.response?.path;
+          }
+        });
+      } else if (fileList[fileList.length - 1]?.response?.path && type == "logo") {
         this.ruleForm.logo = fileList[0]?.response?.path;
       }
-      this[type ? `fileList` : `fileList1`] = fileList;
+      this[type == "images" ? `fileList` : `fileList1`] = fileList;
     },
     handleCancel() {
       this.previewVisible = false;
     },
-    async __POST_FEEDBACK(data) {
+    async __PUT_FEEDBACK(data) {
       try {
-        await this.$store.dispatch("fetchFeedbacks/postFeedbacks", data);
+        await this.$store.dispatch("fetchFeedbacks/editFeedbacks", {
+          id: this.$route.params.index,
+          data: data,
+        });
         await this.$notify({
           title: "Success",
-          message: "Упешно добавлен",
+          message: "Упешно изменен",
           type: "success",
         });
         this.$router.push("/contents/feedbacks");
@@ -202,7 +211,27 @@ export default {
         "fetchFeedbacks/getFeedbacksById",
         this.$route.params.index
       );
-      console.log(data);
+      const { created_at, updated_at, id, ...rest } = data?.feedback;
+      this.ruleForm = { ...rest };
+      this.fileList = rest.images.map((item) => {
+        return {
+          id: item.id,
+          uid: "-1",
+          name: "image.png",
+          status: "done",
+          oldImg: true,
+          url: item.lg_img,
+        };
+      });
+      this.fileList1 = [
+        {
+          uid: "-1",
+          name: "image.png",
+          status: "done",
+          oldImg: true,
+          url: rest.logo,
+        },
+      ];
     },
     statusFunc(res) {
       switch (res.status) {

@@ -75,29 +75,16 @@
             {{ tags }}
           </span>
           <span slot="btns" slot-scope="text">
-           <span class="action-btn" v-if="checkAccess('orders', 'PUT')" @click="$router.push(`/orders/${text}/edit`)" >
+            <span
+              class="action-btn"
+              v-if="checkAccess('orders', 'PUT')"
+              @click="$router.push(`/orders/${text}/edit`)"
+            >
               <img :src="editIcon" alt="" />
             </span>
           </span>
         </a-table>
-        <div class="d-flex justify-content-between mt-4">
-          <el-select
-            v-model="params.pageSize"
-            class="table-page-size"
-            placeholder="Select"
-            @change="
-              ($event) =>
-                changePageSizeGlobal($event, '/orders/canceled-orders', '__GET_ORDERS')
-            "
-          >
-            <el-option
-              v-for="item in pageSizes"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
+        <div class="d-flex justify-content-end mt-4">
           <a-pagination
             class="table-pagination"
             :simple="false"
@@ -120,7 +107,7 @@ import OrderStatusMenu from "../../components/OrderStatusMenu.vue";
 import authAccess from "@/mixins/authAccess";
 export default {
   layout: "toolbar",
-  mixins: [global, columns,authAccess],
+  mixins: [global, columns, authAccess],
   data() {
     return {
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
