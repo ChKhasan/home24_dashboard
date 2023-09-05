@@ -174,16 +174,39 @@ export default {
       this.previewVisible = true;
     },
     handleChange({ fileList }, type) {
+      console.log(fileList);
       if (fileList[fileList.length - 1]?.response?.path && type == "images") {
-        this.ruleForm.images = fileList.map((item) => {
+        this.ruleForm.images = [...fileList].map((item) => {
           if (item.id) {
-            return item.id;
+            return {
+              id: item.id,
+            };
           } else {
-            return item.response?.path;
+            return {
+              id: 0,
+              img: item.response?.path,
+            };
           }
         });
-      } else if (fileList[fileList.length - 1]?.response?.path && type == "logo") {
+      } else if (type == "images") {
+        this.ruleForm.images = [...fileList].map((item) => {
+          if (item.id) {
+            return {
+              id: item.id,
+            };
+          } else {
+            return {
+              id: 0,
+              img: item.response?.path,
+            };
+          }
+        });
+      }
+
+      if (fileList[fileList.length - 1]?.response?.path && type == "logo") {
         this.ruleForm.logo = fileList[0]?.response?.path;
+      } else if (type == "logo") {
+        this.ruleForm.logo = "";
       }
       this[type == "images" ? `fileList` : `fileList1`] = fileList;
     },
@@ -213,25 +236,33 @@ export default {
       );
       const { created_at, updated_at, id, ...rest } = data?.feedback;
       this.ruleForm = { ...rest };
-      this.fileList = rest.images.map((item) => {
+      this.ruleForm.images = rest?.images.map((item) => {
         return {
           id: item.id,
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: item.lg_img,
         };
       });
-      this.fileList1 = [
-        {
-          uid: "-1",
-          name: "image.png",
-          status: "done",
-          oldImg: true,
-          url: rest.logo,
-        },
-      ];
+      if (rest.images.length > 0)
+        this.fileList = rest.images.map((item, index) => {
+          return {
+            id: item.id,
+            uid: `-${index + 1}`,
+            name: "image.png",
+            status: "done",
+            oldImg: true,
+            url: item.lg_img,
+          };
+        });
+      if (rest.logo) {
+        this.fileList1 = [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            oldImg: true,
+            url: rest.logo,
+          },
+        ];
+      }
     },
     statusFunc(res) {
       switch (res.status) {

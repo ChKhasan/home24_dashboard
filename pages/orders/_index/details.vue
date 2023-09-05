@@ -441,21 +441,23 @@
                               : item?.price.toFixed())
                         );
                       }, 0)}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    }}so'm
+                    }}
+                    so'm
+                  </h2>
+                  <h2>
+                    Доставка
+                    {{
+                      order?.delivery_price
+                        ? `${order?.delivery_price}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                        : 0
+                    }}
+                    so'm
                   </h2>
                   <FormTitle
-                    :title="`Общий сумма: ${`${order?.products_info?.reduce(
-                      (sum, item) => {
-                        return (
-                          sum +
-                          item?.count *
-                            (item?.price_with_discount
-                              ? item?.price_with_discount.toFixed()
-                              : item?.price.toFixed())
-                        );
-                      },
-                      0
-                    )}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} so'm`"
+                    :title="`Общий сумма: ${`${order?.amount}`.replace(
+                      /\B(?=(\d{3})+(?!\d))/g,
+                      ' '
+                    )} so'm`"
                   />
                 </div>
               </div>

@@ -8,7 +8,7 @@
             <div class="customer_details">
               <h1>{{ client?.name }}</h1>
               <div class="customer_sub-info">
-                <span v-if="client?.email"
+                <span
                   ><svg
                     width="24"
                     height="24"
@@ -25,7 +25,7 @@
                       d="M21 5H2.99999C2.69999 5 2.49999 5.10005 2.29999 5.30005L11.2 13.3C11.7 13.7 12.4 13.7 12.8 13.3L21.7 5.30005C21.5 5.10005 21.3 5 21 5Z"
                       fill="currentColor"
                     ></path></svg
-                  >{{ client?.email }}</span
+                  >{{ client?.email ? client?.email : "----" }}</span
                 >
               </div>
             </div>
@@ -63,13 +63,17 @@
           </div>
         </div>
       </div>
-      <div class="mt-4 mb-5" v-if="customerTab == 1 && client?.addresses?.length > 0">
+      <div class="mt-4 mb-5" v-if="customerTab == 1">
         <div class="custom_block">
           <div class="hr_header px-4 pt-4">
             <FormTitle title="Адреса" />
           </div>
-          <div class="customer_info px-4 pb-4">
-            <div class="order-details-items bb_none" v-for="address in client?.addresses">
+          <div class="customer_info px-4 pb-4" v-if="client?.addresses?.length > 0">
+            <div
+              class="order-details-items bb_none"
+              v-for="address in client?.addresses"
+              :key="address?.id"
+            >
               <span
                 ><svg
                   width="24"
@@ -91,6 +95,11 @@
                 {{ address?.region?.name?.ru }}, {{ address?.district?.name?.ru }},
                 {{ address?.village?.name?.ru }}, {{ address?.address }}</span
               >
+            </div>
+          </div>
+          <div class="px-4 pb-4" v-else>
+            <div class="d-flex justify-content-center w-100 mt-5">
+              <a-empty />
             </div>
           </div>
         </div>

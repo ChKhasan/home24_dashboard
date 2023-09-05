@@ -307,7 +307,12 @@ export default {
           scopedSlots: { customRender: "name" },
           className: "column-name",
         },
-
+        {
+          title: "Группа",
+          slots: { title: "customTitle" },
+          scopedSlots: { customRender: "group" },
+          className: "column-name",
+        },
         {
           title: "действия",
           key: "id",

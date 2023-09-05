@@ -62,7 +62,9 @@
                   <h6>{{ text?.ru }}</h6>
                 </span>
                 <span slot="key" slot-scope="text">#{{ text }}</span>
-
+                <span slot="group" slot-scope="text" align="center">
+                  <h6>{{ text?.group ? text?.group?.name?.ru : "----" }}</h6>
+                </span>
                 <span slot="id" slot-scope="text">
                   <span
                     v-if="checkAccess('regions', 'PUT')"
@@ -113,6 +115,21 @@
                 <span slot="name" slot-scope="text" align="center">
                   <h6>{{ text?.ru }}</h6>
                 </span>
+                <div
+                  slot="regions"
+                  slot-scope="text"
+                  align="center"
+                  class="option-container cursor_pointer"
+                  :class="{ maxHeigth: activeOptions == text?.id }"
+                  @click="activeCat(text?.id)"
+                >
+                  <span
+                    class="option-items"
+                    v-for="(item, index) in text?.regions"
+                    :key="index"
+                    >{{ item.name.ru ? item.name.ru : "-----" }}</span
+                  >
+                </div>
                 <span slot="key" slot-scope="text">#{{ text }}</span>
                 <span
                   slot="is_active"
@@ -366,6 +383,13 @@ const columns1 = [
     dataIndex: "name",
     scopedSlots: { customRender: "name" },
     className: "column-name",
+  },
+  {
+    title: "Регионы",
+    // dataIndex: "categories",
+    scopedSlots: { customRender: "regions" },
+    className: "column-options",
+    key: "regions",
   },
   {
     title: "Статус",
