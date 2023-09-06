@@ -248,7 +248,7 @@
             <div
               class="form-container product_list"
               v-for="(element, elementIndex) in ruleForm.products"
-              :key="element.id"
+              :key="elementIndex"
               :class="{
                 'variant-modal': productModal[`product_modal${element.id}`] == true,
               }"

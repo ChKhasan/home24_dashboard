@@ -113,90 +113,18 @@
           <div class="form-container">
             <FormTitle title="Барабан" />
             <div class="baraban-grid">
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
-              <el-form-item
-                class="form-block mb-0 align-items-start"
-                prop="character_name"
-                label="Барабанная пьеса"
-              >
-                <el-input placeholder="Барабанная пьеса..."></el-input>
-              </el-form-item>
+              <div v-for="(item, index) in ruleForm?.items" :key="index">
+                <el-form-item
+                  class="form-block mb-0 align-items-start"
+                  label="Барабанная пьеса"
+                >
+                  <el-input
+                    v-model="item.count"
+                    type="number"
+                    placeholder="Барабанная пьеса..."
+                  ></el-input>
+                </el-form-item>
+              </div>
             </div>
           </div>
         </div>
@@ -260,6 +188,56 @@ export default {
         sum_to_dicoin: "",
         dicoin_to_sum: "",
         dicoin_to_reg: "",
+        items: [
+          {
+            position: 1,
+            count: 1,
+          },
+          {
+            position: 2,
+            count: 2,
+          },
+          {
+            position: 3,
+            count: 3,
+          },
+          {
+            position: 4,
+            count: 4,
+          },
+          {
+            position: 5,
+            count: 5,
+          },
+          {
+            position: 6,
+            count: 6,
+          },
+          {
+            position: 7,
+            count: 7,
+          },
+          {
+            position: 8,
+            count: 8,
+          },
+          {
+            position: 9,
+            count: 9,
+          },
+          {
+            position: 10,
+            count: 10,
+          },
+          {
+            position: 11,
+            count: 11,
+          },
+          {
+            position: 12,
+            count: 12,
+          },
+        ],
       },
     };
   },
@@ -282,11 +260,19 @@ export default {
         dicoin_to_sum: data?.dicoin?.dicoin_to_sum,
         dicoin_to_reg: data?.dicoin?.dicoin_to_reg,
       };
+      this.ruleForm = {
+        ...this.ruleForm,
+        items: [...data?.items],
+      };
     },
     async __POST_DICOIN(formData) {
       try {
         const data = await this.$store.dispatch("fetchDiCoin/postDiCoin", formData);
-        console.log(data);
+        await this.$notify({
+          title: "Success",
+          message: "Упешно изменен",
+          type: "success",
+        });
       } catch (e) {
         console.log(e);
       }

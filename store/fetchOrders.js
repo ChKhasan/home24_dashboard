@@ -8,8 +8,9 @@ export const actions = {
     });
     return res;
   },
-  async getOrdersById({}, id) {
-    const res = await this.$axios.$get(`/orders/${id}`, {
+  async getOrdersById({}, payload) {
+    const res = await this.$axios.$get(`/orders/${payload.id}`, {
+      params: payload.params,
       headers: {
         Authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },

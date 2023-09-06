@@ -699,20 +699,39 @@
                 </div>
               </div>
               <a-table
-                :columns="columns2"
-                :data-source="data2"
+                :columns="columnsHistory"
+                :data-source="history"
                 :pagination="false"
                 align="center"
               >
+                <a slot="img" slot-scope="text"
+                  ><img class="table-image" :src="text?.images[0]?.md_img" alt=""
+                /></a>
                 <nuxt-link
-                  to="/catalog/products"
-                  slot="client"
+                  :to="`/catalog/edit_products/${text?.id}`"
+                  slot="product"
                   slot-scope="text"
                   align="center"
                 >
-                  {{ text }}
+                  {{ text?.info?.name?.ru }}
                 </nuxt-link>
-                <a slot="price" slot-scope="text">${{ text }}</a>
+                <span slot="totalSum" slot-scope="text"
+                  >{{ `${text}`.replace(/\B(?=(\d{3})+(?!\d))/g, " ") }} so'm</span
+                >
+                <span slot="created_at" slot-scope="text"
+                  >{{ moment(text).format("DD/MM/YYYY HH:mm") }}
+                </span>
+                <span
+                  slot="is_paid"
+                  slot-scope="text"
+                  class="tags-style"
+                  :class="{
+                    tag_new: text == 1,
+                    tag_returned: text == 0,
+                  }"
+                  >{{ text ? "Оплачено" : "Неоплачено" }}
+                </span>
+
                 <span slot="customTitle"></span>
 
                 <span
@@ -720,23 +739,26 @@
                   slot-scope="tags"
                   class="tags-style"
                   :class="{
-                    tag_new: tags == 'Completed' || tags == 'Delivered',
-                    tag_pending: tags == 'Pending',
-                    tag_accepted: tags == 'Processing' || tags == 'Delivering',
-                    tag_canceled: tags == 'Failed',
+                    tag_pending: tags == 'pending',
+                    tag_accepted: tags == 'accepted',
+                    tag_canceled: tags == 'canceled',
+                    tag_done: tags == 'done',
+                    tag_new: tags == 'new',
+                    tag_returned: tags == 'returned',
                   }"
                 >
                   {{ tags }}
                 </span>
-                <span slot="btns" slot-scope="text">
-                  <span class="action-btn" @click="tableActions(text)">
-                    <img :src="editIcon" alt="" />
-                  </span>
-                  <span class="action-btn" @click="tableActions(text)">
-                    <img :src="deleteIcon" alt="" />
-                  </span>
-                </span>
               </a-table>
+              <div class="d-flex justify-content-end mt-4">
+                <a-pagination
+                  class="table-pagination"
+                  :simple="false"
+                  v-model.number="current"
+                  :total="totalPage"
+                  :page-size.sync="params.pageSize"
+                />
+              </div>
             </div>
           </div>
         </el-tab-pane>
@@ -745,13 +767,13 @@
   </div>
 </template>
 <script>
-import AddBtn from "../../../components/form/Add-btn.vue";
-import SearchInput from "../../../components/form/Search-input.vue";
 import TitleBlock from "../../../components/Title-block.vue";
 import FormTitle from "../../../components/Form-title.vue";
 import moment from "moment";
+import global from "../../../mixins/global";
 export default {
   layout: "toolbar",
+  mixins: [global],
   data() {
     return {
       status: {
@@ -814,12 +836,11 @@ export default {
       ruleForm: {
         status: "",
       },
+      history: [],
       count: 10,
       pageSize: 10,
       editIcon: require("../../../assets/svg/components/edit-icon.svg"),
       deleteIcon: require("../../../assets/svg/components/delete-icon.svg"),
-      tableData: [],
-      selectedRowKeys: [], // Check here to configure the default column
       loading: false,
       activeName: "summa",
       order: {},
@@ -834,136 +855,7 @@ export default {
           key: "English",
         },
       ],
-      data: [
-        {
-          key: "1",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "2",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "3",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "4",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-        {
-          key: "5",
-          orderId: "#123",
-          client: "A nam .column-name .column-name",
-          dataAdd: "22.22.2022",
-          dataEdit: "22.22.2022",
-          price: "23423432",
-          statusSum: "status",
-          tags: "Success",
-          btns: "id",
-        },
-      ],
-      data2: [
-        {
-          key: "1",
-          dateAdd: "22.22.2022",
-          comment: "lorem ipsum ssdf dsfsdf",
-          customer: "No",
-          tags: "Completed",
-        },
-        {
-          key: "2",
-          dateAdd: "22.22.2022",
-          comment: "lorem ipsum ssdf dsfsdf",
-          customer: "No",
-          tags: "Failed",
-        },
-        {
-          key: "3",
-          dateAdd: "22.22.2022",
-          comment: "lorem ipsum ssdf dsfsdf",
-          customer: "No",
-          tags: "Pending",
-        },
-        {
-          key: "4",
-          dateAdd: "22.22.2022",
-          comment: "lorem ipsum ssdf dsfsdf",
-          customer: "No",
-          tags: "Processing",
-        },
-        {
-          key: "5",
-          dateAdd: "22.22.2022",
-          comment: "lorem ipsum ssdf dsfsdf",
-          customer: "No",
-          tags: "Delivered",
-        },
-        {
-          key: "6",
-          dateAdd: "22.22.2022",
-          comment: "lorem ipsum ssdf dsfsdf",
-          customer: "No",
-          tags: "Delivering",
-        },
-      ],
-      dataOrder: [
-        {
-          key: "1",
-          orderId: "#123",
-          product: "A nam .column-name .column-name",
-          sku: "123234352",
-          qty: "2",
-          price: "$120.00",
-          totalSum: "$240.00",
-        },
-        {
-          key: "2",
-          orderId: "#123",
-          product: "A nam .column-name .column-name",
-          sku: "123234352",
-          qty: "2",
-          price: "$120.00",
-          totalSum: "$240.00",
-        },
-        {
-          key: "3",
-          orderId: "#123",
-          product: "A nam .column-name .column-name",
-          sku: "123234352",
-          qty: "2",
-          price: "$120.00",
-          totalSum: "$240.00",
-        },
-      ],
+
       columnsOrder: [
         {
           title: "ПРОДУКТ",
@@ -1006,114 +898,82 @@ export default {
           className: "column-code",
         },
       ],
-      columns: [
-        {
-          title: "Номер заказ",
-          dataIndex: "orderId",
-          key: "orderId",
-          slots: { title: "customTitle" },
-          scopedSlots: { customRender: "orderId" },
-          className: "column-code",
-        },
-
-        {
-          title: "Номер клиента",
-          dataIndex: "dataAdd",
-          scopedSlots: { customRender: "dataAdd" },
-          className: "column-code",
-          key: "dataAdd",
-        },
-
-        {
-          title: "статус",
-          dataIndex: "tags",
-          scopedSlots: { customRender: "tags" },
-          className: "column-tags",
-          key: "tags",
-        },
-        {
-          title: "дата",
-          dataIndex: "dataEdit",
-          scopedSlots: { customRender: "dataEdit" },
-          className: "column-code",
-          key: "dataEdit",
-        },
-      ],
-      columns2: [
+      columnsHistory: [
         {
           title: "ДАТА ДОБАВЛЕНА",
-          dataIndex: "dateAdd",
+          dataIndex: "created_at",
           key: "dateAdd",
           slots: { title: "customTitle" },
-          scopedSlots: { customRender: "dateAdd" },
-          className: "column-code",
+          scopedSlots: { customRender: "created_at" },
+          className: "column-date",
         },
 
         {
-          title: "КОММЕНТАРИЙ",
-          dataIndex: "comment",
+          title: "Способ оплаты",
+          dataIndex: "payment_method",
           scopedSlots: { customRender: "comment" },
-          className: "column-code",
+          className: "column-name",
           key: "comment",
         },
-
+        {
+          title: "Способ оплаты",
+          dataIndex: "is_paid",
+          scopedSlots: { customRender: "is_paid" },
+          className: "column-tags",
+          key: "comment",
+        },
         {
           title: "СТАТУС ЗАКАЗА",
-          dataIndex: "tags",
+          dataIndex: "status",
           scopedSlots: { customRender: "tags" },
           className: "column-tags",
           key: "tags",
         },
         {
-          title: "КЛИЕНТ УВЕДОМЛЕН",
-          dataIndex: "customer",
+          title: "Способ доставки",
+          dataIndex: "delivery_method",
           scopedSlots: { customRender: "customer" },
           className: "column-code",
           key: "customer",
         },
+        {
+          title: "ОБЩИЙ",
+          dataIndex: "amount",
+          scopedSlots: { customRender: "totalSum" },
+          className: "column-code",
+        },
       ],
     };
   },
-  computed: {
-    hasSelected() {
-      return this.selectedRowKeys.length > 0;
-    },
-
-    classObject(tag) {
-      return {
-        tag_new: tag == "Success",
-        tag_pending: tag == "in progress",
-      };
-    },
-  },
-  mounted() {
-    if (this.data) {
-      this.tableData = this.data;
+  async mounted() {
+    if (
+      !Object.keys(this.$route.query).includes("page") ||
+      !Object.keys(this.$route.query).includes("per_page")
+    ) {
+      await this.$router.replace({
+        path: this.$route.path,
+        query: { page: this.params.page, per_page: this.params.pageSize },
+      });
     }
     this.__GET_ORDER();
+    this.current = Number(this.$route.query.page);
+    this.params.pageSize = Number(this.$route.query.per_page);
   },
   methods: {
     moment,
-    handleTableChange(pagination, filters, sorter) {
-      console.log(filters);
-      this.tableData = this.data.map((item) => {
-        filters.tags.forEach((element) => {
-          if (item.tags == element);
-          return item;
-        });
-      });
-      console.log(this.tableData);
-    },
     submitForm() {
       this.__EDIT_ORDER(this.ruleForm);
     },
     async __GET_ORDER() {
-      const data = await this.$store.dispatch(
-        "fetchOrders/getOrdersById",
-        this.$route.params.index
-      );
+      const data = await this.$store.dispatch("fetchOrders/getOrdersById", {
+        id: this.$route.params.index,
+        params: { ...this.$route.query },
+      });
+      this.totalPage = data?.history?.total;
       this.ruleForm.status = data?.order?.status;
       this.order = data?.order;
+      this.history = data?.history?.data;
+      console.log(this.history);
     },
     async __EDIT_ORDER(formData) {
       try {
@@ -1129,35 +989,18 @@ export default {
         this.__GET_ORDER();
       } catch (e) {}
     },
-
-    start() {
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-        this.selectedRowKeys = [];
-      }, 1000);
-    },
-    tableActions(id) {
-      console.log(id);
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
-      this.selectedRowKeys = selectedRowKeys;
-    },
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
-    },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
-    },
-    handleCommand(command) {
-      this.pageSize = command;
+  },
+  watch: {
+    async current(val) {
+      this.changePagination(
+        val,
+        `/orders/${this.$route.params.index}/details`,
+        "__GET_ORDER"
+      );
     },
   },
   components: {
     TitleBlock,
-    SearchInput,
-    AddBtn,
     FormTitle,
   },
 };
