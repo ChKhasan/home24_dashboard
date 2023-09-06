@@ -721,6 +721,9 @@
                 <span slot="created_at" slot-scope="text"
                   >{{ moment(text).format("DD/MM/YYYY HH:mm") }}
                 </span>
+                <span slot="delivery_method" slot-scope="text"
+                  >{{ text == "pickup" ? "Cамовывоз" : "Доставка" }}
+                </span>
                 <span
                   slot="is_paid"
                   slot-scope="text"
@@ -747,7 +750,7 @@
                     tag_returned: tags == 'returned',
                   }"
                 >
-                  {{ tags }}
+                  {{ statusTypes[tags] }}
                 </span>
               </a-table>
               <div class="d-flex justify-content-end mt-4">
@@ -776,6 +779,14 @@ export default {
   mixins: [global],
   data() {
     return {
+      statusTypes: {
+        pending: "Ожидание",
+        accepted: "Принятые",
+        canceled: "Отмененные",
+        done: "Доставленные",
+        new: "Новые",
+        returned: "Возврат",
+      },
       status: {
         pending: [
           {
@@ -932,7 +943,7 @@ export default {
         {
           title: "Способ доставки",
           dataIndex: "delivery_method",
-          scopedSlots: { customRender: "customer" },
+          scopedSlots: { customRender: "delivery_method" },
           className: "column-code",
           key: "customer",
         },

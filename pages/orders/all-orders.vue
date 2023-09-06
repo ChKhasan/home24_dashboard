@@ -71,7 +71,7 @@
               tag_returned: tags == 'returned',
             }"
           >
-            {{ tags }}
+            {{ statusTypes[tags] }}
           </span>
           <span slot="btns" slot-scope="text">
             <span
@@ -109,6 +109,7 @@ export default {
   mixins: [global, columns, authAccess],
   data() {
     return {
+  
       editIcon: require("../../assets/svg/components/edit-icon.svg"),
       loading: false,
       orders: [],

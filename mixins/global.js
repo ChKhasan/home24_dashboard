@@ -1,6 +1,14 @@
 export default {
   data() {
     return {
+      statusTypes: {
+        pending: "Ожидание",
+        accepted: "Принятые",
+        canceled: "Отмененные",
+        done: "Доставленные",
+        new: "Новые",
+        returned: "Возврат",
+      },
       page: 1,
       current: 1,
       pageSizes: [

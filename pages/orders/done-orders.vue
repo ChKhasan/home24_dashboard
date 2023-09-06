@@ -71,7 +71,7 @@
               tag_returned: tags == 'returned',
             }"
           >
-            {{ tags }}
+            {{ statusTypes[tags] }}
           </span>
           <span slot="btns" slot-scope="text">
             <span
