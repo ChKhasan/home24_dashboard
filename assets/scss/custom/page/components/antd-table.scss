@@ -180,7 +180,10 @@
     color: #181c32;
   }
 }
-
+.empty-style {
+  background: rgba(0, 0, 0, 0.1);
+  color: rgba(0, 0, 0, 0.5);
+}
 .tag_new {
   background: #c9f7f5;
   color: #18b3bd;

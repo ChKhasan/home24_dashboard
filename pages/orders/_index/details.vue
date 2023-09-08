@@ -238,6 +238,25 @@
                     <FormTitle title="Статус заказа" />
                     <a-button type="primary" @click="submitForm">сохранять</a-button>
                   </div>
+                  <div class="d-flex column-tags status-tags">
+                    <span
+                      class="tags-style empty-style"
+                      v-for="item in Object.keys(statusTypes)"
+                      :class="{
+                        tag_pending:
+                          ruleForm.status == 'pending' && item == ruleForm.status,
+                        tag_accepted:
+                          ruleForm.status == 'accepted' && item == ruleForm.status,
+                        tag_canceled:
+                          ruleForm.status == 'canceled' && item == ruleForm.status,
+                        tag_done: ruleForm.status == 'done' && item == ruleForm.status,
+                        tag_new: ruleForm.status == 'new' && item == ruleForm.status,
+                        tag_returned:
+                          ruleForm.status == 'returned' && item == ruleForm.status,
+                      }"
+                      >{{ statusTypes[item] }}</span
+                    >
+                  </div>
 
                   <!-- <div class="order-details-items">
                     <span
@@ -1025,5 +1044,9 @@ export default {
   line-height: 15.6px;
   color: #181c32;
   margin-bottom: 16px !important;
+}
+.status-tags {
+  gap: 8px;
+  margin-bottom: 12px;
 }
 </style>

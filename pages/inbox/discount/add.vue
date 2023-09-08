@@ -84,7 +84,7 @@
                           type="submit"
                           @click="discountAllValue"
                         >
-                          Save
+                          OK
                         </div>
                       </div>
                     </div>
@@ -142,6 +142,7 @@
               >
                 <el-form-item
                   class="form-block mb-0 align-items-start"
+                  style="max-width: 545px"
                   :label="ruleForm.type == 'product' ? 'Продукты' : 'Бренды'"
                 >
                   <a-select
@@ -158,7 +159,7 @@
                   >
                     <a-spin v-if="fetching" slot="notFoundContent" size="small" />
                     <a-select-option v-for="d in data" :key="d.id">
-                      {{ d.name.ru }}
+                      {{ d?.info?.category?.name.ru }} => {{ d.name.ru }}
                     </a-select-option>
                   </a-select>
                 </el-form-item>
@@ -169,13 +170,7 @@
                     v-model="product.percent"
                   />
                 </el-form-item>
-                <el-form-item label="Сумма" class="form-block mb-0">
-                  <el-input
-                    placeholder="Сумма..."
-                    type="number"
-                    v-model="product.price"
-                  />
-                </el-form-item>
+
                 <el-form-item
                   :label="`Сумма (${
                     product.amount
@@ -195,6 +190,15 @@
                           product.amount = (product.price / 100) * 99;
                       }
                     "
+                  />
+                </el-form-item>
+
+                <el-form-item label="Сумма" class="form-block mb-0">
+                  <el-input
+                    disabled
+                    placeholder="Сумма..."
+                    type="number"
+                    v-model="product.price"
                   />
                 </el-form-item>
                 <div class="variant_btns mb-1 mt-0">
@@ -407,10 +411,11 @@ export default {
       const data = {
         ...this.ruleForm,
         products: this.ruleForm.products.map((item) => {
-          const { indexId, ...rest } = item;
+          const { indexId, price, real_price, ...rest } = item;
           return rest;
         }),
       };
+      console.log(data);
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.__POST_DISCOUNT(data);
@@ -450,15 +455,16 @@ export default {
       this.fetching = false;
     },
     handleChange(value, id) {
-      console.log(value, id);
       this.ruleForm.products.find((item) => item.id == id).id = value;
       this.ruleForm.products.find((item) => item.id == id).price = this.data.find(
+        (item) => item.id == id
+      ).real_price;
+      this.ruleForm.products.find((item) => item.id == id).real_price = this.data.find(
         (item) => item.id == id
       ).real_price;
       Object.assign(this, {
         fetching: false,
       });
-      console.log(this.data.find((item) => item.id == id));
     },
   },
   watch: {

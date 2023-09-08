@@ -67,7 +67,9 @@
                       <div class="form-block required mb-0">
                         <el-form-item label="Сумма">
                           <el-input
+                            :disabled="!ruleForm.products[0].price"
                             v-model="amount"
+                            type="number"
                             placeholder="Сумма(в сумах)"
                           ></el-input>
                         </el-form-item>
@@ -77,84 +79,12 @@
                         type="submit"
                         @click="discountAllValue"
                       >
-                        Save
+                        OK
                       </div>
                     </div>
                   </div>
                 </el-tab-pane>
               </el-tabs>
-
-              <div class="form-container">
-                <div class="d-flex justify-content-between">
-                  <FormTitle title="Продукты" />
-                </div>
-
-                <div
-                  style="
-                    display: grid;
-                    grid-template-columns: 2fr 1fr 1fr auto;
-                    grid-gap: 10px;
-                  "
-                  class="mb-3"
-                  v-for="product in ruleForm.products"
-                  :key="product.id"
-                >
-                  <el-form-item
-                    class="form-block mb-0 align-items-start"
-                    :label="ruleForm.type == 'product' ? 'Продукты' : 'Бренды'"
-                  >
-                    <a-select
-                      show-search
-                      :value="product.id"
-                      placeholder="Продукты..."
-                      :default-active-first-option="false"
-                      :show-arrow="false"
-                      :filter-option="false"
-                      style="width: 100%"
-                      :not-found-content="fetching ? undefined : null"
-                      @search="fetchUser"
-                      @change="($event) => handleChange($event, product.id)"
-                    >
-                      <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-                      <a-select-option v-for="d in data" :key="d.id">
-                        {{ d.name.ru }}
-                      </a-select-option>
-                    </a-select>
-                  </el-form-item>
-                  <el-form-item label="Процент" class="form-block mb-0">
-                    <el-input placeholder="Процент..." v-model="product.percent" />
-                  </el-form-item>
-                  <el-form-item label="Сумма" class="form-block mb-0">
-                    <el-input placeholder="Сумма..." v-model="product.amount" />
-                  </el-form-item>
-                  <div class="variant_btns mb-1 mt-0">
-                    <div
-                      class="variant-btn variant-btn-delete mx-2"
-                      @click="deleteElement(product.indexId)"
-                    >
-                      <svg
-                        width="30"
-                        height="30"
-                        viewBox="0 0 30 30"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
-                          stroke="#F65160"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div class="add-variant create-inner-variant" @click="addProduct">
-                  <span v-html="addInnerValidatIcon"></span>
-                  Добавит варизаци
-                </div>
-              </div>
 
               <div class="category-character-grid"></div>
             </div>
@@ -196,6 +126,104 @@
                   </el-form-item>
                 </div>
               </div>
+            </div>
+          </div>
+          <div class="form-container">
+            <div class="d-flex justify-content-between">
+              <FormTitle title="Продукты" />
+            </div>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 2fr 1fr 1fr 1fr auto;
+                grid-gap: 10px;
+              "
+              class="mb-3"
+              v-for="product in ruleForm.products"
+              :key="product.id"
+            >
+              <el-form-item
+                class="form-block mb-0 align-items-start"
+                style="max-width: 545px"
+                :label="ruleForm.type == 'product' ? 'Продукты' : 'Бренды'"
+              >
+                <a-select
+                  show-search
+                  :value="product.id"
+                  placeholder="Продукты..."
+                  :default-active-first-option="false"
+                  :show-arrow="false"
+                  :filter-option="false"
+                  style="width: 100%"
+                  :not-found-content="fetching ? undefined : null"
+                  @search="fetchUser"
+                  @change="($event) => handleChange($event, product.indexId)"
+                >
+                  <a-spin v-if="fetching" slot="notFoundContent" size="small" />
+                  <a-select-option v-for="d in data" :key="d.id">
+                    {{ d.name.ru }}
+                  </a-select-option>
+                </a-select>
+              </el-form-item>
+              <el-form-item label="Процент" class="form-block mb-0">
+                <el-input placeholder="Процент..." v-model="product.percent" />
+              </el-form-item>
+              <el-form-item
+                :label="`Сумма (${
+                  product.amount
+                    ? ((100 / product.price) * product.amount).toFixed() + '%'
+                    : 'Скидка'
+                })`"
+                class="form-block mb-0"
+              >
+                <el-input
+                  :disabled="!product.price"
+                  placeholder="Сумма..."
+                  type="number"
+                  v-model="product.amount"
+                  @input="
+                    (e) => {
+                      if (e > product.price) product.amount = (product.price / 100) * 99;
+                    }
+                  "
+                />
+              </el-form-item>
+
+              <el-form-item label="Сумма" class="form-block mb-0">
+                <el-input
+                  disabled
+                  placeholder="Сумма..."
+                  type="number"
+                  v-model="product.price"
+                />
+              </el-form-item>
+              <div class="variant_btns mb-1 mt-0">
+                <div
+                  class="variant-btn variant-btn-delete mx-2"
+                  @click="deleteElement(product.indexId)"
+                >
+                  <svg
+                    width="30"
+                    height="30"
+                    viewBox="0 0 30 30"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20.3029 9.69684L9.69629 20.3034M20.3029 20.3034L9.69629 9.69678"
+                      stroke="#F65160"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="add-variant create-inner-variant" @click="addProduct">
+              <span v-html="addInnerValidatIcon"></span>
+              Добавит варизаци
             </div>
           </div>
         </div>
@@ -314,6 +342,7 @@ export default {
             indexId: 1,
             percent: null,
             amount: null,
+            price: null,
             id: null,
           },
         ],
@@ -341,17 +370,26 @@ export default {
         });
       } else {
         this.ruleForm.products = this.ruleForm.products.map((item) => {
-          return {
-            ...item,
-            percent: null,
-            amount: this.amount,
-          };
+          if (item.price < this.amount) {
+            return {
+              ...item,
+              percent: null,
+              amount: (item.price / 100) * 99,
+            };
+          } else {
+            return {
+              ...item,
+              percent: null,
+              amount: this.amount,
+            };
+          }
         });
       }
     },
     addProduct() {
       this.ruleForm.products.push({
         percent: null,
+        price: null,
         amount: null,
         indexId: Math.max(...this.ruleForm.products.map((o) => o.indexId)) + 1,
       });
@@ -375,10 +413,12 @@ export default {
       const data = {
         ...this.ruleForm,
         products: this.ruleForm.products.map((item) => {
-          const { indexId, ...rest } = item;
+          const { indexId, price, real_price, ...rest } = item;
           return rest;
         }),
       };
+      console.log(data);
+
       this.$refs[ruleForm].validate((valid) => {
         if (valid) {
           this.__POST_DISCOUNT(data);
@@ -411,7 +451,9 @@ export default {
         this.ruleForm = { ...data?.discount };
         this.ruleForm.products = data?.discount?.products.map((item, index) => {
           return {
-            ...item,
+            id: item.id,
+            name: item.name,
+            price: item.real_price,
             percent: item.pivot.percent,
             amount: item.pivot.amount,
             indexId: index + 1,
@@ -442,7 +484,11 @@ export default {
       this.fetching = false;
     },
     handleChange(value, id) {
-      this.ruleForm.products.find((item) => item.id == id).id = value;
+      this.ruleForm.products.find((item) => item.indexId == id).id = value;
+      this.ruleForm.products.find((item) => item.indexId == id).price = this.data.find(
+        (item) => item.id == value
+      )?.real_price;
+
       Object.assign(this, {
         fetching: false,
       });

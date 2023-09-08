@@ -166,13 +166,13 @@ export default {
     },
     deleteAtribut(obj) {
       console.log(obj);
-      // this.__DELETE_GLOBAL(
-      //   id,
-      //   "fetchDiscount/deleteDiscount",
-      //   "Успешно удален",
-      //   "__GET_DISCOUNT"
-      // );
-      this.__PUT_DISCOUNT(obj);
+      this.__DELETE_GLOBAL(
+        obj.id,
+        "fetchDiscount/deleteDiscount",
+        "Успешно удален",
+        "__GET_DISCOUNT"
+      );
+      // this.__PUT_DISCOUNT(obj);
     },
     async __PUT_DISCOUNT(obj) {
       try {
