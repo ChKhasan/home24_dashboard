@@ -548,14 +548,14 @@ export default {
           disabled: false,
           show: this.checkShow("faqs"),
         },
-        {
-          name: "Категории (F.A.Q)",
-          index: "56",
-          to: "/contents/faq_categories",
-          path: "contents-faq_categories",
-          disabled: false,
-          show: this.checkShow("faq-categories"),
-        },
+        // {
+        //   name: "Категории (F.A.Q)",
+        //   index: "56",
+        //   to: "/contents/faq_categories",
+        //   path: "contents-faq_categories",
+        //   disabled: false,
+        //   show: this.checkShow("faq-categories"),
+        // },
         {
           name: "Feedbacks",
           index: "57",

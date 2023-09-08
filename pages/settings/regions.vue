@@ -292,7 +292,7 @@
               <el-form-item
                 class="form-block required align-items-start"
                 prop="name.ru"
-                label="Status"
+                label="Статус"
               >
                 <a-select
                   placeholder="Inserted are removed"
@@ -327,7 +327,7 @@
                   mode="multiple"
                   label-in-value
                   :value="value"
-                  placeholder="Продукты"
+                  placeholder="Регионы..."
                   style="width: 100%"
                   :filter-option="false"
                   :not-found-content="fetching ? undefined : null"

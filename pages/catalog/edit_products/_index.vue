@@ -527,7 +527,7 @@
                             />
                           </span>
                         </div>
-                        <div class="form-block mx-2 mb-0">
+                        <!-- <div class="form-block mx-2 mb-0">
                           <div>
                             <label
                               >POD
@@ -550,7 +550,7 @@
                               "
                             />
                           </span>
-                        </div>
+                        </div> -->
                         <!-- <div class="form-block mb-0">
                           <div>
                             <label

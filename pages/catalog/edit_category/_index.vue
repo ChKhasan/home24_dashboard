@@ -221,7 +221,7 @@
                                 <el-option
                                   v-for="item in groups"
                                   :key="item.id"
-                                  :label="item.name.ru"
+                                  :label="`${item.keywords} - ${item.keywords}`"
                                   :value="item.id"
                                 >
                                 </el-option>
@@ -712,7 +712,6 @@ export default {
           },
         ];
       }
-      console.log(this.attributes, "aslkdjasidhuiashduihaj");
       if (this.groups.length == 0) {
         this.groups = data.category.characteristic_groups;
       }
@@ -724,6 +723,7 @@ export default {
           return {
             name: item.id,
             id: index + 1,
+            keywords: item.keywords,
           };
         }
       );

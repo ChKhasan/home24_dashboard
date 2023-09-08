@@ -118,7 +118,7 @@
           :key="index"
           v-if="modalTab == item.index"
         >
-          <div class="form-block required">
+          <!-- <div class="form-block required">
             <div>
               <label for="fad_category_select">Категория</label>
             </div>
@@ -139,7 +139,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-          </div>
+          </div> -->
           <div class="form-block required">
             <div>
               <label for="faq_question">Вопрос</label>
@@ -147,7 +147,8 @@
             <el-form-item prop="question_ru">
               <el-input
                 id="faq_question"
-                type="text"
+                type="textarea"
+                rows="5"
                 placeholder="Зоговолок"
                 v-model="ruleForm[`question_${item.index}`]"
               ></el-input>
@@ -160,7 +161,8 @@
             <el-form-item prop="answer_ru">
               <el-input
                 id="faq_answar"
-                type="text"
+                type="textarea"
+                rows="5"
                 placeholder="Ответ"
                 v-model="ruleForm[`answer_${item.index}`]"
               ></el-input>
@@ -263,14 +265,13 @@ export default {
           className: "column-name",
           //   width: "30%",
         },
-        {
-          title: "Категория",
-          dataIndex: "category",
-          scopedSlots: { customRender: "category" },
-          className: "column-code",
-          key: "category",
-          //   width: "30%",
-        },
+        // {
+        //   title: "Категория",
+        //   dataIndex: "category",
+        //   scopedSlots: { customRender: "category" },
+        //   className: "column-code",
+        //   key: "category",
+        // },
 
         {
           title: "действия",

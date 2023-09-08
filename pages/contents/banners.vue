@@ -33,6 +33,7 @@
             </div>
 
             <div slot="link" slot-scope="text" v-html="text?.ru"></div>
+            <div slot="type" slot-scope="text">{{ typeNames[text] }}</div>
             <span slot="numberId" slot-scope="text">#{{ text }}</span>
             <span slot="customTitle"></span>
 
@@ -121,7 +122,12 @@
                 no-data-text="No Category"
                 default-first-option
               >
-                <el-option v-for="item in types" :key="item" :label="item" :value="item">
+                <el-option
+                  v-for="item in types"
+                  :key="item"
+                  :label="typeNames[item]"
+                  :value="item"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
@@ -189,6 +195,17 @@ export default {
   mixins: [global, authAccess],
   data() {
     return {
+      typeNames: {
+        main: "Главный баннер 1",
+        product_of_the_day: "Главный баннер 2",
+        type1: "Баннер категории",
+        type2: "Баннер (скидка)",
+        promo: "Promo",
+        top: "Top",
+        small: "Small",
+        medium: "Medium",
+        bottom: "Bottom",
+      },
       headers: {
         authorization: `Bearer ${localStorage.getItem("auth_token")}`,
       },

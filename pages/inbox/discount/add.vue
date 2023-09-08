@@ -193,10 +193,10 @@
                   />
                 </el-form-item>
 
-                <el-form-item label="Сумма" class="form-block mb-0">
+                <el-form-item label="Цена" class="form-block mb-0">
                   <el-input
                     disabled
-                    placeholder="Сумма..."
+                    placeholder="Цена..."
                     type="number"
                     v-model="product.price"
                   />
@@ -226,7 +226,7 @@
               </div>
               <div class="add-variant create-inner-variant" @click="addProduct">
                 <span v-html="addInnerValidatIcon"></span>
-                Добавит варизаци
+                Добавить продукты
               </div>
             </div>
           </div>
