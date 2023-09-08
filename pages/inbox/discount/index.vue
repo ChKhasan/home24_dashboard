@@ -66,7 +66,7 @@
                 <img :src="editIcon" alt="" />
               </span>
               <a-popconfirm
-                v-if="checkAccess('discount', 'DELETE')"
+                v-if="checkAccess('discount', 'DELETE') && value"
                 title="Are you sure delete this row?"
                 ok-text="Yes"
                 cancel-text="No"

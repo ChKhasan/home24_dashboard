@@ -84,7 +84,9 @@
                     </svg>
                     Способ доставки</span
                   >
-                  <p>{{ order?.delivery_method }}</p>
+                  <p>
+                    {{ order?.delivery_method == "pickup" ? "Cамовывоз" : "Доставка" }}
+                  </p>
                 </div>
                 <div class="order-details-items">
                   <span
@@ -560,7 +562,9 @@
                     </svg>
                     Способ доставки</span
                   >
-                  <p>{{ order?.delivery_method }}</p>
+                  <p>
+                    {{ order?.delivery_method == "pickup" ? "Cамовывоз" : "Доставка" }}
+                  </p>
                 </div>
                 <div class="order-details-items">
                   <span
